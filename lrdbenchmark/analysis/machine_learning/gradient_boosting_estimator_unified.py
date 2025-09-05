@@ -29,10 +29,10 @@ except ImportError:
 
 # Import base estimator
 try:
-    from lrdbenchmark.analysis.base_estimator import BaseEstimator
+    from ...models.estimators.base_estimator import BaseEstimator
 except ImportError:
     try:
-        from models.estimators.base_estimator import BaseEstimator
+        from ...models.estimators.base_estimator import BaseEstimator
     except ImportError:
         # Fallback if base estimator not available
         class BaseEstimator:

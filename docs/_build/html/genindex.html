@@ -46,6 +46,7 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/machine_learning_estimators.html">Machine Learning Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/neural_network_factory.html">Neural Network Factory API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/adaptive_estimators.html">Comprehensive Adaptive Estimators API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/contamination_factory.html">Contamination Factory API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/estimators.html">Estimators API</a></li>
@@ -121,6 +122,7 @@
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#J"><strong>J</strong></a>
  | <a href="#L"><strong>L</strong></a>
@@ -168,6 +170,28 @@
         <li><a href="api/adaptive_estimators.html#id5">(lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWhittle method)</a>, <a href="api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWhittle.__init__">[1]</a>
 </li>
         <li><a href="api/estimators.html#id2">(lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator method)</a>, <a href="api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.__init__">[1]</a>, <a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.__init__">[2]</a>
+</li>
+        <li><a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork.__init__">(lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork method)</a>
+</li>
+        <li><a href="api/neural_network_factory.html#id11">(lrdbenchmark.analysis.machine_learning.neural_network_factory.BidirectionalLSTMNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.BidirectionalLSTMNetwork.__init__">[1]</a>
+</li>
+        <li><a href="api/neural_network_factory.html#id4">(lrdbenchmark.analysis.machine_learning.neural_network_factory.ConvolutionalNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.ConvolutionalNetwork.__init__">[1]</a>
+</li>
+        <li><a href="api/neural_network_factory.html#id1">(lrdbenchmark.analysis.machine_learning.neural_network_factory.FeedforwardNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.FeedforwardNetwork.__init__">[1]</a>
+</li>
+        <li><a href="api/neural_network_factory.html#id14">(lrdbenchmark.analysis.machine_learning.neural_network_factory.GRUNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.GRUNetwork.__init__">[1]</a>
+</li>
+        <li><a href="api/neural_network_factory.html#id23">(lrdbenchmark.analysis.machine_learning.neural_network_factory.HybridCNNLSTMNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.HybridCNNLSTMNetwork.__init__">[1]</a>
+</li>
+        <li><a href="api/neural_network_factory.html#id8">(lrdbenchmark.analysis.machine_learning.neural_network_factory.LSTMNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.LSTMNetwork.__init__">[1]</a>
+</li>
+        <li><a href="api/neural_network_factory.html#id47">(lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.__init__">[1]</a>
+</li>
+        <li><a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.ResNetBlock.__init__">(lrdbenchmark.analysis.machine_learning.neural_network_factory.ResNetBlock method)</a>
+</li>
+        <li><a href="api/neural_network_factory.html#id20">(lrdbenchmark.analysis.machine_learning.neural_network_factory.ResNetNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.ResNetNetwork.__init__">[1]</a>
+</li>
+        <li><a href="api/neural_network_factory.html#id17">(lrdbenchmark.analysis.machine_learning.neural_network_factory.TransformerNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.TransformerNetwork.__init__">[1]</a>
 </li>
         <li><a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.__init__">(lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem method)</a>
 </li>
@@ -312,6 +336,8 @@
 </li>
       <li><a href="api/data_models.html#lrdbenchmark.models.data_models.mrw.mrw_model.MultifractalRandomWalk._direct_method">_direct_method() (lrdbenchmark.models.data_models.mrw.mrw_model.MultifractalRandomWalk method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveCWT._estimate_jax">_estimate_jax() (lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveCWT method)</a>
 
       <ul>
@@ -342,8 +368,6 @@
         <li><a href="api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWhittle._estimate_jax">(lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWhittle method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveCWT._estimate_numba">_estimate_numba() (lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveCWT method)</a>
 
       <ul>
@@ -440,12 +464,18 @@
 </li>
       <li><a href="api/data_models.html#lrdbenchmark.models.data_models.mrw.mrw_model.MultifractalRandomWalk._generate_volatility_cascade">_generate_volatility_cascade() (lrdbenchmark.models.data_models.mrw.mrw_model.MultifractalRandomWalk method)</a>
 </li>
+      <li><a href="api/neural_network_factory.html#id5">_get_conv_output_size() (lrdbenchmark.analysis.machine_learning.neural_network_factory.ConvolutionalNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.ConvolutionalNetwork._get_conv_output_size">[1]</a>
+</li>
       <li><a href="api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker._get_length_range">_get_length_range() (lrdbenchmark.analytics.usage_tracker.UsageTracker method)</a>
 
       <ul>
         <li><a href="api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer._get_length_range">(lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer method)</a>
 </li>
       </ul></li>
+      <li><a href="api/neural_network_factory.html#id24">_get_lstm_input_size() (lrdbenchmark.analysis.machine_learning.neural_network_factory.HybridCNNLSTMNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.HybridCNNLSTMNetwork._get_lstm_input_size">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork._get_optimizer">_get_optimizer() (lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork method)</a>
+</li>
       <li><a href="api/data_models.html#lrdbenchmark.models.data_models.fbm.fbm_model.FractionalBrownianMotion._get_recommended_framework">_get_recommended_framework() (lrdbenchmark.models.data_models.fbm.fbm_model.FractionalBrownianMotion method)</a>
 </li>
       <li><a href="api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker._hash_user_id">_hash_user_id() (lrdbenchmark.analytics.usage_tracker.UsageTracker method)</a>
@@ -526,6 +556,8 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/neural_network_factory.html#id38">activation (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.activation">[1]</a>
+</li>
       <li><a href="api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer.add_workflow_step">add_workflow_step() (lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer method)</a>
 </li>
       <li><a href="api/analytics.html#lrdbenchmark.analytics.dashboard.AnalyticsDashboard">AnalyticsDashboard (class in lrdbenchmark.analytics.dashboard)</a>
@@ -534,6 +566,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/neural_network_factory.html#id31">architecture (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.architecture">[1]</a>
+</li>
       <li><a href="api/data_models.html#lrdbenchmark.models.data_models.arfima.arfima_model.ARFIMAModel">ARFIMAModel (class in lrdbenchmark.models.data_models.arfima.arfima_model)</a>
 </li>
       <li><a href="api/analytics.html#lrdbenchmark.analytics.performance_monitor.PerformanceSummary.avg_execution_time">avg_execution_time (lrdbenchmark.analytics.performance_monitor.PerformanceSummary attribute)</a>
@@ -552,9 +586,17 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/data_models.html#lrdbenchmark.models.data_models.base_model.BaseModel">BaseModel (class in lrdbenchmark.models.data_models.base_model)</a>
 </li>
+      <li><a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork">BaseNeuralNetwork (class in lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>
+</li>
+      <li><a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.batch_predict">batch_predict() (lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.batch_predict">batch_predict() (lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem method)</a>
+      <li><a href="api/neural_network_factory.html#id36">batch_size (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.batch_size">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id10">BidirectionalLSTMNetwork (class in lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.BidirectionalLSTMNetwork">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id52">BILSTM (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture.BILSTM">[1]</a>
 </li>
       <li><a href="api/analytics.html#lrdbenchmark.analytics.performance_monitor.PerformanceSummary.bottleneck_estimators">bottleneck_estimators (lrdbenchmark.analytics.performance_monitor.PerformanceSummary attribute)</a>
 </li>
@@ -564,6 +606,8 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/neural_network_factory.html#id50">CNN (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture.CNN">[1]</a>
+</li>
       <li><a href="api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageSummary.common_errors">common_errors (lrdbenchmark.analytics.usage_tracker.UsageSummary attribute)</a>
 </li>
       <li><a href="api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveCWT">ComprehensiveAdaptiveCWT (class in lrdbenchmark.analysis.comprehensive_adaptive_estimators)</a>
@@ -588,8 +632,6 @@
 </li>
       <li><a href="api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletLogVar">ComprehensiveAdaptiveWaveletLogVar (class in lrdbenchmark.analysis.comprehensive_adaptive_estimators)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletVar">ComprehensiveAdaptiveWaveletVar (class in lrdbenchmark.analysis.comprehensive_adaptive_estimators)</a>
 </li>
       <li><a href="api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletWhittle">ComprehensiveAdaptiveWaveletWhittle (class in lrdbenchmark.analysis.comprehensive_adaptive_estimators)</a>
@@ -598,21 +640,41 @@
 </li>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile">ConfoundingProfile (class in lrdbenchmark.models.contamination.contamination_factory)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario">ConfoundingScenario (class in lrdbenchmark.models.contamination.contamination_factory)</a>
 </li>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory">ContaminationFactory (class in lrdbenchmark.models.contamination.contamination_factory)</a>
 </li>
+      <li><a href="api/neural_network_factory.html#id41">conv_filters (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.conv_filters">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id42">conv_kernel_size (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.conv_kernel_size">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id3">ConvolutionalNetwork (class in lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.ConvolutionalNetwork">[1]</a>
+</li>
       <li><a href="api/analytics.html#lrdbenchmark.analytics.performance_monitor.PerformanceMetrics.cpu_percent">cpu_percent (lrdbenchmark.analytics.performance_monitor.PerformanceMetrics attribute)</a>
 </li>
+      <li><a href="api/neural_network_factory.html#id60">create_all_benchmark_networks() (in module lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.create_all_benchmark_networks">[1]</a>
+</li>
       <li><a href="api/data_models.html#lrdbenchmark.models.data_models.create_arfima_model">create_arfima_model() (in module lrdbenchmark.models.data_models)</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id29">create_benchmark_networks() (lrdbenchmark.analysis.machine_learning.neural_network_factory.NeuralNetworkFactory class method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NeuralNetworkFactory.create_benchmark_networks">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id58">create_cnn_network() (in module lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.create_cnn_network">[1]</a>
 </li>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.create_confounding_profile">create_confounding_profile() (lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory method)</a>
 </li>
       <li><a href="api/data_models.html#lrdbenchmark.models.data_models.create_fbm_model">create_fbm_model() (in module lrdbenchmark.models.data_models)</a>
 </li>
+      <li><a href="api/neural_network_factory.html#id57">create_feedforward_network() (in module lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.create_feedforward_network">[1]</a>
+</li>
       <li><a href="api/data_models.html#lrdbenchmark.models.data_models.create_fgn_model">create_fgn_model() (in module lrdbenchmark.models.data_models)</a>
 </li>
+      <li><a href="api/neural_network_factory.html#id59">create_lstm_network() (in module lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.create_lstm_network">[1]</a>
+</li>
       <li><a href="api/data_models.html#lrdbenchmark.models.data_models.create_mrw_model">create_mrw_model() (in module lrdbenchmark.models.data_models)</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id27">create_network() (lrdbenchmark.analysis.machine_learning.neural_network_factory.NeuralNetworkFactory class method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NeuralNetworkFactory.create_network">[1]</a>
 </li>
       <li><a href="api/analytics.html#lrdbenchmark.analytics.dashboard.AnalyticsDashboard.create_visualizations">create_visualizations() (lrdbenchmark.analytics.dashboard.AnalyticsDashboard method)</a>
 </li>
@@ -635,6 +697,8 @@
       <li><a href="api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageSummary.data_length_distribution">data_length_distribution (lrdbenchmark.analytics.usage_tracker.UsageSummary attribute)</a>
 </li>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.description">description (lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile attribute)</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id34">dropout_rate (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.dropout_rate">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -665,6 +729,8 @@
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.ENVIRONMENTAL_MEASUREMENT_DRIFT">ENVIRONMENTAL_MEASUREMENT_DRIFT (lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario attribute)</a>
 </li>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.ENVIRONMENTAL_SEASONAL">ENVIRONMENTAL_SEASONAL (lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario attribute)</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id37">epochs (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.epochs">[1]</a>
 </li>
       <li><a href="api/analytics.html#lrdbenchmark.analytics.error_analyzer.ErrorSummary.error_by_estimator">error_by_estimator (lrdbenchmark.analytics.error_analyzer.ErrorSummary attribute)</a>
 </li>
@@ -760,14 +826,40 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/neural_network_factory.html#id0">FeedforwardNetwork (class in lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.FeedforwardNetwork">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id49">FFN (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture.FFN">[1]</a>
+</li>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.FINANCIAL_CRASH">FINANCIAL_CRASH (lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario attribute)</a>
 </li>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.FINANCIAL_REGIME_CHANGE">FINANCIAL_REGIME_CHANGE (lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.FINANCIAL_VOLATILITY_CLUSTERING">FINANCIAL_VOLATILITY_CLUSTERING (lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario attribute)</a>
 </li>
+      <li><a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork.forward">forward() (lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork method)</a>
+
+      <ul>
+        <li><a href="api/neural_network_factory.html#id12">(lrdbenchmark.analysis.machine_learning.neural_network_factory.BidirectionalLSTMNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.BidirectionalLSTMNetwork.forward">[1]</a>
+</li>
+        <li><a href="api/neural_network_factory.html#id6">(lrdbenchmark.analysis.machine_learning.neural_network_factory.ConvolutionalNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.ConvolutionalNetwork.forward">[1]</a>
+</li>
+        <li><a href="api/neural_network_factory.html#id2">(lrdbenchmark.analysis.machine_learning.neural_network_factory.FeedforwardNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.FeedforwardNetwork.forward">[1]</a>
+</li>
+        <li><a href="api/neural_network_factory.html#id15">(lrdbenchmark.analysis.machine_learning.neural_network_factory.GRUNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.GRUNetwork.forward">[1]</a>
+</li>
+        <li><a href="api/neural_network_factory.html#id25">(lrdbenchmark.analysis.machine_learning.neural_network_factory.HybridCNNLSTMNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.HybridCNNLSTMNetwork.forward">[1]</a>
+</li>
+        <li><a href="api/neural_network_factory.html#id9">(lrdbenchmark.analysis.machine_learning.neural_network_factory.LSTMNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.LSTMNetwork.forward">[1]</a>
+</li>
+        <li><a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.ResNetBlock.forward">(lrdbenchmark.analysis.machine_learning.neural_network_factory.ResNetBlock method)</a>
+</li>
+        <li><a href="api/neural_network_factory.html#id21">(lrdbenchmark.analysis.machine_learning.neural_network_factory.ResNetNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.ResNetNetwork.forward">[1]</a>
+</li>
+        <li><a href="api/neural_network_factory.html#id18">(lrdbenchmark.analysis.machine_learning.neural_network_factory.TransformerNetwork method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.TransformerNetwork.forward">[1]</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/data_models.html#lrdbenchmark.models.data_models.fbm.fbm_model.FractionalBrownianMotion">FractionalBrownianMotion (class in lrdbenchmark.models.data_models.fbm.fbm_model)</a>
 </li>
       <li><a href="api/data_models.html#lrdbenchmark.models.data_models.fgn.fgn_model.FractionalGaussianNoise">FractionalGaussianNoise (class in lrdbenchmark.models.data_models.fgn.fgn_model)</a>
@@ -803,6 +895,8 @@
       <li><a href="api/analytics.html#id5">generate_workflow_report() (lrdbenchmark.analytics.dashboard.AnalyticsDashboard method)</a>, <a href="api/analytics.html#lrdbenchmark.analytics.dashboard.AnalyticsDashboard.generate_workflow_report">[1]</a>
 </li>
       <li><a href="api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.get_all_comprehensive_adaptive_classical_estimators">get_all_comprehensive_adaptive_classical_estimators() (in module lrdbenchmark.analysis.comprehensive_adaptive_estimators)</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id28">get_available_architectures() (lrdbenchmark.analysis.machine_learning.neural_network_factory.NeuralNetworkFactory class method)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NeuralNetworkFactory.get_available_architectures">[1]</a>
 </li>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.get_available_scenarios">get_available_scenarios() (lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory method)</a>
 </li>
@@ -918,6 +1012,24 @@
 </li>
       <li><a href="api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator">GradientBoostingEstimator (class in lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator)</a>, <a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator">[1]</a>
 </li>
+      <li><a href="api/neural_network_factory.html#id53">GRU (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture.GRU">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id13">GRUNetwork (class in lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.GRUNetwork">[1]</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/neural_network_factory.html#id33">hidden_dims (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.hidden_dims">[1]</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/neural_network_factory.html#id55">HYBRID_CNN_LSTM (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture.HYBRID_CNN_LSTM">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id22">HybridCNNLSTMNetwork (class in lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.HybridCNNLSTMNetwork">[1]</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -928,11 +1040,15 @@
 </li>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.INDUSTRIAL_ENVIRONMENTAL_INTERFERENCE">INDUSTRIAL_ENVIRONMENTAL_INTERFERENCE (lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.INDUSTRIAL_SENSOR_AGING">INDUSTRIAL_SENSOR_AGING (lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/neural_network_factory.html#id32">input_length (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.input_length">[1]</a>
+</li>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.intensity">intensity (lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile attribute)</a>
+</li>
+      <li><a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork.is_model_trained">is_model_trained() (lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -948,9 +1064,13 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/neural_network_factory.html#id35">learning_rate (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.learning_rate">[1]</a>
+</li>
       <li><a href="api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.load_model">load_model() (lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator method)</a>, <a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.load_model">[1]</a>
 
       <ul>
+        <li><a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork.load_model">(lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork method)</a>
+</li>
         <li><a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.load_model">(lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem method)</a>
 </li>
         <li><a href="api/estimators.html#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.load_model">(lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator method)</a>, <a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.load_model">[1]</a>
@@ -958,6 +1078,21 @@
         <li><a href="api/estimators.html#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.load_model">(lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator method)</a>, <a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.load_model">[1]</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    lrdbenchmark.analysis.machine_learning.neural_network_factory
+
+      <ul>
+        <li><a href="api/neural_network_factory.html#module-lrdbenchmark.analysis.machine_learning.neural_network_factory">module</a>
+</li>
+      </ul></li>
+      <li><a href="api/neural_network_factory.html#id51">LSTM (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture.LSTM">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id43">lstm_units (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.lstm_units">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id7">LSTMNetwork (class in lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.LSTMNetwork">[1]</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -974,16 +1109,23 @@
 </li>
       <li><a href="api/analytics.html#lrdbenchmark.analytics.performance_monitor.PerformanceMetrics.memory_peak">memory_peak (lrdbenchmark.analytics.performance_monitor.PerformanceMetrics attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/analytics.html#lrdbenchmark.analytics.performance_monitor.PerformanceSummary.min_execution_time">min_execution_time (lrdbenchmark.analytics.performance_monitor.PerformanceSummary attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.MIXED_REALISTIC_LIGHT">MIXED_REALISTIC_LIGHT (lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario attribute)</a>
 </li>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.MIXED_REALISTIC_MODERATE">MIXED_REALISTIC_MODERATE (lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario attribute)</a>
 </li>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.MIXED_REALISTIC_SEVERE">MIXED_REALISTIC_SEVERE (lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario attribute)</a>
 </li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="api/neural_network_factory.html#module-lrdbenchmark.analysis.machine_learning.neural_network_factory">lrdbenchmark.analysis.machine_learning.neural_network_factory</a>
+</li>
+      </ul></li>
       <li><a href="api/analytics.html#lrdbenchmark.analytics.error_analyzer.ErrorSummary.most_common_errors">most_common_errors (lrdbenchmark.analytics.error_analyzer.ErrorSummary attribute)</a>
 </li>
       <li><a href="api/data_models.html#lrdbenchmark.models.data_models.mrw.mrw_model.MultifractalRandomWalk">MultifractalRandomWalk (class in lrdbenchmark.models.data_models.mrw.mrw_model)</a>
@@ -998,9 +1140,15 @@
 </li>
       <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.NETWORK_CONGESTION">NETWORK_CONGESTION (lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario attribute)</a>
 </li>
+      <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.NETWORK_EQUIPMENT_FAILURE">NETWORK_EQUIPMENT_FAILURE (lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario attribute)</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id26">NeuralNetworkFactory (class in lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NeuralNetworkFactory">[1]</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/contamination_factory.html#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.NETWORK_EQUIPMENT_FAILURE">NETWORK_EQUIPMENT_FAILURE (lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario attribute)</a>
+      <li><a href="api/neural_network_factory.html#id48">NNArchitecture (class in lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id30">NNConfig (class in lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig">[1]</a>
 </li>
       <li><a href="api/adaptive_estimators.html#lrdbenchmark.analysis.optimization_backend.OptimizationFramework.NUMBA">NUMBA (lrdbenchmark.analysis.optimization_backend.OptimizationFramework attribute)</a>
 </li>
@@ -1017,6 +1165,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/adaptive_estimators.html#lrdbenchmark.analysis.optimization_backend.OptimizationFramework">OptimizationFramework (class in lrdbenchmark.analysis.optimization_backend)</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id39">optimizer (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.optimizer">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1055,6 +1205,8 @@
       <li><a href="api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.predict">predict() (lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator method)</a>, <a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.predict">[1]</a>
 
       <ul>
+        <li><a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork.predict">(lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork method)</a>
+</li>
         <li><a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.predict">(lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem method)</a>
 </li>
         <li><a href="api/estimators.html#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.predict">(lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator method)</a>, <a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.predict">[1]</a>
@@ -1074,11 +1226,19 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/estimators.html#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator">RandomForestEstimator (class in lrdbenchmark.analysis.machine_learning.random_forest_estimator)</a>, <a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator">[1]</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/analytics.html#id15">record_error() (lrdbenchmark.analytics.error_analyzer.ErrorAnalyzer method)</a>, <a href="api/analytics.html#lrdbenchmark.analytics.error_analyzer.ErrorAnalyzer.record_error">[1]</a>
 </li>
       <li><a href="api/analytics.html#lrdbenchmark.analytics.error_analyzer.ErrorSummary.reliability_score">reliability_score (lrdbenchmark.analytics.error_analyzer.ErrorSummary attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/neural_network_factory.html#id56">RESNET (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture.RESNET">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id46">resnet_blocks (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.resnet_blocks">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.ResNetBlock">ResNetBlock (class in lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id19">ResNetNetwork (class in lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.ResNetNetwork">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1089,6 +1249,8 @@
       <li><a href="api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.save_model">save_model() (lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator method)</a>, <a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.save_model">[1]</a>
 
       <ul>
+        <li><a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork.save_model">(lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork method)</a>
+</li>
         <li><a href="api/estimators.html#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.save_model">(lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator method)</a>, <a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.save_model">[1]</a>
 </li>
         <li><a href="api/estimators.html#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.save_model">(lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator method)</a>, <a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.save_model">[1]</a>
@@ -1146,12 +1308,12 @@
 </li>
       <li><a href="api/analytics.html#lrdbenchmark.analytics.performance_monitor.PerformanceSummary.total_executions">total_executions (lrdbenchmark.analytics.performance_monitor.PerformanceSummary attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/analytics.html#id8">track_benchmark_run() (lrdbenchmark.analytics.usage_tracker.UsageTracker method)</a>, <a href="api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker.track_benchmark_run">[1]</a>
 </li>
       <li><a href="api/analytics.html#id7">track_estimator_usage() (lrdbenchmark.analytics.usage_tracker.UsageTracker method)</a>, <a href="api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker.track_estimator_usage">[1]</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.train">train() (lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator method)</a>, <a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.train">[1]</a>
 
       <ul>
@@ -1162,6 +1324,16 @@
         <li><a href="api/estimators.html#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.train">(lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator method)</a>, <a href="api/machine_learning_estimators.html#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.train">[1]</a>
 </li>
       </ul></li>
+      <li><a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork.train_model">train_model() (lrdbenchmark.analysis.machine_learning.neural_network_factory.BaseNeuralNetwork method)</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id54">TRANSFORMER (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNArchitecture.TRANSFORMER">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id44">transformer_heads (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.transformer_heads">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id45">transformer_layers (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.transformer_layers">[1]</a>
+</li>
+      <li><a href="api/neural_network_factory.html#id16">TransformerNetwork (class in lrdbenchmark.analysis.machine_learning.neural_network_factory)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.TransformerNetwork">[1]</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1191,6 +1363,10 @@
 
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/neural_network_factory.html#id40">weight_decay (lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig attribute)</a>, <a href="api/neural_network_factory.html#lrdbenchmark.analysis.machine_learning.neural_network_factory.NNConfig.weight_decay">[1]</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer">WorkflowAnalyzer (class in lrdbenchmark.analytics.workflow_analyzer)</a>
 </li>

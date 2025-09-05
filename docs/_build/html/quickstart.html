@@ -47,6 +47,7 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#neural-network-usage">Neural Network Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#machine-learning-usage">Machine Learning Usage</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#production-ml-system">Production ML System</a></li>
 </ul>
@@ -65,6 +66,7 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/machine_learning_estimators.html">Machine Learning Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/neural_network_factory.html">Neural Network Factory API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/adaptive_estimators.html">Comprehensive Adaptive Estimators API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/contamination_factory.html">Contamination Factory API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/estimators.html">Estimators API</a></li>
@@ -151,9 +153,50 @@
 </pre></div>
 </div>
 </section>
+<section id="neural-network-usage">
+<h2>Neural Network Usage<a class="headerlink" href="#neural-network-usage" title="Link to this heading"></a></h2>
+<p>LRDBenchmark provides a comprehensive neural network factory with 8 architectures that achieve excellent speed-accuracy trade-offs:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.analysis.machine_learning.neural_network_factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">NeuralNetworkFactory</span><span class="p">,</span> <span class="n">NNArchitecture</span><span class="p">,</span> <span class="n">NNConfig</span><span class="p">,</span> <span class="n">create_all_benchmark_networks</span>
+<span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create neural network factory</span>
+<span class="n">factory</span> <span class="o">=</span> <span class="n">NeuralNetworkFactory</span><span class="p">()</span>
+
+<span class="c1"># Create a specific network</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">NNConfig</span><span class="p">(</span>
+    <span class="n">architecture</span><span class="o">=</span><span class="n">NNArchitecture</span><span class="o">.</span><span class="n">TRANSFORMER</span><span class="p">,</span>
+    <span class="n">input_length</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">hidden_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span>
+    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span>
+<span class="p">)</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_network</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+<span class="c1"># Generate training data</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>  <span class="c1"># 100 samples of length 500</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>  <span class="c1"># True Hurst parameters</span>
+
+<span class="c1"># Train the network (train-once, apply-many workflow)</span>
+<span class="n">history</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">train_model</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Make predictions on new data</span>
+<span class="n">new_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">new_data</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Neural Network Prediction: </span><span class="si">{</span><span class="n">prediction</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create all benchmark networks</span>
+<span class="n">all_networks</span> <span class="o">=</span> <span class="n">create_all_benchmark_networks</span><span class="p">(</span><span class="n">input_length</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">network</span> <span class="ow">in</span> <span class="n">all_networks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> network&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
 <section id="machine-learning-usage">
 <h2>Machine Learning Usage<a class="headerlink" href="#machine-learning-usage" title="Link to this heading"></a></h2>
-<p>LRDBenchmark provides production-ready machine learning estimators that achieve <strong>74% better accuracy</strong> than classical methods:</p>
+<p>LRDBenchmark provides production-ready machine learning estimators:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.analysis.machine_learning.svr_estimator</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVREstimator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator</span><span class="w"> </span><span class="kn">import</span> <span class="n">GradientBoostingEstimator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.analysis.machine_learning.random_forest_estimator</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestEstimator</span>

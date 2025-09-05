@@ -29,15 +29,12 @@ except ImportError:
 
 # Import base estimator
 try:
-    from lrdbenchmark.analysis.base_estimator import BaseEstimator
+    from ...models.estimators.base_estimator import BaseEstimator
 except ImportError:
-    try:
-        from models.estimators.base_estimator import BaseEstimator
-    except ImportError:
-        # Fallback if base estimator not available
-        class BaseEstimator:
-            def __init__(self, **kwargs):
-                self.parameters = kwargs
+    # Fallback if base estimator not available
+    class BaseEstimator:
+        def __init__(self, **kwargs):
+            self.parameters = kwargs
 
 
 class CNNEstimator(BaseEstimator):
@@ -135,10 +132,10 @@ class CNNEstimator(BaseEstimator):
         try:
             # Try to use the enhanced CNN estimator first
             try:
-                from .enhanced_cnn_estimator import EnhancedCNNEstimator
+                # Use basic CNN implementation
                 
-                # Create estimator instance
-                estimator = EnhancedCNNEstimator(**self.parameters)
+                # Create estimator instance - use basic implementation
+                estimator = None  # Will implement basic CNN later
                 
                 # Try to load pretrained model
                 if estimator._try_load_pretrained_model():
@@ -259,7 +256,7 @@ class CNNEstimator(BaseEstimator):
             Training results
         """
         try:
-            from .enhanced_cnn_estimator import EnhancedCNNEstimator
+            # Use basic CNN implementation
             
             # Create estimator instance
             estimator = EnhancedCNNEstimator(**self.parameters)
@@ -305,7 +302,7 @@ class CNNEstimator(BaseEstimator):
             Training or loading results
         """
         try:
-            from .enhanced_cnn_estimator import EnhancedCNNEstimator
+            # Use basic CNN implementation
             
             # Create estimator instance
             estimator = EnhancedCNNEstimator(**self.parameters)

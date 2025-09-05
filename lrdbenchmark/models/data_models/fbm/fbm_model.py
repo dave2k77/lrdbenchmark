@@ -12,29 +12,30 @@ The class automatically selects the optimal generation method based on:
 
 import numpy as np
 from scipy import linalg
-from typing import Optional, Dict, Any, Union, Tuple
+from typing import Optional, Dict, Any
 import warnings
 
 # Try to import optimization libraries
 try:
     import jax
     import jax.numpy as jnp
-    from jax import jit, vmap
+
+    # JAX imports available but not used in this implementation
     JAX_AVAILABLE = True
 except ImportError:
     JAX_AVAILABLE = False
 
 try:
-    from numba import jit as numba_jit
-    from numba import prange
+    # NUMBA imports available but not used in this implementation
     NUMBA_AVAILABLE = True
 except ImportError:
     NUMBA_AVAILABLE = False
 
 try:
-    import hpfracc
-    from hpfracc.core.integrals import create_fractional_integral, analytical_fractional_integral, trapezoidal_fractional_integral
+    # hpfracc available but not used in this implementation
+    from hpfracc.core.integrals import create_fractional_integral
     from hpfracc.core.derivatives import create_fractional_derivative
+
     HPFRACC_AVAILABLE = True
 except ImportError:
     HPFRACC_AVAILABLE = False
@@ -76,11 +77,11 @@ class FractionalBrownianMotion(BaseModel):
     """
 
     def __init__(
-        self, 
-        H: float, 
-        sigma: float = 1.0, 
+        self,
+        H: float,
+        sigma: float = 1.0,
         method: str = "auto",
-        use_optimization: str = "auto"
+        use_optimization: str = "auto",
     ):
         """
         Initialize the Fractional Brownian Motion model.
@@ -96,8 +97,10 @@ class FractionalBrownianMotion(BaseModel):
         use_optimization : str, optional
             Optimization framework preference (default: 'auto')
         """
-        super().__init__(H=H, sigma=sigma, method=method, use_optimization=use_optimization)
-        
+        super().__init__(
+            H=H, sigma=sigma, method=method, use_optimization=use_optimization
+        )
+
         # Set optimization framework
         if use_optimization == "auto":
             if JAX_AVAILABLE:
@@ -108,7 +111,7 @@ class FractionalBrownianMotion(BaseModel):
                 self.optimization_framework = "numpy"
         else:
             self.optimization_framework = use_optimization
-            
+
         # Validate optimization framework availability
         if self.optimization_framework == "jax" and not JAX_AVAILABLE:
             warnings.warn("JAX requested but not available. Falling back to numpy.")
@@ -132,36 +135,39 @@ class FractionalBrownianMotion(BaseModel):
         valid_methods = ["auto", "davies_harte", "cholesky", "circulant"]
         if HPFRACC_AVAILABLE:
             valid_methods.append("hpfracc")
-            
+
         if method not in valid_methods:
             raise ValueError(f"Method must be one of {valid_methods}")
 
     def _select_optimal_method(self, n: int, H: float) -> str:
         """
-        Automatically select the optimal generation method based on data size and parameters.
-        
+        Automatically select the optimal generation method based on data size and
+        parameters.
+
         Parameters
         ----------
         n : int
             Data size
         H : float
             Hurst parameter
-            
+
         Returns
         -------
         str
             Optimal method name
         """
         method = self.parameters["method"]
-        
+
         # If method is specified, use it (if available)
         if method != "auto":
             if method == "hpfracc" and not HPFRACC_AVAILABLE:
-                warnings.warn("hpfracc requested but not available. Using auto-selection.")
+                warnings.warn(
+                    "hpfracc requested but not available. Using auto-selection."
+                )
                 method = "auto"
             elif method in ["davies_harte", "cholesky", "circulant"]:
                 return method
-        
+
         # Auto-selection logic
         if method == "auto":
             # If hpfracc is available, prioritize it for physics-informed applications
@@ -176,7 +182,7 @@ class FractionalBrownianMotion(BaseModel):
             # For large datasets, Davies-Harte is fastest
             else:
                 return "davies_harte"
-        
+
         return method
 
     def generate(self, n: int, seed: Optional[int] = None) -> np.ndarray:
@@ -202,10 +208,10 @@ class FractionalBrownianMotion(BaseModel):
 
         H = self.parameters["H"]
         sigma = self.parameters["sigma"]
-        
+
         # Select optimal method
         optimal_method = self._select_optimal_method(n, H)
-        
+
         # Generate using selected method
         if optimal_method == "davies_harte":
             return self._generate_davies_harte(n, H, sigma)
@@ -221,7 +227,7 @@ class FractionalBrownianMotion(BaseModel):
     def _generate_davies_harte(self, n: int, H: float, sigma: float) -> np.ndarray:
         """
         Generate fBm using Davies-Harte method (spectral approach).
-        
+
         Best for: Large datasets (n > 1000)
         Complexity: O(n log n)
         Memory: O(n)
@@ -236,7 +242,7 @@ class FractionalBrownianMotion(BaseModel):
     def _generate_cholesky(self, n: int, H: float, sigma: float) -> np.ndarray:
         """
         Generate fBm using Cholesky decomposition.
-        
+
         Best for: Small datasets (n ≤ 100), high accuracy requirements
         Complexity: O(n³)
         Memory: O(n²)
@@ -251,7 +257,7 @@ class FractionalBrownianMotion(BaseModel):
     def _generate_circulant(self, n: int, H: float, sigma: float) -> np.ndarray:
         """
         Generate fBm using circulant embedding.
-        
+
         Best for: Medium datasets (100 < n ≤ 1000)
         Complexity: O(n log n)
         Memory: O(n)
@@ -266,21 +272,21 @@ class FractionalBrownianMotion(BaseModel):
     def _generate_hpfracc(self, n: int, H: float, sigma: float) -> np.ndarray:
         """
         Generate fBm using hpfracc library integration.
-        
+
         Best for: Physics-informed applications, fractional calculus research
         Complexity: O(n log n)
         Memory: O(n)
         """
         if not HPFRACC_AVAILABLE:
             raise ImportError("hpfracc library not available")
-            
+
         # Generate standard Brownian motion increments
         increments = np.random.normal(0, sigma, n)
-        
+
         # For FBM with hpfracc, we'll use a hybrid approach:
         # 1. Generate standard Brownian motion
         # 2. Use hpfracc for fractional calculus operations if needed
-        
+
         if H == 0.5:
             # Standard Brownian motion
             fbm = np.cumsum(increments)
@@ -288,19 +294,19 @@ class FractionalBrownianMotion(BaseModel):
             # Use circulant embedding as base, but leverage hpfracc for validation
             # This gives us the benefits of hpfracc's mathematical rigor
             # while maintaining computational efficiency
-            
+
             # Generate using circulant method as base
             fbm = self._generate_circulant(n, H, sigma)
-            
+
             # Use hpfracc to validate the fractional properties
             # This is where hpfracc adds value - mathematical validation
             try:
                 # Check if the generated series has the expected fractional properties
                 # using hpfracc's validation tools
                 pass  # Placeholder for future hpfracc validation
-            except:
+            except Exception:
                 pass  # Graceful fallback if validation fails
-            
+
         return fbm
 
     # NumPy implementations (base methods)
@@ -392,19 +398,23 @@ class FractionalBrownianMotion(BaseModel):
         filtered_noise = complex_noise * jnp.sqrt(spectral_density)
 
         full_spectrum = jnp.zeros(n, dtype=jnp.complex64)
-        full_spectrum = full_spectrum.at[1:n//2+1].set(filtered_noise)
-        
+        full_spectrum = full_spectrum.at[1 : n // 2 + 1].set(filtered_noise)
+
         if n % 2 == 0:
-            full_spectrum = full_spectrum.at[n//2+1:].set(jnp.conj(filtered_noise)[:-1][::-1])
+            full_spectrum = full_spectrum.at[n // 2 + 1 :].set(
+                jnp.conj(filtered_noise)[:-1][::-1]
+            )
         else:
-            full_spectrum = full_spectrum.at[n//2+1:].set(jnp.conj(filtered_noise)[::-1])
+            full_spectrum = full_spectrum.at[n // 2 + 1 :].set(
+                jnp.conj(filtered_noise)[::-1]
+            )
 
         fbm = jnp.real(jnp.fft.ifft(full_spectrum)) * jnp.sqrt(n)
         return np.array(fbm)
 
     def _cholesky_jax(self, n: int, H: float, sigma: float) -> np.ndarray:
         """JAX implementation of Cholesky method."""
-        i, j = jnp.meshgrid(jnp.arange(n), jnp.arange(n), indexing='ij')
+        i, j = jnp.meshgrid(jnp.arange(n), jnp.arange(n), indexing="ij")
         cov_matrix = (
             sigma**2
             * 0.5
@@ -414,14 +424,14 @@ class FractionalBrownianMotion(BaseModel):
                 - jnp.abs(i - j) ** (2 * H)
             )
         )
-        
+
         cov_matrix = cov_matrix + 1e-10 * jnp.eye(n)
         L = jax.scipy.linalg.cholesky(cov_matrix, lower=True)
-        
+
         key = jax.random.PRNGKey(42)
         noise = jax.random.normal(key, (n,))
         fbm = L @ noise
-        
+
         return np.array(fbm)
 
     def _circulant_jax(self, n: int, H: float, sigma: float) -> np.ndarray:
@@ -436,20 +446,20 @@ class FractionalBrownianMotion(BaseModel):
                 + jnp.maximum(0, lags - 1) ** (2 * H)
             )
         )
-        
-        circulant_row = jnp.concatenate([autocov, autocov[1:n-1][::-1]])
+
+        circulant_row = jnp.concatenate([autocov, autocov[1 : n - 1][::-1]])
         eigenvalues = jnp.fft.fft(circulant_row)
         eigenvalues = jnp.maximum(eigenvalues, 0)
-        
+
         key = jax.random.PRNGKey(42)
         real_part = jax.random.normal(key, (len(eigenvalues),))
         key, _ = jax.random.split(key)
         imag_part = jax.random.normal(key, (len(eigenvalues),))
         noise = (real_part + 1j * imag_part) / jnp.sqrt(2.0)
-        
+
         filtered_noise = noise * jnp.sqrt(eigenvalues)
         fbm = jnp.real(jnp.fft.ifft(filtered_noise))[:n]
-        
+
         return np.array(fbm)
 
     # NUMBA implementations
@@ -480,17 +490,36 @@ class FractionalBrownianMotion(BaseModel):
         """
         H = self.parameters["H"]
         sigma = self.parameters["sigma"]
-        
+
         return {
             "hurst_parameter": H,
             "standard_deviation": sigma,
+            "variance": sigma**2,
             "self_similarity_exponent": H,
             "long_range_dependence": H > 0.5,
-            "autocorrelation_function": f"γ(k) ∝ k^(2H-2)",
-            "power_spectral_density": f"S(f) ∝ f^(-2H-1)",
-            "variance_scaling": f"Var(X(t)) = σ²t^(2H)",
-            "fractional_dimension": 2 - H
+            "stationary_increments": True,
+            "gaussian": True,
+            "autocorrelation_function": "γ(k) ∝ k^(2H-2)",
+            "power_spectral_density": "S(f) ∝ f^(-2H-1)",
+            "variance_scaling": "Var(X(t)) = σ²t^(2H)",
+            "fractional_dimension": 2 - H,
         }
+
+    def get_increments(self, data: np.ndarray) -> np.ndarray:
+        """
+        Compute increments of the fBm process.
+
+        Parameters
+        ----------
+        data : np.ndarray
+            The fBm time series data
+
+        Returns
+        -------
+        np.ndarray
+            The increments (differences) of the time series
+        """
+        return np.diff(data)
 
     def get_optimization_info(self) -> Dict[str, Any]:
         """
@@ -506,7 +535,7 @@ class FractionalBrownianMotion(BaseModel):
             "jax_available": JAX_AVAILABLE,
             "numba_available": NUMBA_AVAILABLE,
             "hpfracc_available": HPFRACC_AVAILABLE,
-            "recommended_framework": self._get_recommended_framework()
+            "recommended_framework": self._get_recommended_framework(),
         }
 
     def _get_recommended_framework(self) -> str:
@@ -533,56 +562,56 @@ class FractionalBrownianMotion(BaseModel):
             Method recommendation and reasoning
         """
         optimal_method = self._select_optimal_method(n, self.parameters["H"])
-        
+
         recommendations = {
             "davies_harte": {
                 "description": "Spectral method using FFT",
                 "best_for": "Large datasets (n > 1000)",
                 "complexity": "O(n log n)",
                 "memory": "O(n)",
-                "accuracy": "High"
+                "accuracy": "High",
             },
             "cholesky": {
                 "description": "Matrix decomposition method",
                 "best_for": "Small datasets (n ≤ 100), high accuracy",
                 "complexity": "O(n³)",
                 "memory": "O(n²)",
-                "accuracy": "Highest"
+                "accuracy": "Highest",
             },
             "circulant": {
                 "description": "Circulant embedding method",
                 "best_for": "Medium datasets (100 < n ≤ 1000)",
                 "complexity": "O(n log n)",
                 "memory": "O(n)",
-                "accuracy": "High"
+                "accuracy": "High",
             },
             "hpfracc": {
                 "description": "hpfracc library integration",
                 "best_for": "Physics-informed applications",
                 "complexity": "O(n log n)",
                 "memory": "O(n)",
-                "accuracy": "High"
-            }
+                "accuracy": "High",
+            },
         }
-        
+
         return {
             "recommended_method": optimal_method,
             "reasoning": f"Data size n={n}",
-            "method_details": recommendations[optimal_method]
+            "method_details": recommendations[optimal_method],
         }
-    
+
     def generate_with_hpfracc(self, n: int) -> np.ndarray:
         """
         Generate FBM using hpfracc for fractional calculus operations.
-        
+
         This method leverages hpfracc's specialized fractional calculus
         implementations for high-precision FBM generation.
-        
+
         Parameters
         ----------
         n : int
             Number of data points to generate
-            
+
         Returns
         -------
         np.ndarray
@@ -590,19 +619,19 @@ class FractionalBrownianMotion(BaseModel):
         """
         if not HPFRACC_AVAILABLE:
             raise ImportError("hpfracc not available for this method")
-        
+
         H = self.parameters["H"]
-        
+
         # Create fractional derivative operator
-        fractional_deriv = create_fractional_derivative(order=1-H)
-        
+        fractional_deriv = create_fractional_derivative(order=1 - H)
+
         # Generate white noise
         noise = np.random.normal(0, self.parameters["sigma"], n)
-        
+
         # Apply fractional integration using hpfracc
         # For FBM, we need fractional integration of order H-0.5
         integration_order = H - 0.5
-        
+
         if integration_order > 0:
             # Fractional integration
             fractional_integral = create_fractional_integral(order=integration_order)
@@ -614,5 +643,5 @@ class FractionalBrownianMotion(BaseModel):
         else:
             # Standard Brownian motion
             fbm = np.cumsum(noise)
-        
+
         return fbm

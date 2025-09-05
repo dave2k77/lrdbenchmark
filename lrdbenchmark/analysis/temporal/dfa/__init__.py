@@ -6,6 +6,6 @@ Detrended Fluctuation Analysis, a method for quantifying long-range
 correlations in time series.
 """
 
-from .dfa_estimator import DFAEstimator
+from .dfa_estimator_unified import DFAEstimator
 
 __all__ = ["DFAEstimator"]

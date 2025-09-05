@@ -1,0 +1,10 @@
+{
+  "overall": {
+    "total_tests": 64,
+    "successful_tests": "21",
+    "success_rate": 32.8125,
+    "mean_error": 0.4069023955541816,
+    "mean_execution_time": 0.06877825781702995
+  },
+  "by_estimator": {
+    

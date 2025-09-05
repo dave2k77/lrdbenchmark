@@ -1,482 +1,619 @@
 #!/usr/bin/env python3
 """
-Comprehensive Benchmark: Classical vs. ML Estimators
+Comprehensive ML vs Classical Benchmark.
 
-This script runs a comprehensive benchmark comparing:
-- Classical estimators (R/S, Higuchi, DFA, DMA)
-- ML estimators (Random Forest, Gradient Boosting, SVR, LSTM, GRU, CNN, Transformer)
-
-Features:
-- Multiple synthetic datasets with known Hurst parameters
-- Performance metrics: accuracy, speed, memory usage
-- Statistical significance testing
-- Comprehensive reporting and visualization
+This script includes ALL available ML models and compares them against classical methods.
 """
 
-import time
 import numpy as np
+import time
+import logging
+import json
 import pandas as pd
+from pathlib import Path
+from typing import Dict, Any, List, Tuple
 import warnings
-from typing import Dict, Any, List, Tuple, Optional
-import matplotlib.pyplot as plt
-import seaborn as sns
 from datetime import datetime
-import os
-import gc
+import matplotlib.pyplot as plt
 
-# Suppress warnings for cleaner output
-warnings.filterwarnings('ignore')
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
-# Import classical estimators (only those available)
+# Import classical estimators
 from lrdbenchmark.analysis.temporal.rs.rs_estimator_unified import RSEstimator
-from lrdbenchmark.analysis.temporal.higuchi.higuchi_estimator_unified import HiguchiEstimator
 from lrdbenchmark.analysis.temporal.dfa.dfa_estimator_unified import DFAEstimator
-from lrdbenchmark.analysis.temporal.dma.dma_estimator_unified import DMAEstimator
+from lrdbenchmark.analysis.spectral.gph.gph_estimator_unified import GPHEstimator
+from lrdbenchmark.analysis.spectral.whittle.whittle_estimator_unified import WhittleEstimator
 
-# Import ML estimators
+# Import ALL ML models
 from lrdbenchmark.analysis.machine_learning.random_forest_estimator_unified import RandomForestEstimator
-from lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified import GradientBoostingEstimator
 from lrdbenchmark.analysis.machine_learning.svr_estimator_unified import SVREstimator
+from lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified import GradientBoostingEstimator
+from lrdbenchmark.analysis.machine_learning.cnn_estimator_unified import CNNEstimator
 from lrdbenchmark.analysis.machine_learning.lstm_estimator_unified import LSTMEstimator
 from lrdbenchmark.analysis.machine_learning.gru_estimator_unified import GRUEstimator
-from lrdbenchmark.analysis.machine_learning.cnn_estimator_unified import CNNEstimator
 from lrdbenchmark.analysis.machine_learning.transformer_estimator_unified import TransformerEstimator
 
-# GPU memory management
-try:
-    import torch
-    if torch.cuda.is_available():
-        print(f"🚀 GPU Available: {torch.cuda.get_device_name(0)}")
-        print(f"💾 GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f}GB")
-        torch.cuda.empty_cache()
-except ImportError:
-    print("⚠️ PyTorch not available")
+# Import production system for deep learning models
+from lrdbenchmark.analysis.machine_learning.production_ml_system import (
+    ProductionMLSystem, ProductionConfig
+)
 
-def generate_synthetic_fbm_data(h: float, length: int, seed: Optional[int] = None) -> np.ndarray:
-    """
-    Generate synthetic FBM-like data with known Hurst parameter.
+class ComprehensiveMLvsClassicalBenchmark:
+    """Comprehensive benchmark including ALL ML models vs classical methods."""
     
-    This is a simplified generator for testing purposes.
-    """
-    if seed is not None:
-        np.random.seed(seed)
-    
-    # Generate random walk with Hurst-like properties
-    if h > 0.5:
-        # Persistent: positive autocorrelation
-        noise = np.random.normal(0, 1, length)
-        # Apply moving average to create persistence
-        window = int(length * 0.1)
-        data = np.convolve(noise, np.ones(window)/window, mode='same')
-    elif h < 0.5:
-        # Anti-persistent: negative autocorrelation
-        noise = np.random.normal(0, 1, length)
-        # Apply differencing to create anti-persistence
-        data = np.diff(noise, prepend=noise[0])
-    else:
-        # H = 0.5: Standard random walk
-        data = np.cumsum(np.random.normal(0, 1, length))
-    
-    # Normalize to have similar scale
-    data = (data - np.mean(data)) / np.std(data)
-    
-    # Scale by Hurst parameter to simulate different levels of long-range dependence
-    data = data * (h ** 0.5)
-    
-    return data
-
-class ComprehensiveBenchmark:
-    """Comprehensive benchmark comparing classical vs. ML estimators."""
-    
-    def __init__(self):
-        """Initialize the benchmark."""
-        self.results = []
+    def __init__(self, output_dir: str = "comprehensive_ml_benchmark_results"):
+        self.output_dir = Path(output_dir)
+        self.output_dir.mkdir(exist_ok=True)
+        
+        # Initialize classical estimators
         self.classical_estimators = {
-            'R/S': RSEstimator(),
-            'Higuchi': HiguchiEstimator(),
-            'DFA': DFAEstimator(),
-            'DMA': DMAEstimator()
+            'RS': RSEstimator(use_optimization='numpy'),
+            'DFA': DFAEstimator(use_optimization='numpy'),
+            'GPH': GPHEstimator(use_optimization='numpy'),
+            'Whittle': WhittleEstimator(use_optimization='numpy')
         }
         
+        # Initialize ALL ML estimators
         self.ml_estimators = {
-            'Random Forest': RandomForestEstimator(),
-            'Gradient Boosting': GradientBoostingEstimator(),
-            'SVR': SVREstimator(),
-            'LSTM': LSTMEstimator(),
-            'GRU': GRUEstimator(),
-            'CNN': CNNEstimator(),
-            'Transformer': TransformerEstimator()
+            'RandomForest': RandomForestEstimator(use_optimization='numpy'),
+            'SVR': SVREstimator(use_optimization='numpy'),
+            'GradientBoosting': GradientBoostingEstimator(use_optimization='numpy'),
+            'CNN': CNNEstimator(use_optimization='numpy'),
+            'LSTM': LSTMEstimator(use_optimization='numpy'),
+            'GRU': GRUEstimator(use_optimization='numpy'),
+            'Transformer': TransformerEstimator(use_optimization='numpy')
         }
         
-        # Test datasets
-        self.test_datasets = self._generate_test_datasets()
+        # Results storage
+        self.results = []
         
-    def _generate_test_datasets(self) -> List[Tuple[np.ndarray, float]]:
-        """Generate test datasets with known Hurst parameters."""
-        print("🔧 Generating comprehensive test datasets...")
+    def generate_synthetic_data(self, n_samples: int = 100, seq_len: int = 500) -> Tuple[np.ndarray, np.ndarray]:
+        """Generate synthetic time series data with known Hurst parameters."""
+        logger.info(f"Generating {n_samples} synthetic samples of length {seq_len}")
         
-        datasets = []
+        X = []
+        y = []
         
-        # Dataset 1: Short time series (100 points)
-        for h in [0.1, 0.3, 0.5, 0.7, 0.9]:
-            data = generate_synthetic_fbm_data(h=h, length=100, seed=42)
-            datasets.append((data, h))
+        # Generate data with different Hurst parameters
+        hurst_values = np.linspace(0.2, 0.8, 10)
         
-        # Dataset 2: Medium time series (500 points)
-        for h in [0.2, 0.4, 0.6, 0.8]:
-            data = generate_synthetic_fbm_data(h=h, length=500, seed=42)
-            datasets.append((data, h))
+        for hurst in hurst_values:
+            for _ in range(n_samples // len(hurst_values)):
+                # Generate fractional Brownian motion-like data
+                t = np.linspace(0, 1, seq_len)
+                dt = t[1] - t[0]
+                
+                # Generate increments with Hurst scaling
+                dB = np.random.normal(0, np.sqrt(dt), seq_len)
+                fbm = np.cumsum(dB) * (dt ** hurst)
+                
+                # Add some noise
+                noise = np.random.normal(0, 0.1, seq_len)
+                data = fbm + noise
+                
+                X.append(data)
+                y.append(hurst)
         
-        # Dataset 3: Long time series (1000 points)
-        for h in [0.15, 0.35, 0.55, 0.75, 0.85]:
-            data = generate_synthetic_fbm_data(h=h, length=1000, seed=42)
-            datasets.append((data, h))
+        X = np.array(X)
+        y = np.array(y)
         
-        print(f"✅ Generated {len(datasets)} test datasets")
-        return datasets
+        logger.info(f"Generated {len(X)} samples with shape {X.shape}")
+        return X, y
     
-    def _benchmark_estimator(self, name: str, estimator: Any, data: np.ndarray, true_h: float) -> Dict[str, Any]:
-        """Benchmark a single estimator on a dataset."""
+    def train_production_ml_models(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
+        """Train production ML models (CNN, Transformer)."""
+        logger.info("Training production ML models...")
+        
+        trained_models = {}
+        
+        # Train CNN
         try:
+            logger.info("  Training CNN...")
+            config = ProductionConfig(
+                model_type="cnn",
+                input_length=X.shape[1],
+                hidden_dims=[64, 32],
+                dropout_rate=0.2,
+                learning_rate=0.001,
+                batch_size=32,
+                epochs=20,
+                early_stopping_patience=5,
+                validation_split=0.2,
+                framework_priority=['torch']
+            )
+            
+            system = ProductionMLSystem(config)
             start_time = time.time()
+            training_result = system.train(X, y)
+            training_time = time.time() - start_time
             
-            # Estimate Hurst parameter
-            if name in self.ml_estimators:
-                # ML estimators need to be trained first
-                result = estimator.estimate(data)
-            else:
-                # Classical estimators
-                result = estimator.estimate(data)
-            
-            end_time = time.time()
-            
-            estimated_h = result.get('hurst', result.get('H', np.nan))
-            method = result.get('method', 'unknown')
-            optimization = result.get('optimization_framework', 'unknown')
-            
-            # Calculate metrics
-            mse = (estimated_h - true_h) ** 2
-            mae = abs(estimated_h - true_h)
-            relative_error = abs(estimated_h - true_h) / true_h * 100
-            
-            return {
-                'estimator': name,
-                'type': 'ML' if name in self.ml_estimators else 'Classical',
-                'true_h': true_h,
-                'estimated_h': estimated_h,
-                'method': method,
-                'optimization': optimization,
-                'mse': mse,
-                'mae': mae,
-                'relative_error': relative_error,
-                'time': end_time - start_time,
-                'success': True,
-                'error': None
+            trained_models['CNN_Production'] = {
+                'system': system,
+                'training_time': training_time,
+                'training_result': training_result,
+                'type': 'production'
             }
+            logger.info(f"    ✅ CNN (Production) trained in {training_time:.2f}s")
             
         except Exception as e:
-            return {
-                'estimator': name,
-                'type': 'ML' if name in self.ml_estimators else 'Classical',
-                'true_h': true_h,
-                'estimated_h': np.nan,
-                'method': 'failed',
-                'optimization': 'failed',
-                'mse': np.nan,
-                'mae': np.nan,
-                'relative_error': np.nan,
-                'time': np.nan,
-                'success': False,
-                'error': str(e)
+            logger.error(f"    ❌ CNN (Production) training failed: {e}")
+        
+        # Train Transformer
+        try:
+            logger.info("  Training Transformer...")
+            config = ProductionConfig(
+                model_type="transformer",
+                input_length=X.shape[1],
+                hidden_dims=[64, 32],
+                dropout_rate=0.2,
+                learning_rate=0.001,
+                batch_size=32,
+                epochs=20,
+                early_stopping_patience=5,
+                validation_split=0.2,
+                framework_priority=['torch']
+            )
+            
+            system = ProductionMLSystem(config)
+            start_time = time.time()
+            training_result = system.train(X, y)
+            training_time = time.time() - start_time
+            
+            trained_models['Transformer_Production'] = {
+                'system': system,
+                'training_time': training_time,
+                'training_result': training_result,
+                'type': 'production'
             }
-    
-    def run_benchmark(self) -> pd.DataFrame:
-        """Run the comprehensive benchmark."""
-        print("🚀 Starting Comprehensive Benchmark: Classical vs. ML Estimators")
-        print("=" * 80)
-        
-        total_tests = len(self.test_datasets) * (len(self.classical_estimators) + len(self.ml_estimators))
-        current_test = 0
-        
-        # Test classical estimators
-        print("\n🔬 Testing Classical Estimators...")
-        for i, (data, true_h) in enumerate(self.test_datasets):
-            print(f"  Dataset {i+1}/{len(self.test_datasets)} (H={true_h:.2f}, length={len(data)})")
+            logger.info(f"    ✅ Transformer (Production) trained in {training_time:.2f}s")
             
-            for name, estimator in self.classical_estimators.items():
-                current_test += 1
-                print(f"    [{current_test}/{total_tests}] Testing {name}...", end=" ")
-                
-                result = self._benchmark_estimator(name, estimator, data, true_h)
-                self.results.append(result)
-                
-                if result['success']:
-                    print(f"✅ H={result['estimated_h']:.4f} (error: {result['relative_error']:.1f}%)")
-                else:
-                    print(f"❌ Failed: {result['error']}")
+        except Exception as e:
+            logger.error(f"    ❌ Transformer (Production) training failed: {e}")
         
-        # Test ML estimators
-        print("\n🧠 Testing ML Estimators...")
-        for i, (data, true_h) in enumerate(self.test_datasets):
-            print(f"  Dataset {i+1}/{len(self.test_datasets)} (H={true_h:.2f}, length={len(data)})")
-            
-            for name, estimator in self.ml_estimators.items():
-                current_test += 1
-                print(f"    [{current_test}/{total_tests}] Testing {name}...", end=" ")
-                
-                result = self._benchmark_estimator(name, estimator, data, true_h)
-                self.results.append(result)
-                
-                if result['success']:
-                    print(f"✅ H={result['estimated_h']:.4f} (error: {result['relative_error']:.1f}%)")
-                else:
-                    print(f"❌ Failed: {result['error']}")
-        
-        # Convert to DataFrame
-        df = pd.DataFrame(self.results)
-        
-        # Save results
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        results_file = f"comprehensive_ml_vs_classical_benchmark_results_{timestamp}.csv"
-        df.to_csv(results_file, index=False)
-        
-        print(f"\n💾 Results saved to: {results_file}")
-        return df
+        return trained_models
     
-    def analyze_results(self, df: pd.DataFrame) -> Dict[str, Any]:
-        """Analyze benchmark results."""
-        print("\n📊 Analyzing Results...")
+    def run_benchmark(self, X: np.ndarray, y: np.ndarray, trained_production_models: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Run comprehensive benchmark including ALL models."""
+        logger.info("Running comprehensive benchmark...")
         
-        # Overall statistics
-        total_tests = len(df)
-        successful_tests = df['success'].sum()
-        success_rate = successful_tests / total_tests * 100
+        results = []
+        n_samples = len(X)
         
-        print(f"📈 Overall Success Rate: {success_rate:.1f}% ({successful_tests}/{total_tests})")
+        # Benchmark classical estimators
+        logger.info("Benchmarking classical estimators...")
+        for name, estimator in self.classical_estimators.items():
+            logger.info(f"  Testing {name}...")
+            
+            for i in range(n_samples):
+                try:
+                    start_time = time.time()
+                    result = estimator.estimate(X[i])
+                    execution_time = time.time() - start_time
+                    
+                    results.append({
+                        'estimator': name,
+                        'estimator_type': 'classical',
+                        'sample_id': i,
+                        'true_hurst': y[i],
+                        'estimated_hurst': result.get('hurst_parameter', 0.5),
+                        'execution_time': execution_time,
+                        'r_squared': result.get('r_squared', 0.0),
+                        'method': result.get('method', name),
+                        'success': True,
+                        'error': None
+                    })
+                    
+                except Exception as e:
+                    results.append({
+                        'estimator': name,
+                        'estimator_type': 'classical',
+                        'sample_id': i,
+                        'true_hurst': y[i],
+                        'estimated_hurst': 0.5,
+                        'execution_time': 0.0,
+                        'r_squared': 0.0,
+                        'method': name,
+                        'success': False,
+                        'error': str(e)
+                    })
+        
+        # Benchmark traditional ML estimators
+        logger.info("Benchmarking traditional ML estimators...")
+        for name, estimator in self.ml_estimators.items():
+            logger.info(f"  Testing {name}...")
+            
+            for i in range(n_samples):
+                try:
+                    start_time = time.time()
+                    result = estimator.estimate(X[i])
+                    execution_time = time.time() - start_time
+                    
+                    results.append({
+                        'estimator': name,
+                        'estimator_type': 'ml_traditional',
+                        'sample_id': i,
+                        'true_hurst': y[i],
+                        'estimated_hurst': result.get('hurst_parameter', 0.5),
+                        'execution_time': execution_time,
+                        'r_squared': result.get('r_squared', 0.0),
+                        'method': result.get('method', f"{name}_ML"),
+                        'success': True,
+                        'error': None
+                    })
+                    
+                except Exception as e:
+                    results.append({
+                        'estimator': name,
+                        'estimator_type': 'ml_traditional',
+                        'sample_id': i,
+                        'true_hurst': y[i],
+                        'estimated_hurst': 0.5,
+                        'execution_time': 0.0,
+                        'r_squared': 0.0,
+                        'method': f"{name}_ML",
+                        'success': False,
+                        'error': str(e)
+                    })
+        
+        # Benchmark production ML models
+        logger.info("Benchmarking production ML models...")
+        for name, model_info in trained_production_models.items():
+            logger.info(f"  Testing {name}...")
+            
+            for i in range(n_samples):
+                try:
+                    start_time = time.time()
+                    prediction = model_info['system'].predict(X[i])
+                    execution_time = time.time() - start_time
+                    
+                    results.append({
+                        'estimator': name,
+                        'estimator_type': 'ml_production',
+                        'sample_id': i,
+                        'true_hurst': y[i],
+                        'estimated_hurst': prediction.hurst_parameter,
+                        'execution_time': execution_time,
+                        'r_squared': 0.0,
+                        'method': f"{name}_Production",
+                        'success': True,
+                        'error': None
+                    })
+                    
+                except Exception as e:
+                    results.append({
+                        'estimator': name,
+                        'estimator_type': 'ml_production',
+                        'sample_id': i,
+                        'true_hurst': y[i],
+                        'estimated_hurst': 0.5,
+                        'execution_time': 0.0,
+                        'r_squared': 0.0,
+                        'method': f"{name}_Production",
+                        'success': False,
+                        'error': str(e)
+                    })
+        
+        logger.info(f"Benchmark completed: {len(results)} total evaluations")
+        return results
+    
+    def analyze_results(self, results: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Analyze comprehensive benchmark results."""
+        logger.info("Analyzing comprehensive results...")
+        
+        if not results:
+            return {}
+        
+        df = pd.DataFrame(results)
+        
+        # Calculate performance metrics
+        analysis = {}
+        
+        # Overall performance
+        analysis['overall'] = self._calculate_metrics(df)
         
         # Performance by estimator type
-        classical_df = df[df['type'] == 'Classical']
-        ml_df = df[df['type'] == 'ML']
+        analysis['by_type'] = {}
+        for estimator_type in df['estimator_type'].unique():
+            type_df = df[df['estimator_type'] == estimator_type]
+            analysis['by_type'][estimator_type] = self._calculate_metrics(type_df)
         
-        classical_success = classical_df['success'].sum() / len(classical_df) * 100
-        ml_success = ml_df['success'].sum() / len(ml_df) * 100
+        # Performance by individual estimator
+        analysis['by_estimator'] = {}
+        for estimator in df['estimator'].unique():
+            estimator_df = df[df['estimator'] == estimator]
+            analysis['by_estimator'][estimator] = self._calculate_metrics(estimator_df)
         
-        print(f"🔬 Classical Estimators: {classical_success:.1f}% success")
-        print(f"🧠 ML Estimators: {ml_success:.1f}% success")
+        return analysis
+    
+    def _calculate_metrics(self, df: pd.DataFrame) -> Dict[str, Any]:
+        """Calculate performance metrics."""
+        if len(df) == 0:
+            return {}
         
-        # Accuracy analysis (only successful estimates)
         successful_df = df[df['success'] == True]
         
-        if len(successful_df) > 0:
-            # MSE by estimator type
-            classical_mse = successful_df[successful_df['type'] == 'Classical']['mse'].mean()
-            ml_mse = successful_df[successful_df['type'] == 'ML']['mse'].mean()
-            
-            print(f"🎯 Classical MSE: {classical_mse:.6f}")
-            print(f"🎯 ML MSE: {ml_mse:.6f}")
-            
-            # Speed analysis
-            classical_time = successful_df[successful_df['type'] == 'Classical']['time'].mean()
-            ml_time = successful_df[successful_df['type'] == 'ML']['time'].mean()
-            
-            print(f"⏱️  Classical Avg Time: {classical_time:.4f}s")
-            print(f"⏱️  ML Avg Time: {ml_time:.4f}s")
+        if len(successful_df) == 0:
+            return {
+                'success_rate': 0.0,
+                'n_total': len(df),
+                'n_successful': 0
+            }
         
-        # Top performers
-        if len(successful_df) > 0:
-            top_estimators = successful_df.groupby('estimator')['relative_error'].mean().sort_values()
-            print(f"\n🏆 Top 5 Most Accurate Estimators:")
-            for i, (estimator, error) in enumerate(top_estimators.head(5)):
-                print(f"  {i+1}. {estimator}: {error:.2f}% error")
+        errors = np.abs(successful_df['estimated_hurst'] - successful_df['true_hurst'])
         
         return {
-            'total_tests': total_tests,
-            'success_rate': success_rate,
-            'classical_success': classical_success,
-            'ml_success': ml_success,
-            'classical_mse': classical_mse if len(successful_df) > 0 else np.nan,
-            'ml_mse': ml_mse if len(successful_df) > 0 else np.nan,
-            'classical_time': classical_time if len(successful_df) > 0 else np.nan,
-            'ml_time': ml_time if len(successful_df) > 0 else np.nan
+            'success_rate': len(successful_df) / len(df),
+            'n_total': len(df),
+            'n_successful': len(successful_df),
+            'mean_absolute_error': float(np.mean(errors)),
+            'median_absolute_error': float(np.median(errors)),
+            'std_absolute_error': float(np.std(errors)),
+            'mean_execution_time': float(np.mean(successful_df['execution_time'])),
+            'median_execution_time': float(np.median(successful_df['execution_time'])),
+            'correlation': float(np.corrcoef(successful_df['true_hurst'], successful_df['estimated_hurst'])[0, 1])
         }
     
-    def create_visualizations(self, df: pd.DataFrame, analysis: Dict[str, Any]):
+    def create_visualizations(self, results: List[Dict[str, Any]], analysis: Dict[str, Any]):
         """Create comprehensive visualizations."""
-        print("\n🎨 Creating Visualizations...")
+        logger.info("Creating comprehensive visualizations...")
         
-        # Set style
-        plt.style.use('seaborn-v0_8')
-        fig, axes = plt.subplots(2, 3, figsize=(18, 12))
-        fig.suptitle('Comprehensive Benchmark: Classical vs. ML Estimators', fontsize=16, fontweight='bold')
+        if not results:
+            return
         
-        # 1. Success Rate by Type
+        df = pd.DataFrame(results)
+        
+        # Create figure with more subplots
+        fig, axes = plt.subplots(3, 3, figsize=(18, 15))
+        fig.suptitle('Comprehensive ML vs Classical Models Comparison', fontsize=16, fontweight='bold')
+        
+        # 1. Success rate by estimator type
+        ax1 = axes[0, 0]
+        by_type = analysis.get('by_type', {})
+        types = list(by_type.keys())
+        success_rates = [by_type[t].get('success_rate', 0) * 100 for t in types]
+        
+        bars = ax1.bar(types, success_rates, color=['#2E8B57', '#FF6B6B', '#4169E1'])
+        ax1.set_title('Success Rate by Estimator Type')
+        ax1.set_ylabel('Success Rate (%)')
+        ax1.tick_params(axis='x', rotation=45)
+        for bar, rate in zip(bars, success_rates):
+            height = bar.get_height()
+            ax1.text(bar.get_x() + bar.get_width()/2., height + height*0.01,
+                    f'{rate:.1f}%', ha='center', va='bottom')
+        
+        # 2. Mean Absolute Error by estimator type
+        ax2 = axes[0, 1]
+        maes = [by_type[t].get('mean_absolute_error', 0) for t in types]
+        
+        bars = ax2.bar(types, maes, color=['#2E8B57', '#FF6B6B', '#4169E1'])
+        ax2.set_title('Mean Absolute Error by Estimator Type')
+        ax2.set_ylabel('Mean Absolute Error')
+        ax2.tick_params(axis='x', rotation=45)
+        for bar, mae in zip(bars, maes):
+            height = bar.get_height()
+            ax2.text(bar.get_x() + bar.get_width()/2., height + height*0.01,
+                    f'{mae:.4f}', ha='center', va='bottom')
+        
+        # 3. Top 10 individual estimators by MAE
+        ax3 = axes[0, 2]
+        by_estimator = analysis.get('by_estimator', {})
+        estimators = sorted(by_estimator.items(), 
+                          key=lambda x: x[1].get('mean_absolute_error', 0))[:10]
+        
+        names = [e[0] for e in estimators]
+        maes = [e[1].get('mean_absolute_error', 0) for e in estimators]
+        
+        bars = ax3.barh(names, maes, color='#FF6347')
+        ax3.set_xlabel('Mean Absolute Error')
+        ax3.set_title('Top 10 Estimators by Accuracy')
+        
+        # 4. Execution time comparison
+        ax4 = axes[1, 0]
         successful_df = df[df['success'] == True]
-        type_counts = df.groupby(['type', 'success']).size().unstack(fill_value=0)
-        
-        axes[0, 0].pie(type_counts[True], labels=type_counts.index, autopct='%1.1f%%', startangle=90)
-        axes[0, 0].set_title('Success Rate by Estimator Type')
-        
-        # 2. Accuracy Comparison (Box Plot)
         if len(successful_df) > 0:
-            successful_df.boxplot(column='relative_error', by='type', ax=axes[0, 1])
-            axes[0, 1].set_title('Accuracy Distribution by Type')
-            axes[0, 1].set_xlabel('Estimator Type')
-            axes[0, 1].set_ylabel('Relative Error (%)')
+            classical_times = successful_df[successful_df['estimator_type'] == 'classical']['execution_time']
+            ml_traditional_times = successful_df[successful_df['estimator_type'] == 'ml_traditional']['execution_time']
+            ml_production_times = successful_df[successful_df['estimator_type'] == 'ml_production']['execution_time']
+            
+            data = [classical_times, ml_traditional_times, ml_production_times]
+            labels = ['Classical', 'ML Traditional', 'ML Production']
+            
+            bp = ax4.boxplot(data, labels=labels, patch_artist=True)
+            bp['boxes'][0].set_facecolor('#2E8B57')
+            bp['boxes'][1].set_facecolor('#FF6B6B')
+            bp['boxes'][2].set_facecolor('#4169E1')
+            
+            ax4.set_title('Execution Time Comparison')
+            ax4.set_ylabel('Execution Time (seconds)')
+            ax4.set_yscale('log')
+            ax4.tick_params(axis='x', rotation=45)
         
-        # 3. Speed Comparison (Box Plot)
+        # 5. True vs Estimated scatter plot
+        ax5 = axes[1, 1]
         if len(successful_df) > 0:
-            successful_df.boxplot(column='time', by='type', ax=axes[0, 2])
-            axes[0, 2].set_title('Speed Distribution by Type')
-            axes[0, 2].set_xlabel('Estimator Type')
-            axes[0, 2].set_ylabel('Time (seconds)')
+            classical_df = successful_df[successful_df['estimator_type'] == 'classical']
+            ml_traditional_df = successful_df[successful_df['estimator_type'] == 'ml_traditional']
+            ml_production_df = successful_df[successful_df['estimator_type'] == 'ml_production']
+            
+            if len(classical_df) > 0:
+                ax5.scatter(classical_df['true_hurst'], classical_df['estimated_hurst'], 
+                           alpha=0.6, label='Classical', color='#2E8B57', s=20)
+            
+            if len(ml_traditional_df) > 0:
+                ax5.scatter(ml_traditional_df['true_hurst'], ml_traditional_df['estimated_hurst'], 
+                           alpha=0.6, label='ML Traditional', color='#FF6B6B', s=20)
+            
+            if len(ml_production_df) > 0:
+                ax5.scatter(ml_production_df['true_hurst'], ml_production_df['estimated_hurst'], 
+                           alpha=0.6, label='ML Production', color='#4169E1', s=20)
+            
+            # Perfect prediction line
+            min_val = min(successful_df['true_hurst'].min(), successful_df['estimated_hurst'].min())
+            max_val = max(successful_df['true_hurst'].max(), successful_df['estimated_hurst'].max())
+            ax5.plot([min_val, max_val], [min_val, max_val], 'k--', alpha=0.8, label='Perfect')
+            
+            ax5.set_xlabel('True Hurst Parameter')
+            ax5.set_ylabel('Estimated Hurst Parameter')
+            ax5.set_title('True vs Estimated Hurst Parameters')
+            ax5.legend()
+            ax5.grid(True, alpha=0.3)
         
-        # 4. Top Performers
+        # 6. Error distribution
+        ax6 = axes[1, 2]
         if len(successful_df) > 0:
-            top_estimators = successful_df.groupby('estimator')['relative_error'].mean().sort_values().head(10)
-            axes[1, 0].barh(range(len(top_estimators)), top_estimators.values)
-            axes[1, 0].set_yticks(range(len(top_estimators)))
-            axes[1, 0].set_yticklabels(top_estimators.index)
-            axes[1, 0].set_xlabel('Average Relative Error (%)')
-            axes[1, 0].set_title('Top 10 Most Accurate Estimators')
+            errors = np.abs(successful_df['estimated_hurst'] - successful_df['true_hurst'])
+            ax6.hist(errors, bins=30, alpha=0.7, color='#FF6347', edgecolor='black')
+            ax6.set_xlabel('Absolute Error')
+            ax6.set_ylabel('Frequency')
+            ax6.set_title('Distribution of Absolute Errors')
+            ax6.axvline(np.mean(errors), color='red', linestyle='--', 
+                      label=f'Mean: {np.mean(errors):.3f}')
+            ax6.legend()
         
-        # 5. Success Rate by Estimator
-        success_by_estimator = df.groupby('estimator')['success'].mean().sort_values(ascending=False)
-        axes[1, 1].bar(range(len(success_by_estimator)), success_by_estimator.values)
-        axes[1, 1].set_xticks(range(len(success_by_estimator)))
-        axes[1, 1].set_xticklabels(success_by_estimator.index, rotation=45, ha='right')
-        axes[1, 1].set_ylabel('Success Rate')
-        axes[1, 1].set_title('Success Rate by Individual Estimator')
+        # 7. Performance by ML model type
+        ax7 = axes[2, 0]
+        ml_estimators = [name for name in by_estimator.keys() if 'ML' in name or 'Production' in name]
+        ml_maes = [by_estimator[name].get('mean_absolute_error', 0) for name in ml_estimators]
         
-        # 6. Performance Summary
+        if ml_estimators:
+            bars = ax7.bar(ml_estimators, ml_maes, color='#9B59B6')
+            ax7.set_title('ML Models Performance')
+            ax7.set_ylabel('Mean Absolute Error')
+            ax7.tick_params(axis='x', rotation=45)
+            for bar, mae in zip(bars, ml_maes):
+                height = bar.get_height()
+                ax7.text(bar.get_x() + bar.get_width()/2., height + height*0.01,
+                        f'{mae:.4f}', ha='center', va='bottom')
+        
+        # 8. Success rate by individual estimator
+        ax8 = axes[2, 1]
+        success_rates = [by_estimator[e].get('success_rate', 0) * 100 for e in estimators]
+        
+        bars = ax8.barh(names, success_rates, color='#2ECC71')
+        ax8.set_xlabel('Success Rate (%)')
+        ax8.set_title('Success Rate by Estimator')
+        
+        # 9. Summary statistics
+        ax9 = axes[2, 2]
+        ax9.axis('off')
+        
+        # Create summary text
+        overall = analysis.get('overall', {})
         summary_text = f"""
-        Overall Success Rate: {analysis['success_rate']:.1f}%
+        COMPREHENSIVE BENCHMARK SUMMARY
         
-        Classical Estimators:
-        • Success Rate: {analysis['classical_success']:.1f}%
-        • Avg MSE: {analysis['classical_mse']:.6f}
-        • Avg Time: {analysis['classical_time']:.4f}s
+        Total Evaluations: {overall.get('n_total', 0)}
+        Overall Success Rate: {overall.get('success_rate', 0)*100:.1f}%
+        Overall MAE: {overall.get('mean_absolute_error', 0):.4f}
+        Overall Execution Time: {overall.get('mean_execution_time', 0):.4f}s
         
-        ML Estimators:
-        • Success Rate: {analysis['ml_success']:.1f}%
-        • Avg MSE: {analysis['ml_mse']:.6f}
-        • Avg Time: {analysis['ml_time']:.4f}s
+        Estimator Types:
+        • Classical: {len([t for t in types if 'classical' in t])} methods
+        • ML Traditional: {len([t for t in types if 'traditional' in t])} methods  
+        • ML Production: {len([t for t in types if 'production' in t])} methods
         """
         
-        axes[1, 2].text(0.1, 0.5, summary_text, transform=axes[1, 2].transAxes, 
-                        fontsize=10, verticalalignment='center', fontfamily='monospace')
-        axes[1, 2].set_title('Performance Summary')
-        axes[1, 2].axis('off')
+        ax9.text(0.1, 0.9, summary_text, transform=ax9.transAxes, fontsize=10,
+                verticalalignment='top', fontfamily='monospace',
+                bbox=dict(boxstyle='round', facecolor='lightgray', alpha=0.8))
         
         plt.tight_layout()
         
-        # Save plot
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        plot_file = f"comprehensive_ml_vs_classical_benchmark_visualizations_{timestamp}.png"
-        plt.savefig(plot_file, dpi=300, bbox_inches='tight')
-        print(f"📊 Visualizations saved to: {plot_file}")
+        # Save figure
+        output_path = self.output_dir / "comprehensive_ml_vs_classical_comparison.png"
+        plt.savefig(output_path, dpi=300, bbox_inches='tight')
+        plt.close()
         
-        plt.show()
+        logger.info(f"Comprehensive visualization saved to {output_path}")
     
-    def generate_report(self, df: pd.DataFrame, analysis: Dict[str, Any]):
-        """Generate comprehensive benchmark report."""
-        print("\n📝 Generating Comprehensive Report...")
+    def save_results(self, results: List[Dict[str, Any]], analysis: Dict[str, Any]):
+        """Save comprehensive results."""
+        logger.info("Saving comprehensive results...")
         
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        report_file = f"comprehensive_ml_vs_classical_benchmark_report_{timestamp}.md"
+        # Save raw results
+        results_path = self.output_dir / "comprehensive_ml_vs_classical_results.json"
+        with open(results_path, 'w') as f:
+            json.dump(results, f, indent=2)
         
-        with open(report_file, 'w') as f:
-            f.write("# Comprehensive Benchmark: Classical vs. ML Estimators\n\n")
-            f.write(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-            
-            f.write("## 🎯 Executive Summary\n\n")
-            f.write(f"- **Total Tests:** {analysis['total_tests']}\n")
-            f.write(f"- **Overall Success Rate:** {analysis['success_rate']:.1f}%\n")
-            f.write(f"- **Classical Estimators Success:** {analysis['classical_success']:.1f}%\n")
-            f.write(f"- **ML Estimators Success:** {analysis['ml_success']:.1f}%\n\n")
-            
-            f.write("## 📊 Performance Analysis\n\n")
-            f.write("### Accuracy (MSE)\n")
-            f.write(f"- **Classical:** {analysis['classical_mse']:.6f}\n")
-            f.write(f"- **ML:** {analysis['ml_mse']:.6f}\n\n")
-            
-            f.write("### Speed (Average Time)\n")
-            f.write(f"- **Classical:** {analysis['classical_time']:.4f} seconds\n")
-            f.write(f"- **ML:** {analysis['ml_time']:.4f} seconds\n\n")
-            
-            f.write("## 🔬 Detailed Results\n\n")
-            f.write("### Successful Estimations\n\n")
-            
-            successful_df = df[df['success'] == True]
-            if len(successful_df) > 0:
-                # Top performers
-                top_estimators = successful_df.groupby('estimator')['relative_error'].mean().sort_values()
-                f.write("#### Top 10 Most Accurate Estimators\n\n")
-                f.write("| Rank | Estimator | Type | Avg Relative Error |\n")
-                f.write("|------|-----------|------|-------------------|\n")
-                for i, (estimator, error) in enumerate(top_estimators.head(10)):
-                    estimator_type = 'ML' if estimator in self.ml_estimators else 'Classical'
-                    f.write(f"| {i+1} | {estimator} | {estimator_type} | {error:.2f}% |\n")
-                f.write("\n")
-            
-            f.write("### Failed Estimations\n\n")
-            failed_df = df[df['success'] == False]
-            if len(failed_df) > 0:
-                f.write("| Estimator | Type | Error |\n")
-                f.write("|-----------|------|-------|\n")
-                for _, row in failed_df.iterrows():
-                    f.write(f"| {row['estimator']} | {row['error']} |\n")
-                f.write("\n")
-            
-            f.write("## 📈 Recommendations\n\n")
-            if analysis['ml_success'] > analysis['classical_success']:
-                f.write("- **ML estimators show higher success rates** and may be preferred for robust estimation\n")
-            else:
-                f.write("- **Classical estimators show higher success rates** and remain reliable choices\n")
-            
-            if analysis['ml_mse'] < analysis['classical_mse']:
-                f.write("- **ML estimators provide better accuracy** when they succeed\n")
-            else:
-                f.write("- **Classical estimators provide better accuracy** on average\n")
-            
-            if analysis['ml_time'] < analysis['classical_time']:
-                f.write("- **ML estimators are faster** for inference\n")
-            else:
-                f.write("- **Classical estimators are faster** for computation\n")
-            
-            f.write("\n## 🔧 Technical Details\n\n")
-            f.write(f"- **Test Datasets:** {len(self.test_datasets)} synthetic FBM series\n")
-            f.write(f"- **Classical Estimators:** {len(self.classical_estimators)} methods\n")
-            f.write(f"- **ML Estimators:** {len(self.ml_estimators)} methods\n")
-            f.write(f"- **Data Lengths:** 100, 500, 1000 points\n")
-            f.write(f"- **Hurst Range:** 0.1 to 0.9\n")
+        # Save analysis
+        analysis_path = self.output_dir / "comprehensive_ml_vs_classical_analysis.json"
+        with open(analysis_path, 'w') as f:
+            json.dump(analysis, f, indent=2)
         
-        print(f"📝 Report saved to: {report_file}")
+        # Save CSV
+        df = pd.DataFrame(results)
+        csv_path = self.output_dir / "comprehensive_ml_vs_classical_results.csv"
+        df.to_csv(csv_path, index=False)
+        
+        logger.info(f"Comprehensive results saved to {self.output_dir}")
 
 def main():
-    """Run the comprehensive benchmark."""
-    print("🚀 Comprehensive Benchmark: Classical vs. ML Estimators")
-    print("=" * 80)
+    """Main comprehensive benchmark function."""
+    logger.info("🚀 Starting Comprehensive ML vs Classical Benchmark")
     
-    # Initialize benchmark
-    benchmark = ComprehensiveBenchmark()
+    # Create benchmark instance
+    benchmark = ComprehensiveMLvsClassicalBenchmark()
     
-    # Run benchmark
-    results_df = benchmark.run_benchmark()
-    
-    # Analyze results
-    analysis = benchmark.analyze_results(results_df)
-    
-    # Create visualizations
-    benchmark.create_visualizations(results_df, analysis)
-    
-    # Generate report
-    benchmark.generate_report(results_df, analysis)
-    
-    print("\n🎉 Comprehensive benchmark completed!")
-    print("=" * 80)
-    print("📊 Results analyzed and visualized")
-    print("📝 Report generated")
-    print("💾 Data saved to CSV")
+    try:
+        # Generate data
+        logger.info("=" * 60)
+        X, y = benchmark.generate_synthetic_data(n_samples=50, seq_len=500)
+        
+        # Train production ML models
+        logger.info("=" * 60)
+        trained_production_models = benchmark.train_production_ml_models(X, y)
+        
+        # Run comprehensive benchmark
+        logger.info("=" * 60)
+        results = benchmark.run_benchmark(X, y, trained_production_models)
+        
+        # Analyze results
+        logger.info("=" * 60)
+        analysis = benchmark.analyze_results(results)
+        
+        # Create visualizations
+        logger.info("=" * 60)
+        benchmark.create_visualizations(results, analysis)
+        
+        # Save results
+        logger.info("=" * 60)
+        benchmark.save_results(results, analysis)
+        
+        # Print comprehensive summary
+        logger.info("=" * 60)
+        logger.info("🎉 Comprehensive ML vs Classical Benchmark Completed!")
+        
+        # Print key findings
+        overall = analysis.get('overall', {})
+        by_type = analysis.get('by_type', {})
+        
+        logger.info("📊 Comprehensive Key Findings:")
+        logger.info(f"  Total evaluations: {overall.get('n_total', 0)}")
+        logger.info(f"  Overall success rate: {overall.get('success_rate', 0)*100:.1f}%")
+        logger.info(f"  Overall MAE: {overall.get('mean_absolute_error', 0):.4f}")
+        logger.info(f"  Overall execution time: {overall.get('mean_execution_time', 0):.4f}s")
+        
+        # Print by type results
+        for estimator_type, metrics in by_type.items():
+            logger.info(f"  {estimator_type}: {metrics.get('success_rate', 0)*100:.1f}% success, {metrics.get('mean_absolute_error', 0):.4f} MAE")
+        
+        # Find best performing estimator
+        by_estimator = analysis.get('by_estimator', {})
+        best_estimator = min(by_estimator.items(), 
+                           key=lambda x: x[1].get('mean_absolute_error', float('inf')))
+        
+        logger.info(f"🏆 Best performing estimator: {best_estimator[0]} with {best_estimator[1].get('mean_absolute_error', 0):.4f} MAE")
+        
+        return True
+        
+    except Exception as e:
+        logger.error(f"❌ Comprehensive benchmark failed: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
 
 if __name__ == "__main__":
-    main()
+    success = main()
+    exit(0 if success else 1)

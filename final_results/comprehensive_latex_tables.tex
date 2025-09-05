@@ -1,0 +1,47 @@
+% Comprehensive LaTeX Tables Generated from LRDBenchmark Results
+% Generated automatically from comprehensive_all_estimators_benchmark_20250905_074313.csv
+
+% Comprehensive Analysis Table
+\begin{table}[htbp]
+\centering
+\caption{Comprehensive Estimator Performance Analysis}
+\label{tab:comprehensive_analysis}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccccccc}
+\toprule
+\textbf{Estimator} & \textbf{Category} & \textbf{Mean Error} & \textbf{Std Dev} & \textbf{CV (\%)} & \textbf{Mean Time (s)} & \textbf{Min Time (s)} & \textbf{Max Time (s)} & \textbf{Efficiency} \\
+\midrule
+Classical Whittle & Classical & 0.1332 & 0.1028 & 77.2 & 0.0024 & 0.0016 & 0.0053 & 3128.13 \\
+ML GradientBoosting & ML & 0.2032 & 0.1339 & 65.9 & 0.1082 & 0.0806 & 0.2461 & 45.48 \\
+ML RandomForest & ML & 0.2032 & 0.1339 & 65.9 & 0.1080 & 0.0799 & 0.1985 & 45.57 \\
+ML SVR & ML & 0.2032 & 0.1339 & 65.9 & 0.1059 & 0.0817 & 0.2289 & 46.47 \\
+Classical DMA & Classical & 0.2894 & 0.2378 & 82.2 & 0.0289 & 0.0131 & 2.5437 & 119.56 \\
+Classical GPH & Classical & 0.3177 & 0.2320 & 73.0 & 0.0013 & 0.0009 & 0.0022 & 2421.25 \\
+Classical RS & Classical & 0.3597 & 0.2799 & 77.8 & 0.1321 & 0.0679 & 10.4550 & 21.05 \\
+Neural CNN & Neural & 0.5663 & 0.2241 & 39.6 & 0.0429 & 0.0310 & 1.2979 & 41.16 \\
+Neural Transformer & Neural & 0.6000 & 0.2238 & 37.3 & 0.1198 & 0.0898 & 0.2076 & 13.91 \\
+Neural LSTM & Neural & 0.6000 & 0.2238 & 37.3 & 0.0711 & 0.0568 & 0.1231 & 23.44 \\
+Neural GRU & Neural & 0.6000 & 0.2238 & 37.3 & 0.0751 & 0.0584 & 0.1375 & 22.19 \\
+Classical Higuchi & Classical & 0.7763 & 0.3800 & 49.0 & 0.0564 & 0.0369 & 1.3301 & 22.84 \\
+Classical Periodogram & Classical & 0.8058 & 0.7963 & 98.8 & 0.0012 & 0.0008 & 0.0030 & 1034.17 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+% Statistical Summary Table
+\begin{table}[htbp]
+\centering
+\caption{Statistical Summary by Category}
+\label{tab:statistical_summary}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Category} & \textbf{Mean Error} & \textbf{Avg Std Dev} & \textbf{Mean Time (s)} & \textbf{Avg CV (\%)} \\
+\midrule
+Classical & 0.4470 & 0.3381 & 0.0370 & 76.3 \\
+ML & 0.2032 & 0.1339 & 0.1074 & 65.9 \\
+Neural & 0.5916 & 0.2239 & 0.0772 & 37.9 \\
+\bottomrule
+\end{tabular}
+\end{table}
+

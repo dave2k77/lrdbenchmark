@@ -173,7 +173,7 @@ class WaveletWhittleEstimator(BaseEstimator):
         # Check data length requirement
         if n < 2 ** max(self.parameters["scales"]):
             raise ValueError(
-                f"Data length {n} is too short for scale {max(self.parameters["scales"])}"
+                f"Data length {n} is too short for scale {max(self.parameters['scales'])}"
             )
 
         # Perform wavelet decomposition at all scales

@@ -1,0 +1,38 @@
+{
+  "framework_performance": {
+    "jax": {
+      "framework": "jax",
+      "success": false,
+      "error": "No suitable framework available"
+    },
+    "torch": {
+      "framework": "torch",
+      "training_time": 1.9872772693634033,
+      "training_mse": 0.03842156566679478,
+      "avg_inference_time": 0.0009712696075439454,
+      "inference_time_std": 0.002907451018185861,
+      "success": true,
+      "prediction_sample": 0.5327370166778564
+    },
+    "numba": {
+      "framework": "numba",
+      "success": false,
+      "error": "Failed in nopython mode pipeline (step: nopython frontend)\n\u001b[1m\u001b[1mUnknown attribute 'fft' of type Module(<module 'numpy.fft' from '/home/davianc/miniconda3/envs/lrdbenchmark/lib/python3.9/site-packages/numpy/fft/__init__.py'>)\n\u001b[1m\nFile \"lrdbenchmark/analysis/machine_learning/production_ml_system.py\", line 314:\u001b[0m\n\u001b[1m    def numba_feature_extraction(data):\n        <source elided>\n        if n > 4:\n\u001b[1m            fft_vals = np.abs(np.fft.fft(data))\n\u001b[0m            \u001b[1m^\u001b[0m\u001b[0m\n\u001b[0m\n\u001b[0m\u001b[1mDuring: typing of get attribute at /home/davianc/LRDBenchmark/lrdbenchmark/analysis/machine_learning/production_ml_system.py (314)\u001b[0m\n\u001b[1m\nFile \"lrdbenchmark/analysis/machine_learning/production_ml_system.py\", line 314:\u001b[0m\n\u001b[1m    def numba_feature_extraction(data):\n        <source elided>\n        if n > 4:\n\u001b[1m            fft_vals = np.abs(np.fft.fft(data))\n\u001b[0m            \u001b[1m^\u001b[0m\u001b[0m\n"
+    }
+  },
+  "workflow_performance": {
+    "training_time": 0.30126214027404785,
+    "training_mse": 0.03454954642802477,
+    "single_inference_time": 0.001871204376220703,
+    "batch_inference_time": 0.0010173916816711426,
+    "batch_efficiency": 1.839217294510516,
+    "single_mae": 0.10887560968599526,
+    "batch_mae": 0.11755981662660278
+  },
+  "caching_performance": {
+    "cache_miss_time": 0.0016863346099853516,
+    "cache_hit_time": 2.6226043701171875e-06,
+    "cache_speedup": 643.0
+  },
+  "timestamp": "2025-09-05 12:58:31"
+}

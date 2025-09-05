@@ -5,21 +5,13 @@ This module provides various spectral estimators for analyzing long-range depend
 in time series data using frequency domain methods.
 """
 
-# Import individual modules for direct access
-from .gph import gph_estimator
-from .periodogram import periodogram_estimator
-from .whittle import whittle_estimator
-
-# Import estimators from individual modules
-from .gph.gph_estimator import GPHEstimator
-from .periodogram.periodogram_estimator import PeriodogramEstimator
-from .whittle.whittle_estimator import WhittleEstimator
+# Import unified estimators
+from .gph.gph_estimator_unified import GPHEstimator
+from .periodogram.periodogram_estimator_unified import PeriodogramEstimator
+from .whittle.whittle_estimator_unified import WhittleEstimator
 
 __all__ = [
     "GPHEstimator",
     "PeriodogramEstimator",
     "WhittleEstimator",
-    "gph_estimator",
-    "periodogram_estimator",
-    "whittle_estimator",
 ]

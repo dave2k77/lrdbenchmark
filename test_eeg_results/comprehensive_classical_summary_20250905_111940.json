@@ -1,0 +1,126 @@
+{
+  "overall": {
+    "total_tests": 128,
+    "successful_tests": "118",
+    "success_rate": 92.1875,
+    "mean_error": 0.12499039163638326,
+    "mean_execution_time": 0.030976105481386185
+  },
+  "by_estimator": {
+    "error_mean": {
+      "Adaptive_RS": 0.125
+    },
+    "error_std": {
+      "Adaptive_RS": 0.1506
+    },
+    "error_median": {
+      "Adaptive_RS": 0.0735
+    },
+    "execution_time_mean": {
+      "Adaptive_RS": 0.031
+    },
+    "execution_time_std": {
+      "Adaptive_RS": 0.315
+    },
+    "execution_time_median": {
+      "Adaptive_RS": 0.0009
+    },
+    "success_sum": {
+      "Adaptive_RS": 118
+    }
+  },
+  "by_confounding_scenario": {
+    "error_mean": {
+      "eeg_60hz_noise": 0.124,
+      "eeg_movement_artifacts": 0.1247,
+      "eeg_muscle_artifacts": 0.1282,
+      "eeg_ocular_artifacts": 0.1231
+    },
+    "error_std": {
+      "eeg_60hz_noise": 0.1493,
+      "eeg_movement_artifacts": 0.1565,
+      "eeg_muscle_artifacts": 0.1504,
+      "eeg_ocular_artifacts": 0.1531
+    },
+    "execution_time_mean": {
+      "eeg_60hz_noise": 0.0009,
+      "eeg_movement_artifacts": 0.0009,
+      "eeg_muscle_artifacts": 0.0094,
+      "eeg_ocular_artifacts": 0.1127
+    },
+    "execution_time_std": {
+      "eeg_60hz_noise": 0.0003,
+      "eeg_movement_artifacts": 0.0003,
+      "eeg_muscle_artifacts": 0.0483,
+      "eeg_ocular_artifacts": 0.6285
+    },
+    "success_sum": {
+      "eeg_60hz_noise": 30,
+      "eeg_movement_artifacts": 29,
+      "eeg_muscle_artifacts": 30,
+      "eeg_ocular_artifacts": 29
+    }
+  },
+  "by_framework": {
+    "error_mean": {
+      "jax": 0.5253,
+      "numba": 0.1187,
+      "numpy": 0.5117
+    },
+    "error_std": {
+      "jax": NaN,
+      "numba": 0.1432,
+      "numpy": NaN
+    },
+    "execution_time_mean": {
+      "jax": 3.5568,
+      "numba": 0.0031,
+      "numpy": 0.0142
+    },
+    "execution_time_std": {
+      "jax": NaN,
+      "numba": 0.0243,
+      "numpy": NaN
+    },
+    "success_sum": {
+      "jax": 0,
+      "numba": 118,
+      "numpy": 0
+    }
+  },
+  "by_data_characteristics": {
+    "error": {
+      "500_eeg_60hz_noise": 0.1202,
+      "500_eeg_movement_artifacts": 0.1296,
+      "500_eeg_muscle_artifacts": 0.1321,
+      "500_eeg_ocular_artifacts": 0.1223,
+      "1000_eeg_60hz_noise": 0.1278,
+      "1000_eeg_movement_artifacts": 0.1198,
+      "1000_eeg_muscle_artifacts": 0.1243,
+      "1000_eeg_ocular_artifacts": 0.1238
+    },
+    "execution_time": {
+      "500_eeg_60hz_noise": 0.0008,
+      "500_eeg_movement_artifacts": 0.0009,
+      "500_eeg_muscle_artifacts": 0.0179,
+      "500_eeg_ocular_artifacts": 0.2244,
+      "1000_eeg_60hz_noise": 0.001,
+      "1000_eeg_movement_artifacts": 0.001,
+      "1000_eeg_muscle_artifacts": 0.0009,
+      "1000_eeg_ocular_artifacts": 0.001
+    },
+    "success": {
+      "500_eeg_60hz_noise": 16.0,
+      "500_eeg_movement_artifacts": 14.0,
+      "500_eeg_muscle_artifacts": 15.0,
+      "500_eeg_ocular_artifacts": 14.0,
+      "1000_eeg_60hz_noise": 14.0,
+      "1000_eeg_movement_artifacts": 15.0,
+      "1000_eeg_muscle_artifacts": 15.0,
+      "1000_eeg_ocular_artifacts": 15.0
+    }
+  },
+  "optimization_backend_summary": {
+    "message": "No performance data available"
+  }
+}

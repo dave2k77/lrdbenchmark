@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from lrdbench.models.data_models.arfima.arfima_model import ARFIMAModel
+from lrdbenchmark.models.data_models.arfima.arfima_model import ARFIMAModel
 
 
 class TestARFIMAModel:

@@ -24,10 +24,53 @@ Generate synthetic data and run a benchmark:
    print("Benchmark completed!")
    print(f"Results: {results}")
 
+Neural Network Usage
+--------------------
+
+LRDBenchmark provides a comprehensive neural network factory with 8 architectures that achieve excellent speed-accuracy trade-offs:
+
+.. code-block:: python
+
+   from lrdbenchmark.analysis.machine_learning.neural_network_factory import (
+       NeuralNetworkFactory, NNArchitecture, NNConfig, create_all_benchmark_networks
+   )
+   import numpy as np
+
+   # Create neural network factory
+   factory = NeuralNetworkFactory()
+
+   # Create a specific network
+   config = NNConfig(
+       architecture=NNArchitecture.TRANSFORMER,
+       input_length=500,
+       hidden_dims=[64, 32],
+       learning_rate=0.001,
+       epochs=50
+   )
+   network = factory.create_network(config)
+
+   # Generate training data
+   X_train = np.random.randn(100, 500)  # 100 samples of length 500
+   y_train = np.random.uniform(0.2, 0.8, 100)  # True Hurst parameters
+
+   # Train the network (train-once, apply-many workflow)
+   history = network.train_model(X_train, y_train)
+
+   # Make predictions on new data
+   new_data = np.random.randn(1, 500)
+   prediction = network.predict(new_data)
+
+   print(f"Neural Network Prediction: {prediction[0]:.3f}")
+
+   # Create all benchmark networks
+   all_networks = create_all_benchmark_networks(input_length=500)
+   for name, network in all_networks.items():
+       print(f"Created {name} network")
+
 Machine Learning Usage
 ----------------------
 
-LRDBenchmark provides production-ready machine learning estimators that achieve **74% better accuracy** than classical methods:
+LRDBenchmark provides production-ready machine learning estimators:
 
 .. code-block:: python
 

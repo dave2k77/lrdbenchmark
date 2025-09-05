@@ -1,0 +1,178 @@
+{
+  "overall": {
+    "total_tests": 896,
+    "successful_tests": "196",
+    "success_rate": 21.875,
+    "mean_error": 0.2844392242032054,
+    "mean_execution_time": 0.026518155155437335
+  },
+  "pure_vs_contaminated": {
+    "pure_data": {
+      "mean_error": 0.2844392242032054,
+      "mean_execution_time": 0.106064786868436,
+      "success_rate": 87.5,
+      "total_tests": 224
+    },
+    "contaminated_data": {
+      "mean_error": NaN,
+      "mean_execution_time": 2.6112511044456846e-06,
+      "success_rate": 0.0,
+      "total_tests": 672
+    }
+  },
+  "by_estimator": {
+    "error_mean": {
+      "Adaptive_DFA": 0.4389,
+      "Adaptive_DMA": 0.5125,
+      "Adaptive_GPH": 0.1591,
+      "Adaptive_Higuchi": 0.4961,
+      "Adaptive_Periodogram": 0.1465,
+      "Adaptive_RS": 0.1379,
+      "Adaptive_Whittle": 0.1
+    },
+    "error_std": {
+      "Adaptive_DFA": 0.1767,
+      "Adaptive_DMA": 0.1893,
+      "Adaptive_GPH": 0.1462,
+      "Adaptive_Higuchi": 0.1975,
+      "Adaptive_Periodogram": 0.1473,
+      "Adaptive_RS": 0.1508,
+      "Adaptive_Whittle": 0.1016
+    },
+    "error_median": {
+      "Adaptive_DFA": 0.4784,
+      "Adaptive_DMA": 0.5728,
+      "Adaptive_GPH": 0.1228,
+      "Adaptive_Higuchi": 0.4715,
+      "Adaptive_Periodogram": 0.1179,
+      "Adaptive_RS": 0.0946,
+      "Adaptive_Whittle": 0.1
+    },
+    "execution_time_mean": {
+      "Adaptive_DFA": 0.0104,
+      "Adaptive_DMA": 0.0007,
+      "Adaptive_GPH": 0.009,
+      "Adaptive_Higuchi": 0.0035,
+      "Adaptive_Periodogram": 0.0017,
+      "Adaptive_RS": 0.1598,
+      "Adaptive_Whittle": 0.0005
+    },
+    "execution_time_std": {
+      "Adaptive_DFA": 0.0192,
+      "Adaptive_DMA": 0.0013,
+      "Adaptive_GPH": 0.0566,
+      "Adaptive_Higuchi": 0.0069,
+      "Adaptive_Periodogram": 0.0029,
+      "Adaptive_RS": 0.4015,
+      "Adaptive_Whittle": 0.0008
+    },
+    "execution_time_median": {
+      "Adaptive_DFA": 0.0,
+      "Adaptive_DMA": 0.0,
+      "Adaptive_GPH": 0.0,
+      "Adaptive_Higuchi": 0.0,
+      "Adaptive_Periodogram": 0.0,
+      "Adaptive_RS": 0.0,
+      "Adaptive_Whittle": 0.0
+    },
+    "success_sum": {
+      "Adaptive_DFA": 32,
+      "Adaptive_DMA": 30,
+      "Adaptive_GPH": 32,
+      "Adaptive_Higuchi": 10,
+      "Adaptive_Periodogram": 32,
+      "Adaptive_RS": 28,
+      "Adaptive_Whittle": 32
+    }
+  },
+  "by_eeg_scenario": {
+    "error_mean": {
+      "eeg_60hz_noise": NaN,
+      "eeg_muscle_artifacts": NaN,
+      "eeg_ocular_artifacts": NaN,
+      "pure": 0.2844
+    },
+    "error_std": {
+      "eeg_60hz_noise": NaN,
+      "eeg_muscle_artifacts": NaN,
+      "eeg_ocular_artifacts": NaN,
+      "pure": 0.2358
+    },
+    "execution_time_mean": {
+      "eeg_60hz_noise": 0.0,
+      "eeg_muscle_artifacts": 0.0,
+      "eeg_ocular_artifacts": 0.0,
+      "pure": 0.1061
+    },
+    "execution_time_std": {
+      "eeg_60hz_noise": 0.0,
+      "eeg_muscle_artifacts": 0.0,
+      "eeg_ocular_artifacts": 0.0,
+      "pure": 0.312
+    },
+    "success_sum": {
+      "eeg_60hz_noise": 0,
+      "eeg_muscle_artifacts": 0,
+      "eeg_ocular_artifacts": 0,
+      "pure": 196
+    }
+  },
+  "by_framework": {
+    "error_mean": {
+      "failed": NaN,
+      "jax": 0.5253,
+      "numba": 0.3568,
+      "numpy": 0.2788
+    },
+    "error_std": {
+      "failed": NaN,
+      "jax": NaN,
+      "numba": 0.2585,
+      "numpy": 0.2342
+    },
+    "execution_time_mean": {
+      "failed": 0.0,
+      "jax": 3.6255,
+      "numba": 0.1277,
+      "numpy": 0.088
+    },
+    "execution_time_std": {
+      "failed": 0.0,
+      "jax": NaN,
+      "numba": 0.223,
+      "numpy": 0.2034
+    },
+    "success_sum": {
+      "failed": 0,
+      "jax": 0,
+      "numba": 11,
+      "numpy": 185
+    }
+  },
+  "by_data_characteristics": {
+    "error": {
+      "2_eeg_60hz_noise": null,
+      "2_eeg_muscle_artifacts": null,
+      "2_eeg_ocular_artifacts": null,
+      "500_pure": 0.2828,
+      "1000_pure": 0.2861
+    },
+    "execution_time": {
+      "2_eeg_60hz_noise": 0.0,
+      "2_eeg_muscle_artifacts": 0.0,
+      "2_eeg_ocular_artifacts": 0.0,
+      "500_pure": 0.0968,
+      "1000_pure": 0.1153
+    },
+    "success": {
+      "2_eeg_60hz_noise": 0.0,
+      "2_eeg_muscle_artifacts": 0.0,
+      "2_eeg_ocular_artifacts": 0.0,
+      "500_pure": 96.0,
+      "1000_pure": 100.0
+    }
+  },
+  "optimization_backend_summary": {
+    "message": "No performance data available"
+  }
+}

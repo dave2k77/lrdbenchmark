@@ -3,7 +3,7 @@ import pytest
 import matplotlib
 matplotlib.use('Agg')  # Use non-GUI backend for testing
 
-from lrdbench.analysis.temporal.higuchi.higuchi_estimator import HiguchiEstimator
+from lrdbenchmark.analysis.temporal.higuchi.higuchi_estimator import HiguchiEstimator
 
 
 class TestHiguchiEstimator:

@@ -1,0 +1,269 @@
+{
+  "overall": {
+    "total_tests": 3696,
+    "successful_tests": "3601",
+    "success_rate": 97.42965367965368,
+    "mean_error": 0.09246841309021799,
+    "mean_execution_time": 0.0038257992757863295
+  },
+  "by_estimator": {
+    "error_mean": {
+      "Adaptive_RS": 0.0925
+    },
+    "error_std": {
+      "Adaptive_RS": 0.0945
+    },
+    "error_median": {
+      "Adaptive_RS": 0.0729
+    },
+    "execution_time_mean": {
+      "Adaptive_RS": 0.0038
+    },
+    "execution_time_std": {
+      "Adaptive_RS": 0.0586
+    },
+    "execution_time_median": {
+      "Adaptive_RS": 0.0027
+    },
+    "success_sum": {
+      "Adaptive_RS": 3601
+    }
+  },
+  "by_confounding_scenario": {
+    "error_mean": {
+      "environmental_extreme_events": 0.0898,
+      "environmental_seasonal": 0.0919,
+      "financial_crash": 0.0915,
+      "financial_volatility_clustering": 0.0938,
+      "industrial_calibration_drift": 0.0941,
+      "mixed_realistic_light": 0.0918,
+      "mixed_realistic_moderate": 0.0925,
+      "mixed_realistic_severe": 0.0942,
+      "network_bursts": 0.0912,
+      "physiological_motion_artifacts": 0.0938,
+      "physiological_sensor_drift": 0.0925
+    },
+    "error_std": {
+      "environmental_extreme_events": 0.0942,
+      "environmental_seasonal": 0.0932,
+      "financial_crash": 0.0963,
+      "financial_volatility_clustering": 0.0952,
+      "industrial_calibration_drift": 0.0937,
+      "mixed_realistic_light": 0.0955,
+      "mixed_realistic_moderate": 0.0967,
+      "mixed_realistic_severe": 0.0942,
+      "network_bursts": 0.0934,
+      "physiological_motion_artifacts": 0.095,
+      "physiological_sensor_drift": 0.0936
+    },
+    "execution_time_mean": {
+      "environmental_extreme_events": 0.0028,
+      "environmental_seasonal": 0.0028,
+      "financial_crash": 0.0028,
+      "financial_volatility_clustering": 0.0028,
+      "industrial_calibration_drift": 0.0028,
+      "mixed_realistic_light": 0.0142,
+      "mixed_realistic_moderate": 0.0028,
+      "mixed_realistic_severe": 0.0028,
+      "network_bursts": 0.0028,
+      "physiological_motion_artifacts": 0.0028,
+      "physiological_sensor_drift": 0.0028
+    },
+    "execution_time_std": {
+      "environmental_extreme_events": 0.0012,
+      "environmental_seasonal": 0.0012,
+      "financial_crash": 0.0012,
+      "financial_volatility_clustering": 0.0012,
+      "industrial_calibration_drift": 0.0012,
+      "mixed_realistic_light": 0.1942,
+      "mixed_realistic_moderate": 0.0012,
+      "mixed_realistic_severe": 0.0012,
+      "network_bursts": 0.0012,
+      "physiological_motion_artifacts": 0.0012,
+      "physiological_sensor_drift": 0.0012
+    },
+    "success_sum": {
+      "environmental_extreme_events": 329,
+      "environmental_seasonal": 329,
+      "financial_crash": 325,
+      "financial_volatility_clustering": 326,
+      "industrial_calibration_drift": 328,
+      "mixed_realistic_light": 326,
+      "mixed_realistic_moderate": 326,
+      "mixed_realistic_severe": 329,
+      "network_bursts": 329,
+      "physiological_motion_artifacts": 327,
+      "physiological_sensor_drift": 327
+    }
+  },
+  "by_framework": {
+    "error_mean": {
+      "jax": 0.1307,
+      "numba": 0.0924,
+      "numpy": 0.1307
+    },
+    "error_std": {
+      "jax": NaN,
+      "numba": 0.0945,
+      "numpy": NaN
+    },
+    "execution_time_mean": {
+      "jax": 3.5534,
+      "numba": 0.0029,
+      "numpy": 0.0161
+    },
+    "execution_time_std": {
+      "jax": NaN,
+      "numba": 0.0047,
+      "numpy": NaN
+    },
+    "success_sum": {
+      "jax": 1,
+      "numba": 3599,
+      "numpy": 1
+    }
+  },
+  "by_data_characteristics": {
+    "error": {
+      "500_environmental_extreme_events": 0.0928,
+      "500_environmental_seasonal": 0.0913,
+      "500_financial_crash": 0.0892,
+      "500_financial_volatility_clustering": 0.1002,
+      "500_industrial_calibration_drift": 0.0927,
+      "500_mixed_realistic_light": 0.0937,
+      "500_mixed_realistic_moderate": 0.0935,
+      "500_mixed_realistic_severe": 0.0982,
+      "500_network_bursts": 0.0862,
+      "500_physiological_motion_artifacts": 0.0977,
+      "500_physiological_sensor_drift": 0.0982,
+      "1000_environmental_extreme_events": 0.0853,
+      "1000_environmental_seasonal": 0.0872,
+      "1000_financial_crash": 0.0888,
+      "1000_financial_volatility_clustering": 0.0885,
+      "1000_industrial_calibration_drift": 0.092,
+      "1000_mixed_realistic_light": 0.0873,
+      "1000_mixed_realistic_moderate": 0.0897,
+      "1000_mixed_realistic_severe": 0.0912,
+      "1000_network_bursts": 0.092,
+      "1000_physiological_motion_artifacts": 0.0912,
+      "1000_physiological_sensor_drift": 0.0836,
+      "2000_environmental_extreme_events": 0.0853,
+      "2000_environmental_seasonal": 0.0906,
+      "2000_financial_crash": 0.0924,
+      "2000_financial_volatility_clustering": 0.09,
+      "2000_industrial_calibration_drift": 0.0923,
+      "2000_mixed_realistic_light": 0.0903,
+      "2000_mixed_realistic_moderate": 0.089,
+      "2000_mixed_realistic_severe": 0.0899,
+      "2000_network_bursts": 0.0903,
+      "2000_physiological_motion_artifacts": 0.0899,
+      "2000_physiological_sensor_drift": 0.0885,
+      "5000_environmental_extreme_events": 0.096,
+      "5000_environmental_seasonal": 0.0984,
+      "5000_financial_crash": 0.0956,
+      "5000_financial_volatility_clustering": 0.0964,
+      "5000_industrial_calibration_drift": 0.0993,
+      "5000_mixed_realistic_light": 0.0961,
+      "5000_mixed_realistic_moderate": 0.0978,
+      "5000_mixed_realistic_severe": 0.0974,
+      "5000_network_bursts": 0.0964,
+      "5000_physiological_motion_artifacts": 0.0966,
+      "5000_physiological_sensor_drift": 0.0996
+    },
+    "execution_time": {
+      "500_environmental_extreme_events": 0.0024,
+      "500_environmental_seasonal": 0.0024,
+      "500_financial_crash": 0.0024,
+      "500_financial_volatility_clustering": 0.0024,
+      "500_industrial_calibration_drift": 0.0025,
+      "500_mixed_realistic_light": 0.0482,
+      "500_mixed_realistic_moderate": 0.0024,
+      "500_mixed_realistic_severe": 0.0024,
+      "500_network_bursts": 0.0025,
+      "500_physiological_motion_artifacts": 0.0024,
+      "500_physiological_sensor_drift": 0.0024,
+      "1000_environmental_extreme_events": 0.0026,
+      "1000_environmental_seasonal": 0.0026,
+      "1000_financial_crash": 0.0026,
+      "1000_financial_volatility_clustering": 0.0026,
+      "1000_industrial_calibration_drift": 0.0026,
+      "1000_mixed_realistic_light": 0.0026,
+      "1000_mixed_realistic_moderate": 0.0026,
+      "1000_mixed_realistic_severe": 0.0026,
+      "1000_network_bursts": 0.0026,
+      "1000_physiological_motion_artifacts": 0.0026,
+      "1000_physiological_sensor_drift": 0.0027,
+      "2000_environmental_extreme_events": 0.0028,
+      "2000_environmental_seasonal": 0.0028,
+      "2000_financial_crash": 0.0028,
+      "2000_financial_volatility_clustering": 0.0027,
+      "2000_industrial_calibration_drift": 0.0028,
+      "2000_mixed_realistic_light": 0.0027,
+      "2000_mixed_realistic_moderate": 0.0028,
+      "2000_mixed_realistic_severe": 0.0028,
+      "2000_network_bursts": 0.0028,
+      "2000_physiological_motion_artifacts": 0.0028,
+      "2000_physiological_sensor_drift": 0.0029,
+      "5000_environmental_extreme_events": 0.0034,
+      "5000_environmental_seasonal": 0.0033,
+      "5000_financial_crash": 0.0034,
+      "5000_financial_volatility_clustering": 0.0034,
+      "5000_industrial_calibration_drift": 0.0033,
+      "5000_mixed_realistic_light": 0.0033,
+      "5000_mixed_realistic_moderate": 0.0034,
+      "5000_mixed_realistic_severe": 0.0033,
+      "5000_network_bursts": 0.0033,
+      "5000_physiological_motion_artifacts": 0.0033,
+      "5000_physiological_sensor_drift": 0.0033
+    },
+    "success": {
+      "500_environmental_extreme_events": 83.0,
+      "500_environmental_seasonal": 83.0,
+      "500_financial_crash": 81.0,
+      "500_financial_volatility_clustering": 81.0,
+      "500_industrial_calibration_drift": 82.0,
+      "500_mixed_realistic_light": 83.0,
+      "500_mixed_realistic_moderate": 82.0,
+      "500_mixed_realistic_severe": 83.0,
+      "500_network_bursts": 83.0,
+      "500_physiological_motion_artifacts": 81.0,
+      "500_physiological_sensor_drift": 82.0,
+      "1000_environmental_extreme_events": 82.0,
+      "1000_environmental_seasonal": 83.0,
+      "1000_financial_crash": 82.0,
+      "1000_financial_volatility_clustering": 82.0,
+      "1000_industrial_calibration_drift": 82.0,
+      "1000_mixed_realistic_light": 81.0,
+      "1000_mixed_realistic_moderate": 81.0,
+      "1000_mixed_realistic_severe": 82.0,
+      "1000_network_bursts": 82.0,
+      "1000_physiological_motion_artifacts": 83.0,
+      "1000_physiological_sensor_drift": 83.0,
+      "2000_environmental_extreme_events": 82.0,
+      "2000_environmental_seasonal": 82.0,
+      "2000_financial_crash": 81.0,
+      "2000_financial_volatility_clustering": 82.0,
+      "2000_industrial_calibration_drift": 83.0,
+      "2000_mixed_realistic_light": 81.0,
+      "2000_mixed_realistic_moderate": 82.0,
+      "2000_mixed_realistic_severe": 82.0,
+      "2000_network_bursts": 82.0,
+      "2000_physiological_motion_artifacts": 82.0,
+      "2000_physiological_sensor_drift": 81.0,
+      "5000_environmental_extreme_events": 82.0,
+      "5000_environmental_seasonal": 81.0,
+      "5000_financial_crash": 81.0,
+      "5000_financial_volatility_clustering": 81.0,
+      "5000_industrial_calibration_drift": 81.0,
+      "5000_mixed_realistic_light": 81.0,
+      "5000_mixed_realistic_moderate": 81.0,
+      "5000_mixed_realistic_severe": 82.0,
+      "5000_network_bursts": 82.0,
+      "5000_physiological_motion_artifacts": 81.0,
+      "5000_physiological_sensor_drift": 81.0
+    }
+  },
+  "optimization_backend_summary": {
+    "message": "No performance data available"
+  }
+}

@@ -5,6 +5,6 @@ This module provides Continuous Wavelet Transform analysis for estimating the Hu
 from time series data using continuous wavelet decomposition.
 """
 
-from .cwt_estimator import CWTEstimator
+from .cwt_estimator_unified import CWTEstimator
 
 __all__ = ["CWTEstimator"]

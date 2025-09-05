@@ -1,0 +1,254 @@
+{
+  "overall": {
+    "n_total": 17,
+    "n_classical": 7,
+    "n_ml": 3,
+    "n_neural_network": 7,
+    "overall_success_rate": 0.8823529411764706,
+    "overall_mean_mae": 0.24343870204827114,
+    "overall_mean_time": 0.01803312929471334
+  },
+  "by_type": {
+    "classical": {
+      "n_estimators": 7,
+      "mean_mae": 0.3079198785253626,
+      "mean_success_rate": 1.0,
+      "mean_execution_time": 0.03831963751997267,
+      "best_mae": 0.09968255248747336,
+      "best_estimator": "RS"
+    },
+    "ml": {
+      "n_estimators": 3,
+      "mean_mae": 0.19946442383041482,
+      "mean_success_rate": 0.3333333333333333,
+      "mean_execution_time": 0.0006158244609832763,
+      "best_mae": 0.19946442383041482,
+      "best_estimator": "SVR"
+    },
+    "neural_network": {
+      "n_estimators": 7,
+      "mean_mae": 0.1852395653165877,
+      "mean_success_rate": 1.0,
+      "mean_execution_time": 0.0002348074742725917,
+      "best_mae": 0.1802064357995987,
+      "best_estimator": "transformer"
+    }
+  },
+  "top_estimators": [
+    {
+      "estimator_name": "RS",
+      "estimator_type": "classical",
+      "mean_absolute_error": 0.09968255248747336,
+      "success_rate": 1.0
+    },
+    {
+      "estimator_name": "transformer",
+      "estimator_type": "neural_network",
+      "mean_absolute_error": 0.1802064357995987,
+      "success_rate": 1.0
+    },
+    {
+      "estimator_name": "lstm",
+      "estimator_type": "neural_network",
+      "mean_absolute_error": 0.18327804237604145,
+      "success_rate": 1.0
+    },
+    {
+      "estimator_name": "bidirectional_lstm",
+      "estimator_type": "neural_network",
+      "mean_absolute_error": 0.18341939195990561,
+      "success_rate": 1.0
+    },
+    {
+      "estimator_name": "convolutional",
+      "estimator_type": "neural_network",
+      "mean_absolute_error": 0.18436832826957109,
+      "success_rate": 1.0
+    },
+    {
+      "estimator_name": "gru",
+      "estimator_type": "neural_network",
+      "mean_absolute_error": 0.18490843012928962,
+      "success_rate": 1.0
+    },
+    {
+      "estimator_name": "resnet",
+      "estimator_type": "neural_network",
+      "mean_absolute_error": 0.18586979126930242,
+      "success_rate": 1.0
+    },
+    {
+      "estimator_name": "feedforward",
+      "estimator_type": "neural_network",
+      "mean_absolute_error": 0.19462653741240502,
+      "success_rate": 1.0
+    },
+    {
+      "estimator_name": "SVR",
+      "estimator_type": "ml",
+      "mean_absolute_error": 0.19946442383041482,
+      "success_rate": 1.0
+    },
+    {
+      "estimator_name": "Whittle",
+      "estimator_type": "classical",
+      "mean_absolute_error": 0.24,
+      "success_rate": 1.0
+    }
+  ],
+  "detailed_results": [
+    {
+      "estimator_name": "RS",
+      "estimator_type": "classical",
+      "mean_absolute_error": 0.09968255248747336,
+      "success_rate": 1.0,
+      "mean_execution_time": 0.2296493399143219,
+      "n_valid": 400,
+      "n_total": 400
+    },
+    {
+      "estimator_name": "DFA",
+      "estimator_type": "classical",
+      "mean_absolute_error": 0.39676607354539956,
+      "success_rate": 1.0,
+      "mean_execution_time": 0.014497279524803161,
+      "n_valid": 400,
+      "n_total": 400
+    },
+    {
+      "estimator_name": "DMA",
+      "estimator_type": "classical",
+      "mean_absolute_error": 0.4468192770017332,
+      "success_rate": 1.0,
+      "mean_execution_time": 0.0011152064800262452,
+      "n_valid": 400,
+      "n_total": 400
+    },
+    {
+      "estimator_name": "Higuchi",
+      "estimator_type": "classical",
+      "mean_absolute_error": 0.44947442849332964,
+      "success_rate": 1.0,
+      "mean_execution_time": 0.014447118043899537,
+      "n_valid": 400,
+      "n_total": 400
+    },
+    {
+      "estimator_name": "GPH",
+      "estimator_type": "classical",
+      "mean_absolute_error": 0.2676238089729653,
+      "success_rate": 1.0,
+      "mean_execution_time": 0.005081813335418701,
+      "n_valid": 400,
+      "n_total": 400
+    },
+    {
+      "estimator_name": "Whittle",
+      "estimator_type": "classical",
+      "mean_absolute_error": 0.24,
+      "success_rate": 1.0,
+      "mean_execution_time": 0.00046082496643066404,
+      "n_valid": 400,
+      "n_total": 400
+    },
+    {
+      "estimator_name": "Periodogram",
+      "estimator_type": "classical",
+      "mean_absolute_error": 0.25507300917663744,
+      "success_rate": 1.0,
+      "mean_execution_time": 0.0029858803749084474,
+      "n_valid": 400,
+      "n_total": 400
+    },
+    {
+      "estimator_name": "SVR",
+      "estimator_type": "ml",
+      "mean_absolute_error": 0.19946442383041482,
+      "success_rate": 1.0,
+      "mean_execution_time": 0.0006158244609832763,
+      "n_valid": 400,
+      "n_total": 400
+    },
+    {
+      "estimator_name": "GradientBoosting",
+      "estimator_type": "ml",
+      "mean_absolute_error": NaN,
+      "success_rate": 0.0,
+      "mean_execution_time": NaN,
+      "n_valid": 0,
+      "n_total": 400
+    },
+    {
+      "estimator_name": "RandomForest",
+      "estimator_type": "ml",
+      "mean_absolute_error": NaN,
+      "success_rate": 0.0,
+      "mean_execution_time": NaN,
+      "n_valid": 0,
+      "n_total": 400
+    },
+    {
+      "estimator_name": "feedforward",
+      "estimator_type": "neural_network",
+      "mean_absolute_error": 0.19462653741240502,
+      "success_rate": 1.0,
+      "mean_execution_time": 3.322184085845947e-05,
+      "n_valid": 400,
+      "n_total": 400
+    },
+    {
+      "estimator_name": "convolutional",
+      "estimator_type": "neural_network",
+      "mean_absolute_error": 0.18436832826957109,
+      "success_rate": 1.0,
+      "mean_execution_time": 3.84056568145752e-05,
+      "n_valid": 400,
+      "n_total": 400
+    },
+    {
+      "estimator_name": "lstm",
+      "estimator_type": "neural_network",
+      "mean_absolute_error": 0.18327804237604145,
+      "success_rate": 1.0,
+      "mean_execution_time": 0.00025387287139892577,
+      "n_valid": 400,
+      "n_total": 400
+    },
+    {
+      "estimator_name": "bidirectional_lstm",
+      "estimator_type": "neural_network",
+      "mean_absolute_error": 0.18341939195990561,
+      "success_rate": 1.0,
+      "mean_execution_time": 0.00031492769718170164,
+      "n_valid": 400,
+      "n_total": 400
+    },
+    {
+      "estimator_name": "gru",
+      "estimator_type": "neural_network",
+      "mean_absolute_error": 0.18490843012928962,
+      "success_rate": 1.0,
+      "mean_execution_time": 0.00019666433334350586,
+      "n_valid": 400,
+      "n_total": 400
+    },
+    {
+      "estimator_name": "transformer",
+      "estimator_type": "neural_network",
+      "mean_absolute_error": 0.1802064357995987,
+      "success_rate": 1.0,
+      "mean_execution_time": 0.0007370525598526001,
+      "n_valid": 400,
+      "n_total": 400
+    },
+    {
+      "estimator_name": "resnet",
+      "estimator_type": "neural_network",
+      "mean_absolute_error": 0.18586979126930242,
+      "success_rate": 1.0,
+      "mean_execution_time": 6.950736045837403e-05,
+      "n_valid": 400,
+      "n_total": 400
+    }
+  ]
+}

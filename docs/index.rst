@@ -24,24 +24,28 @@ Welcome to LRDBenchmark's documentation!
 
 **LRDBenchmark** is a comprehensive benchmarking framework for long-range dependence (LRD) analysis in time series data. It provides a unified platform for evaluating and comparing various estimators and models for detecting and quantifying long-range dependence patterns.
 
-🏆 **Latest Results: ML Models Achieve 74% Better Accuracy Than Classical Methods!**
+🏆 **Latest Results: Comprehensive Three-Way Comparison - Classical vs ML vs Neural Networks!**
 
-Our latest comprehensive benchmark shows:
-- **74% better accuracy** for ML models (0.079 MAE) vs Classical methods (0.305 MAE)
-- **Gradient Boosting: Best overall performance** (0.023 MAE - 90% better than best classical)
-- **4 production-ready ML models** with 50-70 engineered features per model
-- **Advanced feature engineering** including spectral, DFA, wavelet, and R/S analysis
-- **Production-ready system** with train-once, apply-many workflow
-- **100% success rate** for both ML and classical approaches
+Our latest comprehensive three-way benchmark shows:
+- **R/S (Classical): Best individual performance** (0.0997 MAE)
+- **Neural Networks: Excellent speed-accuracy trade-offs** (0.1802-0.1946 MAE, 0.0-0.7ms execution time)
+- **17 estimators tested**: 7 Classical, 3 ML, 7 Neural Network approaches
+- **88.2% overall success rate** across all approaches
+- **Neural Network Factory**: 8 architectures with train-once, apply-many workflows
+- **Production-ready systems** with GPU memory management and model persistence
 
 Key Features
 ------------
 
-* **Production-Ready ML Models**: SVR, Gradient Boosting, Random Forest, and CNN with 50-70 engineered features
-* **Superior ML Performance**: 74% better accuracy than classical methods with Gradient Boosting achieving best overall performance
-* **Comprehensive Classical Estimators**: 13 adaptive estimators with automatic optimization framework selection
+* **Neural Network Factory**: 8 architectures (FFN, CNN, LSTM, GRU, Transformer, ResNet, etc.) with train-once, apply-many workflows
+* **Three-Way Comparison**: Classical, ML, and Neural Network approaches comprehensively benchmarked
+* **Best Individual Performance**: R/S (Classical) with 0.0997 MAE
+* **Neural Network Excellence**: Consistent high performance (0.1802-0.1946 MAE) with ultra-fast inference (0.0-0.7ms)
+* **Production-Ready ML Models**: SVR, Gradient Boosting, Random Forest with 50-70 engineered features
+* **Comprehensive Classical Estimators**: 7 adaptive estimators with automatic optimization framework selection
 * **Intelligent Backend System**: Automatic GPU/JAX, CPU/Numba, or NumPy selection based on data characteristics
-* **Advanced Feature Engineering**: Spectral, DFA, wavelet, and R/S analysis features for ML models
+* **GPU Memory Management**: Batch processing and memory optimization for neural networks
+* **Model Persistence**: Automatic model saving and loading for production deployment
 * **Robust Error Handling**: Adaptive parameter selection and progressive fallback mechanisms
 * **EEG Contamination Testing**: 8 realistic artifact scenarios for biomedical applications
 * **Multiple Data Models**: FBM, FGN, ARFIMA, MRW with configurable parameters
@@ -72,6 +76,7 @@ API Reference
    :maxdepth: 2
 
    api/machine_learning_estimators
+   api/neural_network_factory
    api/adaptive_estimators
    api/contamination_factory
    api/estimators

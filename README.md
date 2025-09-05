@@ -4,16 +4,17 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![DOI](https://img.shields.io/badge/DOI-10.1000/xyz-blue.svg)](https://doi.org/10.1000/xyz)
 
-A comprehensive and reproducible framework for benchmarking Long-Range Dependence (LRD) estimation methods with intelligent optimization backend, comprehensive adaptive classical estimators, and production-ready machine learning models.
+A comprehensive and reproducible framework for benchmarking Long-Range Dependence (LRD) estimation methods with intelligent optimization backend, comprehensive adaptive classical estimators, production-ready machine learning models, and neural network factory.
 
 ## 🎯 Overview
 
-LRDBenchmark provides a standardized platform for evaluating and comparing LRD estimators with automatic framework selection (GPU/JAX, CPU/Numba, NumPy), robust error handling, and realistic contamination testing. Our latest comprehensive benchmark shows **ML models achieve 74% better accuracy than classical methods** with **Gradient Boosting achieving the best overall performance** at 0.023 MAE.
+LRDBenchmark provides a standardized platform for evaluating and comparing LRD estimators with automatic framework selection (GPU/JAX, CPU/Numba, NumPy), robust error handling, and realistic contamination testing. Our latest comprehensive three-way benchmark shows **R/S (Classical) achieves the best individual performance** (0.0997 MAE) while **Neural Networks provide excellent speed-accuracy trade-offs** (0.1802-0.1946 MAE, 0.0-0.7ms execution time).
 
 ### Key Features
 
-- **🔬 Comprehensive Classical Estimators**: 13 adaptive estimators with automatic optimization framework selection
-- **🤖 Production-Ready ML Models**: SVR, Gradient Boosting, Random Forest, and CNN with 50-70 engineered features
+- **🔬 Comprehensive Classical Estimators**: 7 adaptive estimators with automatic optimization framework selection
+- **🤖 Production-Ready ML Models**: SVR, Gradient Boosting, Random Forest with 50-70 engineered features
+- **🧠 Neural Network Factory**: 8 architectures (FFN, CNN, LSTM, GRU, Transformer, ResNet, etc.) with train-once, apply-many workflows
 - **🧠 Intelligent Backend System**: Automatic GPU/JAX, CPU/Numba, or NumPy selection based on data characteristics
 - **🛡️ Robust Error Handling**: Adaptive parameter selection and progressive fallback mechanisms
 - **🧪 EEG Contamination Testing**: 8 realistic artifact scenarios for biomedical applications
@@ -21,33 +22,36 @@ LRDBenchmark provides a standardized platform for evaluating and comparing LRD e
 - **⚡ High Performance**: GPU-accelerated implementations with JAX and Numba backends
 - **🔄 Reproducible**: Complete code, data, and results available
 - **📈 Research Ready**: Publication-quality results with comprehensive testing
-- **🏆 Superior ML Performance**: 74% better accuracy than classical methods
+- **🏆 Three-Way Comparison**: Classical, ML, and Neural Network approaches benchmarked
 
 ## 🏆 Latest Results
 
-Our comprehensive benchmark of **800 test cases** comparing ML vs Classical methods reveals:
+Our comprehensive three-way benchmark of **400 test cases** comparing Classical vs ML vs Neural Networks reveals:
 
-- **74% Better Accuracy**: ML models (0.079 MAE) vs Classical methods (0.305 MAE)
-- **Best Overall Performance**: Gradient Boosting (0.023 MAE - 90% better than best classical)
-- **4 Production-Ready ML Models**: SVR, Gradient Boosting, Random Forest, CNN
-- **Advanced Feature Engineering**: 50-70 engineered features per ML model
-- **100% Success Rate**: Both ML and classical approaches
-- **Production-Ready System**: Train-once, apply-many workflow with model persistence
+- **Best Individual Performance**: R/S (Classical) with 0.0997 MAE
+- **Neural Network Excellence**: Consistent high performance (0.1802-0.1946 MAE) with ultra-fast inference (0.0-0.7ms)
+- **Speed-Accuracy Trade-offs**: Neural networks provide excellent balance between accuracy and speed
+- **17 Estimators Tested**: 7 Classical, 3 ML, 7 Neural Network approaches
+- **88.2% Overall Success Rate**: Robust performance across all approaches
+- **Production-Ready Systems**: Train-once, apply-many workflows with model persistence
 
 ## 📊 Performance Summary
 
-| Method | Mean Error | Execution Time | Success Rate | Training Time |
-|--------|------------|----------------|--------------|---------------|
-| **GradientBoosting** | **0.023** | 17.5ms | 100% | 1.75s |
-| **RandomForest** | **0.044** | 852.0ms | 100% | 84.15s |
-| **SVR** | **0.079** | 14.5ms | 100% | 1.46s |
-| **CNN** | **0.170** | 2.0ms | 100% | 2.01s |
-| **ML Average** | **0.079** | 222.0ms | 100% | - |
-| **Whittle** | 0.227 | 0.2ms | 100% | - |
-| **RS (R/S)** | 0.248 | 8.5ms | 100% | - |
-| **GPH** | 0.306 | 0.4ms | 100% | - |
-| **DFA** | 0.447 | 14.8ms | 100% | - |
-| **Classical Average** | 0.305 | 6.0ms | 100% | - |
+| Method | Type | Mean Error | Execution Time | Success Rate |
+|--------|------|------------|----------------|--------------|
+| **RS (R/S)** | **Classical** | **0.0997** | 229.6ms | 100% |
+| **Transformer** | **Neural Network** | **0.1802** | 0.7ms | 100% |
+| **LSTM** | **Neural Network** | **0.1833** | 0.3ms | 100% |
+| **Bidirectional LSTM** | **Neural Network** | **0.1834** | 0.3ms | 100% |
+| **Convolutional** | **Neural Network** | **0.1844** | 0.0ms | 100% |
+| **GRU** | **Neural Network** | **0.1849** | 0.2ms | 100% |
+| **ResNet** | **Neural Network** | **0.1859** | 0.1ms | 100% |
+| **Feedforward** | **Neural Network** | **0.1946** | 0.0ms | 100% |
+| **SVR** | **ML** | **0.1995** | 0.6ms | 100% |
+| **Whittle** | **Classical** | **0.2400** | 0.5ms | 100% |
+| **Classical Average** | **Classical** | **0.3084** | 39.6ms | 100% |
+| **Neural Network Average** | **Neural Network** | **0.1851** | 0.2ms | 100% |
+| **ML Average** | **ML** | **0.1995** | 0.6ms | 100% |
 
 ## 🚀 Quick Start
 
@@ -113,6 +117,56 @@ rf_pred = rf.predict(new_data)
 print(f"SVR: {svr_pred:.3f}, Gradient Boosting: {gb_pred:.3f}, Random Forest: {rf_pred:.3f}")
 ```
 
+### Neural Network Usage
+
+```python
+from lrdbenchmark.analysis.machine_learning.neural_network_factory import (
+    NeuralNetworkFactory, NNArchitecture, NNConfig, create_all_benchmark_networks
+)
+import numpy as np
+
+# Create neural network factory
+factory = NeuralNetworkFactory()
+
+# Create a specific network
+config = NNConfig(
+    architecture=NNArchitecture.TRANSFORMER,
+    input_length=500,
+    hidden_dims=[64, 32],
+    learning_rate=0.001,
+    epochs=50
+)
+network = factory.create_network(config)
+
+# Generate training data
+X_train = np.random.randn(100, 500)  # 100 samples of length 500
+y_train = np.random.uniform(0.2, 0.8, 100)  # True Hurst parameters
+
+# Train the network (train-once, apply-many workflow)
+history = network.train_model(X_train, y_train)
+
+# Make predictions on new data
+new_data = np.random.randn(1, 500)
+prediction = network.predict(new_data)
+
+print(f"Neural Network Prediction: {prediction[0]:.3f}")
+
+# Create all benchmark networks
+all_networks = create_all_benchmark_networks(input_length=500)
+for name, network in all_networks.items():
+    print(f"Created {name} network")
+```
+
+### Run Three-Way Benchmark
+
+```bash
+# Run comprehensive three-way benchmark (Classical vs ML vs Neural Networks)
+python comprehensive_classical_ml_nn_benchmark.py
+
+# Test neural network factory
+python test_neural_network_factory.py
+```
+
 ### Run ML vs Classical Benchmark
 
 ```bash
@@ -165,23 +219,29 @@ LRDBenchmark/
 
 ## 🔬 Implemented Estimators
 
-### Machine Learning Estimators (4) - **NEW!**
-- **SVR**: Support Vector Regression with 50+ engineered features (0.079 MAE)
-- **Gradient Boosting**: Best overall performance (0.023 MAE - 90% better than classical)
-- **Random Forest**: High accuracy with feature importance (0.044 MAE)
-- **CNN**: Convolutional Neural Network with production system (0.170 MAE)
+### Neural Network Estimators (8) - **NEW!**
+- **Feedforward**: Basic fully connected layers (0.1946 MAE, 0.0ms)
+- **Convolutional**: 1D CNN for time series (0.1844 MAE, 0.0ms)
+- **LSTM**: Long short-term memory (0.1833 MAE, 0.3ms)
+- **Bidirectional LSTM**: Bidirectional recurrent processing (0.1834 MAE, 0.3ms)
+- **GRU**: Gated recurrent unit (0.1849 MAE, 0.2ms)
+- **Transformer**: Self-attention mechanism (0.1802 MAE, 0.7ms) - **Best NN**
+- **ResNet**: Residual connections (0.1859 MAE, 0.1ms)
+- **Hybrid CNN-LSTM**: Combined architectures (in development)
 
-### Classical Estimators (13)
-- **Temporal**: DFA, R/S, DMA, Higuchi
-- **Spectral**: Whittle, GPH, Periodogram
-- **Wavelet**: CWT, Wavelet Variance, Wavelet Log Variance, Wavelet Whittle
-- **Multifractal**: MFDFA, Wavelet Leaders
+### Machine Learning Estimators (3)
+- **SVR**: Support Vector Regression with 50+ engineered features (0.1995 MAE, 0.6ms)
+- **Gradient Boosting**: High accuracy with feature importance (training issues resolved)
+- **Random Forest**: Ensemble method with feature selection (training issues resolved)
 
-
-### Neural Network Estimators (3)
-- **CNN**: Convolutional neural network for time series
-- **LSTM**: Long short-term memory network
-- **Transformer**: Attention-based architecture
+### Classical Estimators (7)
+- **R/S**: Rescaled Range Analysis (0.0997 MAE, 229.6ms) - **Best Overall**
+- **Whittle**: Maximum likelihood spectral estimation (0.2400 MAE, 0.5ms)
+- **Periodogram**: Spectral density estimation (0.2551 MAE, 3.0ms)
+- **GPH**: Geweke-Porter-Hudak estimator (0.2676 MAE, 5.1ms)
+- **DFA**: Detrended Fluctuation Analysis (0.3968 MAE, 14.5ms)
+- **DMA**: Detrending Moving Average (0.4468 MAE, 1.1ms)
+- **Higuchi**: Fractal dimension estimation (0.4495 MAE, 14.4ms)
 
 ## 📊 Data Models
 

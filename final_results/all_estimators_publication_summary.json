@@ -1,0 +1,13 @@
+{
+  "total_tests": 6240,
+  "success_rate": 100.0,
+  "mean_absolute_error": 0.4352296683405006,
+  "mean_relative_error": 86.86519855609288,
+  "best_estimator": "Classical_Whittle",
+  "fastest_estimator": "Classical_Periodogram",
+  "classical_mean_error": 0.4470159893654871,
+  "ml_mean_error": 0.2031801184337785,
+  "neural_mean_error": 0.5915873492330623,
+  "ml_advantage_over_classical": 54.54746065746312,
+  "contamination_robustness_degradation": 55.01429664187674
+}

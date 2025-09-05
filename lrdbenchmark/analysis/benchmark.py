@@ -43,10 +43,10 @@ from .multifractal.wavelet_leaders.multifractal_wavelet_leaders_estimator import
 )
 
 # Import data models
-from models.data_models.fbm.fbm_model import FractionalBrownianMotion as FBMModel
-from models.data_models.fgn.fgn_model import FractionalGaussianNoise as FGNModel
-from models.data_models.arfima.arfima_model import ARFIMAModel
-from models.data_models.mrw.mrw_model import MultifractalRandomWalk as MRWModel
+from ..models.data_models.fbm.fbm_model import FractionalBrownianMotion as FBMModel
+from ..models.data_models.fgn.fgn_model import FractionalGaussianNoise as FGNModel
+from ..models.data_models.arfima.arfima_model import ARFIMAModel
+from ..models.data_models.mrw.mrw_model import MultifractalRandomWalk as MRWModel
 
 
 # Import contamination models

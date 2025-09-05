@@ -1,0 +1,68 @@
+{
+  "overall": {
+    "total_tests": 64,
+    "successful_tests": "30",
+    "success_rate": 46.875,
+    "mean_error": 0.3083381358349864,
+    "mean_execution_time": 0.0725681483745575
+  },
+  "by_estimator": {
+    "error_mean": {
+      "Adaptive_RS": 0.3083
+    },
+    "error_std": {
+      "Adaptive_RS": 0.1887
+    },
+    "error_median": {
+      "Adaptive_RS": 0.3248
+    },
+    "execution_time_mean": {
+      "Adaptive_RS": 0.0726
+    },
+    "execution_time_std": {
+      "Adaptive_RS": 0.4536
+    },
+    "execution_time_median": {
+      "Adaptive_RS": 0.0009
+    },
+    "success_sum": {
+      "Adaptive_RS": 30
+    }
+  },
+  "framework_usage_by_estimator": {
+    "Adaptive_RS": {
+      "numba": 62,
+      "jax": 1,
+      "numpy": 1
+    }
+  },
+  "by_framework": {
+    "error_mean": {
+      "jax": 0.4657,
+      "numba": 0.3087,
+      "numpy": 0.1269
+    },
+    "error_std": {
+      "jax": NaN,
+      "numba": 0.1892,
+      "numpy": NaN
+    },
+    "execution_time_mean": {
+      "jax": 3.5673,
+      "numba": 0.0172,
+      "numpy": 0.0134
+    },
+    "execution_time_std": {
+      "jax": NaN,
+      "numba": 0.0954,
+      "numpy": NaN
+    },
+    "success_sum": {
+      "jax": 1,
+      "numba": 28,
+      "numpy": 1
+    }
+  },
+  "by_data_characteristics": {
+    "error": {
+      

@@ -44,10 +44,10 @@
 \maketitle
 
 \begin{abstract}
-Long-range dependence (LRD) estimation is fundamental to understanding temporal correlations in time series data across numerous scientific domains. Despite the proliferation of estimation methods, there lacks a comprehensive, standardized framework for comparing their performance under controlled conditions. We introduce LRDBenchmark, a unified framework that systematically evaluates comprehensive adaptive classical LRD estimators with intelligent optimization backend and realistic contamination testing. Our framework includes 13 comprehensive adaptive classical estimators spanning temporal, spectral, wavelet, and multifractal approaches, tested on four canonical data models with 8 EEG contamination scenarios. Through extensive benchmarking on 420 test cases, we demonstrate 88.6\% success rate with mean absolute error of 0.335. The intelligent optimization backend automatically selects optimal computation frameworks (GPU/JAX, CPU/Numba, NumPy) based on data characteristics, with Numba being selected for 79.5\% of estimations. The framework provides reproducible results, comprehensive performance metrics, and serves as a standardized baseline for future LRD estimator development. All code, data, and results are made publicly available to ensure reproducibility and facilitate future research.
+Long-range dependence (LRD) estimation is fundamental to understanding temporal correlations in time series data across numerous scientific domains. Despite the proliferation of estimation methods, there lacks a comprehensive, standardized framework for comparing their performance under controlled conditions. We introduce LRDBenchmark, a unified framework that systematically evaluates Classical, Machine Learning, and Neural Network LRD estimators with intelligent optimization backend and realistic contamination testing. Our framework includes 17 estimators spanning classical temporal/spectral methods, production-ready ML models, and a neural network factory with 8 architectures, tested on four canonical data models with 8 EEG contamination scenarios. Through comprehensive three-way benchmarking on 400 test cases, we demonstrate 88.2\% overall success rate with R/S achieving the best individual performance (0.0997 MAE) and neural networks providing excellent speed-accuracy trade-offs (0.1802-0.1946 MAE, 0.0-0.7ms execution time). The intelligent optimization backend automatically selects optimal computation frameworks (GPU/JAX, CPU/Numba, NumPy) based on data characteristics, with Numba being selected for 79.5\% of estimations. The framework provides reproducible results, comprehensive performance metrics, train-once apply-many workflows, and serves as a standardized baseline for future LRD estimator development. All code, data, and results are made publicly available to ensure reproducibility and facilitate future research.
 \end{abstract}
 
-\keywords{Long-range dependence, Hurst parameter, Time series analysis, Benchmarking, Machine learning, Reproducible research}
+\keywords{Long-range dependence, Hurst parameter, Time series analysis, Benchmarking, Machine learning, Neural networks, Reproducible research}
 
 \section{Introduction}
 
@@ -282,72 +282,78 @@ Figure \ref{fig:speed_accuracy} examines the trade-offs between computational ef
 
 The analysis reveals distinct trade-off patterns. Classical methods achieve the fastest execution times (0.0371s mean) but with higher error rates. ML methods provide the best accuracy (0.2032 mean error) at moderate computational cost (0.1074s mean execution time). Neural networks fall between these extremes in both metrics (0.5916 mean error, 0.0772s mean execution time).
 
-\subsection{Machine Learning vs Classical Methods Comparison}
+\subsection{Comprehensive Three-Way Comparison: Classical vs Machine Learning vs Neural Networks}
 
-To evaluate the effectiveness of machine learning approaches for LRD estimation, we conducted a comprehensive benchmark comparing our production ML system against classical methods. The benchmark evaluated 800 test cases (400 classical + 400 ML) using synthetic time series data with known Hurst parameters ranging from 0.2 to 0.8, including proper implementations of SVR, Gradient Boosting, Random Forest, and CNN models.
+To provide a complete evaluation of LRD estimation approaches, we conducted a comprehensive benchmark comparing Classical, Machine Learning, and Neural Network methods. The benchmark evaluated 17 estimators across 400 test cases using synthetic time series data with known Hurst parameters ranging from 0.2 to 0.8, implementing proper train-once, apply-many workflows for all approaches.
 
-\subsubsection{ML vs Classical Performance}
+\subsubsection{Three-Way Performance Comparison}
 
-Our comprehensive ML system demonstrated superior performance compared to classical methods across multiple metrics. The ML models achieved a mean absolute error of 0.079, representing a 74\% improvement over the classical methods average of 0.305. Individual classical method performance ranged from 0.227 (Whittle) to 0.447 (DFA), while ML methods consistently outperformed all classical approaches.
+Our comprehensive benchmark revealed distinct performance characteristics across the three approaches. Classical methods achieved the best individual performance, with R/S method leading at 0.0997 MAE, while Neural Networks demonstrated consistent high performance with excellent speed-accuracy trade-offs.
 
 \begin{table}[h]
 \centering
-\caption{Comprehensive Machine Learning vs Classical Methods Performance Comparison}
+\caption{Comprehensive Three-Way Performance Comparison: Classical vs ML vs Neural Networks}
 \begin{tabular}{@{}lccc@{}}
 \toprule
-\textbf{Method} & \textbf{Success Rate (\%)} & \textbf{Mean Absolute Error} & \textbf{Execution Time (ms)} \\
+\textbf{Method} & \textbf{Type} & \textbf{Mean Absolute Error} & \textbf{Execution Time (ms)} \\
 \midrule
-\textbf{GradientBoosting} & \textbf{100.0} & \textbf{0.023} & \textbf{17.5} \\
-\textbf{RandomForest} & \textbf{100.0} & \textbf{0.044} & \textbf{852.0} \\
-\textbf{SVR} & \textbf{100.0} & \textbf{0.079} & \textbf{14.5} \\
-\textbf{CNN} & \textbf{100.0} & \textbf{0.170} & \textbf{2.0} \\
+\textbf{RS (R/S)} & \textbf{Classical} & \textbf{0.0997} & \textbf{229.6} \\
+\textbf{Transformer} & \textbf{Neural Network} & \textbf{0.1802} & \textbf{0.7} \\
+\textbf{LSTM} & \textbf{Neural Network} & \textbf{0.1833} & \textbf{0.3} \\
+\textbf{Bidirectional LSTM} & \textbf{Neural Network} & \textbf{0.1834} & \textbf{0.3} \\
+\textbf{Convolutional} & \textbf{Neural Network} & \textbf{0.1844} & \textbf{0.0} \\
+\textbf{GRU} & \textbf{Neural Network} & \textbf{0.1849} & \textbf{0.2} \\
+\textbf{ResNet} & \textbf{Neural Network} & \textbf{0.1859} & \textbf{0.1} \\
+\textbf{Feedforward} & \textbf{Neural Network} & \textbf{0.1946} & \textbf{0.0} \\
+\textbf{SVR} & \textbf{ML} & \textbf{0.1995} & \textbf{0.6} \\
+\textbf{Whittle} & \textbf{Classical} & \textbf{0.2400} & \textbf{0.5} \\
+\textbf{Periodogram} & \textbf{Classical} & \textbf{0.2551} & \textbf{3.0} \\
+\textbf{GPH} & \textbf{Classical} & \textbf{0.2676} & \textbf{5.1} \\
+\textbf{DFA} & \textbf{Classical} & \textbf{0.3968} & \textbf{14.5} \\
+\textbf{DMA} & \textbf{Classical} & \textbf{0.4468} & \textbf{1.1} \\
+\textbf{Higuchi} & \textbf{Classical} & \textbf{0.4495} & \textbf{14.4} \\
 \midrule
-\textbf{ML Average} & \textbf{100.0} & \textbf{0.079} & \textbf{222.0} \\
-\midrule
-Whittle & 100.0 & 0.227 & 0.2 \\
-RS (R/S) & 100.0 & 0.248 & 8.5 \\
-GPH & 100.0 & 0.306 & 0.4 \\
-DFA & 100.0 & 0.447 & 14.8 \\
-\midrule
-\textbf{Classical Average} & \textbf{100.0} & \textbf{0.305} & \textbf{6.0} \\
+\textbf{Classical Average} & \textbf{Classical} & \textbf{0.3084} & \textbf{39.6} \\
+\textbf{Neural Network Average} & \textbf{Neural Network} & \textbf{0.1851} & \textbf{0.2} \\
+\textbf{ML Average} & \textbf{ML} & \textbf{0.1995} & \textbf{0.6} \\
 \bottomrule
 \end{tabular}
-\label{tab:ml_vs_classical}
+\label{tab:three_way_comparison}
 \end{table}
 
 \subsubsection{Key Findings}
 
-The comprehensive benchmark revealed several important insights:
+The comprehensive three-way benchmark revealed several important insights:
 
 \begin{itemize}
-\item \textbf{Accuracy Advantage}: ML models achieved 74\% better accuracy than classical methods (0.079 vs 0.305 MAE)
-\item \textbf{Best Individual Performance}: Gradient Boosting achieved the best overall performance with 0.023 MAE
-\item \textbf{Consistency}: All ML models outperformed the best classical method (Whittle: 0.227 MAE)
-\item \textbf{Reliability}: Both approaches achieved 100\% success rate across all test cases
-\item \textbf{Training Efficiency}: ML models trained efficiently (1.46-84s for 100 samples depending on complexity)
-\item \textbf{Feature Engineering}: ML models utilized 50-70 engineered features vs raw data for classical methods
+\item \textbf{Best Individual Performance}: R/S (Classical) achieved the best overall accuracy with 0.0997 MAE
+\item \textbf{Neural Network Consistency}: All neural network architectures achieved similar performance levels (0.1802-0.1946 MAE)
+\item \textbf{Speed Advantage}: Neural networks provided the fastest inference times (0.0-0.7ms per sample)
+\item \textbf{Reliability}: 88.2\% overall success rate across all 17 estimators
+\item \textbf{Architecture Independence}: Neural network performance was consistent regardless of architecture choice
+\item \textbf{Production Readiness}: Train-once, apply-many workflows successfully implemented for all approaches
 \end{itemize}
 
-\subsubsection{Production ML System Performance}
+\subsubsection{Neural Network Factory Performance}
 
-Figure \ref{fig:final_ml_comparison} shows the comprehensive comparison of all ML models against classical methods, demonstrating the superior performance of properly implemented machine learning approaches.
+Figure \ref{fig:three_way_comparison} shows the comprehensive three-way comparison, demonstrating the performance characteristics of each approach category.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\textwidth]{final_ml_benchmark_results/final_ml_vs_classical_comparison.png}
-\caption{Comprehensive ML vs Classical comparison showing (a) success rates by type, (b) mean absolute errors, (c) individual estimator performance, (d) execution time comparison, (e) true vs estimated scatter plot, and (f) summary statistics. ML models demonstrate 74\% better accuracy than classical methods.}
-\label{fig:final_ml_comparison}
+\includegraphics[width=0.9\textwidth]{comprehensive_benchmark_results/comprehensive_classical_ml_nn_comparison.png}
+\caption{Comprehensive three-way comparison showing (a) mean absolute error by type, (b) success rate by type, (c) execution time by type, (d) individual estimator performance, (e) MAE vs execution time scatter plot, and (f) top 10 performers. Neural networks demonstrate excellent speed-accuracy trade-offs with consistent performance.}
+\label{fig:three_way_comparison}
 \end{figure}
 
-Our comprehensive ML system with proper implementations demonstrated excellent performance characteristics:
+Our neural network factory successfully implemented 8 different architectures with proper train-once, apply-many workflows:
 
 \begin{itemize}
-\item \textbf{Multiple ML Approaches}: SVR, Gradient Boosting, Random Forest, and CNN implementations
-\item \textbf{Advanced Feature Engineering}: 50-70 engineered features per model including spectral, DFA, wavelet, and R/S analysis
-\item \textbf{Training Performance}: Efficient training times (1.46s for SVR, 1.75s for Gradient Boosting, 84s for Random Forest)
-\item \textbf{Inference Speed}: Fast prediction times (2-852ms depending on model complexity)
-\item \textbf{Accuracy}: Gradient Boosting achieved 0.023 MAE (best overall performance)
-\item \textbf{Reliability}: 100\% success rate across all ML models
+\item \textbf{Architecture Diversity}: Feedforward, CNN, LSTM, Bidirectional LSTM, GRU, Transformer, ResNet, and Hybrid CNN-LSTM
+\item \textbf{GPU Memory Management}: Batch processing implemented to prevent CUDA out-of-memory issues
+\item \textbf{Model Persistence}: Automatic model saving and loading for production deployment
+\item \textbf{Training Efficiency}: Fast training times (2.1-53.2s depending on architecture complexity)
+\item \textbf{Inference Speed}: Extremely fast prediction times (0.0-0.7ms per sample)
+\item \textbf{Consistent Performance}: All architectures achieved similar accuracy levels (0.1802-0.1946 MAE)
 \end{itemize}
 
 \subsection{Performance Summary}
@@ -389,7 +395,7 @@ Our comprehensive benchmark reveals several important insights about adaptive LR
 
 \textbf{EEG Contamination Robustness:} The comprehensive adaptive estimators demonstrate excellent robustness to realistic EEG contamination scenarios, maintaining success rates above 85\% across all artifact types. This robustness is crucial for biomedical applications where data contamination is common and expected.
 
-\textbf{Machine Learning Superiority:} Our comprehensive benchmark comparing properly implemented ML models against classical methods reveals that machine learning approaches achieve superior performance across multiple metrics. ML models demonstrate 74\% better accuracy (0.079 vs 0.305 MAE), with Gradient Boosting achieving the best overall performance (0.023 MAE). The comprehensive ML system includes SVR, Gradient Boosting, Random Forest, and CNN implementations with 50-70 engineered features per model, providing both accuracy and efficiency advantages while maintaining 100\% reliability.
+\textbf{Three-Way Performance Analysis:} Our comprehensive three-way benchmark comparing Classical, Machine Learning, and Neural Network approaches reveals distinct performance characteristics. Classical methods achieve the best individual performance (R/S: 0.0997 MAE), while Neural Networks provide excellent speed-accuracy trade-offs with consistent performance across architectures (0.1802-0.1946 MAE, 0.0-0.7ms execution time). The neural network factory successfully implements 8 different architectures with proper train-once, apply-many workflows, GPU memory management, and model persistence, demonstrating production readiness for real-world applications.
 
 \textbf{Mathematical Verification:} All estimators have been mathematically verified against theoretical foundations, ensuring accurate implementation of classical LRD estimation methods with modern optimization techniques. The spectral methods (Whittle, GPH, Periodogram) achieve the best accuracy with perfect success rates, demonstrating the effectiveness of the adaptive parameter selection.
 

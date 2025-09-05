@@ -1,0 +1,95 @@
+% LaTeX Tables Generated from LRDBenchmark Results
+% Generated automatically from comprehensive_all_estimators_benchmark_20250905_074313.csv
+
+% Individual Estimators Table
+\begin{table}[htbp]
+\centering
+\caption{Individual Estimator Performance}
+\label{tab:individual_estimators}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Estimator} & \textbf{Mean Error} & \textbf{Std Dev} & \textbf{Mean Time (s)} \\
+\midrule
+Classical Whittle & 0.1332 & 0.1028 & 0.0024 \\
+ML GradientBoosting & 0.2032 & 0.1339 & 0.1082 \\
+ML RandomForest & 0.2032 & 0.1339 & 0.1080 \\
+ML SVR & 0.2032 & 0.1339 & 0.1059 \\
+Classical DMA & 0.2894 & 0.2378 & 0.0289 \\
+Classical GPH & 0.3177 & 0.2320 & 0.0013 \\
+Classical RS & 0.3597 & 0.2799 & 0.1321 \\
+Neural CNN & 0.5663 & 0.2241 & 0.0429 \\
+Neural Transformer & 0.6000 & 0.2238 & 0.1198 \\
+Neural LSTM & 0.6000 & 0.2238 & 0.0711 \\
+Neural GRU & 0.6000 & 0.2238 & 0.0751 \\
+Classical Higuchi & 0.7763 & 0.3800 & 0.0564 \\
+Classical Periodogram & 0.8058 & 0.7963 & 0.0012 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Category Comparison Table
+\begin{table}[htbp]
+\centering
+\caption{Performance Summary by Estimator Category}
+\label{tab:category_comparison}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Category} & \textbf{Mean Error} & \textbf{Mean Time (s)} & \textbf{Success Rate} \\
+\midrule
+Classical & 0.4470 & 0.0371 & 1.000 \\
+ML & 0.2032 & 0.1074 & 1.000 \\
+Neural & 0.5916 & 0.0772 & 1.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Contamination Effects Table
+\begin{table}[htbp]
+\centering
+\caption{Contamination Effects on Estimator Performance}
+\label{tab:contamination_effects}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Category} & \textbf{0\% Contamination} & \textbf{20\% Contamination} & \textbf{Degradation (\%)} \\
+\midrule
+Classical & 0.1992 & 0.6053 & 203.9 \\
+ML & 0.1927 & 0.2052 & 6.5 \\
+Neural & 0.5916 & 0.5916 & 0.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Data Model Performance Table
+\begin{table}[htbp]
+\centering
+\caption{Performance by Data Model}
+\label{tab:data_model_performance}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Data Model} & \textbf{Classical} & \textbf{ML} & \textbf{Neural} \\
+\midrule
+ARFIMA & 0.3847 & 0.1998 & 0.5916 \\
+FBM & 0.5402 & 0.2072 & 0.5916 \\
+FGN & 0.5332 & 0.2053 & 0.5916 \\
+MRW & 0.3300 & 0.2004 & 0.5916 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Hurst Value Performance Table
+\begin{table}[htbp]
+\centering
+\caption{Performance by True Hurst Value}
+\label{tab:hurst_value_performance}
+\begin{tabular}{lccc}
+\toprule
+\textbf{True Hurst} & \textbf{Classical} & \textbf{ML} & \textbf{Neural} \\
+\midrule
+0.3 & 0.7436 & 0.2020 & 0.2916 \\
+0.5 & 0.4987 & 0.0185 & 0.4916 \\
+0.7 & 0.3383 & 0.2001 & 0.6916 \\
+0.9 & 0.2074 & 0.3922 & 0.8916 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
