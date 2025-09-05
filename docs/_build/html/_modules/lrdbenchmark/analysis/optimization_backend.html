@@ -1,0 +1,648 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lrdbenchmark.analysis.optimization_backend &mdash; LRDBenchmark 1.7.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/_modules/lrdbenchmark/analysis/optimization_backend.html"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=030dc6f6"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LRDBenchmark
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/machine_learning_estimators.html">Machine Learning Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/adaptive_estimators.html">Comprehensive Adaptive Estimators API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/contamination_factory.html">Contamination Factory API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/estimators.html">Estimators API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/data_models.html">Data Models API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/benchmark.html">Benchmark API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/analytics.html">Analytics API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html">Theoretical Foundations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#statistical-estimators">Statistical Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#validation-techniques">Validation Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#performance-metrics">Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#statistical-tests">Statistical Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#practical-examples">Practical Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#theoretical-references">Theoretical References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html">Validation Techniques and Statistical Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#monte-carlo-validation">Monte Carlo Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#bootstrap-methods">Bootstrap Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#cross-validation">Cross-Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#robustness-analysis">Robustness Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#statistical-tests">Statistical Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#model-selection">Model Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#performance-metrics">Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#quality-assurance">Quality Assurance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#id4">Quality Assurance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#validation-references">Validation References</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_adaptive_demo.html">Comprehensive Adaptive Estimators Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html">Comprehensive LRDBench Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#basic-data-generation-and-analysis">Basic Data Generation and Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#advanced-benchmarking">Advanced Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#machine-learning-and-neural-network-analysis">Machine Learning and Neural Network Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#analytics-and-monitoring">Analytics and Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#real-world-application-example">Real-World Application Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#integration-with-external-libraries">Integration with External Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#complete-workflow-example">Complete Workflow Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#summary">Summary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LRDBenchmark</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">lrdbenchmark.analysis.optimization_backend</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lrdbenchmark.analysis.optimization_backend</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Intelligent Optimization Backend for LRDBenchmark</span>
+
+<span class="sd">This module provides an intelligent backend system that automatically selects</span>
+<span class="sd">the optimal computation framework (GPU/JAX, CPU/Numba, or NumPy) based on:</span>
+<span class="sd">- Data characteristics (size, type, complexity)</span>
+<span class="sd">- Hardware availability (GPU, CPU cores)</span>
+<span class="sd">- Performance profiling results</span>
+<span class="sd">- Memory constraints</span>
+
+<span class="sd">The system learns from performance data and adapts to different scenarios.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">psutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># Import optimization frameworks</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">vmap</span><span class="p">,</span> <span class="n">device_put</span>
+    <span class="n">JAX_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">JAX_DEVICES</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">devices</span><span class="p">()</span>
+    <span class="n">HAS_GPU</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="s1">&#39;gpu&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="s1">&#39;cuda&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> 
+                  <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">JAX_DEVICES</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">JAX_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">JAX_DEVICES</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">HAS_GPU</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numba</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">numba</span><span class="w"> </span><span class="kn">import</span> <span class="n">jit</span> <span class="k">as</span> <span class="n">numba_jit</span><span class="p">,</span> <span class="n">prange</span>
+    <span class="n">NUMBA_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">NUMBA_CORES</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">NUMBA_NUM_THREADS</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">NUMBA_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">NUMBA_CORES</span> <span class="o">=</span> <span class="mi">1</span>
+
+
+<div class="viewcode-block" id="OptimizationFramework">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.optimization_backend.OptimizationFramework">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OptimizationFramework</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Available optimization frameworks.&quot;&quot;&quot;</span>
+    <span class="n">NUMPY</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+    <span class="n">NUMBA</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span>
+    <span class="n">JAX</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span></div>
+
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PerformanceProfile</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Performance profile for a specific computation.&quot;&quot;&quot;</span>
+    <span class="n">framework</span><span class="p">:</span> <span class="n">OptimizationFramework</span>
+    <span class="n">data_size</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">execution_time</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">memory_usage</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">accuracy</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">timestamp</span><span class="p">:</span> <span class="nb">float</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">HardwareInfo</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hardware information and capabilities.&quot;&quot;&quot;</span>
+    <span class="n">cpu_cores</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">memory_gb</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">has_gpu</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">gpu_memory_gb</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">jax_available</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">numba_available</span><span class="p">:</span> <span class="nb">bool</span>
+
+
+<div class="viewcode-block" id="OptimizationBackend">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.optimization_backend.OptimizationBackend">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OptimizationBackend</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Intelligent optimization backend that automatically selects the best</span>
+<span class="sd">    computation framework based on data characteristics and hardware.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="OptimizationBackend.__init__">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cache_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the optimization backend.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cache_dir : str, optional</span>
+<span class="sd">            Directory to cache performance profiles. If None, uses default.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">cache_dir</span> <span class="k">else</span> <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;.lrdbenchmark&quot;</span> <span class="o">/</span> <span class="s2">&quot;optimization_cache&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">performance_profiles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">PerformanceProfile</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hardware_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detect_hardware</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">framework_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_framework_weights</span><span class="p">()</span>
+        
+        <span class="c1"># Load cached performance data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_performance_cache</span><span class="p">()</span>
+        
+        <span class="c1"># Performance thresholds (in seconds)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">performance_thresholds</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;small_data&#39;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>    <span class="c1"># &lt; 1000 points</span>
+            <span class="s1">&#39;medium_data&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>    <span class="c1"># 1000-10000 points</span>
+            <span class="s1">&#39;large_data&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>      <span class="c1"># &gt; 10000 points</span>
+        <span class="p">}</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Optimization Backend initialized:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Hardware: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hardware_info</span><span class="o">.</span><span class="n">cpu_cores</span><span class="si">}</span><span class="s2"> cores, &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hardware_info</span><span class="o">.</span><span class="n">memory_gb</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">GB RAM&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  GPU: </span><span class="si">{</span><span class="s1">&#39;Available&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">hardware_info</span><span class="o">.</span><span class="n">has_gpu</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;Not available&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Frameworks: JAX=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hardware_info</span><span class="o">.</span><span class="n">jax_available</span><span class="si">}</span><span class="s2">, &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;Numba=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hardware_info</span><span class="o">.</span><span class="n">numba_available</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="OptimizationBackend._detect_hardware">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._detect_hardware">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_detect_hardware</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HardwareInfo</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detect available hardware capabilities.&quot;&quot;&quot;</span>
+        <span class="n">cpu_cores</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">(</span><span class="n">logical</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">memory_gb</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">total</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+        
+        <span class="n">gpu_memory_gb</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">HAS_GPU</span> <span class="ow">and</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Try to get GPU memory info</span>
+                <span class="n">gpu_memory_gb</span> <span class="o">=</span> <span class="mf">8.0</span>  <span class="c1"># Default assumption, could be improved</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">gpu_memory_gb</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="k">return</span> <span class="n">HardwareInfo</span><span class="p">(</span>
+            <span class="n">cpu_cores</span><span class="o">=</span><span class="n">cpu_cores</span><span class="p">,</span>
+            <span class="n">memory_gb</span><span class="o">=</span><span class="n">memory_gb</span><span class="p">,</span>
+            <span class="n">has_gpu</span><span class="o">=</span><span class="n">HAS_GPU</span><span class="p">,</span>
+            <span class="n">gpu_memory_gb</span><span class="o">=</span><span class="n">gpu_memory_gb</span><span class="p">,</span>
+            <span class="n">jax_available</span><span class="o">=</span><span class="n">JAX_AVAILABLE</span><span class="p">,</span>
+            <span class="n">numba_available</span><span class="o">=</span><span class="n">NUMBA_AVAILABLE</span>
+        <span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="OptimizationBackend._initialize_framework_weights">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._initialize_framework_weights">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_framework_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">OptimizationFramework</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize framework selection weights based on hardware.&quot;&quot;&quot;</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">NUMPY</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">NUMBA</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">JAX</span><span class="p">:</span> <span class="mf">1.0</span>
+        <span class="p">}</span>
+        
+        <span class="c1"># Adjust weights based on hardware</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardware_info</span><span class="o">.</span><span class="n">has_gpu</span> <span class="ow">and</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="n">weights</span><span class="p">[</span><span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">JAX</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1"># Prefer JAX for GPU</span>
+        <span class="k">elif</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="n">weights</span><span class="p">[</span><span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">NUMBA</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.5</span>  <span class="c1"># Prefer Numba for CPU</span>
+        
+        <span class="k">return</span> <span class="n">weights</span></div>
+
+    
+<div class="viewcode-block" id="OptimizationBackend.select_optimal_framework">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.select_optimal_framework">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select_optimal_framework</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                                <span class="n">data_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+                                <span class="n">computation_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                <span class="n">memory_requirement</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OptimizationFramework</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Select the optimal framework for a given computation.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data_size : int</span>
+<span class="sd">            Size of the input data</span>
+<span class="sd">        computation_type : str</span>
+<span class="sd">            Type of computation (e.g., &#39;matrix_mult&#39;, &#39;fft&#39;, &#39;regression&#39;)</span>
+<span class="sd">        memory_requirement : float, optional</span>
+<span class="sd">            Estimated memory requirement in GB</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        OptimizationFramework</span>
+<span class="sd">            Selected optimization framework</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check memory constraints</span>
+        <span class="k">if</span> <span class="n">memory_requirement</span> <span class="ow">and</span> <span class="n">memory_requirement</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardware_info</span><span class="o">.</span><span class="n">memory_gb</span> <span class="o">*</span> <span class="mf">0.8</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">NUMPY</span>  <span class="c1"># Fallback to NumPy for memory safety</span>
+        
+        <span class="c1"># Get performance predictions for each framework</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">framework</span> <span class="ow">in</span> <span class="n">OptimizationFramework</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_framework_available</span><span class="p">(</span><span class="n">framework</span><span class="p">):</span>
+                <span class="n">predictions</span><span class="p">[</span><span class="n">framework</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict_performance</span><span class="p">(</span>
+                    <span class="n">framework</span><span class="p">,</span> <span class="n">data_size</span><span class="p">,</span> <span class="n">computation_type</span>
+                <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">predictions</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">NUMPY</span>
+        
+        <span class="c1"># Select framework with best predicted performance</span>
+        <span class="n">best_framework</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">predictions</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">predictions</span><span class="p">[</span><span class="n">f</span><span class="p">])</span>
+        
+        <span class="c1"># Apply hardware-specific adjustments</span>
+        <span class="k">if</span> <span class="n">data_size</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="c1"># Very small data: NumPy is often fastest due to overhead</span>
+            <span class="n">best_framework</span> <span class="o">=</span> <span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">NUMPY</span>
+        <span class="k">elif</span> <span class="n">data_size</span> <span class="o">&gt;</span> <span class="mi">10000</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardware_info</span><span class="o">.</span><span class="n">has_gpu</span><span class="p">:</span>
+            <span class="c1"># Large data with GPU: prefer JAX</span>
+            <span class="k">if</span> <span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">JAX</span> <span class="ow">in</span> <span class="n">predictions</span><span class="p">:</span>
+                <span class="n">best_framework</span> <span class="o">=</span> <span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">JAX</span>
+        
+        <span class="k">return</span> <span class="n">best_framework</span></div>
+
+    
+<div class="viewcode-block" id="OptimizationBackend._is_framework_available">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._is_framework_available">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_framework_available</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">framework</span><span class="p">:</span> <span class="n">OptimizationFramework</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if a framework is available.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">framework</span> <span class="o">==</span> <span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">JAX</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">JAX_AVAILABLE</span>
+        <span class="k">elif</span> <span class="n">framework</span> <span class="o">==</span> <span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">NUMBA</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">NUMBA_AVAILABLE</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>  <span class="c1"># NumPy is always available</span></div>
+
+    
+<div class="viewcode-block" id="OptimizationBackend._predict_performance">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._predict_performance">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_predict_performance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                           <span class="n">framework</span><span class="p">:</span> <span class="n">OptimizationFramework</span><span class="p">,</span> 
+                           <span class="n">data_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+                           <span class="n">computation_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict performance score for a framework based on historical data.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Performance score (higher is better)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get relevant historical data</span>
+        <span class="n">relevant_profiles</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">performance_profiles</span>
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">framework</span> <span class="o">==</span> <span class="n">framework</span> <span class="ow">and</span> <span class="n">p</span><span class="o">.</span><span class="n">success</span>
+        <span class="p">]</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">relevant_profiles</span><span class="p">:</span>
+            <span class="c1"># No historical data, use default weights</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">framework_weights</span><span class="p">[</span><span class="n">framework</span><span class="p">]</span>
+        
+        <span class="c1"># Calculate weighted performance score</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">relevant_profiles</span><span class="p">:</span>
+            <span class="c1"># Normalize execution time (lower is better)</span>
+            <span class="n">time_score</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">profile</span><span class="o">.</span><span class="n">execution_time</span><span class="p">)</span>
+            <span class="c1"># Accuracy weight</span>
+            <span class="n">accuracy_score</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">accuracy</span>
+            <span class="c1"># Combine scores</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="n">time_score</span> <span class="o">*</span> <span class="n">accuracy_score</span>
+            <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span> <span class="k">if</span> <span class="n">scores</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">framework_weights</span><span class="p">[</span><span class="n">framework</span><span class="p">]</span></div>
+
+    
+<div class="viewcode-block" id="OptimizationBackend.profile_computation">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.profile_computation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">profile_computation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                          <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> 
+                          <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
+                          <span class="n">framework</span><span class="p">:</span> <span class="n">OptimizationFramework</span><span class="p">,</span>
+                          <span class="n">computation_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PerformanceProfile</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Profile a computation and record performance metrics.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        func : Callable</span>
+<span class="sd">            Function to profile</span>
+<span class="sd">        data : np.ndarray</span>
+<span class="sd">            Input data</span>
+<span class="sd">        framework : OptimizationFramework</span>
+<span class="sd">            Framework used</span>
+<span class="sd">        computation_type : str</span>
+<span class="sd">            Type of computation</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PerformanceProfile</span>
+<span class="sd">            Performance profile of the computation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;__len__&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="mi">1</span>
+        
+        <span class="c1"># Measure memory before</span>
+        <span class="n">process</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">Process</span><span class="p">()</span>
+        <span class="n">memory_before</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">memory_info</span><span class="p">()</span><span class="o">.</span><span class="n">rss</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># MB</span>
+        
+        <span class="c1"># Time the computation</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">execution_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+            
+            <span class="c1"># Calculate accuracy (simplified - could be improved)</span>
+            <span class="n">accuracy</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># Default accuracy, could be calculated based on result quality</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">execution_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+            <span class="n">accuracy</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Computation failed with </span><span class="si">{</span><span class="n">framework</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Measure memory after</span>
+        <span class="n">memory_after</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">memory_info</span><span class="p">()</span><span class="o">.</span><span class="n">rss</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># MB</span>
+        <span class="n">memory_usage</span> <span class="o">=</span> <span class="n">memory_after</span> <span class="o">-</span> <span class="n">memory_before</span>
+        
+        <span class="n">profile</span> <span class="o">=</span> <span class="n">PerformanceProfile</span><span class="p">(</span>
+            <span class="n">framework</span><span class="o">=</span><span class="n">framework</span><span class="p">,</span>
+            <span class="n">data_size</span><span class="o">=</span><span class="n">data_size</span><span class="p">,</span>
+            <span class="n">execution_time</span><span class="o">=</span><span class="n">execution_time</span><span class="p">,</span>
+            <span class="n">memory_usage</span><span class="o">=</span><span class="n">memory_usage</span><span class="p">,</span>
+            <span class="n">accuracy</span><span class="o">=</span><span class="n">accuracy</span><span class="p">,</span>
+            <span class="n">success</span><span class="o">=</span><span class="n">success</span><span class="p">,</span>
+            <span class="n">timestamp</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Store the profile</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">performance_profiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">profile</span></div>
+
+    
+<div class="viewcode-block" id="OptimizationBackend.get_framework_recommendation">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.get_framework_recommendation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_framework_recommendation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                                   <span class="n">data_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+                                   <span class="n">computation_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;general&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a detailed recommendation for framework selection.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Recommendation with framework, reasoning, and performance predictions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">optimal_framework</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_optimal_framework</span><span class="p">(</span><span class="n">data_size</span><span class="p">,</span> <span class="n">computation_type</span><span class="p">)</span>
+        
+        <span class="c1"># Get performance predictions for all available frameworks</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">framework</span> <span class="ow">in</span> <span class="n">OptimizationFramework</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_framework_available</span><span class="p">(</span><span class="n">framework</span><span class="p">):</span>
+                <span class="n">predictions</span><span class="p">[</span><span class="n">framework</span><span class="o">.</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict_performance</span><span class="p">(</span>
+                    <span class="n">framework</span><span class="p">,</span> <span class="n">data_size</span><span class="p">,</span> <span class="n">computation_type</span>
+                <span class="p">)</span>
+        
+        <span class="c1"># Generate reasoning</span>
+        <span class="n">reasoning</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_reasoning</span><span class="p">(</span><span class="n">optimal_framework</span><span class="p">,</span> <span class="n">data_size</span><span class="p">,</span> <span class="n">computation_type</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;recommended_framework&quot;</span><span class="p">:</span> <span class="n">optimal_framework</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s2">&quot;reasoning&quot;</span><span class="p">:</span> <span class="n">reasoning</span><span class="p">,</span>
+            <span class="s2">&quot;performance_predictions&quot;</span><span class="p">:</span> <span class="n">predictions</span><span class="p">,</span>
+            <span class="s2">&quot;hardware_info&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;cpu_cores&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardware_info</span><span class="o">.</span><span class="n">cpu_cores</span><span class="p">,</span>
+                <span class="s2">&quot;memory_gb&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardware_info</span><span class="o">.</span><span class="n">memory_gb</span><span class="p">,</span>
+                <span class="s2">&quot;has_gpu&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardware_info</span><span class="o">.</span><span class="n">has_gpu</span><span class="p">,</span>
+                <span class="s2">&quot;jax_available&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardware_info</span><span class="o">.</span><span class="n">jax_available</span><span class="p">,</span>
+                <span class="s2">&quot;numba_available&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardware_info</span><span class="o">.</span><span class="n">numba_available</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;data_size&quot;</span><span class="p">:</span> <span class="n">data_size</span><span class="p">,</span>
+            <span class="s2">&quot;computation_type&quot;</span><span class="p">:</span> <span class="n">computation_type</span>
+        <span class="p">}</span></div>
+
+    
+<div class="viewcode-block" id="OptimizationBackend._generate_reasoning">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._generate_reasoning">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_reasoning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                          <span class="n">framework</span><span class="p">:</span> <span class="n">OptimizationFramework</span><span class="p">,</span> 
+                          <span class="n">data_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+                          <span class="n">computation_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate human-readable reasoning for framework selection.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">framework</span> <span class="o">==</span> <span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">JAX</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">data_size</span> <span class="o">&gt;</span> <span class="mi">10000</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;JAX selected for large dataset (n=</span><span class="si">{</span><span class="n">data_size</span><span class="si">}</span><span class="s2">) with GPU acceleration&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;JAX selected for </span><span class="si">{</span><span class="n">computation_type</span><span class="si">}</span><span class="s2"> computation with GPU support&quot;</span>
+        <span class="k">elif</span> <span class="n">framework</span> <span class="o">==</span> <span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">NUMBA</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">data_size</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Numba selected for medium dataset (n=</span><span class="si">{</span><span class="n">data_size</span><span class="si">}</span><span class="s2">) with JIT compilation&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Numba selected for </span><span class="si">{</span><span class="n">computation_type</span><span class="si">}</span><span class="s2"> computation with CPU optimization&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;NumPy selected as fallback for </span><span class="si">{</span><span class="n">computation_type</span><span class="si">}</span><span class="s2"> computation&quot;</span></div>
+
+    
+<div class="viewcode-block" id="OptimizationBackend._load_performance_cache">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._load_performance_cache">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_performance_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load cached performance profiles from disk.&quot;&quot;&quot;</span>
+        <span class="n">cache_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="s2">&quot;performance_profiles.json&quot;</span>
+        <span class="k">if</span> <span class="n">cache_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cache_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                        <span class="n">profile</span> <span class="o">=</span> <span class="n">PerformanceProfile</span><span class="p">(</span>
+                            <span class="n">framework</span><span class="o">=</span><span class="n">OptimizationFramework</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;framework&#39;</span><span class="p">]),</span>
+                            <span class="n">data_size</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;data_size&#39;</span><span class="p">],</span>
+                            <span class="n">execution_time</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;execution_time&#39;</span><span class="p">],</span>
+                            <span class="n">memory_usage</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;memory_usage&#39;</span><span class="p">],</span>
+                            <span class="n">accuracy</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">],</span>
+                            <span class="n">success</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">],</span>
+                            <span class="n">timestamp</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span>
+                        <span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">performance_profiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">performance_profiles</span><span class="p">)</span><span class="si">}</span><span class="s2"> cached performance profiles&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load performance cache: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="OptimizationBackend.save_performance_cache">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.save_performance_cache">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_performance_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save performance profiles to disk.&quot;&quot;&quot;</span>
+        <span class="n">cache_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="s2">&quot;performance_profiles.json&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">profile</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">performance_profiles</span><span class="p">:</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s1">&#39;framework&#39;</span><span class="p">:</span> <span class="n">profile</span><span class="o">.</span><span class="n">framework</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="s1">&#39;data_size&#39;</span><span class="p">:</span> <span class="n">profile</span><span class="o">.</span><span class="n">data_size</span><span class="p">,</span>
+                    <span class="s1">&#39;execution_time&#39;</span><span class="p">:</span> <span class="n">profile</span><span class="o">.</span><span class="n">execution_time</span><span class="p">,</span>
+                    <span class="s1">&#39;memory_usage&#39;</span><span class="p">:</span> <span class="n">profile</span><span class="o">.</span><span class="n">memory_usage</span><span class="p">,</span>
+                    <span class="s1">&#39;accuracy&#39;</span><span class="p">:</span> <span class="n">profile</span><span class="o">.</span><span class="n">accuracy</span><span class="p">,</span>
+                    <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="n">profile</span><span class="o">.</span><span class="n">success</span><span class="p">,</span>
+                    <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">profile</span><span class="o">.</span><span class="n">timestamp</span>
+                <span class="p">})</span>
+            
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cache_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">performance_profiles</span><span class="p">)</span><span class="si">}</span><span class="s2"> performance profiles to cache&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save performance cache: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="OptimizationBackend.get_performance_summary">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.get_performance_summary">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_performance_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a summary of performance data.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">performance_profiles</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No performance data available&quot;</span><span class="p">}</span>
+        
+        <span class="n">summary</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">framework</span> <span class="ow">in</span> <span class="n">OptimizationFramework</span><span class="p">:</span>
+            <span class="n">profiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">performance_profiles</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">framework</span> <span class="o">==</span> <span class="n">framework</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">profiles</span><span class="p">:</span>
+                <span class="n">successful</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">profiles</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">success</span><span class="p">]</span>
+                <span class="n">summary</span><span class="p">[</span><span class="n">framework</span><span class="o">.</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;total_runs&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">profiles</span><span class="p">),</span>
+                    <span class="s2">&quot;success_rate&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">successful</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">profiles</span><span class="p">),</span>
+                    <span class="s2">&quot;avg_execution_time&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">execution_time</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">successful</span><span class="p">])</span> <span class="k">if</span> <span class="n">successful</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;avg_accuracy&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">accuracy</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">successful</span><span class="p">])</span> <span class="k">if</span> <span class="n">successful</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;data_size_range&quot;</span><span class="p">:</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">data_size</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">profiles</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">data_size</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">profiles</span><span class="p">))</span>
+                <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="n">summary</span></div>
+</div>
+
+
+
+<span class="c1"># Global backend instance</span>
+<span class="n">_global_backend</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_optimization_backend</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">OptimizationBackend</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the global optimization backend instance.&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_global_backend</span>
+    <span class="k">if</span> <span class="n">_global_backend</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_global_backend</span> <span class="o">=</span> <span class="n">OptimizationBackend</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">_global_backend</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">set_optimization_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">:</span> <span class="n">OptimizationBackend</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the global optimization backend instance.&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_global_backend</span>
+    <span class="n">_global_backend</span> <span class="o">=</span> <span class="n">backend</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Davian Chin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XXXXXXXXXX', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>

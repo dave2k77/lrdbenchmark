@@ -15,7 +15,7 @@
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=030dc6f6"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -47,8 +47,11 @@
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api/data_models.html">Data Models API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/machine_learning_estimators.html">Machine Learning Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/adaptive_estimators.html">Comprehensive Adaptive Estimators API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/contamination_factory.html">Contamination Factory API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/estimators.html">Estimators API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/data_models.html">Data Models API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/benchmark.html">Benchmark API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/analytics.html">Analytics API</a></li>
 </ul>
@@ -73,6 +76,7 @@
 <li class="toctree-l1"><a class="reference internal" href="research/validation.html#validation-references">Validation References</a></li>
 </ul>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/comprehensive_adaptive_demo.html">Comprehensive Adaptive Estimators Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/comprehensive_demo.html">Comprehensive LRDBench Demonstration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/comprehensive_demo.html#basic-data-generation-and-analysis">Basic Data Generation and Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/comprehensive_demo.html#advanced-benchmarking">Advanced Benchmarking</a></li>
@@ -119,23 +123,36 @@
 <a class="reference external image-reference" href="https://lrdbenchmark.readthedocs.io/en/latest/?badge=latest"><img alt="Documentation Status" src="https://readthedocs.org/projects/lrdbenchmark/badge/?version=latest" />
 </a>
 <p><strong>LRDBenchmark</strong> is a comprehensive benchmarking framework for long-range dependence (LRD) analysis in time series data. It provides a unified platform for evaluating and comparing various estimators and models for detecting and quantifying long-range dependence patterns.</p>
-<p>🏆 <strong>Latest Results: ML Estimators 4x More Accurate Than Classical Methods!</strong></p>
-<p>Our latest benchmark shows:
-- <strong>100% success rate</strong> across all 98 test cases
-- <strong>ML estimators significantly outperform</strong> classical methods (MSE: 0.061 vs 0.245)
-- <strong>All estimators working correctly</strong> with unified interfaces and graceful fallbacks
-- <strong>Top performers</strong>: DFA (32.5% error), DMA (39.8% error), Random Forest (74.8% error)</p>
-<p><strong>LRDBenchmark</strong> provides a comprehensive benchmarking framework for long-range dependence (LRD) analysis in time series data. It offers a unified platform for evaluating and comparing various estimators and models for detecting and quantifying long-range dependence patterns.</p>
-<p><strong>Key Features:</strong>
-* <strong>Comprehensive Estimator Suite</strong>: 18 total estimators including classical, enhanced machine learning, and neural network estimators
-* <strong>Multiple Data Models</strong>: FBM, FGN, ARFIMA, MRW with configurable parameters
-* <strong>High Performance</strong>: GPU-accelerated implementations with JAX and PyTorch backends
-* <strong>Analytics System</strong>: Built-in usage tracking and performance monitoring
-* <strong>Extensible Architecture</strong>: Easy integration of new estimators and models
-* <strong>Production Ready</strong>: Pre-trained models for deployment
-* <strong>Unified Framework</strong>: All estimators work seamlessly with graceful fallbacks</p>
-<p><strong>Quick Start:</strong>
-Install with <cite>pip install lrdbenchmark</cite> and see the Quick Start Guide for detailed examples.</p>
+<p>🏆 <strong>Latest Results: ML Models Achieve 74% Better Accuracy Than Classical Methods!</strong></p>
+<p>Our latest comprehensive benchmark shows:
+- <strong>74% better accuracy</strong> for ML models (0.079 MAE) vs Classical methods (0.305 MAE)
+- <strong>Gradient Boosting: Best overall performance</strong> (0.023 MAE - 90% better than best classical)
+- <strong>4 production-ready ML models</strong> with 50-70 engineered features per model
+- <strong>Advanced feature engineering</strong> including spectral, DFA, wavelet, and R/S analysis
+- <strong>Production-ready system</strong> with train-once, apply-many workflow
+- <strong>100% success rate</strong> for both ML and classical approaches</p>
+<section id="key-features">
+<h2>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Production-Ready ML Models</strong>: SVR, Gradient Boosting, Random Forest, and CNN with 50-70 engineered features</p></li>
+<li><p><strong>Superior ML Performance</strong>: 74% better accuracy than classical methods with Gradient Boosting achieving best overall performance</p></li>
+<li><p><strong>Comprehensive Classical Estimators</strong>: 13 adaptive estimators with automatic optimization framework selection</p></li>
+<li><p><strong>Intelligent Backend System</strong>: Automatic GPU/JAX, CPU/Numba, or NumPy selection based on data characteristics</p></li>
+<li><p><strong>Advanced Feature Engineering</strong>: Spectral, DFA, wavelet, and R/S analysis features for ML models</p></li>
+<li><p><strong>Robust Error Handling</strong>: Adaptive parameter selection and progressive fallback mechanisms</p></li>
+<li><p><strong>EEG Contamination Testing</strong>: 8 realistic artifact scenarios for biomedical applications</p></li>
+<li><p><strong>Multiple Data Models</strong>: FBM, FGN, ARFIMA, MRW with configurable parameters</p></li>
+<li><p><strong>High Performance</strong>: GPU-accelerated implementations with JAX and Numba backends</p></li>
+<li><p><strong>Analytics System</strong>: Built-in usage tracking and performance monitoring</p></li>
+<li><p><strong>Extensible Architecture</strong>: Easy integration of new estimators and models</p></li>
+<li><p><strong>Production Ready</strong>: Pre-trained models and comprehensive testing</p></li>
+<li><p><strong>Research Ready</strong>: Publication-quality results with mathematical verification</p></li>
+</ul>
+</section>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h2>
+<p>Install with <cite>pip install lrdbenchmark</cite> and see the Quick Start Guide for detailed examples.</p>
+</section>
 <section id="installation-setup">
 <h2>Installation &amp; Setup<a class="headerlink" href="#installation-setup" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
@@ -154,6 +171,7 @@ Install with <cite>pip install lrdbenchmark</cite> and see the Quick Start Guide
 </li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#machine-learning-usage">Machine Learning Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#data-models">Data Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#individual-estimators">Individual Estimators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#analytics-system">Analytics System</a></li>
@@ -172,17 +190,36 @@ Install with <cite>pip install lrdbenchmark</cite> and see the Quick Start Guide
 <h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api/data_models.html">Data Models API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#base-model">Base Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#fractional-brownian-motion-fbm">Fractional Brownian Motion (FBM)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#fractional-gaussian-noise-fgn">Fractional Gaussian Noise (FGN)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#arfima-model">ARFIMA Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#multifractal-random-walk-mrw">Multifractal Random Walk (MRW)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#convenience-aliases">Convenience Aliases</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#convenience-functions">Convenience Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#usage-examples">Usage Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#error-handling">Error Handling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/machine_learning_estimators.html">Machine Learning Estimators</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/machine_learning_estimators.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/machine_learning_estimators.html#svr-estimator">SVR Estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/machine_learning_estimators.html#gradient-boosting-estimator">Gradient Boosting Estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/machine_learning_estimators.html#random-forest-estimator">Random Forest Estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/machine_learning_estimators.html#production-ml-system">Production ML System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/machine_learning_estimators.html#performance-comparison">Performance Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/machine_learning_estimators.html#key-advantages">Key Advantages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/machine_learning_estimators.html#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/machine_learning_estimators.html#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/adaptive_estimators.html">Comprehensive Adaptive Estimators API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/adaptive_estimators.html#optimization-backend">Optimization Backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/adaptive_estimators.html#comprehensive-adaptive-estimators">Comprehensive Adaptive Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/adaptive_estimators.html#temporal-estimators">Temporal Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/adaptive_estimators.html#spectral-estimators">Spectral Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/adaptive_estimators.html#wavelet-estimators">Wavelet Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/adaptive_estimators.html#multifractal-estimators">Multifractal Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/adaptive_estimators.html#factory-functions">Factory Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/adaptive_estimators.html#usage-examples">Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/adaptive_estimators.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/contamination_factory.html">Contamination Factory API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/contamination_factory.html#contamination-factory">Contamination Factory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/contamination_factory.html#confounding-scenarios">Confounding Scenarios</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/contamination_factory.html#confounding-profiles">Confounding Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/contamination_factory.html#usage-examples">Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/contamination_factory.html#best-practices">Best Practices</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/estimators.html">Estimators API</a><ul>
@@ -198,6 +235,19 @@ Install with <cite>pip install lrdbenchmark</cite> and see the Quick Start Guide
 <li class="toctree-l2"><a class="reference internal" href="api/estimators.html#error-handling">Error Handling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/estimators.html#performance-comparison">Performance Comparison</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/estimators.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/data_models.html">Data Models API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#base-model">Base Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#fractional-brownian-motion-fbm">Fractional Brownian Motion (FBM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#fractional-gaussian-noise-fgn">Fractional Gaussian Noise (FGN)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#arfima-model">ARFIMA Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#multifractal-random-walk-mrw">Multifractal Random Walk (MRW)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#convenience-aliases">Convenience Aliases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#convenience-functions">Convenience Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#usage-examples">Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_models.html#performance-considerations">Performance Considerations</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/benchmark.html">Benchmark API</a><ul>
@@ -322,6 +372,17 @@ Install with <cite>pip install lrdbenchmark</cite> and see the Quick Start Guide
 <h2>Examples &amp; Demos<a class="headerlink" href="#examples-demos" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/comprehensive_adaptive_demo.html">Comprehensive Adaptive Estimators Demo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/comprehensive_adaptive_demo.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/comprehensive_adaptive_demo.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/comprehensive_adaptive_demo.html#performance-comparison">Performance Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/comprehensive_adaptive_demo.html#eeg-contamination-testing">EEG Contamination Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/comprehensive_adaptive_demo.html#data-length-robustness-testing">Data Length Robustness Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/comprehensive_adaptive_demo.html#framework-selection-analysis">Framework Selection Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/comprehensive_adaptive_demo.html#comprehensive-benchmark">Comprehensive Benchmark</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/comprehensive_adaptive_demo.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="examples/comprehensive_demo.html">Comprehensive LRDBench Demonstration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/comprehensive_demo.html#basic-data-generation-and-analysis">Basic Data Generation and Analysis</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/comprehensive_demo.html#simple-hurst-parameter-estimation">Simple Hurst Parameter Estimation</a></li>

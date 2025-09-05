@@ -1,7 +1,7 @@
 Documentation Guide
 ==================
 
-Welcome to the LRDBenchmark documentation! This directory contains the source files for building the comprehensive documentation for LRDBenchmark, a Long-Range Dependence Benchmarking Toolkit.
+Welcome to the LRDBenchmark documentation! This directory contains the source files for building the comprehensive documentation for LRDBenchmark, a Long-Range Dependence Benchmarking Toolkit with comprehensive adaptive classical estimators and intelligent optimization backend.
 
 Building the Documentation
 -------------------------
@@ -29,11 +29,19 @@ To build the documentation locally:
 Documentation Structure
 ----------------------
 
-- **index.rst**: Main documentation entry point
+- **index.rst**: Main documentation entry point with latest results
 - **installation.rst**: Installation and setup instructions
 - **quickstart.rst**: Quick start guide and basic usage
 - **api/**: Complete API reference documentation
+  - **data_models.rst**: Data model APIs (FBM, FGN, ARFIMA, MRW)
+  - **estimators.rst**: Classical estimator APIs
+  - **adaptive_estimators.rst**: Comprehensive adaptive estimator APIs
+  - **contamination_factory.rst**: Contamination factory and EEG scenarios
+  - **benchmark.rst**: Benchmarking framework APIs
+  - **analytics.rst**: Analytics and monitoring APIs
 - **examples/**: Code examples and demonstrations
+  - **comprehensive_demo.rst**: Original comprehensive demo
+  - **comprehensive_adaptive_demo.rst**: New adaptive estimator demo
 - **research/**: Theoretical background and validation studies
 
 ReadTheDocs.io Integration

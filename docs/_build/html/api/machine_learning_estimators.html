@@ -1,0 +1,885 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Machine Learning Estimators &mdash; LRDBenchmark 1.7.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/api/machine_learning_estimators.html"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=030dc6f6"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Comprehensive Adaptive Estimators API" href="adaptive_estimators.html" />
+    <link rel="prev" title="Quick Start Guide" href="../quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LRDBenchmark
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start Guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Machine Learning Estimators</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#svr-estimator">SVR Estimator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator"><code class="docutils literal notranslate"><span class="pre">SVREstimator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.__init__"><code class="docutils literal notranslate"><span class="pre">SVREstimator.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator._validate_parameters"><code class="docutils literal notranslate"><span class="pre">SVREstimator._validate_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator._extract_features"><code class="docutils literal notranslate"><span class="pre">SVREstimator._extract_features()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.train"><code class="docutils literal notranslate"><span class="pre">SVREstimator.train()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.predict"><code class="docutils literal notranslate"><span class="pre">SVREstimator.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.estimate"><code class="docutils literal notranslate"><span class="pre">SVREstimator.estimate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator._fallback_estimation"><code class="docutils literal notranslate"><span class="pre">SVREstimator._fallback_estimation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.save_model"><code class="docutils literal notranslate"><span class="pre">SVREstimator.save_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.load_model"><code class="docutils literal notranslate"><span class="pre">SVREstimator.load_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.get_model_info"><code class="docutils literal notranslate"><span class="pre">SVREstimator.get_model_info()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#gradient-boosting-estimator">Gradient Boosting Estimator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator"><code class="docutils literal notranslate"><span class="pre">GradientBoostingEstimator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.__init__"><code class="docutils literal notranslate"><span class="pre">GradientBoostingEstimator.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator._validate_parameters"><code class="docutils literal notranslate"><span class="pre">GradientBoostingEstimator._validate_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator._extract_features"><code class="docutils literal notranslate"><span class="pre">GradientBoostingEstimator._extract_features()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.train"><code class="docutils literal notranslate"><span class="pre">GradientBoostingEstimator.train()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.predict"><code class="docutils literal notranslate"><span class="pre">GradientBoostingEstimator.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.estimate"><code class="docutils literal notranslate"><span class="pre">GradientBoostingEstimator.estimate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator._fallback_estimation"><code class="docutils literal notranslate"><span class="pre">GradientBoostingEstimator._fallback_estimation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.save_model"><code class="docutils literal notranslate"><span class="pre">GradientBoostingEstimator.save_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.load_model"><code class="docutils literal notranslate"><span class="pre">GradientBoostingEstimator.load_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.get_model_info"><code class="docutils literal notranslate"><span class="pre">GradientBoostingEstimator.get_model_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.get_feature_importance"><code class="docutils literal notranslate"><span class="pre">GradientBoostingEstimator.get_feature_importance()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#random-forest-estimator">Random Forest Estimator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator"><code class="docutils literal notranslate"><span class="pre">RandomForestEstimator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.__init__"><code class="docutils literal notranslate"><span class="pre">RandomForestEstimator.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator._validate_parameters"><code class="docutils literal notranslate"><span class="pre">RandomForestEstimator._validate_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator._extract_features"><code class="docutils literal notranslate"><span class="pre">RandomForestEstimator._extract_features()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.train"><code class="docutils literal notranslate"><span class="pre">RandomForestEstimator.train()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.predict"><code class="docutils literal notranslate"><span class="pre">RandomForestEstimator.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.estimate"><code class="docutils literal notranslate"><span class="pre">RandomForestEstimator.estimate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator._fallback_estimation"><code class="docutils literal notranslate"><span class="pre">RandomForestEstimator._fallback_estimation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.save_model"><code class="docutils literal notranslate"><span class="pre">RandomForestEstimator.save_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.load_model"><code class="docutils literal notranslate"><span class="pre">RandomForestEstimator.load_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.get_model_info"><code class="docutils literal notranslate"><span class="pre">RandomForestEstimator.get_model_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.get_feature_importance"><code class="docutils literal notranslate"><span class="pre">RandomForestEstimator.get_feature_importance()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#production-ml-system">Production ML System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem"><code class="docutils literal notranslate"><span class="pre">ProductionMLSystem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.__init__"><code class="docutils literal notranslate"><span class="pre">ProductionMLSystem.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._initialize_framework"><code class="docutils literal notranslate"><span class="pre">ProductionMLSystem._initialize_framework()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.train"><code class="docutils literal notranslate"><span class="pre">ProductionMLSystem.train()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._train_jax"><code class="docutils literal notranslate"><span class="pre">ProductionMLSystem._train_jax()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._train_torch"><code class="docutils literal notranslate"><span class="pre">ProductionMLSystem._train_torch()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._train_numba"><code class="docutils literal notranslate"><span class="pre">ProductionMLSystem._train_numba()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.predict"><code class="docutils literal notranslate"><span class="pre">ProductionMLSystem.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._predict_jax"><code class="docutils literal notranslate"><span class="pre">ProductionMLSystem._predict_jax()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._predict_torch"><code class="docutils literal notranslate"><span class="pre">ProductionMLSystem._predict_torch()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._predict_numba"><code class="docutils literal notranslate"><span class="pre">ProductionMLSystem._predict_numba()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._save_model"><code class="docutils literal notranslate"><span class="pre">ProductionMLSystem._save_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.load_model"><code class="docutils literal notranslate"><span class="pre">ProductionMLSystem.load_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.batch_predict"><code class="docutils literal notranslate"><span class="pre">ProductionMLSystem.batch_predict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-comparison">Performance Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#key-advantages">Key Advantages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="adaptive_estimators.html">Comprehensive Adaptive Estimators API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contamination_factory.html">Contamination Factory API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="estimators.html">Estimators API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_models.html">Data Models API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html">Benchmark API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analytics.html">Analytics API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html">Theoretical Foundations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html#statistical-estimators">Statistical Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html#validation-techniques">Validation Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html#performance-metrics">Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html#statistical-tests">Statistical Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html#practical-examples">Practical Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html#theoretical-references">Theoretical References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html">Validation Techniques and Statistical Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#monte-carlo-validation">Monte Carlo Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#bootstrap-methods">Bootstrap Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#cross-validation">Cross-Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#robustness-analysis">Robustness Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#statistical-tests">Statistical Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#model-selection">Model Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#performance-metrics">Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#quality-assurance">Quality Assurance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#id4">Quality Assurance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#validation-references">Validation References</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_adaptive_demo.html">Comprehensive Adaptive Estimators Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html">Comprehensive LRDBench Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#basic-data-generation-and-analysis">Basic Data Generation and Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#advanced-benchmarking">Advanced Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#machine-learning-and-neural-network-analysis">Machine Learning and Neural Network Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#analytics-and-monitoring">Analytics and Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#real-world-application-example">Real-World Application Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#integration-with-external-libraries">Integration with External Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#complete-workflow-example">Complete Workflow Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#summary">Summary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LRDBenchmark</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Machine Learning Estimators</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/machine_learning_estimators.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="machine-learning-estimators">
+<h1>Machine Learning Estimators<a class="headerlink" href="#machine-learning-estimators" title="Link to this heading"></a></h1>
+<p>LRDBenchmark provides production-ready machine learning estimators for Long-Range Dependence (LRD) estimation. These estimators achieve <strong>74% better accuracy</strong> than classical methods, with <strong>Gradient Boosting achieving the best overall performance</strong> at 0.023 MAE.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The machine learning estimators use advanced feature engineering with 50-70 engineered features per model, including:</p>
+<ul class="simple">
+<li><p><strong>Statistical Features</strong>: Mean, standard deviation, skewness, kurtosis</p></li>
+<li><p><strong>Time Series Features</strong>: Autocorrelation at multiple lags, variance of increments</p></li>
+<li><p><strong>Spectral Features</strong>: Power spectrum analysis, frequency band ratios, spectral slope</p></li>
+<li><p><strong>DFA Features</strong>: Detrended fluctuation analysis with slope calculation</p></li>
+<li><p><strong>Wavelet Features</strong>: Wavelet variance at different scales, wavelet slope</p></li>
+<li><p><strong>R/S Analysis Features</strong>: Rescaled range analysis with slope calculation</p></li>
+<li><p><strong>Additional Features</strong>: Trend analysis, seasonality detection, entropy measures</p></li>
+</ul>
+</section>
+<section id="svr-estimator">
+<h2>SVR Estimator<a class="headerlink" href="#svr-estimator" title="Link to this heading"></a></h2>
+<p>Support Vector Regression estimator with RBF kernel and comprehensive feature engineering.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lrdbenchmark.analysis.machine_learning.svr_estimator.</span></span><span class="sig-name descname"><span class="pre">SVREstimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'scale'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_optimization</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/svr_estimator.html#SVREstimator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></p>
+<p>Support Vector Regression estimator for Hurst parameter estimation.</p>
+<p>This estimator uses SVR with engineered features from time series data
+to predict Hurst parameters. It includes feature extraction, model training,
+and prediction capabilities.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'scale'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_optimization</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/svr_estimator.html#SVREstimator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize SVR estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kernel</strong> – SVR kernel type (‘rbf’, ‘linear’, ‘poly’, ‘sigmoid’)</p></li>
+<li><p><strong>C</strong> – Regularization parameter</p></li>
+<li><p><strong>gamma</strong> – Kernel coefficient</p></li>
+<li><p><strong>epsilon</strong> – Epsilon-tube parameter</p></li>
+<li><p><strong>use_optimization</strong> – Optimization framework (not used for SVR)</p></li>
+<li><p><strong>**kwargs</strong> – Additional parameters</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator._validate_parameters">
+<span class="sig-name descname"><span class="pre">_validate_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/svr_estimator.html#SVREstimator._validate_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator._validate_parameters" title="Link to this definition"></a></dt>
+<dd><p>Validate SVR estimator parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator._extract_features">
+<span class="sig-name descname"><span class="pre">_extract_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/svr_estimator.html#SVREstimator._extract_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator._extract_features" title="Link to this definition"></a></dt>
+<dd><p>Extract features from time series data for SVR.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – Input time series data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Feature vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_split</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/svr_estimator.html#SVREstimator.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.train" title="Link to this definition"></a></dt>
+<dd><p>Train the SVR model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – Training data (time series)</p></li>
+<li><p><strong>y</strong> – Target Hurst parameters</p></li>
+<li><p><strong>validation_split</strong> – Fraction of data to use for validation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Training results</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/svr_estimator.html#SVREstimator.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict Hurst parameter for a single time series.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – Input time series data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Predicted Hurst parameter</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.estimate">
+<span class="sig-name descname"><span class="pre">estimate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/svr_estimator.html#SVREstimator.estimate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.estimate" title="Link to this definition"></a></dt>
+<dd><p>Estimate Hurst parameter using SVR.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – Input time series data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Estimation results</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator._fallback_estimation">
+<span class="sig-name descname"><span class="pre">_fallback_estimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/svr_estimator.html#SVREstimator._fallback_estimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator._fallback_estimation" title="Link to this definition"></a></dt>
+<dd><p>Fallback estimation when SVR model is not available.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.save_model">
+<span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/svr_estimator.html#SVREstimator.save_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.save_model" title="Link to this definition"></a></dt>
+<dd><p>Save the trained model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.load_model">
+<span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/svr_estimator.html#SVREstimator.load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.load_model" title="Link to this definition"></a></dt>
+<dd><p>Load a pretrained model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.get_model_info">
+<span class="sig-name descname"><span class="pre">get_model_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/svr_estimator.html#SVREstimator.get_model_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator.get_model_info" title="Link to this definition"></a></dt>
+<dd><p>Get information about the trained model.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><strong>Performance</strong>: 0.079 MAE, 100% success rate, 1.46s training time</p>
+<p><strong>Key Features</strong>:
+* RBF kernel with configurable parameters (C, gamma, epsilon)
+* 50+ engineered features including spectral and DFA analysis
+* Model persistence with save/load functionality
+* Robust error handling with fallback to R/S analysis</p>
+<p><strong>Example Usage</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.analysis.machine_learning.svr_estimator</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVREstimator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Initialize estimator</span>
+<span class="n">svr</span> <span class="o">=</span> <span class="n">SVREstimator</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="s1">&#39;scale&#39;</span><span class="p">)</span>
+
+<span class="c1"># Generate training data</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># Train model</span>
+<span class="n">svr</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Make prediction</span>
+<span class="n">new_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">svr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">new_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="gradient-boosting-estimator">
+<h2>Gradient Boosting Estimator<a class="headerlink" href="#gradient-boosting-estimator" title="Link to this heading"></a></h2>
+<p>Gradient Boosting Regressor with comprehensive feature engineering - <strong>Best Overall Performance</strong>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.</span></span><span class="sig-name descname"><span class="pre">GradientBoostingEstimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_estimators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples_split</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples_leaf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsample</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_optimization</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/gradient_boosting_estimator.html#GradientBoostingEstimator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></p>
+<p>Gradient Boosting estimator for Hurst parameter estimation.</p>
+<p>This estimator uses Gradient Boosting with engineered features from time series data
+to predict Hurst parameters. It includes feature extraction, model training,
+and prediction capabilities.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_estimators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples_split</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples_leaf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsample</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_optimization</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/gradient_boosting_estimator.html#GradientBoostingEstimator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize Gradient Boosting estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_estimators</strong> – Number of boosting stages</p></li>
+<li><p><strong>learning_rate</strong> – Learning rate</p></li>
+<li><p><strong>max_depth</strong> – Maximum depth of trees</p></li>
+<li><p><strong>min_samples_split</strong> – Minimum samples to split a node</p></li>
+<li><p><strong>min_samples_leaf</strong> – Minimum samples in a leaf</p></li>
+<li><p><strong>subsample</strong> – Fraction of samples to use for fitting</p></li>
+<li><p><strong>use_optimization</strong> – Optimization framework (not used for GB)</p></li>
+<li><p><strong>**kwargs</strong> – Additional parameters</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator._validate_parameters">
+<span class="sig-name descname"><span class="pre">_validate_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/gradient_boosting_estimator.html#GradientBoostingEstimator._validate_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator._validate_parameters" title="Link to this definition"></a></dt>
+<dd><p>Validate Gradient Boosting estimator parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator._extract_features">
+<span class="sig-name descname"><span class="pre">_extract_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/gradient_boosting_estimator.html#GradientBoostingEstimator._extract_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator._extract_features" title="Link to this definition"></a></dt>
+<dd><p>Extract features from time series data for Gradient Boosting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – Input time series data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Feature vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_split</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/gradient_boosting_estimator.html#GradientBoostingEstimator.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.train" title="Link to this definition"></a></dt>
+<dd><p>Train the Gradient Boosting model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – Training data (time series)</p></li>
+<li><p><strong>y</strong> – Target Hurst parameters</p></li>
+<li><p><strong>validation_split</strong> – Fraction of data to use for validation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Training results</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/gradient_boosting_estimator.html#GradientBoostingEstimator.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict Hurst parameter for a single time series.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – Input time series data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Predicted Hurst parameter</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.estimate">
+<span class="sig-name descname"><span class="pre">estimate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/gradient_boosting_estimator.html#GradientBoostingEstimator.estimate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.estimate" title="Link to this definition"></a></dt>
+<dd><p>Estimate Hurst parameter using Gradient Boosting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – Input time series data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Estimation results</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator._fallback_estimation">
+<span class="sig-name descname"><span class="pre">_fallback_estimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/gradient_boosting_estimator.html#GradientBoostingEstimator._fallback_estimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator._fallback_estimation" title="Link to this definition"></a></dt>
+<dd><p>Fallback estimation when Gradient Boosting model is not available.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.save_model">
+<span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/gradient_boosting_estimator.html#GradientBoostingEstimator.save_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.save_model" title="Link to this definition"></a></dt>
+<dd><p>Save the trained model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.load_model">
+<span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/gradient_boosting_estimator.html#GradientBoostingEstimator.load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.load_model" title="Link to this definition"></a></dt>
+<dd><p>Load a pretrained model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.get_model_info">
+<span class="sig-name descname"><span class="pre">get_model_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/gradient_boosting_estimator.html#GradientBoostingEstimator.get_model_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.get_model_info" title="Link to this definition"></a></dt>
+<dd><p>Get information about the trained model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.get_feature_importance">
+<span class="sig-name descname"><span class="pre">get_feature_importance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/gradient_boosting_estimator.html#GradientBoostingEstimator.get_feature_importance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator.get_feature_importance" title="Link to this definition"></a></dt>
+<dd><p>Get feature importance from the trained model.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><strong>Performance</strong>: 0.023 MAE (<strong>Best Overall</strong>), 100% success rate, 1.75s training time</p>
+<p><strong>Key Features</strong>:
+* Configurable parameters (n_estimators, learning_rate, max_depth)
+* 60+ engineered features including advanced spectral and DFA analysis
+* Feature importance analysis
+* Model persistence with save/load functionality
+* Robust error handling with fallback to R/S analysis</p>
+<p><strong>Example Usage</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator</span><span class="w"> </span><span class="kn">import</span> <span class="n">GradientBoostingEstimator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Initialize estimator</span>
+<span class="n">gb</span> <span class="o">=</span> <span class="n">GradientBoostingEstimator</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># Generate training data</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># Train model</span>
+<span class="n">gb</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Make prediction</span>
+<span class="n">new_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">new_data</span><span class="p">)</span>
+
+<span class="c1"># Get feature importance</span>
+<span class="n">importance</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">get_feature_importance</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="random-forest-estimator">
+<h2>Random Forest Estimator<a class="headerlink" href="#random-forest-estimator" title="Link to this heading"></a></h2>
+<p>Random Forest Regressor with comprehensive feature engineering and feature importance analysis.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lrdbenchmark.analysis.machine_learning.random_forest_estimator.</span></span><span class="sig-name descname"><span class="pre">RandomForestEstimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_estimators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples_split</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples_leaf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sqrt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_optimization</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/random_forest_estimator.html#RandomForestEstimator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></p>
+<p>Random Forest estimator for Hurst parameter estimation.</p>
+<p>This estimator uses Random Forest with engineered features from time series data
+to predict Hurst parameters. It includes feature extraction, model training,
+and prediction capabilities.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_estimators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples_split</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples_leaf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sqrt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_optimization</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/random_forest_estimator.html#RandomForestEstimator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize Random Forest estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_estimators</strong> – Number of trees in the forest</p></li>
+<li><p><strong>max_depth</strong> – Maximum depth of trees</p></li>
+<li><p><strong>min_samples_split</strong> – Minimum samples to split a node</p></li>
+<li><p><strong>min_samples_leaf</strong> – Minimum samples in a leaf</p></li>
+<li><p><strong>max_features</strong> – Number of features to consider for splits</p></li>
+<li><p><strong>bootstrap</strong> – Whether to use bootstrap sampling</p></li>
+<li><p><strong>random_state</strong> – Random state for reproducibility</p></li>
+<li><p><strong>use_optimization</strong> – Optimization framework (not used for RF)</p></li>
+<li><p><strong>**kwargs</strong> – Additional parameters</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator._validate_parameters">
+<span class="sig-name descname"><span class="pre">_validate_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/random_forest_estimator.html#RandomForestEstimator._validate_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator._validate_parameters" title="Link to this definition"></a></dt>
+<dd><p>Validate Random Forest estimator parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator._extract_features">
+<span class="sig-name descname"><span class="pre">_extract_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/random_forest_estimator.html#RandomForestEstimator._extract_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator._extract_features" title="Link to this definition"></a></dt>
+<dd><p>Extract features from time series data for Random Forest.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – Input time series data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Feature vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_split</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/random_forest_estimator.html#RandomForestEstimator.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.train" title="Link to this definition"></a></dt>
+<dd><p>Train the Random Forest model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – Training data (time series)</p></li>
+<li><p><strong>y</strong> – Target Hurst parameters</p></li>
+<li><p><strong>validation_split</strong> – Fraction of data to use for validation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Training results</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/random_forest_estimator.html#RandomForestEstimator.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict Hurst parameter for a single time series.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – Input time series data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Predicted Hurst parameter</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.estimate">
+<span class="sig-name descname"><span class="pre">estimate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/random_forest_estimator.html#RandomForestEstimator.estimate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.estimate" title="Link to this definition"></a></dt>
+<dd><p>Estimate Hurst parameter using Random Forest.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – Input time series data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Estimation results</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator._fallback_estimation">
+<span class="sig-name descname"><span class="pre">_fallback_estimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/random_forest_estimator.html#RandomForestEstimator._fallback_estimation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator._fallback_estimation" title="Link to this definition"></a></dt>
+<dd><p>Fallback estimation when Random Forest model is not available.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.save_model">
+<span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/random_forest_estimator.html#RandomForestEstimator.save_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.save_model" title="Link to this definition"></a></dt>
+<dd><p>Save the trained model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.load_model">
+<span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/random_forest_estimator.html#RandomForestEstimator.load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.load_model" title="Link to this definition"></a></dt>
+<dd><p>Load a pretrained model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.get_model_info">
+<span class="sig-name descname"><span class="pre">get_model_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/random_forest_estimator.html#RandomForestEstimator.get_model_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.get_model_info" title="Link to this definition"></a></dt>
+<dd><p>Get information about the trained model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.get_feature_importance">
+<span class="sig-name descname"><span class="pre">get_feature_importance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/random_forest_estimator.html#RandomForestEstimator.get_feature_importance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator.get_feature_importance" title="Link to this definition"></a></dt>
+<dd><p>Get feature importance from the trained model.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><strong>Performance</strong>: 0.044 MAE, 100% success rate, 84.15s training time</p>
+<p><strong>Key Features</strong>:
+* Configurable parameters (n_estimators, max_depth, min_samples_split)
+* 70+ engineered features including fractal dimension and approximate entropy
+* Feature importance analysis
+* Model persistence with save/load functionality
+* Robust error handling with fallback to R/S analysis</p>
+<p><strong>Example Usage</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.analysis.machine_learning.random_forest_estimator</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestEstimator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Initialize estimator</span>
+<span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestEstimator</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Generate training data</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># Train model</span>
+<span class="n">rf</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Make prediction</span>
+<span class="n">new_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">new_data</span><span class="p">)</span>
+
+<span class="c1"># Get feature importance</span>
+<span class="n">importance</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">get_feature_importance</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="production-ml-system">
+<h2>Production ML System<a class="headerlink" href="#production-ml-system" title="Link to this heading"></a></h2>
+<p>Production-ready ML system with train-once, apply-many workflow and intelligent framework selection.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lrdbenchmark.analysis.machine_learning.production_ml_system.</span></span><span class="sig-name descname"><span class="pre">ProductionMLSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ProductionConfig</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/production_ml_system.html#ProductionMLSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Production ML system with train-once, apply-many workflow.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ProductionConfig</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/production_ml_system.html#ProductionMLSystem.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._initialize_framework">
+<span class="sig-name descname"><span class="pre">_initialize_framework</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/production_ml_system.html#ProductionMLSystem._initialize_framework"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._initialize_framework" title="Link to this definition"></a></dt>
+<dd><p>Initialize the best available framework.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/production_ml_system.html#ProductionMLSystem.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.train" title="Link to this definition"></a></dt>
+<dd><p>Train the model once for production use.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._train_jax">
+<span class="sig-name descname"><span class="pre">_train_jax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/production_ml_system.html#ProductionMLSystem._train_jax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._train_jax" title="Link to this definition"></a></dt>
+<dd><p>Train JAX model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._train_torch">
+<span class="sig-name descname"><span class="pre">_train_torch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/production_ml_system.html#ProductionMLSystem._train_torch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._train_torch" title="Link to this definition"></a></dt>
+<dd><p>Train PyTorch model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._train_numba">
+<span class="sig-name descname"><span class="pre">_train_numba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/production_ml_system.html#ProductionMLSystem._train_numba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._train_numba" title="Link to this definition"></a></dt>
+<dd><p>Train Numba-optimized model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ProductionResult</span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/production_ml_system.html#ProductionMLSystem.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.predict" title="Link to this definition"></a></dt>
+<dd><p>Make prediction using trained model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._predict_jax">
+<span class="sig-name descname"><span class="pre">_predict_jax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/production_ml_system.html#ProductionMLSystem._predict_jax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._predict_jax" title="Link to this definition"></a></dt>
+<dd><p>Make JAX prediction.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._predict_torch">
+<span class="sig-name descname"><span class="pre">_predict_torch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/production_ml_system.html#ProductionMLSystem._predict_torch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._predict_torch" title="Link to this definition"></a></dt>
+<dd><p>Make PyTorch prediction.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._predict_numba">
+<span class="sig-name descname"><span class="pre">_predict_numba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/production_ml_system.html#ProductionMLSystem._predict_numba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._predict_numba" title="Link to this definition"></a></dt>
+<dd><p>Make Numba prediction.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._save_model">
+<span class="sig-name descname"><span class="pre">_save_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/production_ml_system.html#ProductionMLSystem._save_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem._save_model" title="Link to this definition"></a></dt>
+<dd><p>Save the trained model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.load_model">
+<span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/production_ml_system.html#ProductionMLSystem.load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.load_model" title="Link to this definition"></a></dt>
+<dd><p>Load a trained model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.batch_predict">
+<span class="sig-name descname"><span class="pre">batch_predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ProductionResult</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/machine_learning/production_ml_system.html#ProductionMLSystem.batch_predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem.batch_predict" title="Link to this definition"></a></dt>
+<dd><p>Make batch predictions for efficiency.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><strong>Key Features</strong>:
+* Intelligent framework selection (JAX, PyTorch, Numba)
+* Train-once, apply-many workflow
+* Model persistence and caching
+* Batch prediction capabilities
+* Production-ready deployment</p>
+<p><strong>Example Usage</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.analysis.machine_learning.production_ml_system</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProductionMLSystem</span><span class="p">,</span> <span class="n">ProductionConfig</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Configure system</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">ProductionConfig</span><span class="p">(</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;cnn&quot;</span><span class="p">,</span>
+    <span class="n">input_length</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">hidden_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span>
+    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">20</span>
+<span class="p">)</span>
+
+<span class="c1"># Initialize system</span>
+<span class="n">system</span> <span class="o">=</span> <span class="n">ProductionMLSystem</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+<span class="c1"># Generate training data</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># Train model</span>
+<span class="n">system</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Make prediction</span>
+<span class="n">new_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">new_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="performance-comparison">
+<h2>Performance Comparison<a class="headerlink" href="#performance-comparison" title="Link to this heading"></a></h2>
+<div class="line-block">
+<div class="line">Method | Mean Error | Execution Time | Success Rate | Training Time |</div>
+</div>
+<p><a href="#id1"><span class="problematic" id="id2">|--------|</span></a>————<a href="#id3"><span class="problematic" id="id4">|----------------|</span></a>————–<a href="#id5"><span class="problematic" id="id6">|---------------|</span></a>
+| <strong>GradientBoosting</strong> | <strong>0.023</strong> | 17.5ms | 100% | 1.75s |
+| <strong>RandomForest</strong> | <strong>0.044</strong> | 852.0ms | 100% | 84.15s |
+| <strong>SVR</strong> | <strong>0.079</strong> | 14.5ms | 100% | 1.46s |
+| <strong>CNN</strong> | <strong>0.170</strong> | 2.0ms | 100% | 2.01s |
+| <strong>ML Average</strong> | <strong>0.079</strong> | 222.0ms | 100% | - |
+| <strong>Whittle</strong> | 0.227 | 0.2ms | 100% | - |
+| <strong>RS (R/S)</strong> | 0.248 | 8.5ms | 100% | - |
+| <strong>GPH</strong> | 0.306 | 0.4ms | 100% | - |
+| <strong>DFA</strong> | 0.447 | 14.8ms | 100% | - |
+| <strong>Classical Average</strong> | 0.305 | 6.0ms | 100% | - |</p>
+</section>
+<section id="key-advantages">
+<h2>Key Advantages<a class="headerlink" href="#key-advantages" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Superior Accuracy</strong>: 74% better accuracy than classical methods</p></li>
+<li><p><strong>Advanced Feature Engineering</strong>: 50-70 engineered features per model</p></li>
+<li><p><strong>Production Ready</strong>: Model persistence, error handling, and deployment capabilities</p></li>
+<li><p><strong>Comprehensive Testing</strong>: 100% success rate across all test cases</p></li>
+<li><p><strong>Research Quality</strong>: Publication-ready results with detailed performance metrics</p></li>
+</ul>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>For Highest Accuracy</strong>: Use Gradient Boosting (0.023 MAE)</p></li>
+<li><p><strong>For Fast Training</strong>: Use SVR (1.46s training time)</p></li>
+<li><p><strong>For Feature Analysis</strong>: Use Random Forest (feature importance available)</p></li>
+<li><p><strong>For Production Deployment</strong>: Use Production ML System with train-once, apply-many workflow</p></li>
+<li><p><strong>For Real-time Applications</strong>: Use CNN (2.0ms execution time)</p></li>
+</ol>
+</section>
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../examples/comprehensive_adaptive_demo.html"><span class="doc">Comprehensive Adaptive Estimators Demo</span></a> - Complete usage examples</p></li>
+<li><p><a class="reference internal" href="../research/theory.html"><span class="doc">Theoretical Foundations</span></a> - Theoretical foundations</p></li>
+<li><p><a class="reference internal" href="../research/validation.html"><span class="doc">Validation Techniques and Statistical Tests</span></a> - Validation methodology</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../quickstart.html" class="btn btn-neutral float-left" title="Quick Start Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="adaptive_estimators.html" class="btn btn-neutral float-right" title="Comprehensive Adaptive Estimators API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Davian Chin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XXXXXXXXXX', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>

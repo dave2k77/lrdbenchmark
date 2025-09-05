@@ -1,0 +1,944 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contamination Factory API &mdash; LRDBenchmark 1.7.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/api/contamination_factory.html"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=030dc6f6"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Estimators API" href="estimators.html" />
+    <link rel="prev" title="Comprehensive Adaptive Estimators API" href="adaptive_estimators.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LRDBenchmark
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start Guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="machine_learning_estimators.html">Machine Learning Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adaptive_estimators.html">Comprehensive Adaptive Estimators API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contamination Factory API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#contamination-factory">Contamination Factory</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.__init__"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._initialize_profiles"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._initialize_profiles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.create_confounding_profile"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory.create_confounding_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.apply_confounding"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory.apply_confounding()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_financial_crash"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_financial_crash()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_volatility_clustering"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_volatility_clustering()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_regime_change"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_regime_change()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_sensor_drift"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_sensor_drift()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_motion_artifacts"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_motion_artifacts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_equipment_failure"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_equipment_failure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_seasonal_effects"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_seasonal_effects()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_extreme_events"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_extreme_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_measurement_drift"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_measurement_drift()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_network_bursts"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_network_bursts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_network_congestion"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_network_congestion()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_network_equipment_failure"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_network_equipment_failure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_calibration_drift"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_calibration_drift()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_sensor_aging"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_sensor_aging()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_environmental_interference"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_environmental_interference()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_mixed_realistic_light"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_mixed_realistic_light()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_mixed_realistic_moderate"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_mixed_realistic_moderate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_mixed_realistic_severe"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_mixed_realistic_severe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_ocular_artifacts"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_eeg_ocular_artifacts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_muscle_artifacts"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_eeg_muscle_artifacts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_cardiac_artifacts"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_eeg_cardiac_artifacts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_electrode_popping"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_eeg_electrode_popping()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_electrode_drift"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_eeg_electrode_drift()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_60hz_noise"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_eeg_60hz_noise()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_sweat_artifacts"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_eeg_sweat_artifacts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_movement_artifacts"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory._apply_eeg_movement_artifacts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.get_available_scenarios"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory.get_available_scenarios()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.get_scenario_info"><code class="docutils literal notranslate"><span class="pre">ContaminationFactory.get_scenario_info()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#confounding-scenarios">Confounding Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.FINANCIAL_CRASH"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.FINANCIAL_CRASH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.FINANCIAL_VOLATILITY_CLUSTERING"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.FINANCIAL_VOLATILITY_CLUSTERING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.FINANCIAL_REGIME_CHANGE"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.FINANCIAL_REGIME_CHANGE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.PHYSIOLOGICAL_SENSOR_DRIFT"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.PHYSIOLOGICAL_SENSOR_DRIFT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.PHYSIOLOGICAL_MOTION_ARTIFACTS"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.PHYSIOLOGICAL_MOTION_ARTIFACTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.PHYSIOLOGICAL_EQUIPMENT_FAILURE"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.PHYSIOLOGICAL_EQUIPMENT_FAILURE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.ENVIRONMENTAL_SEASONAL"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.ENVIRONMENTAL_SEASONAL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.ENVIRONMENTAL_EXTREME_EVENTS"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.ENVIRONMENTAL_EXTREME_EVENTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.ENVIRONMENTAL_MEASUREMENT_DRIFT"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.ENVIRONMENTAL_MEASUREMENT_DRIFT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.NETWORK_BURSTS"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.NETWORK_BURSTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.NETWORK_CONGESTION"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.NETWORK_CONGESTION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.NETWORK_EQUIPMENT_FAILURE"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.NETWORK_EQUIPMENT_FAILURE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.INDUSTRIAL_CALIBRATION_DRIFT"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.INDUSTRIAL_CALIBRATION_DRIFT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.INDUSTRIAL_SENSOR_AGING"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.INDUSTRIAL_SENSOR_AGING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.INDUSTRIAL_ENVIRONMENTAL_INTERFERENCE"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.INDUSTRIAL_ENVIRONMENTAL_INTERFERENCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_OCULAR_ARTIFACTS"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.EEG_OCULAR_ARTIFACTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_MUSCLE_ARTIFACTS"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.EEG_MUSCLE_ARTIFACTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_CARDIAC_ARTIFACTS"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.EEG_CARDIAC_ARTIFACTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_ELECTRODE_POPPING"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.EEG_ELECTRODE_POPPING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_ELECTRODE_DRIFT"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.EEG_ELECTRODE_DRIFT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_60HZ_NOISE"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.EEG_60HZ_NOISE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_SWEAT_ARTIFACTS"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.EEG_SWEAT_ARTIFACTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_MOVEMENT_ARTIFACTS"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.EEG_MOVEMENT_ARTIFACTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.MIXED_REALISTIC_LIGHT"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.MIXED_REALISTIC_LIGHT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.MIXED_REALISTIC_MODERATE"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.MIXED_REALISTIC_MODERATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.MIXED_REALISTIC_SEVERE"><code class="docutils literal notranslate"><span class="pre">ConfoundingScenario.MIXED_REALISTIC_SEVERE</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#confounding-profiles">Confounding Profiles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile"><code class="docutils literal notranslate"><span class="pre">ConfoundingProfile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.scenario"><code class="docutils literal notranslate"><span class="pre">ConfoundingProfile.scenario</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.intensity"><code class="docutils literal notranslate"><span class="pre">ConfoundingProfile.intensity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.parameters"><code class="docutils literal notranslate"><span class="pre">ConfoundingProfile.parameters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.description"><code class="docutils literal notranslate"><span class="pre">ConfoundingProfile.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.__init__"><code class="docutils literal notranslate"><span class="pre">ConfoundingProfile.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#usage-examples">Usage Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basic-contamination-application">Basic Contamination Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eeg-contamination-scenarios">EEG Contamination Scenarios</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#financial-contamination-scenarios">Financial Contamination Scenarios</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#physiological-contamination-scenarios">Physiological Contamination Scenarios</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#environmental-contamination-scenarios">Environmental Contamination Scenarios</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-contamination-profiles">Custom Contamination Profiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#intensity-variation-testing">Intensity Variation Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#contamination-analysis">Contamination Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="estimators.html">Estimators API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_models.html">Data Models API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html">Benchmark API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analytics.html">Analytics API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html">Theoretical Foundations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html#statistical-estimators">Statistical Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html#validation-techniques">Validation Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html#performance-metrics">Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html#statistical-tests">Statistical Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html#practical-examples">Practical Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html#theoretical-references">Theoretical References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html">Validation Techniques and Statistical Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#monte-carlo-validation">Monte Carlo Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#bootstrap-methods">Bootstrap Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#cross-validation">Cross-Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#robustness-analysis">Robustness Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#statistical-tests">Statistical Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#model-selection">Model Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#performance-metrics">Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#quality-assurance">Quality Assurance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#id4">Quality Assurance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#validation-references">Validation References</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_adaptive_demo.html">Comprehensive Adaptive Estimators Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html">Comprehensive LRDBench Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#basic-data-generation-and-analysis">Basic Data Generation and Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#advanced-benchmarking">Advanced Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#machine-learning-and-neural-network-analysis">Machine Learning and Neural Network Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#analytics-and-monitoring">Analytics and Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#real-world-application-example">Real-World Application Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#integration-with-external-libraries">Integration with External Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#complete-workflow-example">Complete Workflow Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#summary">Summary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LRDBenchmark</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Contamination Factory API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/contamination_factory.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="contamination-factory-api">
+<h1>Contamination Factory API<a class="headerlink" href="#contamination-factory-api" title="Link to this heading"></a></h1>
+<p>The Contamination Factory provides a comprehensive system for generating realistic confounding profiles and applying them to pure signals for testing estimator robustness under various real-world conditions.</p>
+<section id="contamination-factory">
+<h2>Contamination Factory<a class="headerlink" href="#contamination-factory" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lrdbenchmark.models.contamination.contamination_factory.</span></span><span class="sig-name descname"><span class="pre">ContaminationFactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Advanced contamination factory that creates realistic confounding profiles.</p>
+<p>This factory generates complex, realistic data artifacts that mimic real-world
+scenarios encountered in time series analysis across various domains.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the contamination factory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>random_seed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Random seed for reproducible results</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._initialize_profiles">
+<span class="sig-name descname"><span class="pre">_initialize_profiles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario" title="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario"><span class="pre">ConfoundingScenario</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile" title="lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile"><span class="pre">ConfoundingProfile</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._initialize_profiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._initialize_profiles" title="Link to this definition"></a></dt>
+<dd><p>Initialize predefined confounding profiles.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.create_confounding_profile">
+<span class="sig-name descname"><span class="pre">create_confounding_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario" title="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario"><span class="pre">ConfoundingScenario</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile" title="lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile"><span class="pre">ConfoundingProfile</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory.create_confounding_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.create_confounding_profile" title="Link to this definition"></a></dt>
+<dd><p>Create a confounding profile for a specific scenario.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario" title="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario"><em>ConfoundingScenario</em></a>) – The confounding scenario to create</p></li>
+<li><p><strong>intensity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Intensity of the confounding (0.0 to 1.0). If None, uses default.</p></li>
+<li><p><strong>custom_parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>, </em><em>optional</em>) – Custom parameters to override defaults</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created confounding profile</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile" title="lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile">ConfoundingProfile</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.apply_confounding">
+<span class="sig-name descname"><span class="pre">apply_confounding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario" title="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario"><span class="pre">ConfoundingScenario</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory.apply_confounding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.apply_confounding" title="Link to this definition"></a></dt>
+<dd><p>Apply confounding to data based on a specific scenario.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.ndarray</em>) – Input time series data</p></li>
+<li><p><strong>scenario</strong> (<a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario" title="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario"><em>ConfoundingScenario</em></a>) – Confounding scenario to apply</p></li>
+<li><p><strong>intensity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Intensity of confounding (0.0 to 1.0). If None, uses default.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(contaminated_data, description)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_financial_crash">
+<span class="sig-name descname"><span class="pre">_apply_financial_crash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_financial_crash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_financial_crash" title="Link to this definition"></a></dt>
+<dd><p>Apply financial crash confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_volatility_clustering">
+<span class="sig-name descname"><span class="pre">_apply_volatility_clustering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_volatility_clustering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_volatility_clustering" title="Link to this definition"></a></dt>
+<dd><p>Apply volatility clustering confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_regime_change">
+<span class="sig-name descname"><span class="pre">_apply_regime_change</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_regime_change"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_regime_change" title="Link to this definition"></a></dt>
+<dd><p>Apply regime change confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_sensor_drift">
+<span class="sig-name descname"><span class="pre">_apply_sensor_drift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_sensor_drift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_sensor_drift" title="Link to this definition"></a></dt>
+<dd><p>Apply sensor drift confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_motion_artifacts">
+<span class="sig-name descname"><span class="pre">_apply_motion_artifacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_motion_artifacts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_motion_artifacts" title="Link to this definition"></a></dt>
+<dd><p>Apply motion artifacts confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_equipment_failure">
+<span class="sig-name descname"><span class="pre">_apply_equipment_failure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_equipment_failure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_equipment_failure" title="Link to this definition"></a></dt>
+<dd><p>Apply equipment failure confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_seasonal_effects">
+<span class="sig-name descname"><span class="pre">_apply_seasonal_effects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_seasonal_effects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_seasonal_effects" title="Link to this definition"></a></dt>
+<dd><p>Apply seasonal effects confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_extreme_events">
+<span class="sig-name descname"><span class="pre">_apply_extreme_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_extreme_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_extreme_events" title="Link to this definition"></a></dt>
+<dd><p>Apply extreme events confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_measurement_drift">
+<span class="sig-name descname"><span class="pre">_apply_measurement_drift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_measurement_drift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_measurement_drift" title="Link to this definition"></a></dt>
+<dd><p>Apply measurement drift confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_network_bursts">
+<span class="sig-name descname"><span class="pre">_apply_network_bursts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_network_bursts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_network_bursts" title="Link to this definition"></a></dt>
+<dd><p>Apply network bursts confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_network_congestion">
+<span class="sig-name descname"><span class="pre">_apply_network_congestion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_network_congestion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_network_congestion" title="Link to this definition"></a></dt>
+<dd><p>Apply network congestion confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_network_equipment_failure">
+<span class="sig-name descname"><span class="pre">_apply_network_equipment_failure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_network_equipment_failure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_network_equipment_failure" title="Link to this definition"></a></dt>
+<dd><p>Apply network equipment failure confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_calibration_drift">
+<span class="sig-name descname"><span class="pre">_apply_calibration_drift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_calibration_drift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_calibration_drift" title="Link to this definition"></a></dt>
+<dd><p>Apply calibration drift confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_sensor_aging">
+<span class="sig-name descname"><span class="pre">_apply_sensor_aging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_sensor_aging"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_sensor_aging" title="Link to this definition"></a></dt>
+<dd><p>Apply sensor aging confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_environmental_interference">
+<span class="sig-name descname"><span class="pre">_apply_environmental_interference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_environmental_interference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_environmental_interference" title="Link to this definition"></a></dt>
+<dd><p>Apply environmental interference confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_mixed_realistic_light">
+<span class="sig-name descname"><span class="pre">_apply_mixed_realistic_light</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_mixed_realistic_light"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_mixed_realistic_light" title="Link to this definition"></a></dt>
+<dd><p>Apply light realistic confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_mixed_realistic_moderate">
+<span class="sig-name descname"><span class="pre">_apply_mixed_realistic_moderate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_mixed_realistic_moderate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_mixed_realistic_moderate" title="Link to this definition"></a></dt>
+<dd><p>Apply moderate realistic confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_mixed_realistic_severe">
+<span class="sig-name descname"><span class="pre">_apply_mixed_realistic_severe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_mixed_realistic_severe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_mixed_realistic_severe" title="Link to this definition"></a></dt>
+<dd><p>Apply severe realistic confounding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_ocular_artifacts">
+<span class="sig-name descname"><span class="pre">_apply_eeg_ocular_artifacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_eeg_ocular_artifacts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_ocular_artifacts" title="Link to this definition"></a></dt>
+<dd><p>Apply EEG ocular artifacts (blinks, saccades).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_muscle_artifacts">
+<span class="sig-name descname"><span class="pre">_apply_eeg_muscle_artifacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_eeg_muscle_artifacts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_muscle_artifacts" title="Link to this definition"></a></dt>
+<dd><p>Apply EEG muscle artifacts (EMG).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_cardiac_artifacts">
+<span class="sig-name descname"><span class="pre">_apply_eeg_cardiac_artifacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_eeg_cardiac_artifacts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_cardiac_artifacts" title="Link to this definition"></a></dt>
+<dd><p>Apply EEG cardiac artifacts (ECG).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_electrode_popping">
+<span class="sig-name descname"><span class="pre">_apply_eeg_electrode_popping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_eeg_electrode_popping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_electrode_popping" title="Link to this definition"></a></dt>
+<dd><p>Apply EEG electrode popping artifacts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_electrode_drift">
+<span class="sig-name descname"><span class="pre">_apply_eeg_electrode_drift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_eeg_electrode_drift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_electrode_drift" title="Link to this definition"></a></dt>
+<dd><p>Apply EEG electrode drift and impedance changes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_60hz_noise">
+<span class="sig-name descname"><span class="pre">_apply_eeg_60hz_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_eeg_60hz_noise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_60hz_noise" title="Link to this definition"></a></dt>
+<dd><p>Apply EEG 60Hz power line noise and harmonics.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_sweat_artifacts">
+<span class="sig-name descname"><span class="pre">_apply_eeg_sweat_artifacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_eeg_sweat_artifacts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_sweat_artifacts" title="Link to this definition"></a></dt>
+<dd><p>Apply EEG sweat artifacts and impedance changes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_movement_artifacts">
+<span class="sig-name descname"><span class="pre">_apply_eeg_movement_artifacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory._apply_eeg_movement_artifacts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory._apply_eeg_movement_artifacts" title="Link to this definition"></a></dt>
+<dd><p>Apply EEG head/body movement artifacts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.get_available_scenarios">
+<span class="sig-name descname"><span class="pre">get_available_scenarios</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario" title="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario"><span class="pre">ConfoundingScenario</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory.get_available_scenarios"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.get_available_scenarios" title="Link to this definition"></a></dt>
+<dd><p>Get list of available confounding scenarios.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.get_scenario_info">
+<span class="sig-name descname"><span class="pre">get_scenario_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario" title="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario"><span class="pre">ConfoundingScenario</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ContaminationFactory.get_scenario_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ContaminationFactory.get_scenario_info" title="Link to this definition"></a></dt>
+<dd><p>Get information about a specific scenario.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="confounding-scenarios">
+<h2>Confounding Scenarios<a class="headerlink" href="#confounding-scenarios" title="Link to this heading"></a></h2>
+<p>The contamination factory supports various domain-specific confounding scenarios:</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lrdbenchmark.models.contamination.contamination_factory.</span></span><span class="sig-name descname"><span class="pre">ConfoundingScenario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ConfoundingScenario"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>Real-world confounding scenarios.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.FINANCIAL_CRASH">
+<span class="sig-name descname"><span class="pre">FINANCIAL_CRASH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'financial_crash'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.FINANCIAL_CRASH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.FINANCIAL_VOLATILITY_CLUSTERING">
+<span class="sig-name descname"><span class="pre">FINANCIAL_VOLATILITY_CLUSTERING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'financial_volatility_clustering'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.FINANCIAL_VOLATILITY_CLUSTERING" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.FINANCIAL_REGIME_CHANGE">
+<span class="sig-name descname"><span class="pre">FINANCIAL_REGIME_CHANGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'financial_regime_change'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.FINANCIAL_REGIME_CHANGE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.PHYSIOLOGICAL_SENSOR_DRIFT">
+<span class="sig-name descname"><span class="pre">PHYSIOLOGICAL_SENSOR_DRIFT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'physiological_sensor_drift'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.PHYSIOLOGICAL_SENSOR_DRIFT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.PHYSIOLOGICAL_MOTION_ARTIFACTS">
+<span class="sig-name descname"><span class="pre">PHYSIOLOGICAL_MOTION_ARTIFACTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'physiological_motion_artifacts'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.PHYSIOLOGICAL_MOTION_ARTIFACTS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.PHYSIOLOGICAL_EQUIPMENT_FAILURE">
+<span class="sig-name descname"><span class="pre">PHYSIOLOGICAL_EQUIPMENT_FAILURE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'physiological_equipment_failure'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.PHYSIOLOGICAL_EQUIPMENT_FAILURE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.ENVIRONMENTAL_SEASONAL">
+<span class="sig-name descname"><span class="pre">ENVIRONMENTAL_SEASONAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'environmental_seasonal'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.ENVIRONMENTAL_SEASONAL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.ENVIRONMENTAL_EXTREME_EVENTS">
+<span class="sig-name descname"><span class="pre">ENVIRONMENTAL_EXTREME_EVENTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'environmental_extreme_events'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.ENVIRONMENTAL_EXTREME_EVENTS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.ENVIRONMENTAL_MEASUREMENT_DRIFT">
+<span class="sig-name descname"><span class="pre">ENVIRONMENTAL_MEASUREMENT_DRIFT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'environmental_measurement_drift'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.ENVIRONMENTAL_MEASUREMENT_DRIFT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.NETWORK_BURSTS">
+<span class="sig-name descname"><span class="pre">NETWORK_BURSTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'network_bursts'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.NETWORK_BURSTS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.NETWORK_CONGESTION">
+<span class="sig-name descname"><span class="pre">NETWORK_CONGESTION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'network_congestion'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.NETWORK_CONGESTION" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.NETWORK_EQUIPMENT_FAILURE">
+<span class="sig-name descname"><span class="pre">NETWORK_EQUIPMENT_FAILURE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'network_equipment_failure'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.NETWORK_EQUIPMENT_FAILURE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.INDUSTRIAL_CALIBRATION_DRIFT">
+<span class="sig-name descname"><span class="pre">INDUSTRIAL_CALIBRATION_DRIFT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'industrial_calibration_drift'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.INDUSTRIAL_CALIBRATION_DRIFT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.INDUSTRIAL_SENSOR_AGING">
+<span class="sig-name descname"><span class="pre">INDUSTRIAL_SENSOR_AGING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'industrial_sensor_aging'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.INDUSTRIAL_SENSOR_AGING" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.INDUSTRIAL_ENVIRONMENTAL_INTERFERENCE">
+<span class="sig-name descname"><span class="pre">INDUSTRIAL_ENVIRONMENTAL_INTERFERENCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'industrial_environmental_interference'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.INDUSTRIAL_ENVIRONMENTAL_INTERFERENCE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_OCULAR_ARTIFACTS">
+<span class="sig-name descname"><span class="pre">EEG_OCULAR_ARTIFACTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'eeg_ocular_artifacts'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_OCULAR_ARTIFACTS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_MUSCLE_ARTIFACTS">
+<span class="sig-name descname"><span class="pre">EEG_MUSCLE_ARTIFACTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'eeg_muscle_artifacts'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_MUSCLE_ARTIFACTS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_CARDIAC_ARTIFACTS">
+<span class="sig-name descname"><span class="pre">EEG_CARDIAC_ARTIFACTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'eeg_cardiac_artifacts'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_CARDIAC_ARTIFACTS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_ELECTRODE_POPPING">
+<span class="sig-name descname"><span class="pre">EEG_ELECTRODE_POPPING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'eeg_electrode_popping'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_ELECTRODE_POPPING" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_ELECTRODE_DRIFT">
+<span class="sig-name descname"><span class="pre">EEG_ELECTRODE_DRIFT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'eeg_electrode_drift'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_ELECTRODE_DRIFT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_60HZ_NOISE">
+<span class="sig-name descname"><span class="pre">EEG_60HZ_NOISE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'eeg_60hz_noise'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_60HZ_NOISE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_SWEAT_ARTIFACTS">
+<span class="sig-name descname"><span class="pre">EEG_SWEAT_ARTIFACTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'eeg_sweat_artifacts'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_SWEAT_ARTIFACTS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_MOVEMENT_ARTIFACTS">
+<span class="sig-name descname"><span class="pre">EEG_MOVEMENT_ARTIFACTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'eeg_movement_artifacts'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.EEG_MOVEMENT_ARTIFACTS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.MIXED_REALISTIC_LIGHT">
+<span class="sig-name descname"><span class="pre">MIXED_REALISTIC_LIGHT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'mixed_realistic_light'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.MIXED_REALISTIC_LIGHT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.MIXED_REALISTIC_MODERATE">
+<span class="sig-name descname"><span class="pre">MIXED_REALISTIC_MODERATE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'mixed_realistic_moderate'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.MIXED_REALISTIC_MODERATE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.MIXED_REALISTIC_SEVERE">
+<span class="sig-name descname"><span class="pre">MIXED_REALISTIC_SEVERE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'mixed_realistic_severe'</span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario.MIXED_REALISTIC_SEVERE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="confounding-profiles">
+<h2>Confounding Profiles<a class="headerlink" href="#confounding-profiles" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lrdbenchmark.models.contamination.contamination_factory.</span></span><span class="sig-name descname"><span class="pre">ConfoundingProfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario" title="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario"><span class="pre">ConfoundingScenario</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/models/contamination/contamination_factory.html#ConfoundingProfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Configuration for a specific confounding profile.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.scenario">
+<span class="sig-name descname"><span class="pre">scenario</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario" title="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario"><span class="pre">ConfoundingScenario</span></a></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.scenario" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.intensity">
+<span class="sig-name descname"><span class="pre">intensity</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.intensity" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.parameters">
+<span class="sig-name descname"><span class="pre">parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.description" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario" title="lrdbenchmark.models.contamination.contamination_factory.ConfoundingScenario"><span class="pre">ConfoundingScenario</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#lrdbenchmark.models.contamination.contamination_factory.ConfoundingProfile.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="usage-examples">
+<h2>Usage Examples<a class="headerlink" href="#usage-examples" title="Link to this heading"></a></h2>
+<section id="basic-contamination-application">
+<h3>Basic Contamination Application<a class="headerlink" href="#basic-contamination-application" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.contamination.contamination_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContaminationFactory</span><span class="p">,</span> <span class="n">ConfoundingScenario</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.data_models.fbm.fbm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create contamination factory</span>
+<span class="n">factory</span> <span class="o">=</span> <span class="n">ContaminationFactory</span><span class="p">()</span>
+
+<span class="c1"># Generate pure data</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">pure_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Apply different contamination scenarios</span>
+<span class="n">scenarios</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">PURE</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">GAUSSIAN_NOISE</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">TREND</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">OUTLIERS</span>
+<span class="p">]</span>
+
+<span class="k">for</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="n">scenarios</span><span class="p">:</span>
+    <span class="n">contaminated_data</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">apply_confounding</span><span class="p">(</span>
+        <span class="n">pure_data</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="mf">0.2</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scenario</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="eeg-contamination-scenarios">
+<h3>EEG Contamination Scenarios<a class="headerlink" href="#eeg-contamination-scenarios" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.contamination.contamination_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContaminationFactory</span><span class="p">,</span> <span class="n">ConfoundingScenario</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.data_models.fbm.fbm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create contamination factory</span>
+<span class="n">factory</span> <span class="o">=</span> <span class="n">ContaminationFactory</span><span class="p">()</span>
+
+<span class="c1"># Generate pure data</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">pure_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># EEG-specific contamination scenarios</span>
+<span class="n">eeg_scenarios</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_OCULAR_ARTIFACTS</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_MUSCLE_ARTIFACTS</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_CARDIAC_ARTIFACTS</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_ELECTRODE_POPPING</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_ELECTRODE_DRIFT</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_60HZ_NOISE</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_SWEAT_ARTIFACTS</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_MOVEMENT_ARTIFACTS</span>
+<span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;EEG Contamination Testing:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="n">eeg_scenarios</span><span class="p">:</span>
+    <span class="n">contaminated_data</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">apply_confounding</span><span class="p">(</span>
+        <span class="n">pure_data</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="mf">0.3</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scenario</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="financial-contamination-scenarios">
+<h3>Financial Contamination Scenarios<a class="headerlink" href="#financial-contamination-scenarios" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.contamination.contamination_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContaminationFactory</span><span class="p">,</span> <span class="n">ConfoundingScenario</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.data_models.fbm.fbm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create contamination factory</span>
+<span class="n">factory</span> <span class="o">=</span> <span class="n">ContaminationFactory</span><span class="p">()</span>
+
+<span class="c1"># Generate pure data</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">pure_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Financial-specific contamination scenarios</span>
+<span class="n">financial_scenarios</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">FINANCIAL_CRASH</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">VOLATILITY_CLUSTERING</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">MARKET_MICROSTRUCTURE</span>
+<span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Financial Contamination Testing:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="n">financial_scenarios</span><span class="p">:</span>
+    <span class="n">contaminated_data</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">apply_confounding</span><span class="p">(</span>
+        <span class="n">pure_data</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="mf">0.4</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scenario</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="physiological-contamination-scenarios">
+<h3>Physiological Contamination Scenarios<a class="headerlink" href="#physiological-contamination-scenarios" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.contamination.contamination_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContaminationFactory</span><span class="p">,</span> <span class="n">ConfoundingScenario</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.data_models.fbm.fbm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create contamination factory</span>
+<span class="n">factory</span> <span class="o">=</span> <span class="n">ContaminationFactory</span><span class="p">()</span>
+
+<span class="c1"># Generate pure data</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">pure_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Physiological-specific contamination scenarios</span>
+<span class="n">physiological_scenarios</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">PHYSIOLOGICAL_DRIFT</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">SENSOR_ARTIFACTS</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">MEASUREMENT_ERRORS</span>
+<span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Physiological Contamination Testing:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="n">physiological_scenarios</span><span class="p">:</span>
+    <span class="n">contaminated_data</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">apply_confounding</span><span class="p">(</span>
+        <span class="n">pure_data</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="mf">0.25</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scenario</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="environmental-contamination-scenarios">
+<h3>Environmental Contamination Scenarios<a class="headerlink" href="#environmental-contamination-scenarios" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.contamination.contamination_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContaminationFactory</span><span class="p">,</span> <span class="n">ConfoundingScenario</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.data_models.fbm.fbm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create contamination factory</span>
+<span class="n">factory</span> <span class="o">=</span> <span class="n">ContaminationFactory</span><span class="p">()</span>
+
+<span class="c1"># Generate pure data</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">pure_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Environmental-specific contamination scenarios</span>
+<span class="n">environmental_scenarios</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">ENVIRONMENTAL_SEASONAL</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">NETWORK_BURSTS</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">INDUSTRIAL_CALIBRATION</span>
+<span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Environmental Contamination Testing:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="n">environmental_scenarios</span><span class="p">:</span>
+    <span class="n">contaminated_data</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">apply_confounding</span><span class="p">(</span>
+        <span class="n">pure_data</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="mf">0.3</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scenario</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="custom-contamination-profiles">
+<h3>Custom Contamination Profiles<a class="headerlink" href="#custom-contamination-profiles" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.contamination.contamination_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContaminationFactory</span><span class="p">,</span> <span class="n">ConfoundingScenario</span><span class="p">,</span> <span class="n">ConfoundingProfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.data_models.fbm.fbm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create contamination factory</span>
+<span class="n">factory</span> <span class="o">=</span> <span class="n">ContaminationFactory</span><span class="p">()</span>
+
+<span class="c1"># Generate pure data</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">pure_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Create custom contamination profile</span>
+<span class="n">custom_profile</span> <span class="o">=</span> <span class="n">ConfoundingProfile</span><span class="p">(</span>
+    <span class="n">scenario</span><span class="o">=</span><span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">GAUSSIAN_NOISE</span><span class="p">,</span>
+    <span class="n">intensity</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">parameters</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;noise_std&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+        <span class="s1">&#39;noise_correlation&#39;</span><span class="p">:</span> <span class="mf">0.1</span>
+    <span class="p">},</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Custom high-intensity correlated noise&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Apply custom contamination</span>
+<span class="n">contaminated_data</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">apply_confounding</span><span class="p">(</span>
+    <span class="n">pure_data</span><span class="p">,</span> <span class="n">custom_profile</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Custom contamination: </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="intensity-variation-testing">
+<h3>Intensity Variation Testing<a class="headerlink" href="#intensity-variation-testing" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.contamination.contamination_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContaminationFactory</span><span class="p">,</span> <span class="n">ConfoundingScenario</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.data_models.fbm.fbm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create contamination factory</span>
+<span class="n">factory</span> <span class="o">=</span> <span class="n">ContaminationFactory</span><span class="p">()</span>
+
+<span class="c1"># Generate pure data</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">pure_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Test different intensity levels</span>
+<span class="n">intensities</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+<span class="n">scenario</span> <span class="o">=</span> <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_OCULAR_ARTIFACTS</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Intensity Variation Testing:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">intensity</span> <span class="ow">in</span> <span class="n">intensities</span><span class="p">:</span>
+    <span class="n">contaminated_data</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">apply_confounding</span><span class="p">(</span>
+        <span class="n">pure_data</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="n">intensity</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Intensity </span><span class="si">{</span><span class="n">intensity</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="contamination-analysis">
+<h3>Contamination Analysis<a class="headerlink" href="#contamination-analysis" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.contamination.contamination_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContaminationFactory</span><span class="p">,</span> <span class="n">ConfoundingScenario</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.data_models.fbm.fbm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create contamination factory</span>
+<span class="n">factory</span> <span class="o">=</span> <span class="n">ContaminationFactory</span><span class="p">()</span>
+
+<span class="c1"># Generate pure data</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">pure_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Analyze contamination effects</span>
+<span class="n">scenarios</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">PURE</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">GAUSSIAN_NOISE</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_OCULAR_ARTIFACTS</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">FINANCIAL_CRASH</span>
+<span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Contamination Analysis:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="n">scenarios</span><span class="p">:</span>
+    <span class="n">contaminated_data</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">apply_confounding</span><span class="p">(</span>
+        <span class="n">pure_data</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="mf">0.3</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Calculate contamination metrics</span>
+    <span class="n">contamination_level</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">contaminated_data</span> <span class="o">-</span> <span class="n">pure_data</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">pure_data</span><span class="p">)</span>
+    <span class="n">correlation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">pure_data</span><span class="p">,</span> <span class="n">contaminated_data</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scenario</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Description: </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Contamination level: </span><span class="si">{</span><span class="n">contamination_level</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Correlation with pure: </span><span class="si">{</span><span class="n">correlation</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Intensity Selection</strong>: Use appropriate intensity levels (0.1-0.5) for realistic testing</p></li>
+<li><p><strong>Scenario Selection</strong>: Choose scenarios relevant to your application domain</p></li>
+<li><p><strong>Multiple Scenarios</strong>: Test robustness across different contamination types</p></li>
+<li><p><strong>Intensity Variation</strong>: Test across different intensity levels</p></li>
+<li><p><strong>Analysis</strong>: Always analyze the effects of contamination on your data</p></li>
+<li><p><strong>Validation</strong>: Compare contaminated results with pure data baselines</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The contamination factory provides realistic confounding profiles based on
+real-world scenarios. This makes it ideal for testing estimator robustness
+in practical applications.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>High intensity contamination (&gt; 0.5) may significantly distort the underlying
+signal characteristics and should be used with caution.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="adaptive_estimators.html" class="btn btn-neutral float-left" title="Comprehensive Adaptive Estimators API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="estimators.html" class="btn btn-neutral float-right" title="Estimators API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Davian Chin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XXXXXXXXXX', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>
