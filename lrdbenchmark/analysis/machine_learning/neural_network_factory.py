@@ -17,6 +17,16 @@ import pickle
 import os
 import json
 
+# Import utility function for package data paths
+try:
+    from ...utils import get_neural_network_model_path
+except ImportError:
+    # Fallback for development
+    import sys
+    from pathlib import Path
+    sys.path.append(str(Path(__file__).parent.parent.parent))
+    from utils import get_neural_network_model_path
+
 logger = logging.getLogger(__name__)
 
 class NNArchitecture(Enum):
@@ -228,7 +238,15 @@ class BaseNeuralNetwork(nn.Module):
     def load_model(self, model_path: str = None):
         """Load a trained model."""
         if model_path is None:
-            model_path = os.path.join(self.model_dir, f"{self.model_name}_neural_network.pth")
+            # Try to get pretrained model from package first
+            pretrained_model_path, pretrained_config_path = get_neural_network_model_path(self.model_name)
+            if pretrained_model_path:
+                model_path = pretrained_model_path
+                logger.info(f"Using pretrained {self.model_name} model from package: {model_path}")
+            else:
+                # Fallback to local model directory
+                model_path = os.path.join(self.model_dir, f"{self.model_name}_neural_network.pth")
+                logger.info(f"Using local {self.model_name} model path: {model_path}")
         
         if not os.path.exists(model_path):
             logger.warning(f"Model file not found: {model_path}")

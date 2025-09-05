@@ -20,6 +20,15 @@ from scipy import stats
 
 from lrdbenchmark.models.estimators.base_estimator import BaseEstimator
 
+# Import utility function for package data paths
+try:
+    from ...utils import get_pretrained_model_path
+except ImportError:
+    # Fallback for development
+    import sys
+    sys.path.append(str(Path(__file__).parent.parent.parent))
+    from utils import get_pretrained_model_path
+
 logger = logging.getLogger(__name__)
 
 class RandomForestEstimator(BaseEstimator):
@@ -72,9 +81,16 @@ class RandomForestEstimator(BaseEstimator):
         self.feature_names = []
         self.feature_importance = None
         
-        # Model path for saving/loading
-        self.model_path = Path("models/random_forest_estimator.joblib")
-        self.model_path.parent.mkdir(exist_ok=True)
+        # Model path for saving/loading - try pretrained model first
+        pretrained_path = get_pretrained_model_path("random_forest_estimator", "joblib")
+        if pretrained_path:
+            self.model_path = Path(pretrained_path)
+            logger.info(f"Using pretrained Random Forest model from package: {self.model_path}")
+        else:
+            # Fallback to local models directory
+            self.model_path = Path("models/random_forest_estimator.joblib")
+            self.model_path.parent.mkdir(exist_ok=True)
+            logger.info(f"Using local Random Forest model path: {self.model_path}")
         
         # Validate parameters
         self._validate_parameters()
