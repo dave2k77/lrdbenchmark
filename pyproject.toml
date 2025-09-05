@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lrdbenchmark"
-version = "1.7.0"
-description = "Long-Range Dependence Benchmarking Toolkit with Working ML and Neural Network Estimators - 4x More Accurate Than Classical Methods"
+version = "2.0.0"
+description = "Comprehensive Long-Range Dependence Benchmarking Framework with Neural Network Factory - Three-Way Comparison: Classical vs ML vs Neural Networks"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
@@ -29,6 +29,18 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 
+]
+keywords = [
+    "long-range dependence",
+    "hurst parameter", 
+    "time series analysis",
+    "benchmarking",
+    "machine learning",
+    "neural networks",
+    "reproducible research",
+    "fractional brownian motion",
+    "wavelet analysis",
+    "spectral analysis"
 ]
 requires-python = ">=3.8"
 dependencies = [
