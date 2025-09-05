@@ -1,0 +1,94 @@
+{
+  "overall": {
+    "success_rate": 1.0,
+    "n_total": 250,
+    "n_successful": 250,
+    "mean_absolute_error": 0.2790249569017466,
+    "median_absolute_error": 0.23333333333333323,
+    "std_absolute_error": 0.20624201181250093,
+    "mean_execution_time": 0.005283446311950684,
+    "median_execution_time": 0.0022602081298828125,
+    "correlation": -0.12132129510024087
+  },
+  "by_type": {
+    "classical": {
+      "success_rate": 1.0,
+      "n_total": 200,
+      "n_successful": 200,
+      "mean_absolute_error": 0.3071137408910662,
+      "median_absolute_error": 0.2667325998388337,
+      "std_absolute_error": 0.21640973660303092,
+      "mean_execution_time": 0.005962350368499756,
+      "median_execution_time": 0.004233121871948242,
+      "correlation": -0.1356544784795691
+    },
+    "ml": {
+      "success_rate": 1.0,
+      "n_total": 50,
+      "n_successful": 50,
+      "mean_absolute_error": 0.1666698209444682,
+      "median_absolute_error": 0.16660965482393902,
+      "std_absolute_error": 0.09780871676897109,
+      "mean_execution_time": 0.0025678300857543946,
+      "median_execution_time": 0.0022602081298828125,
+      "correlation": 0.00455564171786321
+    }
+  },
+  "by_estimator": {
+    "RS": {
+      "success_rate": 1.0,
+      "n_total": 50,
+      "n_successful": 50,
+      "mean_absolute_error": 0.24846333381206112,
+      "median_absolute_error": 0.18135310486727435,
+      "std_absolute_error": 0.19536146307907995,
+      "mean_execution_time": 0.008453526496887208,
+      "median_execution_time": 0.008273005485534668,
+      "correlation": -0.7872906867780144
+    },
+    "DFA": {
+      "success_rate": 1.0,
+      "n_total": 50,
+      "n_successful": 50,
+      "mean_absolute_error": 0.4468443385628477,
+      "median_absolute_error": 0.45062466504609133,
+      "std_absolute_error": 0.19713699775340068,
+      "mean_execution_time": 0.014779949188232422,
+      "median_execution_time": 0.01477348804473877,
+      "correlation": -0.6197109891667743
+    },
+    "GPH": {
+      "success_rate": 1.0,
+      "n_total": 50,
+      "n_successful": 50,
+      "mean_absolute_error": 0.30648062452268937,
+      "median_absolute_error": 0.24192662250693592,
+      "std_absolute_error": 0.23575001080384445,
+      "mean_execution_time": 0.00043990612030029295,
+      "median_execution_time": 0.00041687488555908203,
+      "correlation": -0.4656634777775981
+    },
+    "Whittle": {
+      "success_rate": 1.0,
+      "n_total": 50,
+      "n_successful": 50,
+      "mean_absolute_error": 0.22666666666666657,
+      "median_absolute_error": 0.19999999999999987,
+      "std_absolute_error": 0.1590248058916875,
+      "mean_execution_time": 0.00017601966857910156,
+      "median_execution_time": 0.00016748905181884766,
+      "correlation": 2.7830163126930087e-16
+    },
+    "CNN": {
+      "success_rate": 1.0,
+      "n_total": 50,
+      "n_successful": 50,
+      "mean_absolute_error": 0.1666698209444682,
+      "median_absolute_error": 0.16660965482393902,
+      "std_absolute_error": 0.09780871676897109,
+      "mean_execution_time": 0.0025678300857543946,
+      "median_execution_time": 0.0022602081298828125,
+      "correlation": 0.00455564171786321
+    }
+  }
+}
