@@ -109,8 +109,10 @@ class BaseNeuralNetwork(nn.Module):
                 # Ensure correct input shape
                 if len(batch_x.shape) == 1:
                     batch_x = batch_x.unsqueeze(0)  # Add batch dimension
-                elif len(batch_x.shape) == 2 and batch_x.shape[0] == 1:
-                    batch_x = batch_x.unsqueeze(0)  # Add sequence dimension for 1D data
+                elif len(batch_x.shape) == 2:
+                    # For 2D input (batch, sequence_length), we need to add feature dimension
+                    # This will be handled by the individual network's forward method
+                    pass
                 
                 batch_predictions = self.forward(batch_x)
                 predictions.extend(batch_predictions.cpu().numpy().flatten())

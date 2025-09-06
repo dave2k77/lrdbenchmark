@@ -1,5 +1,5 @@
 {
-  "architecture": "gru",
+  "architecture": "lstm",
   "input_length": 1000,
   "hidden_dims": [
     32
@@ -7,7 +7,7 @@
   "dropout_rate": 0.1,
   "learning_rate": 0.001,
   "batch_size": 32,
-  "epochs": 30,
+  "epochs": 10,
   "activation": "relu",
   "optimizer": "adam",
   "weight_decay": 0.0001,

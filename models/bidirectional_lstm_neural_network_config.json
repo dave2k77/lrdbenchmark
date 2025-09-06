@@ -1,6 +1,6 @@
 {
   "architecture": "bidirectional_lstm",
-  "input_length": 500,
+  "input_length": 1000,
   "hidden_dims": [
     64,
     32
