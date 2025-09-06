@@ -6,6 +6,8 @@
 
 A comprehensive and reproducible framework for benchmarking Long-Range Dependence (LRD) estimation methods with intelligent optimization backend, comprehensive adaptive classical estimators, production-ready machine learning models, and neural network factory.
 
+> **Note**: This repository was recently reorganized for better structure and maintainability. All research materials are now in the `manuscript/` directory, and benchmarking files are in the `benchmarks/` directory.
+
 ## 🎯 Overview
 
 LRDBenchmark provides a standardized platform for evaluating and comparing LRD estimators with automatic framework selection (GPU/JAX, CPU/Numba, NumPy), robust error handling, and realistic contamination testing. Our latest comprehensive benchmark shows **RandomForest (ML) achieves the best performance** (0.0233 MAE) while **Neural Networks provide excellent speed-accuracy trade-offs** (0.0410-0.0814 MAE, 0.0ms execution time).
