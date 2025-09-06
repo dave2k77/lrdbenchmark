@@ -112,3 +112,9 @@ coverage.xml
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# Research manuscript and related files
+manuscript/
+
+# Benchmarking files and results
+benchmarks/

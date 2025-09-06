@@ -70,7 +70,7 @@ Our comprehensive benchmark of **45 test cases** comparing Classical vs ML vs Ne
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/LRDBenchmark.git
+git clone https://github.com/dave2k77/LRDBenchmark.git
 cd LRDBenchmark
 
 # Install dependencies
@@ -362,7 +362,7 @@ If you use LRDBenchmark in your research, please cite:
 ```bibtex
 @article{yourname2024,
   title={LRDBenchmark: A Comprehensive and Reproducible Framework for Long-Range Dependence Estimation},
-  author={Your Name},
+  author={Davian R. Chin},
   journal={Journal Name},
   year={2024},
   publisher={Publisher}
@@ -371,9 +371,9 @@ If you use LRDBenchmark in your research, please cite:
 
 ## 📞 Contact
 
-- **Email**: your.email@institution.edu
-- **Issues**: [GitHub Issues](https://github.com/yourusername/LRDBenchmark/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/LRDBenchmark/discussions)
+- **Email**: d.r.chin@reading.ac.uk
+- **Issues**: [GitHub Issues](https://github.com/dave2k77/LRDBenchmark/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/dave2k77/LRDBenchmark/discussions)
 
 ## 📜 License
 

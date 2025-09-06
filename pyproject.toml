@@ -9,7 +9,7 @@ description = "Comprehensive Long-Range Dependence Benchmarking Framework with N
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "LRDBench Development Team", email = "lrdbench@example.com"}
+    {name = "Davian R. Chin", email = "d.r.chin@reading.ac.uk"}
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
