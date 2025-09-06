@@ -8,7 +8,22 @@ A comprehensive and reproducible framework for benchmarking Long-Range Dependenc
 
 ## 🎯 Overview
 
-LRDBenchmark provides a standardized platform for evaluating and comparing LRD estimators with automatic framework selection (GPU/JAX, CPU/Numba, NumPy), robust error handling, and realistic contamination testing. Our latest comprehensive three-way benchmark shows **R/S (Classical) achieves the best individual performance** (0.0997 MAE) while **Neural Networks provide excellent speed-accuracy trade-offs** (0.1802-0.1946 MAE, 0.0-0.7ms execution time).
+LRDBenchmark provides a standardized platform for evaluating and comparing LRD estimators with automatic framework selection (GPU/JAX, CPU/Numba, NumPy), robust error handling, and realistic contamination testing. Our latest comprehensive benchmark shows **RandomForest (ML) achieves the best performance** (0.0233 MAE) while **Neural Networks provide excellent speed-accuracy trade-offs** (0.0410-0.0814 MAE, 0.0ms execution time).
+
+## 🚀 Installation
+
+```bash
+# Install from PyPI (recommended)
+pip install lrdbenchmark
+
+# Or install from GitHub
+pip install git+https://github.com/dave2k77/LRDBenchmark.git
+
+# Or clone and install in development mode
+git clone https://github.com/dave2k77/LRDBenchmark.git
+cd LRDBenchmark
+pip install -e .
+```
 
 ### Key Features
 
@@ -26,32 +41,28 @@ LRDBenchmark provides a standardized platform for evaluating and comparing LRD e
 
 ## 🏆 Latest Results
 
-Our comprehensive three-way benchmark of **400 test cases** comparing Classical vs ML vs Neural Networks reveals:
+Our comprehensive benchmark of **45 test cases** comparing Classical vs ML vs Neural Networks reveals:
 
-- **Best Individual Performance**: R/S (Classical) with 0.0997 MAE
-- **Neural Network Excellence**: Consistent high performance (0.1802-0.1946 MAE) with ultra-fast inference (0.0-0.7ms)
+- **Best Individual Performance**: RandomForest (ML) with 0.0233 MAE
+- **Neural Network Excellence**: Consistent high performance (0.0410-0.0814 MAE) with ultra-fast inference (0.0ms)
 - **Speed-Accuracy Trade-offs**: Neural networks provide excellent balance between accuracy and speed
-- **17 Estimators Tested**: 7 Classical, 3 ML, 7 Neural Network approaches
-- **88.2% Overall Success Rate**: Robust performance across all approaches
+- **9 Estimators Tested**: 4 Classical, 3 ML, 2 Neural Network approaches
+- **91.11% Overall Success Rate**: Robust performance across all approaches
 - **Production-Ready Systems**: Train-once, apply-many workflows with model persistence
 
 ## 📊 Performance Summary
 
 | Method | Type | Mean Error | Execution Time | Success Rate |
 |--------|------|------------|----------------|--------------|
-| **RS (R/S)** | **Classical** | **0.0997** | 229.6ms | 100% |
-| **Transformer** | **Neural Network** | **0.1802** | 0.7ms | 100% |
-| **LSTM** | **Neural Network** | **0.1833** | 0.3ms | 100% |
-| **Bidirectional LSTM** | **Neural Network** | **0.1834** | 0.3ms | 100% |
-| **Convolutional** | **Neural Network** | **0.1844** | 0.0ms | 100% |
-| **GRU** | **Neural Network** | **0.1849** | 0.2ms | 100% |
-| **ResNet** | **Neural Network** | **0.1859** | 0.1ms | 100% |
-| **Feedforward** | **Neural Network** | **0.1946** | 0.0ms | 100% |
-| **SVR** | **ML** | **0.1995** | 0.6ms | 100% |
-| **Whittle** | **Classical** | **0.2400** | 0.5ms | 100% |
-| **Classical Average** | **Classical** | **0.3084** | 39.6ms | 100% |
-| **Neural Network Average** | **Neural Network** | **0.1851** | 0.2ms | 100% |
-| **ML Average** | **ML** | **0.1995** | 0.6ms | 100% |
+| **RandomForest** | **ML** | **0.0233** | 0.0ms | 100% |
+| **GradientBoosting** | **ML** | **0.0404** | 0.0ms | 100% |
+| **SVR** | **ML** | **0.0440** | 0.0ms | 100% |
+| **CNN** | **Neural Network** | **0.0698** | 0.0ms | 100% |
+| **Feedforward** | **Neural Network** | **0.0814** | 0.0ms | 100% |
+| **R/S** | **Classical** | **0.0841** | 271.1ms | 100% |
+| **Whittle** | **Classical** | **0.1800** | 0.7ms | 100% |
+| **GPH** | **Classical** | **0.2746** | 3.4ms | 80% |
+| **DFA** | **Classical** | **0.4735** | 22.3ms | 40% |
 
 ## 🚀 Quick Start
 
