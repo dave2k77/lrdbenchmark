@@ -213,6 +213,25 @@ For a segment of length :math:`k`, the rescaled range is:
 
 Higuchi Method
 ~~~~~~~~~~~~~~
+Detrended Moving Average (DMA)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Algorithm**:
+
+1. **Moving Average**: Compute local moving averages at window length :math:`s`
+2. **Residuals**: :math:`
+   \,\epsilon(i,s) = x(i) - m_s(i)
+   `
+3. **Fluctuation**: :math:`
+   F^2(s) = \frac{1}{N-s+1}\sum_{i=1}^{N-s+1} \epsilon(i,s)^2
+   `
+4. **Scaling**: :math:`F(s) \sim s^H`
+
+**Theoretical Foundation**:
+DMA measures scaling of residual variance after local averaging; for long‑memory processes, variance scales with window length.
+
+**Mathematical Formulation**:
+For a centred series :math:`x(i)`, the moving average :math:`m_s(i)` over window :math:`s` defines residuals whose variance follows a power law in :math:`s`.
 
 **Algorithm**:
 
@@ -323,6 +342,16 @@ where :math:`\psi(t)` is the mother wavelet and :math:`a, b` are scale and trans
 
 Multifractal Estimators
 -----------------------
+Generalised Hurst Exponent (GHE)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Algorithm**:
+
+1. **Increments**: :math:`\Delta X_\tau(t) = X(t+\tau) - X(t)`
+2. **q‑th Moments**: :math:`K_q(\tau) = \langle |\Delta X_\tau|^q \rangle`
+3. **Scaling**: :math:`K_q(\tau) \sim \tau^{qH(q)}`; estimate :math:`H(q)` by linear regression of :math:`\log K_q` vs :math:`\log \tau`
+
+**Notes**: For monofractal processes, :math:`H(q)` is constant and equals the standard Hurst parameter; variability in :math:`H(q)` indicates multifractality.
 
 Multifractal Detrended Fluctuation Analysis (MFDFA)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -374,15 +403,10 @@ Accuracy Metrics
 
    \text{MAE} = \frac{1}{n} \sum_{i=1}^n |\hat{H}_i - H_i|
 
-**Root Mean Square Error (RMSE)**:
+**Mean Relative Error (MRE)**:
 .. math::
 
-   \text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^n (\hat{H}_i - H_i)^2}
-
-**Mean Absolute Percentage Error (MAPE)**:
-.. math::
-
-   \text{MAPE} = \frac{100\%}{n} \sum_{i=1}^n \left|\frac{\hat{H}_i - H_i}{H_i}\right|
+   \text{MRE} = \frac{1}{n} \sum_{i=1}^n \left|\frac{\hat{H}_i - H_i}{H_i}\right|
 
 Precision Metrics
 -----------------

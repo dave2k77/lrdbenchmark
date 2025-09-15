@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
@@ -8,15 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Comprehensive Adaptive Estimators API &mdash; LRDBenchmark 1.7.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
   
-    <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/api/adaptive_estimators.html"/>
-      <script src="../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=030dc6f6"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/api/adaptive_estimators.html" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=030dc6f6"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -35,6 +37,9 @@
           <a href="../index.html" class="icon icon-home">
             LRDBenchmark
           </a>
+              <div class="version">
+                1.7.0
+              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -52,21 +57,7 @@
 <li class="toctree-l1"><a class="reference internal" href="neural_network_factory.html">Neural Network Factory API</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Comprehensive Adaptive Estimators API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#optimization-backend">Optimization Backend</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend"><code class="docutils literal notranslate"><span class="pre">OptimizationBackend</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.__init__"><code class="docutils literal notranslate"><span class="pre">OptimizationBackend.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._detect_hardware"><code class="docutils literal notranslate"><span class="pre">OptimizationBackend._detect_hardware()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._initialize_framework_weights"><code class="docutils literal notranslate"><span class="pre">OptimizationBackend._initialize_framework_weights()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.select_optimal_framework"><code class="docutils literal notranslate"><span class="pre">OptimizationBackend.select_optimal_framework()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._is_framework_available"><code class="docutils literal notranslate"><span class="pre">OptimizationBackend._is_framework_available()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._predict_performance"><code class="docutils literal notranslate"><span class="pre">OptimizationBackend._predict_performance()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.profile_computation"><code class="docutils literal notranslate"><span class="pre">OptimizationBackend.profile_computation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.get_framework_recommendation"><code class="docutils literal notranslate"><span class="pre">OptimizationBackend.get_framework_recommendation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._generate_reasoning"><code class="docutils literal notranslate"><span class="pre">OptimizationBackend._generate_reasoning()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._load_performance_cache"><code class="docutils literal notranslate"><span class="pre">OptimizationBackend._load_performance_cache()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.save_performance_cache"><code class="docutils literal notranslate"><span class="pre">OptimizationBackend.save_performance_cache()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.get_performance_summary"><code class="docutils literal notranslate"><span class="pre">OptimizationBackend.get_performance_summary()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend"><code class="docutils literal notranslate"><span class="pre">OptimizationBackend</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationFramework"><code class="docutils literal notranslate"><span class="pre">OptimizationFramework</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationFramework.NUMPY"><code class="docutils literal notranslate"><span class="pre">OptimizationFramework.NUMPY</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationFramework.NUMBA"><code class="docutils literal notranslate"><span class="pre">OptimizationFramework.NUMBA</span></code></a></li>
@@ -76,17 +67,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#comprehensive-adaptive-estimators">Comprehensive Adaptive Estimators</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator"><code class="docutils literal notranslate"><span class="pre">ComprehensiveAdaptiveEstimator</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator.__init__"><code class="docutils literal notranslate"><span class="pre">ComprehensiveAdaptiveEstimator.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator.estimate"><code class="docutils literal notranslate"><span class="pre">ComprehensiveAdaptiveEstimator.estimate()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator._profile_computation"><code class="docutils literal notranslate"><span class="pre">ComprehensiveAdaptiveEstimator._profile_computation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator._estimate_with_framework"><code class="docutils literal notranslate"><span class="pre">ComprehensiveAdaptiveEstimator._estimate_with_framework()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator._estimate_numpy"><code class="docutils literal notranslate"><span class="pre">ComprehensiveAdaptiveEstimator._estimate_numpy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator._estimate_numba"><code class="docutils literal notranslate"><span class="pre">ComprehensiveAdaptiveEstimator._estimate_numba()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator._estimate_jax"><code class="docutils literal notranslate"><span class="pre">ComprehensiveAdaptiveEstimator._estimate_jax()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator.get_performance_info"><code class="docutils literal notranslate"><span class="pre">ComprehensiveAdaptiveEstimator.get_performance_info()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator"><code class="docutils literal notranslate"><span class="pre">ComprehensiveAdaptiveEstimator</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#temporal-estimators">Temporal Estimators</a><ul>
@@ -242,134 +223,8 @@
 <p>The intelligent optimization backend automatically selects the best computation framework for each estimator based on data size, hardware availability, and performance characteristics.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="lrdbenchmark.analysis.optimization_backend.OptimizationBackend">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lrdbenchmark.analysis.optimization_backend.</span></span><span class="sig-name descname"><span class="pre">OptimizationBackend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/optimization_backend.html#OptimizationBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Intelligent optimization backend that automatically selects the best
-computation framework based on data characteristics and hardware.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.optimization_backend.OptimizationBackend.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/optimization_backend.html#OptimizationBackend.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize the optimization backend.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cache_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Directory to cache performance profiles. If None, uses default.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.optimization_backend.OptimizationBackend._detect_hardware">
-<span class="sig-name descname"><span class="pre">_detect_hardware</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HardwareInfo</span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/optimization_backend.html#OptimizationBackend._detect_hardware"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._detect_hardware" title="Link to this definition"></a></dt>
-<dd><p>Detect available hardware capabilities.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.optimization_backend.OptimizationBackend._initialize_framework_weights">
-<span class="sig-name descname"><span class="pre">_initialize_framework_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationFramework" title="lrdbenchmark.analysis.optimization_backend.OptimizationFramework"><span class="pre">OptimizationFramework</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/optimization_backend.html#OptimizationBackend._initialize_framework_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._initialize_framework_weights" title="Link to this definition"></a></dt>
-<dd><p>Initialize framework selection weights based on hardware.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.optimization_backend.OptimizationBackend.select_optimal_framework">
-<span class="sig-name descname"><span class="pre">select_optimal_framework</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">computation_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_requirement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationFramework" title="lrdbenchmark.analysis.optimization_backend.OptimizationFramework"><span class="pre">OptimizationFramework</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/optimization_backend.html#OptimizationBackend.select_optimal_framework"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.select_optimal_framework" title="Link to this definition"></a></dt>
-<dd><p>Select the optimal framework for a given computation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Size of the input data</p></li>
-<li><p><strong>computation_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Type of computation (e.g., ‘matrix_mult’, ‘fft’, ‘regression’)</p></li>
-<li><p><strong>memory_requirement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Estimated memory requirement in GB</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Selected optimization framework</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationFramework" title="lrdbenchmark.analysis.optimization_backend.OptimizationFramework">OptimizationFramework</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.optimization_backend.OptimizationBackend._is_framework_available">
-<span class="sig-name descname"><span class="pre">_is_framework_available</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">framework</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationFramework" title="lrdbenchmark.analysis.optimization_backend.OptimizationFramework"><span class="pre">OptimizationFramework</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/optimization_backend.html#OptimizationBackend._is_framework_available"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._is_framework_available" title="Link to this definition"></a></dt>
-<dd><p>Check if a framework is available.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.optimization_backend.OptimizationBackend._predict_performance">
-<span class="sig-name descname"><span class="pre">_predict_performance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">framework</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationFramework" title="lrdbenchmark.analysis.optimization_backend.OptimizationFramework"><span class="pre">OptimizationFramework</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">computation_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/optimization_backend.html#OptimizationBackend._predict_performance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._predict_performance" title="Link to this definition"></a></dt>
-<dd><p>Predict performance score for a framework based on historical data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Performance score (higher is better)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.optimization_backend.OptimizationBackend.profile_computation">
-<span class="sig-name descname"><span class="pre">profile_computation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><span class="pre">Callable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">framework</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationFramework" title="lrdbenchmark.analysis.optimization_backend.OptimizationFramework"><span class="pre">OptimizationFramework</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">computation_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'unknown'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">PerformanceProfile</span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/optimization_backend.html#OptimizationBackend.profile_computation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.profile_computation" title="Link to this definition"></a></dt>
-<dd><p>Profile a computation and record performance metrics.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> (<em>Callable</em>) – Function to profile</p></li>
-<li><p><strong>data</strong> (<em>np.ndarray</em>) – Input data</p></li>
-<li><p><strong>framework</strong> (<a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationFramework" title="lrdbenchmark.analysis.optimization_backend.OptimizationFramework"><em>OptimizationFramework</em></a>) – Framework used</p></li>
-<li><p><strong>computation_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Type of computation</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Performance profile of the computation</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>PerformanceProfile</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.optimization_backend.OptimizationBackend.get_framework_recommendation">
-<span class="sig-name descname"><span class="pre">get_framework_recommendation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">computation_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'general'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/optimization_backend.html#OptimizationBackend.get_framework_recommendation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.get_framework_recommendation" title="Link to this definition"></a></dt>
-<dd><p>Get a detailed recommendation for framework selection.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Recommendation with framework, reasoning, and performance predictions</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.optimization_backend.OptimizationBackend._generate_reasoning">
-<span class="sig-name descname"><span class="pre">_generate_reasoning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">framework</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationFramework" title="lrdbenchmark.analysis.optimization_backend.OptimizationFramework"><span class="pre">OptimizationFramework</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">computation_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/optimization_backend.html#OptimizationBackend._generate_reasoning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._generate_reasoning" title="Link to this definition"></a></dt>
-<dd><p>Generate human-readable reasoning for framework selection.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.optimization_backend.OptimizationBackend._load_performance_cache">
-<span class="sig-name descname"><span class="pre">_load_performance_cache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/optimization_backend.html#OptimizationBackend._load_performance_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend._load_performance_cache" title="Link to this definition"></a></dt>
-<dd><p>Load cached performance profiles from disk.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.optimization_backend.OptimizationBackend.save_performance_cache">
-<span class="sig-name descname"><span class="pre">save_performance_cache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/optimization_backend.html#OptimizationBackend.save_performance_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.save_performance_cache" title="Link to this definition"></a></dt>
-<dd><p>Save performance profiles to disk.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.optimization_backend.OptimizationBackend.get_performance_summary">
-<span class="sig-name descname"><span class="pre">get_performance_summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/optimization_backend.html#OptimizationBackend.get_performance_summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend.get_performance_summary" title="Link to this definition"></a></dt>
-<dd><p>Get a summary of performance data.</p>
-</dd></dl>
-
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lrdbenchmark.analysis.optimization_backend.</span></span><span class="sig-name descname"><span class="pre">OptimizationBackend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/optimization_backend.html#OptimizationBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend" title="Link to this definition"></a></dt>
+<dd><p>Bases:</p>
 </dd></dl>
 
 <dl class="py class">
@@ -400,78 +255,8 @@ computation framework based on data characteristics and hardware.</p>
 <p>All comprehensive adaptive estimators inherit from the base class and provide automatic framework selection, robust error handling, and performance profiling.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lrdbenchmark.analysis.comprehensive_adaptive_estimators.</span></span><span class="sig-name descname"><span class="pre">ComprehensiveAdaptiveEstimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend" title="lrdbenchmark.analysis.optimization_backend.OptimizationBackend"><span class="pre">OptimizationBackend</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_profiling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/comprehensive_adaptive_estimators.html#ComprehensiveAdaptiveEstimator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
-<p>Base class for comprehensive adaptive classical estimators that automatically select optimal
-computation frameworks and include robust error handling.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend" title="lrdbenchmark.analysis.optimization_backend.OptimizationBackend"><span class="pre">OptimizationBackend</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_profiling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/comprehensive_adaptive_estimators.html#ComprehensiveAdaptiveEstimator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize the adaptive estimator.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>estimator_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of the estimator</p></li>
-<li><p><strong>backend</strong> (<a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationBackend" title="lrdbenchmark.analysis.optimization_backend.OptimizationBackend"><em>OptimizationBackend</em></a><em>, </em><em>optional</em>) – Optimization backend to use. If None, uses global backend.</p></li>
-<li><p><strong>enable_profiling</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to enable performance profiling</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator.estimate">
-<span class="sig-name descname"><span class="pre">estimate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/comprehensive_adaptive_estimators.html#ComprehensiveAdaptiveEstimator.estimate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator.estimate" title="Link to this definition"></a></dt>
-<dd><p>Estimate parameters using the adaptive framework selection.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>array-like</em>) – Input time series data</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Estimation results</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator._profile_computation">
-<span class="sig-name descname"><span class="pre">_profile_computation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/comprehensive_adaptive_estimators.html#ComprehensiveAdaptiveEstimator._profile_computation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator._profile_computation" title="Link to this definition"></a></dt>
-<dd><p>Profile the computation and update performance history.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator._estimate_with_framework">
-<span class="sig-name descname"><span class="pre">_estimate_with_framework</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">framework</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lrdbenchmark.analysis.optimization_backend.OptimizationFramework" title="lrdbenchmark.analysis.optimization_backend.OptimizationFramework"><span class="pre">OptimizationFramework</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/comprehensive_adaptive_estimators.html#ComprehensiveAdaptiveEstimator._estimate_with_framework"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator._estimate_with_framework" title="Link to this definition"></a></dt>
-<dd><p>Estimate using a specific framework.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator._estimate_numpy">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_estimate_numpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/comprehensive_adaptive_estimators.html#ComprehensiveAdaptiveEstimator._estimate_numpy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator._estimate_numpy" title="Link to this definition"></a></dt>
-<dd><p>NumPy implementation of the estimator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator._estimate_numba">
-<span class="sig-name descname"><span class="pre">_estimate_numba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/comprehensive_adaptive_estimators.html#ComprehensiveAdaptiveEstimator._estimate_numba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator._estimate_numba" title="Link to this definition"></a></dt>
-<dd><p>Numba implementation of the estimator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator._estimate_jax">
-<span class="sig-name descname"><span class="pre">_estimate_jax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><span class="pre">ndarray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/comprehensive_adaptive_estimators.html#ComprehensiveAdaptiveEstimator._estimate_jax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator._estimate_jax" title="Link to this definition"></a></dt>
-<dd><p>JAX implementation of the estimator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator.get_performance_info">
-<span class="sig-name descname"><span class="pre">get_performance_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/comprehensive_adaptive_estimators.html#ComprehensiveAdaptiveEstimator.get_performance_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator.get_performance_info" title="Link to this definition"></a></dt>
-<dd><p>Get performance information for this estimator.</p>
-</dd></dl>
-
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lrdbenchmark.analysis.comprehensive_adaptive_estimators.</span></span><span class="sig-name descname"><span class="pre">ComprehensiveAdaptiveEstimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lrdbenchmark/analysis/comprehensive_adaptive_estimators.html#ComprehensiveAdaptiveEstimator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator" title="Link to this definition"></a></dt>
+<dd><p>Bases:</p>
 </dd></dl>
 
 </section>
@@ -1752,18 +1537,7 @@ framework used.</p>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-    <!-- Theme Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-XXXXXXXXXX', {
-          'anonymize_ip': false,
-      });
-    </script> 
+  </script> 
 
 </body>
 </html>

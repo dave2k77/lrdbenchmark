@@ -43,7 +43,8 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.autosummary',
     'sphinx.ext.extlinks',
-    'sphinx.ext.imgmath',
+    # Prefer MathJax rendering for portability on RTD
+    # 'sphinx.ext.imgmath',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -90,13 +91,13 @@ html_theme_options = {
     'sticky_navigation': True,
     'includehidden': True,
     'logo_only': False,
-    'display_version': True,
     'prev_next_buttons_location': 'bottom',
     'style_external_links': True,
     'style_nav_header_background': '#2980B9',
-    'canonical_url': 'https://lrdbenchmark.readthedocs.io/',
-    'analytics_id': 'G-XXXXXXXXXX',  # Add Google Analytics if needed
 }
+
+# Base URL for canonical links
+html_baseurl = 'https://lrdbenchmark.readthedocs.io/'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -231,3 +232,8 @@ extlinks = {
     'pypi': ('https://pypi.org/project/lrdbenchmark/%s', 'PyPI: %s'),
     'rtd': ('https://lrdbenchmark.readthedocs.io/%s', 'ReadTheDocs: %s'),
 }
+
+# Mock imports to avoid autodoc import errors for heavy modules during docs build
+autodoc_mock_imports = [
+    'lrdbenchmark.analysis',
+]

@@ -4,12 +4,13 @@ Analytics API
 lrdbenchmark provides a comprehensive analytics system for tracking usage, monitoring performance, analyzing errors, and understanding user workflows.
 
 Analytics Dashboard
------------------
+-------------------
 
 .. autoclass:: lrdbenchmark.analytics.dashboard.AnalyticsDashboard
    :members:
    :undoc-members:
    :show-inheritance:
+   :no-index:
 
    .. automethod:: __init__
    .. automethod:: get_comprehensive_summary
@@ -25,6 +26,7 @@ Usage Tracking
    :members:
    :undoc-members:
    :show-inheritance:
+   :no-index:
 
    .. automethod:: __init__
    .. automethod:: track_estimator_usage
@@ -42,12 +44,13 @@ Usage Tracking
    :show-inheritance:
 
 Performance Monitoring
----------------------
+----------------------
 
 .. autoclass:: lrdbenchmark.analytics.performance_monitor.PerformanceMonitor
    :members:
    :undoc-members:
    :show-inheritance:
+   :no-index:
 
    .. automethod:: __init__
    .. automethod:: start_monitoring
@@ -65,12 +68,13 @@ Performance Monitoring
    :show-inheritance:
 
 Error Analysis
--------------
+--------------
 
 .. autoclass:: lrdbenchmark.analytics.error_analyzer.ErrorAnalyzer
    :members:
    :undoc-members:
    :show-inheritance:
+   :no-index:
 
    .. automethod:: __init__
    .. automethod:: record_error
@@ -88,38 +92,35 @@ Error Analysis
    :show-inheritance:
 
 Workflow Analysis
-----------------
+-----------------
 
 .. autoclass:: lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer
    :members:
    :undoc-members:
    :show-inheritance:
+   :no-index:
 
    .. automethod:: __init__
    .. automethod:: track_workflow_step
    .. automethod:: get_workflow_summary
    .. automethod:: get_optimization_recommendations
 
-.. autoclass:: lrdbench.analytics.workflow_analyzer.WorkflowStep
+.. autoclass:: lrdbenchmark.analytics.workflow_analyzer.WorkflowStep
    :members:
    :undoc-members:
    :show-inheritance:
 
-.. autoclass:: lrdbench.analytics.workflow_analyzer.Workflow
+.. autoclass:: lrdbenchmark.analytics.workflow_analyzer.Workflow
    :members:
    :undoc-members:
    :show-inheritance:
 
-Convenience Functions
---------------------
+Conveneince Functions
+---------------------
 
-.. autofunction:: lrdbench.enable_analytics
-.. autofunction:: lrdbench.get_analytics_summary
-.. autofunction:: lrdbench.generate_analytics_report
-.. autofunction:: lrdbench.track_usage
-.. autofunction:: lrdbench.monitor_performance
-.. autofunction:: lrdbench.track_errors
-.. autofunction:: lrdbench.track_workflow
+.. note::
+   Convenience functions are provided via the analytics submodule. Import from
+   ``lrdbenchmark.analytics`` rather than top-level ``lrdbenchmark``.
 
 Usage Examples
 -------------
@@ -258,7 +259,7 @@ Error Tracking
        print(f"Analysis failed: {e}")
    
    # Get error summary
-   from lrdbench.analytics import ErrorAnalyzer
+   from lrdbenchmark.analytics import ErrorAnalyzer
    error_analyzer = ErrorAnalyzer()
    error_summary = error_analyzer.get_error_summary()
    print(f"Total errors: {error_summary.total_errors}")
@@ -293,7 +294,7 @@ Workflow Tracking
    summary = complete_analysis_workflow()
    
    # Get workflow summary
-   from lrdbench.analytics import WorkflowAnalyzer
+   from lrdbenchmark.analytics import WorkflowAnalyzer
    workflow_analyzer = WorkflowAnalyzer()
    workflow_summary = workflow_analyzer.get_workflow_summary()
    print(f"Workflows completed: {workflow_summary.total_workflows}")
@@ -303,7 +304,7 @@ Advanced Analytics Dashboard
 
 .. code-block:: python
 
-   from lrdbench.analytics import AnalyticsDashboard
+   from lrdbenchmark.analytics import AnalyticsDashboard
    
    # Create analytics dashboard
    dashboard = AnalyticsDashboard()
@@ -336,7 +337,7 @@ Custom Analytics Configuration
 
 .. code-block:: python
 
-   from lrdbench.analytics import (
+   from lrdbenchmark.analytics import (
        UsageTracker, PerformanceMonitor, ErrorAnalyzer, WorkflowAnalyzer
    )
    
@@ -389,7 +390,7 @@ Data Export and Visualization
 
 .. code-block:: python
 
-   from lrdbench.analytics import AnalyticsDashboard
+   from lrdbenchmark.analytics import AnalyticsDashboard
    import pandas as pd
    import matplotlib.pyplot as plt
    
@@ -438,7 +439,7 @@ Real-time Analytics Monitoring
 
 .. code-block:: python
 
-   from lrdbench.analytics import AnalyticsDashboard
+   from lrdbenchmark.analytics import AnalyticsDashboard
    import time
    import threading
    
@@ -479,7 +480,7 @@ Analytics Integration with Benchmarks
 .. code-block:: python
 
    from lrdbenchmark import ComprehensiveBenchmark, enable_analytics
-   from lrdbench.analytics import AnalyticsDashboard
+   from lrdbenchmark.analytics import AnalyticsDashboard
    
    # Enable analytics
    enable_analytics()
@@ -528,7 +529,7 @@ Analytics Configuration
 
 .. code-block:: python
 
-   from lrdbench.analytics import AnalyticsConfig
+   from lrdbenchmark.analytics import AnalyticsConfig
    
    # Configure analytics system
    config = AnalyticsConfig(
@@ -562,7 +563,7 @@ Analytics Configuration
    )
    
    # Apply configuration
-   from lrdbench.analytics import configure_analytics
+   from lrdbenchmark.analytics import configure_analytics
    configure_analytics(config)
 
 Privacy and Security
@@ -570,7 +571,7 @@ Privacy and Security
 
 .. code-block:: python
 
-   from lrdbench.analytics import UsageTracker
+   from lrdbenchmark.analytics import UsageTracker
    
    # Create privacy-aware usage tracker
    usage_tracker = UsageTracker(

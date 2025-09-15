@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
@@ -8,15 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Validation Techniques and Statistical Tests &mdash; LRDBenchmark 1.7.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
   
-    <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/research/validation.html"/>
-      <script src="../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=030dc6f6"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/research/validation.html" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=030dc6f6"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -35,6 +38,9 @@
           <a href="../index.html" class="icon icon-home">
             LRDBenchmark
           </a>
+              <div class="version">
+                1.7.0
+              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -173,14 +179,14 @@
 <li><p><strong>Realization Count</strong>: Generate N realizations for each parameter combination</p></li>
 </ol>
 <p><strong>Mathematical Framework</strong>:</p>
-<p>For estimator <span class="math">\hat{H}</span> and true value <span class="math">H_0</span>:</p>
-<div class="math">
-<p><span class="math">\text{Bias} = \mathbb{E}[\hat{H}] - H_0 = \frac{1}{N} \sum_{i=1}^N \hat{H}_i - H_0</span></p>
-</div><div class="math">
-<p><span class="math">\text{Variance} = \mathbb{E}[(\hat{H} - \mathbb{E}[\hat{H}])^2] = \frac{1}{N-1} \sum_{i=1}^N (\hat{H}_i - \bar{H})^2</span></p>
-</div><div class="math">
-<p><span class="math">\text{MSE} = \mathbb{E}[(\hat{H} - H_0)^2] = \text{Bias}^2 + \text{Variance}</span></p>
-</div><p><strong>Implementation</strong>:</p>
+<p>For estimator <span class="math notranslate nohighlight">\(\hat{H}\)</span> and true value <span class="math notranslate nohighlight">\(H_0\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\text{Bias} = \mathbb{E}[\hat{H}] - H_0 = \frac{1}{N} \sum_{i=1}^N \hat{H}_i - H_0\]</div>
+<div class="math notranslate nohighlight">
+\[\text{Variance} = \mathbb{E}[(\hat{H} - \mathbb{E}[\hat{H}])^2] = \frac{1}{N-1} \sum_{i=1}^N (\hat{H}_i - \bar{H})^2\]</div>
+<div class="math notranslate nohighlight">
+\[\text{MSE} = \mathbb{E}[(\hat{H} - H_0)^2] = \text{Bias}^2 + \text{Variance}\]</div>
+<p><strong>Implementation</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span><span class="p">,</span> <span class="n">ComprehensiveBenchmark</span>
 
@@ -230,17 +236,17 @@
 <h2>Types of Bootstrap<a class="headerlink" href="#types-of-bootstrap" title="Link to this heading"></a></h2>
 <p><strong>1. Non-Parametric Bootstrap</strong>:</p>
 <p>Resample with replacement from the original data:</p>
-<div class="math">
-<p><span class="math">X^*_1, X^*_2, \ldots, X^*_n \sim \text{iid from } \{X_1, X_2, \ldots, X_n\}</span></p>
-</div><p><strong>2. Parametric Bootstrap</strong>:</p>
+<div class="math notranslate nohighlight">
+\[X^*_1, X^*_2, \ldots, X^*_n \sim \text{iid from } \{X_1, X_2, \ldots, X_n\}\]</div>
+<p><strong>2. Parametric Bootstrap</strong>:</p>
 <p>Generate bootstrap samples from a fitted parametric model:</p>
-<div class="math">
-<p><span class="math">X^*_i \sim F_{\hat{\theta}}(x)</span></p>
-</div><p><strong>3. Moving Block Bootstrap</strong>:</p>
+<div class="math notranslate nohighlight">
+\[X^*_i \sim F_{\hat{\theta}}(x)\]</div>
+<p><strong>3. Moving Block Bootstrap</strong>:</p>
 <p>Preserve temporal dependence by resampling blocks:</p>
-<div class="math">
-<p><span class="math">B_i = (X_i, X_{i+1}, \ldots, X_{i+l-1})</span></p>
-</div><p><strong>Implementation</strong>:</p>
+<div class="math notranslate nohighlight">
+\[B_i = (X_i, X_{i+1}, \ldots, X_{i+l-1})\]</div>
+<p><strong>Implementation</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
 
@@ -287,9 +293,9 @@
 <li><p><strong>Performance Aggregation</strong>: Average performance across all folds</p></li>
 </ol>
 <p><strong>Mathematical Formulation</strong>:</p>
-<div class="math">
-<p><span class="math">\text{CV} = \frac{1}{K} \sum_{k=1}^K L(y_k, f^{-k}(x_k))</span></p>
-</div><p>where <span class="math">f^{-k}</span> is the estimator trained on all folds except fold k.</p>
+<div class="math notranslate nohighlight">
+\[\text{CV} = \frac{1}{K} \sum_{k=1}^K L(y_k, f^{-k}(x_k))\]</div>
+<p>where <span class="math notranslate nohighlight">\(f^{-k}\)</span> is the estimator trained on all folds except fold k.</p>
 <p><strong>Implementation</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">KFold</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_squared_error</span>
@@ -356,18 +362,18 @@
 <section id="contamination-models">
 <h2>Contamination Models<a class="headerlink" href="#contamination-models" title="Link to this heading"></a></h2>
 <p><strong>1. Additive Noise</strong>:</p>
-<div class="math">
-<p><span class="math">X_t = X_t^{(0)} + \epsilon_t, \quad \epsilon_t \sim N(0, \sigma^2)</span></p>
-</div><p><strong>2. Outlier Contamination</strong>:</p>
-<div class="math">
-<p><span class="math">X_t = \begin{cases}
+<div class="math notranslate nohighlight">
+\[X_t = X_t^{(0)} + \epsilon_t, \quad \epsilon_t \sim N(0, \sigma^2)\]</div>
+<p><strong>2. Outlier Contamination</strong>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}X_t = \begin{cases}
 X_t^{(0)} &amp; \text{with probability } 1-\epsilon \\
 X_t^{(0)} + \delta &amp; \text{with probability } \epsilon
-\end{cases}</span></p>
-</div><p><strong>3. Trend Contamination</strong>:</p>
-<div class="math">
-<p><span class="math">X_t = X_t^{(0)} + \alpha t + \beta t^2</span></p>
-</div><p><strong>Implementation</strong>:</p>
+\end{cases}\end{split}\]</div>
+<p><strong>3. Trend Contamination</strong>:</p>
+<div class="math notranslate nohighlight">
+\[X_t = X_t^{(0)} + \alpha t + \beta t^2\]</div>
+<p><strong>Implementation</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">robustness_analysis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">estimator_func</span><span class="p">,</span> <span class="n">contamination_levels</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Analyze estimator robustness to contamination.&quot;&quot;&quot;</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
@@ -436,16 +442,16 @@ X_t^{(0)} + \delta &amp; \text{with probability } \epsilon
 <section id="hypothesis-testing">
 <h2>Hypothesis Testing<a class="headerlink" href="#hypothesis-testing" title="Link to this heading"></a></h2>
 <p><strong>1. Test for Long-Range Dependence</strong>:</p>
-<p>Null hypothesis: <span class="math">H_0: H = 0.5</span> (no LRD)
-Alternative hypothesis: <span class="math">H_1: H \neq 0.5</span> (LRD present)</p>
+<p>Null hypothesis: <span class="math notranslate nohighlight">\(H_0: H = 0.5\)</span> (no LRD)
+Alternative hypothesis: <span class="math notranslate nohighlight">\(H_1: H \neq 0.5\)</span> (LRD present)</p>
 <p>Test statistic:
 .. math:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">=</span> \<span class="n">frac</span><span class="p">{</span>\<span class="n">hat</span><span class="p">{</span><span class="n">H</span><span class="p">}</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">}{</span>\<span class="n">text</span><span class="p">{</span><span class="n">SE</span><span class="p">}(</span>\<span class="n">hat</span><span class="p">{</span><span class="n">H</span><span class="p">})}</span>
 </pre></div>
 </div>
 <p><strong>2. Test for Parameter Equality</strong>:</p>
-<p>Null hypothesis: <span class="math">H_0: H_1 = H_2</span>
-Alternative hypothesis: <span class="math">H_1: H_1 \neq H_2</span></p>
+<p>Null hypothesis: <span class="math notranslate nohighlight">\(H_0: H_1 = H_2\)</span>
+Alternative hypothesis: <span class="math notranslate nohighlight">\(H_1: H_1 \neq H_2\)</span></p>
 <p>Test statistic:
 .. math:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">=</span> \<span class="n">frac</span><span class="p">{</span>\<span class="n">hat</span><span class="p">{</span><span class="n">H</span><span class="p">}</span><span class="n">_1</span> <span class="o">-</span> \<span class="n">hat</span><span class="p">{</span><span class="n">H</span><span class="p">}</span><span class="n">_2</span><span class="p">}{</span>\<span class="n">sqrt</span><span class="p">{</span>\<span class="n">text</span><span class="p">{</span><span class="n">SE</span><span class="p">}(</span>\<span class="n">hat</span><span class="p">{</span><span class="n">H</span><span class="p">}</span><span class="n">_1</span><span class="p">)</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span> \<span class="n">text</span><span class="p">{</span><span class="n">SE</span><span class="p">}(</span>\<span class="n">hat</span><span class="p">{</span><span class="n">H</span><span class="p">}</span><span class="n">_2</span><span class="p">)</span><span class="o">^</span><span class="mi">2</span><span class="p">}}</span>
@@ -491,17 +497,17 @@ Alternative hypothesis: <span class="math">H_1: H_1 \neq H_2</span></p>
 <h2>Goodness-of-Fit Tests<a class="headerlink" href="#goodness-of-fit-tests" title="Link to this heading"></a></h2>
 <p><strong>1. Kolmogorov-Smirnov Test</strong>:</p>
 <p>Tests whether empirical distribution matches theoretical distribution.</p>
-<div class="math">
-<p><span class="math">D_n = \sup_x |F_n(x) - F(x)|</span></p>
-</div><p><strong>2. Anderson-Darling Test</strong>:</p>
+<div class="math notranslate nohighlight">
+\[D_n = \sup_x |F_n(x) - F(x)|\]</div>
+<p><strong>2. Anderson-Darling Test</strong>:</p>
 <p>Weighted version of KS test, more sensitive to tails.</p>
-<div class="math">
-<p><span class="math">A^2 = n \int_{-\infty}^{\infty} \frac{(F_n(x) - F(x))^2}{F(x)(1-F(x))} dF(x)</span></p>
-</div><p><strong>3. Chi-Square Test</strong>:</p>
+<div class="math notranslate nohighlight">
+\[A^2 = n \int_{-\infty}^{\infty} \frac{(F_n(x) - F(x))^2}{F(x)(1-F(x))} dF(x)\]</div>
+<p><strong>3. Chi-Square Test</strong>:</p>
 <p>Tests fit of observed frequencies to expected frequencies.</p>
-<div class="math">
-<p><span class="math">\chi^2 = \sum_{i=1}^k \frac{(O_i - E_i)^2}{E_i}</span></p>
-</div><p><strong>Implementation</strong>:</p>
+<div class="math notranslate nohighlight">
+\[\chi^2 = \sum_{i=1}^k \frac{(O_i - E_i)^2}{E_i}\]</div>
+<p><strong>Implementation</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">goodness_of_fit_tests</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">theoretical_distribution</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform goodness-of-fit tests.&quot;&quot;&quot;</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
@@ -543,17 +549,17 @@ Alternative hypothesis: <span class="math">H_1: H_1 \neq H_2</span></p>
 <section id="information-criteria">
 <h2>Information Criteria<a class="headerlink" href="#information-criteria" title="Link to this heading"></a></h2>
 <p><strong>1. Akaike Information Criterion (AIC)</strong>:</p>
-<div class="math">
-<p><span class="math">\text{AIC} = 2k - 2\ln(L)</span></p>
-</div><p>where k is the number of parameters and L is the likelihood.</p>
+<div class="math notranslate nohighlight">
+\[\text{AIC} = 2k - 2\ln(L)\]</div>
+<p>where k is the number of parameters and L is the likelihood.</p>
 <p><strong>2. Bayesian Information Criterion (BIC)</strong>:</p>
-<div class="math">
-<p><span class="math">\text{BIC} = \ln(n)k - 2\ln(L)</span></p>
-</div><p>where n is the sample size.</p>
+<div class="math notranslate nohighlight">
+\[\text{BIC} = \ln(n)k - 2\ln(L)\]</div>
+<p>where n is the sample size.</p>
 <p><strong>3. Corrected AIC (AICc)</strong>:</p>
-<div class="math">
-<p><span class="math">\text{AICc} = \text{AIC} + \frac{2k(k+1)}{n-k-1}</span></p>
-</div><p><strong>Implementation</strong>:</p>
+<div class="math notranslate nohighlight">
+\[\text{AICc} = \text{AIC} + \frac{2k(k+1)}{n-k-1}\]</div>
+<p><strong>Implementation</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">model_selection_criteria</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate model selection criteria.&quot;&quot;&quot;</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
@@ -588,30 +594,30 @@ Alternative hypothesis: <span class="math">H_1: H_1 \neq H_2</span></p>
 <section id="accuracy-metrics">
 <h2>Accuracy Metrics<a class="headerlink" href="#accuracy-metrics" title="Link to this heading"></a></h2>
 <p><strong>1. Mean Absolute Error (MAE)</strong>:</p>
-<div class="math">
-<p><span class="math">MAE = \frac{1}{n} \sum_{i=1}^n |\hat{H}_i - H_i|</span></p>
-</div><p><strong>2. Root Mean Square Error (RMSE)</strong>:</p>
-<div class="math">
-<p><span class="math">RMSE = \sqrt{\frac{1}{n} \sum_{i=1}^n (\hat{H}_i - H_i)^2}</span></p>
-</div><p><strong>3. Mean Absolute Percentage Error (MAPE)</strong>:</p>
-<div class="math">
-<p><span class="math">MAPE = \frac{100\%}{n} \sum_{i=1}^n \left|\frac{\hat{H}_i - H_i}{H_i}\right|</span></p>
-</div><p><strong>4. Symmetric Mean Absolute Percentage Error (SMAPE)</strong>:</p>
-<div class="math">
-<p><span class="math">SMAPE = \frac{100\%}{n} \sum_{i=1}^n \frac{2|\hat{H}_i - H_i|}{|\hat{H}_i| + |H_i|}</span></p>
-</div></section>
+<div class="math notranslate nohighlight">
+\[MAE = \frac{1}{n} \sum_{i=1}^n |\hat{H}_i - H_i|\]</div>
+<p><strong>2. Root Mean Square Error (RMSE)</strong>:</p>
+<div class="math notranslate nohighlight">
+\[RMSE = \sqrt{\frac{1}{n} \sum_{i=1}^n (\hat{H}_i - H_i)^2}\]</div>
+<p><strong>3. Mean Absolute Percentage Error (MAPE)</strong>:</p>
+<div class="math notranslate nohighlight">
+\[MAPE = \frac{100\%}{n} \sum_{i=1}^n \left|\frac{\hat{H}_i - H_i}{H_i}\right|\]</div>
+<p><strong>4. Symmetric Mean Absolute Percentage Error (SMAPE)</strong>:</p>
+<div class="math notranslate nohighlight">
+\[SMAPE = \frac{100\%}{n} \sum_{i=1}^n \frac{2|\hat{H}_i - H_i|}{|\hat{H}_i| + |H_i|}\]</div>
+</section>
 <section id="precision-metrics">
 <h2>Precision Metrics<a class="headerlink" href="#precision-metrics" title="Link to this heading"></a></h2>
 <p><strong>1. Standard Error</strong>:</p>
-<div class="math">
-<p><span class="math">SE = \sqrt{\frac{1}{n-1} \sum_{i=1}^n (\hat{H}_i - \bar{H})^2}</span></p>
-</div><p><strong>2. Coefficient of Variation</strong>:</p>
-<div class="math">
-<p><span class="math">CV = \frac{SE}{\bar{H}} \times 100\%</span></p>
-</div><p><strong>3. Confidence Interval Width</strong>:</p>
-<div class="math">
-<p><span class="math">CI_{width} = \hat{H}_{1-\alpha/2} - \hat{H}_{\alpha/2}</span></p>
-</div><p><strong>Implementation</strong>:</p>
+<div class="math notranslate nohighlight">
+\[SE = \sqrt{\frac{1}{n-1} \sum_{i=1}^n (\hat{H}_i - \bar{H})^2}\]</div>
+<p><strong>2. Coefficient of Variation</strong>:</p>
+<div class="math notranslate nohighlight">
+\[CV = \frac{SE}{\bar{H}} \times 100\%\]</div>
+<p><strong>3. Confidence Interval Width</strong>:</p>
+<div class="math notranslate nohighlight">
+\[CI_{width} = \hat{H}_{1-\alpha/2} - \hat{H}_{\alpha/2}\]</div>
+<p><strong>Implementation</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">calculate_performance_metrics</span><span class="p">(</span><span class="n">true_values</span><span class="p">,</span> <span class="n">estimated_values</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate comprehensive performance metrics.&quot;&quot;&quot;</span>
     <span class="n">metrics</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1230,18 +1236,7 @@ Ratio of estimator variance to Cramér-Rao lower bound.</p>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-    <!-- Theme Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-XXXXXXXXXX', {
-          'anonymize_ip': false,
-      });
-    </script> 
+  </script> 
 
 </body>
 </html>

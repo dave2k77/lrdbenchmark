@@ -266,34 +266,10 @@ Custom benchmark configuration:
    print(f"R/S estimate: {rs_hurst:.3f}")
    print(f"DFA estimate: {dfa_hurst:.3f}")
 
-Integration with HPFracc
-------------------------
+Integration note: HPFracc
+-------------------------
 
-Compare with fractional neural networks:
-
-.. code-block:: python
-
-   # This requires hpfracc to be installed
-   try:
-       from scripts.hpfracc_proper_benchmark import HPFraccProperBenchmark
-       
-       # Create benchmark
-       benchmark = HPFraccProperBenchmark(
-           series_length=1000,
-           batch_size=32,
-           input_window=10,
-           prediction_horizon=1
-       )
-       
-       # Run comparison
-       results = benchmark.run_benchmark()
-       
-       # Generate report
-       report = benchmark.generate_report()
-       print(report)
-       
-   except ImportError:
-       print("HPFracc not available. Install with: pip install hpfracc")
+An updated HPFracc API is available; see `documentation_summaries/PROJECT_CLEANUP_SUMMARY.md` for the current reference and adapt example code accordingly. The integration is optional and not required for core LRDBenchmark usage.
 
 Visualization
 -------------

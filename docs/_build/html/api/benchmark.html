@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
@@ -8,15 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Benchmark API &mdash; LRDBenchmark 1.7.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
   
-    <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/api/benchmark.html"/>
-      <script src="../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=030dc6f6"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/api/benchmark.html" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=030dc6f6"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -35,6 +37,9 @@
           <a href="../index.html" class="icon icon-home">
             LRDBenchmark
           </a>
+              <div class="version">
+                1.7.0
+              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -55,9 +60,26 @@
 <li class="toctree-l1"><a class="reference internal" href="estimators.html">Estimators API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data_models.html">Data Models API</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Benchmark API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#comprehensive-benchmark">Comprehensive Benchmark</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#benchmark-results">Benchmark Results</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#benchmark-configuration">Benchmark Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comprehensive-benchmark">Comprehensive Benchmark</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark"><code class="docutils literal notranslate"><span class="pre">ComprehensiveBenchmark</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark.__init__"><code class="docutils literal notranslate"><span class="pre">ComprehensiveBenchmark.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark.run_comprehensive_benchmark"><code class="docutils literal notranslate"><span class="pre">ComprehensiveBenchmark.run_comprehensive_benchmark()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark.run_classical_benchmark"><code class="docutils literal notranslate"><span class="pre">ComprehensiveBenchmark.run_classical_benchmark()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark.run_ml_benchmark"><code class="docutils literal notranslate"><span class="pre">ComprehensiveBenchmark.run_ml_benchmark()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark.run_neural_benchmark"><code class="docutils literal notranslate"><span class="pre">ComprehensiveBenchmark.run_neural_benchmark()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#benchmark-results">Benchmark Results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lrdbenchmark.analysis.benchmark.BenchmarkResult"><code class="docutils literal notranslate"><span class="pre">BenchmarkResult</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lrdbenchmark.analysis.benchmark.EstimatorResult"><code class="docutils literal notranslate"><span class="pre">EstimatorResult</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#benchmark-configuration">Benchmark Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lrdbenchmark.analysis.benchmark.BenchmarkConfig"><code class="docutils literal notranslate"><span class="pre">BenchmarkConfig</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#usage-examples">Usage Examples</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#basic-benchmark">Basic Benchmark</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#classical-estimators-only">Classical Estimators Only</a></li>
@@ -74,7 +96,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#results-analysis">Results Analysis</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#statistical-analysis">Statistical Analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#visualization">Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualisation">Visualisation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#performance-comparison">Performance Comparison</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#error-analysis">Error Analysis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#confidence-intervals">Confidence Intervals</a></li>
@@ -152,12 +174,61 @@
 <p>lrdbenchmark provides a comprehensive benchmarking framework for evaluating and comparing all 18 estimators of long-range dependence.</p>
 <section id="comprehensive-benchmark">
 <h2>Comprehensive Benchmark<a class="headerlink" href="#comprehensive-benchmark" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lrdbenchmark.analysis.benchmark.</span></span><span class="sig-name descname"><span class="pre">ComprehensiveBenchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark" title="Link to this definition"></a></dt>
+<dd><p>Bases:</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark.run_comprehensive_benchmark">
+<span class="sig-name descname"><span class="pre">run_comprehensive_benchmark</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark.run_comprehensive_benchmark" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark.run_classical_benchmark">
+<span class="sig-name descname"><span class="pre">run_classical_benchmark</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark.run_classical_benchmark" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark.run_ml_benchmark">
+<span class="sig-name descname"><span class="pre">run_ml_benchmark</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark.run_ml_benchmark" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark.run_neural_benchmark">
+<span class="sig-name descname"><span class="pre">run_neural_benchmark</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark.run_neural_benchmark" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="benchmark-results">
 <h2>Benchmark Results<a class="headerlink" href="#benchmark-results" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.benchmark.BenchmarkResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lrdbenchmark.analysis.benchmark.</span></span><span class="sig-name descname"><span class="pre">BenchmarkResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lrdbenchmark.analysis.benchmark.BenchmarkResult" title="Link to this definition"></a></dt>
+<dd><p>Bases:</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.benchmark.EstimatorResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lrdbenchmark.analysis.benchmark.</span></span><span class="sig-name descname"><span class="pre">EstimatorResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lrdbenchmark.analysis.benchmark.EstimatorResult" title="Link to this definition"></a></dt>
+<dd><p>Bases:</p>
+</dd></dl>
+
 </section>
 <section id="benchmark-configuration">
 <h2>Benchmark Configuration<a class="headerlink" href="#benchmark-configuration" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lrdbenchmark.analysis.benchmark.BenchmarkConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lrdbenchmark.analysis.benchmark.</span></span><span class="sig-name descname"><span class="pre">BenchmarkConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lrdbenchmark.analysis.benchmark.BenchmarkConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases:</p>
+</dd></dl>
+
 </section>
 <section id="usage-examples">
 <h2>Usage Examples<a class="headerlink" href="#usage-examples" title="Link to this heading"></a></h2>
@@ -401,8 +472,8 @@
 </pre></div>
 </div>
 </section>
-<section id="visualization">
-<h3>Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h3>
+<section id="visualisation">
+<h3>Visualisation<a class="headerlink" href="#visualisation" title="Link to this heading"></a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">ComprehensiveBenchmark</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
@@ -656,18 +727,7 @@ The benchmark system will report failures but continue with other estimators.</p
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-    <!-- Theme Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-XXXXXXXXXX', {
-          'anonymize_ip': false,
-      });
-    </script> 
+  </script> 
 
 </body>
 </html>

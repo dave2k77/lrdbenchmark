@@ -4,7 +4,7 @@ Benchmark API
 lrdbenchmark provides a comprehensive benchmarking framework for evaluating and comparing all 18 estimators of long-range dependence.
 
 Comprehensive Benchmark
----------------------
+-----------------------
 
 .. autoclass:: lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark
    :members:
@@ -18,7 +18,7 @@ Comprehensive Benchmark
    .. automethod:: run_neural_benchmark
 
 Benchmark Results
-----------------
+-----------------
 
 .. autoclass:: lrdbenchmark.analysis.benchmark.BenchmarkResult
    :members:
@@ -31,7 +31,7 @@ Benchmark Results
    :show-inheritance:
 
 Benchmark Configuration
-----------------------
+-----------------------
 
 .. autoclass:: lrdbenchmark.analysis.benchmark.BenchmarkConfig
    :members:
@@ -42,7 +42,7 @@ Usage Examples
 -------------
 
 Basic Benchmark
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -89,7 +89,7 @@ Basic Benchmark
    print(model_performance.round(3))
 
 Classical Estimators Only
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -110,7 +110,7 @@ Classical Estimators Only
    print(f"DFA standard error: {dfa_results.std_error:.3f}")
 
 Machine Learning Estimators
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -158,7 +158,7 @@ Neural Network Estimators
            print(f"  Final loss: {result.training_history['loss'][-1]:.4f}")
 
 Custom Configuration
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -184,10 +184,10 @@ Custom Configuration
    print(f"Results for length 1000: {len(results_1000.estimators)} estimators")
 
 Advanced Usage
--------------
+--------------
 
 Parallel Processing
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -207,7 +207,7 @@ Parallel Processing
    )
 
 Custom Data Models
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -230,7 +230,7 @@ Custom Data Models
    )
 
 Custom Estimators
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -259,10 +259,10 @@ Custom Estimators
    )
 
 Results Analysis
----------------
+----------------
 
 Statistical Analysis
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -290,8 +290,8 @@ Statistical Analysis
    print(f"\nBias (estimated - true H = {true_H}):")
    print(bias.round(3))
 
-Visualization
-~~~~~~~~~~~~
+Visualisation
+~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -330,7 +330,7 @@ Visualization
    plt.show()
 
 Performance Comparison
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -358,7 +358,7 @@ Performance Comparison
        print(f"{estimator}: {time_taken:.2f} seconds")
 
 Error Analysis
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -399,7 +399,7 @@ Error Analysis
    print(f"\nNumber of outliers: {len(outliers)}")
 
 Confidence Intervals
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -443,10 +443,10 @@ Confidence Intervals
        print(f"{estimator}: {ci['mean']:.3f} [{ci['lower_ci']:.3f}, {ci['upper_ci']:.3f}]")
 
 Export and Reporting
--------------------
+--------------------
 
 Export Results
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -474,7 +474,7 @@ Export Results
        summary_df.to_excel(writer, sheet_name='Summary', index=False)
 
 Generate Reports
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
