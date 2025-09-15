@@ -114,7 +114,26 @@ coverage.xml
 dmypy.json
 
 # Research manuscript and related files
-manuscript/
+# Ignore LaTeX build artifacts for research manuscripts
+research/*.aux
+research/*.bbl
+research/*.blg
+research/*.brf
+research/*.idx
+research/*.ilg
+research/*.ind
+research/*.lof
+research/*.log
+research/*.lot
+research/*.out
+research/*.synctex.gz
+research/*.toc
+research/*.fdb_latexmk
+research/*.fls
+research/*.pdf
+
+# Ignore docs build output
+docs/_build/
 
 # Benchmarking files and results
 benchmarks/
