@@ -1,0 +1,12 @@
+Estimator,Category,MAE_Heavy_Tail,MAE_Standard,MAE_Combined,Success_Rate,Robustness_Score,Rank
+GradientBoosting,ML,0.201,0.193,0.196,100,1.0,1
+RandomForest,ML,0.211,0.202,0.206,100,1.0,2
+LSTM,Neural Network,0.245,0.097,0.156,100,1.0,3
+GRU,Neural Network,0.247,0.108,0.164,100,1.0,4
+Transformer,Neural Network,0.249,0.106,0.163,100,1.0,5
+CNN,Neural Network,0.3,0.103,0.182,100,1.0,6
+SVR,ML,0.308,0.202,0.244,100,1.0,7
+DFA,Classical,0.346,0.465,0.417,100,1.0,8
+DMA,Classical,0.346,0.527,0.455,100,1.0,9
+R/S,Classical,0.409,0.099,0.223,100,1.0,10
+Higuchi,Classical,0.539,0.509,0.521,100,1.0,11

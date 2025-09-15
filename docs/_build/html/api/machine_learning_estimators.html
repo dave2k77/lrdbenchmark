@@ -192,7 +192,7 @@
              
   <section id="machine-learning-estimators">
 <h1>Machine Learning Estimators<a class="headerlink" href="#machine-learning-estimators" title="Link to this heading"></a></h1>
-<p>LRDBenchmark provides production-ready machine learning estimators for Long-Range Dependence (LRD) estimation. These estimators achieve <strong>74% better accuracy</strong> than classical methods, with <strong>Gradient Boosting achieving the best overall performance</strong> at 0.023 MAE.</p>
+<p>LRDBenchmark provides production-ready machine learning estimators for Long-Range Dependence (LRD) estimation. These estimators achieve <strong>excellent performance</strong> with perfect robustness, with <strong>Gradient Boosting achieving the best ML performance</strong> at 0.193 MAE.</p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
 <p>The machine learning estimators use advanced feature engineering with 50-70 engineered features per model, including:</p>
@@ -327,7 +327,7 @@ and prediction capabilities.</p>
 
 </dd></dl>
 
-<p><strong>Performance</strong>: 0.079 MAE, 100% success rate, 1.46s training time</p>
+<p><strong>Performance</strong>: 0.202 MAE, 100% success rate, 0.009s execution time</p>
 <p><strong>Key Features</strong>:
 * RBF kernel with configurable parameters (C, gamma, epsilon)
 * 50+ engineered features including spectral and DFA analysis
@@ -482,7 +482,7 @@ and prediction capabilities.</p>
 
 </dd></dl>
 
-<p><strong>Performance</strong>: 0.023 MAE (<strong>Best Overall</strong>), 100% success rate, 1.75s training time</p>
+<p><strong>Performance</strong>: 0.193 MAE (<strong>Best ML</strong>), 100% success rate, 0.013s execution time</p>
 <p><strong>Key Features</strong>:
 * Configurable parameters (n_estimators, learning_rate, max_depth)
 * 60+ engineered features including advanced spectral and DFA analysis
@@ -642,7 +642,7 @@ and prediction capabilities.</p>
 
 </dd></dl>
 
-<p><strong>Performance</strong>: 0.044 MAE, 100% success rate, 84.15s training time</p>
+<p><strong>Performance</strong>: 0.202 MAE, 100% success rate, 2.099s execution time</p>
 <p><strong>Key Features</strong>:
 * Configurable parameters (n_estimators, max_depth, min_samples_split)
 * 70+ engineered features including fractal dimension and approximate entropy
@@ -797,24 +797,24 @@ and prediction capabilities.</p>
 <section id="performance-comparison">
 <h2>Performance Comparison<a class="headerlink" href="#performance-comparison" title="Link to this heading"></a></h2>
 <div class="line-block">
-<div class="line">Method | Mean Error | Execution Time | Success Rate | Training Time |</div>
+<div class="line">Method | Mean Error | Execution Time | Success Rate | Category |</div>
 </div>
-<p><a href="#id1"><span class="problematic" id="id2">|--------|</span></a>————<a href="#id3"><span class="problematic" id="id4">|----------------|</span></a>————–<a href="#id5"><span class="problematic" id="id6">|---------------|</span></a>
-| <strong>GradientBoosting</strong> | <strong>0.023</strong> | 17.5ms | 100% | 1.75s |
-| <strong>RandomForest</strong> | <strong>0.044</strong> | 852.0ms | 100% | 84.15s |
-| <strong>SVR</strong> | <strong>0.079</strong> | 14.5ms | 100% | 1.46s |
-| <strong>CNN</strong> | <strong>0.170</strong> | 2.0ms | 100% | 2.01s |
-| <strong>ML Average</strong> | <strong>0.079</strong> | 222.0ms | 100% | - |
-| <strong>Whittle</strong> | 0.227 | 0.2ms | 100% | - |
-| <strong>RS (R/S)</strong> | 0.248 | 8.5ms | 100% | - |
-| <strong>GPH</strong> | 0.306 | 0.4ms | 100% | - |
-| <strong>DFA</strong> | 0.447 | 14.8ms | 100% | - |
-| <strong>Classical Average</strong> | 0.305 | 6.0ms | 100% | - |</p>
+<p><a href="#id1"><span class="problematic" id="id2">|--------|</span></a>————<a href="#id3"><span class="problematic" id="id4">|----------------|</span></a>————–<a href="#id5"><span class="problematic" id="id6">|----------|</span></a>
+| <strong>LSTM</strong> | <strong>0.097</strong> | 0.0012s | 100% | Neural Networks |
+| <strong>CNN</strong> | <strong>0.103</strong> | 0.0064s | 100% | Neural Networks |
+| <strong>Transformer</strong> | <strong>0.106</strong> | 0.0026s | 100% | Neural Networks |
+| <strong>GRU</strong> | <strong>0.108</strong> | 0.0007s | 100% | Neural Networks |
+| <strong>R/S</strong> | <strong>0.099</strong> | 0.348s | 100% | Classical |
+| <strong>GradientBoosting</strong> | <strong>0.193</strong> | 0.013s | 100% | ML |
+| <strong>SVR</strong> | <strong>0.202</strong> | 0.009s | 100% | ML |
+| <strong>Whittle</strong> | 0.200 | 0.0002s | 100% | Classical |
+| <strong>Periodogram</strong> | 0.205 | 0.0005s | 100% | Classical |
+| <strong>CWT</strong> | 0.269 | 0.063s | 100% | Classical |</p>
 </section>
 <section id="key-advantages">
 <h2>Key Advantages<a class="headerlink" href="#key-advantages" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><strong>Superior Accuracy</strong>: 74% better accuracy than classical methods</p></li>
+<li><p><strong>Excellent Performance</strong>: Strong performance with perfect robustness</p></li>
 <li><p><strong>Advanced Feature Engineering</strong>: 50-70 engineered features per model</p></li>
 <li><p><strong>Production Ready</strong>: Model persistence, error handling, and deployment capabilities</p></li>
 <li><p><strong>Comprehensive Testing</strong>: 100% success rate across all test cases</p></li>
@@ -824,11 +824,11 @@ and prediction capabilities.</p>
 <section id="best-practices">
 <h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
 <ol class="arabic simple">
-<li><p><strong>For Highest Accuracy</strong>: Use Gradient Boosting (0.023 MAE)</p></li>
-<li><p><strong>For Fast Training</strong>: Use SVR (1.46s training time)</p></li>
+<li><p><strong>For Highest Accuracy</strong>: Use LSTM Neural Network (0.097 MAE)</p></li>
+<li><p><strong>For Fast ML Performance</strong>: Use SVR (0.009s execution time)</p></li>
 <li><p><strong>For Feature Analysis</strong>: Use Random Forest (feature importance available)</p></li>
 <li><p><strong>For Production Deployment</strong>: Use Production ML System with train-once, apply-many workflow</p></li>
-<li><p><strong>For Real-time Applications</strong>: Use CNN (2.0ms execution time)</p></li>
+<li><p><strong>For Real-time Applications</strong>: Use GRU Neural Network (0.0007s execution time)</p></li>
 </ol>
 </section>
 <section id="see-also">

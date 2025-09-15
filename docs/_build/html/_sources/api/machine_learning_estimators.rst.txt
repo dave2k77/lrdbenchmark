@@ -1,7 +1,7 @@
 Machine Learning Estimators
 ============================
 
-LRDBenchmark provides production-ready machine learning estimators for Long-Range Dependence (LRD) estimation. These estimators achieve **74% better accuracy** than classical methods, with **Gradient Boosting achieving the best overall performance** at 0.023 MAE.
+LRDBenchmark provides production-ready machine learning estimators for Long-Range Dependence (LRD) estimation. These estimators achieve **excellent performance** with perfect robustness, with **Gradient Boosting achieving the best ML performance** at 0.193 MAE.
 
 Overview
 --------
@@ -26,7 +26,7 @@ Support Vector Regression estimator with RBF kernel and comprehensive feature en
    :undoc-members:
    :show-inheritance:
 
-**Performance**: 0.079 MAE, 100% success rate, 1.46s training time
+**Performance**: 0.202 MAE, 100% success rate, 0.009s execution time
 
 **Key Features**:
 * RBF kernel with configurable parameters (C, gamma, epsilon)
@@ -65,7 +65,7 @@ Gradient Boosting Regressor with comprehensive feature engineering - **Best Over
    :undoc-members:
    :show-inheritance:
 
-**Performance**: 0.023 MAE (**Best Overall**), 100% success rate, 1.75s training time
+**Performance**: 0.193 MAE (**Best ML**), 100% success rate, 0.013s execution time
 
 **Key Features**:
 * Configurable parameters (n_estimators, learning_rate, max_depth)
@@ -108,7 +108,7 @@ Random Forest Regressor with comprehensive feature engineering and feature impor
    :undoc-members:
    :show-inheritance:
 
-**Performance**: 0.044 MAE, 100% success rate, 84.15s training time
+**Performance**: 0.202 MAE, 100% success rate, 2.099s execution time
 
 **Key Features**:
 * Configurable parameters (n_estimators, max_depth, min_samples_split)
@@ -191,23 +191,23 @@ Production-ready ML system with train-once, apply-many workflow and intelligent 
 Performance Comparison
 ----------------------
 
-| Method | Mean Error | Execution Time | Success Rate | Training Time |
-|--------|------------|----------------|--------------|---------------|
-| **GradientBoosting** | **0.023** | 17.5ms | 100% | 1.75s |
-| **RandomForest** | **0.044** | 852.0ms | 100% | 84.15s |
-| **SVR** | **0.079** | 14.5ms | 100% | 1.46s |
-| **CNN** | **0.170** | 2.0ms | 100% | 2.01s |
-| **ML Average** | **0.079** | 222.0ms | 100% | - |
-| **Whittle** | 0.227 | 0.2ms | 100% | - |
-| **RS (R/S)** | 0.248 | 8.5ms | 100% | - |
-| **GPH** | 0.306 | 0.4ms | 100% | - |
-| **DFA** | 0.447 | 14.8ms | 100% | - |
-| **Classical Average** | 0.305 | 6.0ms | 100% | - |
+| Method | Mean Error | Execution Time | Success Rate | Category |
+|--------|------------|----------------|--------------|----------|
+| **LSTM** | **0.097** | 0.0012s | 100% | Neural Networks |
+| **CNN** | **0.103** | 0.0064s | 100% | Neural Networks |
+| **Transformer** | **0.106** | 0.0026s | 100% | Neural Networks |
+| **GRU** | **0.108** | 0.0007s | 100% | Neural Networks |
+| **R/S** | **0.099** | 0.348s | 100% | Classical |
+| **GradientBoosting** | **0.193** | 0.013s | 100% | ML |
+| **SVR** | **0.202** | 0.009s | 100% | ML |
+| **Whittle** | 0.200 | 0.0002s | 100% | Classical |
+| **Periodogram** | 0.205 | 0.0005s | 100% | Classical |
+| **CWT** | 0.269 | 0.063s | 100% | Classical |
 
 Key Advantages
 --------------
 
-* **Superior Accuracy**: 74% better accuracy than classical methods
+* **Excellent Performance**: Strong performance with perfect robustness
 * **Advanced Feature Engineering**: 50-70 engineered features per model
 * **Production Ready**: Model persistence, error handling, and deployment capabilities
 * **Comprehensive Testing**: 100% success rate across all test cases
@@ -216,11 +216,11 @@ Key Advantages
 Best Practices
 --------------
 
-1. **For Highest Accuracy**: Use Gradient Boosting (0.023 MAE)
-2. **For Fast Training**: Use SVR (1.46s training time)
+1. **For Highest Accuracy**: Use LSTM Neural Network (0.097 MAE)
+2. **For Fast ML Performance**: Use SVR (0.009s execution time)
 3. **For Feature Analysis**: Use Random Forest (feature importance available)
 4. **For Production Deployment**: Use Production ML System with train-once, apply-many workflow
-5. **For Real-time Applications**: Use CNN (2.0ms execution time)
+5. **For Real-time Applications**: Use GRU Neural Network (0.0007s execution time)
 
 See Also
 --------

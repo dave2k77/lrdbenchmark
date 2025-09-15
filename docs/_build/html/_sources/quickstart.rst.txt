@@ -11,23 +11,22 @@ Generate synthetic data and run a benchmark:
 .. code-block:: python
 
    import numpy as np
-   from lrdbenchmark import FBMModel, ComprehensiveBenchmark
+   from lrdbenchmark import FBMModel, RSEstimator
    
    # Generate Fractional Brownian Motion data
    model = FBMModel(H=0.7, sigma=1.0)
    data = model.generate(1000, seed=42)
    
-   # Run comprehensive benchmark
-   benchmark = ComprehensiveBenchmark()
-   results = benchmark.run_comprehensive_benchmark(data_length=1000)
+   # Estimate Hurst parameter using R/S analysis
+   rs_estimator = RSEstimator()
+   hurst_estimate = rs_estimator.estimate(data)
    
-   print("Benchmark completed!")
-   print(f"Results: {results}")
+   print(f"True Hurst: 0.7, Estimated: {hurst_estimate:.3f}")
 
 Neural Network Usage
 --------------------
 
-LRDBenchmark provides a comprehensive neural network factory with 8 architectures that achieve excellent speed-accuracy trade-offs:
+LRDBenchmark provides a comprehensive neural network factory with 4 architectures that achieve excellent speed-accuracy trade-offs:
 
 .. code-block:: python
 
@@ -189,18 +188,17 @@ Track usage and performance:
 
 .. code-block:: python
 
-   from lrdbenchmark import enable_analytics, get_analytics_summary
+   from lrdbenchmark import FBMModel, RSEstimator
    
-   # Enable analytics
-   enable_analytics()
+   # Generate data and run analysis
+   model = FBMModel(H=0.7)
+   data = model.generate(1000)
    
-   # Run your analysis
-   benchmark = ComprehensiveBenchmark()
-   results = benchmark.run_comprehensive_benchmark(data_length=1000)
+   # Estimate Hurst parameter
+   rs_estimator = RSEstimator()
+   hurst_estimate = rs_estimator.estimate(data)
    
-   # Get analytics summary
-   summary = get_analytics_summary()
-   print(summary)
+   print(f"Hurst estimate: {hurst_estimate:.3f}")
 
 Enhanced ML and Neural Network Estimators
 -----------------------------------------
@@ -252,22 +250,21 @@ Custom benchmark configuration:
 
 .. code-block:: python
 
-   from lrdbenchmark import ComprehensiveBenchmark
+   from lrdbenchmark import FBMModel, RSEstimator, DFAEstimator
    
-   # Configure benchmark
-   benchmark = ComprehensiveBenchmark()
+   # Generate data
+   model = FBMModel(H=0.7)
+   data = model.generate(2000)
    
-   # Run with specific parameters
-   results = benchmark.run_comprehensive_benchmark(
-       data_length=2000,
-       estimators=['dfa', 'gph', 'rs'],
-       data_models=['fbm', 'fgn'],
-       n_runs=5
-   )
+   # Test multiple estimators
+   rs_estimator = RSEstimator()
+   dfa_estimator = DFAEstimator()
    
-   # Access detailed results
-   for estimator, result in results.items():
-       print(f"{estimator}: H={result['estimated_H']:.3f}")
+   rs_hurst = rs_estimator.estimate(data)
+   dfa_hurst = dfa_estimator.estimate(data)
+   
+   print(f"R/S estimate: {rs_hurst:.3f}")
+   print(f"DFA estimate: {dfa_hurst:.3f}")
 
 Integration with HPFracc
 ------------------------
@@ -339,7 +336,7 @@ Performance Tips
 Next Steps
 -----------
 
-* :doc:`user_guide/getting_started` - Detailed getting started guide
-* :doc:`user_guide/data_models` - Learn about data models
-* :doc:`user_guide/estimators` - Explore available estimators
-* :doc:`user_guide/examples` - More examples and use cases
+* :doc:`installation` - Detailed installation guide
+* :doc:`api/data_models` - Learn about data models
+* :doc:`api/estimators` - Explore available estimators
+* :doc:`examples/comprehensive_demo` - More examples and use cases

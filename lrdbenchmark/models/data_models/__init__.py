@@ -13,12 +13,14 @@ try:
     from .fgn.fgn_model import FractionalGaussianNoise
     from .arfima.arfima_model import ARFIMAModel
     from .mrw.mrw_model import MultifractalRandomWalk
+    from .alpha_stable.alpha_stable_model import AlphaStableModel
     
     # Create shortened aliases for convenience
     FBMModel = FractionalBrownianMotion
     FGNModel = FractionalGaussianNoise
     ARFIMAModel = ARFIMAModel  # Keep as is since it's already short
     MRWModel = MultifractalRandomWalk
+    AlphaStableModel = AlphaStableModel  # Keep as is since it's already descriptive
     
 except ImportError as e:
     print(f"Warning: Could not import data models: {e}")
@@ -55,6 +57,14 @@ except ImportError as e:
         def generate(self, n=1000):
             import numpy as np
             return np.random.normal(0, 1, n)
+    
+    class AlphaStableModel:
+        def __init__(self, alpha=1.5, beta=0.0, **kwargs):
+            self.alpha = alpha
+            self.beta = beta
+        def generate(self, n=1000):
+            import numpy as np
+            return np.random.normal(0, 1, n)
 
 # Convenience functions with default parameters
 def create_fbm_model(H=0.7, sigma=1.0):
@@ -73,12 +83,17 @@ def create_mrw_model(H=0.7, lambda_param=0.1, sigma=1.0):
     """Create MRWModel with default parameters"""
     return MRWModel(H=H, lambda_param=lambda_param, sigma=sigma)
 
+def create_alpha_stable_model(alpha=1.5, beta=0.0, sigma=1.0, mu=0.0):
+    """Create AlphaStableModel with default parameters"""
+    return AlphaStableModel(alpha=alpha, beta=beta, sigma=sigma, mu=mu)
+
 __all__ = [
     "BaseModel",
     "FractionalBrownianMotion",
     "FractionalGaussianNoise", 
     "ARFIMAModel",
     "MultifractalRandomWalk",
+    "AlphaStableModel",
     "FBMModel",
     "FGNModel",
     "MRWModel",
@@ -86,4 +101,5 @@ __all__ = [
     "create_fgn_model",
     "create_arfima_model",
     "create_mrw_model",
+    "create_alpha_stable_model",
 ]

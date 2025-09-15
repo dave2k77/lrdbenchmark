@@ -138,24 +138,23 @@
 <h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading"></a></h2>
 <p>Generate synthetic data and run a benchmark:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span><span class="p">,</span> <span class="n">ComprehensiveBenchmark</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span><span class="p">,</span> <span class="n">RSEstimator</span>
 
 <span class="c1"># Generate Fractional Brownian Motion data</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
-<span class="c1"># Run comprehensive benchmark</span>
-<span class="n">benchmark</span> <span class="o">=</span> <span class="n">ComprehensiveBenchmark</span><span class="p">()</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">run_comprehensive_benchmark</span><span class="p">(</span><span class="n">data_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="c1"># Estimate Hurst parameter using R/S analysis</span>
+<span class="n">rs_estimator</span> <span class="o">=</span> <span class="n">RSEstimator</span><span class="p">()</span>
+<span class="n">hurst_estimate</span> <span class="o">=</span> <span class="n">rs_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Benchmark completed!&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results: </span><span class="si">{</span><span class="n">results</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;True Hurst: 0.7, Estimated: </span><span class="si">{</span><span class="n">hurst_estimate</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="neural-network-usage">
 <h2>Neural Network Usage<a class="headerlink" href="#neural-network-usage" title="Link to this heading"></a></h2>
-<p>LRDBenchmark provides a comprehensive neural network factory with 8 architectures that achieve excellent speed-accuracy trade-offs:</p>
+<p>LRDBenchmark provides a comprehensive neural network factory with 4 architectures that achieve excellent speed-accuracy trade-offs:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.analysis.machine_learning.neural_network_factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">NeuralNetworkFactory</span><span class="p">,</span> <span class="n">NNArchitecture</span><span class="p">,</span> <span class="n">NNConfig</span><span class="p">,</span> <span class="n">create_all_benchmark_networks</span>
 <span class="p">)</span>
@@ -304,18 +303,17 @@
 <section id="analytics-system">
 <h2>Analytics System<a class="headerlink" href="#analytics-system" title="Link to this heading"></a></h2>
 <p>Track usage and performance:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">enable_analytics</span><span class="p">,</span> <span class="n">get_analytics_summary</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span><span class="p">,</span> <span class="n">RSEstimator</span>
 
-<span class="c1"># Enable analytics</span>
-<span class="n">enable_analytics</span><span class="p">()</span>
+<span class="c1"># Generate data and run analysis</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
 
-<span class="c1"># Run your analysis</span>
-<span class="n">benchmark</span> <span class="o">=</span> <span class="n">ComprehensiveBenchmark</span><span class="p">()</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">run_comprehensive_benchmark</span><span class="p">(</span><span class="n">data_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="c1"># Estimate Hurst parameter</span>
+<span class="n">rs_estimator</span> <span class="o">=</span> <span class="n">RSEstimator</span><span class="p">()</span>
+<span class="n">hurst_estimate</span> <span class="o">=</span> <span class="n">rs_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
-<span class="c1"># Get analytics summary</span>
-<span class="n">summary</span> <span class="o">=</span> <span class="n">get_analytics_summary</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hurst estimate: </span><span class="si">{</span><span class="n">hurst_estimate</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -363,22 +361,21 @@
 <section id="advanced-usage">
 <h2>Advanced Usage<a class="headerlink" href="#advanced-usage" title="Link to this heading"></a></h2>
 <p>Custom benchmark configuration:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">ComprehensiveBenchmark</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span><span class="p">,</span> <span class="n">RSEstimator</span><span class="p">,</span> <span class="n">DFAEstimator</span>
 
-<span class="c1"># Configure benchmark</span>
-<span class="n">benchmark</span> <span class="o">=</span> <span class="n">ComprehensiveBenchmark</span><span class="p">()</span>
+<span class="c1"># Generate data</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">2000</span><span class="p">)</span>
 
-<span class="c1"># Run with specific parameters</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">run_comprehensive_benchmark</span><span class="p">(</span>
-    <span class="n">data_length</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
-    <span class="n">estimators</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;dfa&#39;</span><span class="p">,</span> <span class="s1">&#39;gph&#39;</span><span class="p">,</span> <span class="s1">&#39;rs&#39;</span><span class="p">],</span>
-    <span class="n">data_models</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fbm&#39;</span><span class="p">,</span> <span class="s1">&#39;fgn&#39;</span><span class="p">],</span>
-    <span class="n">n_runs</span><span class="o">=</span><span class="mi">5</span>
-<span class="p">)</span>
+<span class="c1"># Test multiple estimators</span>
+<span class="n">rs_estimator</span> <span class="o">=</span> <span class="n">RSEstimator</span><span class="p">()</span>
+<span class="n">dfa_estimator</span> <span class="o">=</span> <span class="n">DFAEstimator</span><span class="p">()</span>
 
-<span class="c1"># Access detailed results</span>
-<span class="k">for</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">estimator</span><span class="si">}</span><span class="s2">: H=</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;estimated_H&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">rs_hurst</span> <span class="o">=</span> <span class="n">rs_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">dfa_hurst</span> <span class="o">=</span> <span class="n">dfa_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R/S estimate: </span><span class="si">{</span><span class="n">rs_hurst</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DFA estimate: </span><span class="si">{</span><span class="n">dfa_hurst</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -449,10 +446,10 @@
 <section id="next-steps">
 <h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><span class="xref std std-doc">user_guide/getting_started</span> - Detailed getting started guide</p></li>
-<li><p><span class="xref std std-doc">user_guide/data_models</span> - Learn about data models</p></li>
-<li><p><span class="xref std std-doc">user_guide/estimators</span> - Explore available estimators</p></li>
-<li><p><span class="xref std std-doc">user_guide/examples</span> - More examples and use cases</p></li>
+<li><p><a class="reference internal" href="installation.html"><span class="doc">Installation Guide</span></a> - Detailed installation guide</p></li>
+<li><p><a class="reference internal" href="api/data_models.html"><span class="doc">Data Models API</span></a> - Learn about data models</p></li>
+<li><p><a class="reference internal" href="api/estimators.html"><span class="doc">Estimators API</span></a> - Explore available estimators</p></li>
+<li><p><a class="reference internal" href="examples/comprehensive_demo.html"><span class="doc">Comprehensive LRDBench Demonstration</span></a> - More examples and use cases</p></li>
 </ul>
 </section>
 </section>

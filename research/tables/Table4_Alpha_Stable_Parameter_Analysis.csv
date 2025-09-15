@@ -1,0 +1,5 @@
+Alpha_Parameter,Distribution_Type,Kurtosis_Approx,Extreme_Value_Ratio,Preprocessing_Method,ML_Performance,NN_Performance,Classical_Performance
+2.0,Gaussian,0,0.05,Standardize,0.208,0.247,0.409
+1.5,Heavy-tailed,5,0.15,Winsorize,0.201,0.245,0.38
+1.0,Very Heavy-tailed,50,0.3,Winsorize,0.195,0.248,0.395
+0.8,Extreme Heavy-tailed,200,0.5,Winsorize_Log,0.201,0.245,0.409

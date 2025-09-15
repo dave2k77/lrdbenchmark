@@ -122,17 +122,63 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.base_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
 <span class="c1"># Import all model classes</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.fbm.fbm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FractionalBrownianMotion</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.fgn.fgn_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FractionalGaussianNoise</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.arfima.arfima_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">ARFIMAModel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.mrw.mrw_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultifractalRandomWalk</span>
-
-<span class="c1"># Create shortened aliases for convenience</span>
-<span class="n">FBMModel</span> <span class="o">=</span> <span class="n">FractionalBrownianMotion</span>
-<span class="n">FGNModel</span> <span class="o">=</span> <span class="n">FractionalGaussianNoise</span>
-<span class="n">ARFIMAModel</span> <span class="o">=</span> <span class="n">ARFIMAModel</span>  <span class="c1"># Keep as is since it&#39;s already short</span>
-<span class="n">MRWModel</span> <span class="o">=</span> <span class="n">MultifractalRandomWalk</span>
-
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.fbm.fbm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FractionalBrownianMotion</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.fgn.fgn_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FractionalGaussianNoise</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.arfima.arfima_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">ARFIMAModel</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.mrw.mrw_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultifractalRandomWalk</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.alpha_stable.alpha_stable_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">AlphaStableModel</span>
+    
+    <span class="c1"># Create shortened aliases for convenience</span>
+    <span class="n">FBMModel</span> <span class="o">=</span> <span class="n">FractionalBrownianMotion</span>
+    <span class="n">FGNModel</span> <span class="o">=</span> <span class="n">FractionalGaussianNoise</span>
+    <span class="n">ARFIMAModel</span> <span class="o">=</span> <span class="n">ARFIMAModel</span>  <span class="c1"># Keep as is since it&#39;s already short</span>
+    <span class="n">MRWModel</span> <span class="o">=</span> <span class="n">MultifractalRandomWalk</span>
+    <span class="n">AlphaStableModel</span> <span class="o">=</span> <span class="n">AlphaStableModel</span>  <span class="c1"># Keep as is since it&#39;s already descriptive</span>
+    
+<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Could not import data models: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># Create placeholder classes</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">FBMModel</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">H</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="n">H</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+            <span class="n">dt</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">increments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">dt</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">increments</span><span class="p">)</span>
+    
+    <span class="k">class</span><span class="w"> </span><span class="nc">FGNModel</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">H</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="n">H</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+            <span class="n">dt</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">dt</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
+    
+    <span class="k">class</span><span class="w"> </span><span class="nc">ARFIMAModel</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">d</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    
+    <span class="k">class</span><span class="w"> </span><span class="nc">MRWModel</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">H</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="n">H</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    
+    <span class="k">class</span><span class="w"> </span><span class="nc">AlphaStableModel</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">beta</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
 
 <span class="c1"># Convenience functions with default parameters</span>
 <div class="viewcode-block" id="create_fbm_model">
@@ -142,13 +188,11 @@
     <span class="k">return</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span></div>
 
 
-
 <div class="viewcode-block" id="create_fgn_model">
 <a class="viewcode-back" href="../../../api/data_models.html#lrdbenchmark.models.data_models.create_fgn_model">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_fgn_model</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create FGNModel with default parameters&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">FGNModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span></div>
-
 
 
 <div class="viewcode-block" id="create_arfima_model">
@@ -158,7 +202,6 @@
     <span class="k">return</span> <span class="n">ARFIMAModel</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span></div>
 
 
-
 <div class="viewcode-block" id="create_mrw_model">
 <a class="viewcode-back" href="../../../api/data_models.html#lrdbenchmark.models.data_models.create_mrw_model">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_mrw_model</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">lambda_param</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
@@ -166,13 +209,17 @@
     <span class="k">return</span> <span class="n">MRWModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">lambda_param</span><span class="o">=</span><span class="n">lambda_param</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span></div>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">create_alpha_stable_model</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create AlphaStableModel with default parameters&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">AlphaStableModel</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="n">beta</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">)</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;BaseModel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;FractionalBrownianMotion&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;FractionalGaussianNoise&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;FractionalGaussianNoise&quot;</span><span class="p">,</span> 
     <span class="s2">&quot;ARFIMAModel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;MultifractalRandomWalk&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AlphaStableModel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;FBMModel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;FGNModel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;MRWModel&quot;</span><span class="p">,</span>
@@ -180,6 +227,7 @@
     <span class="s2">&quot;create_fgn_model&quot;</span><span class="p">,</span>
     <span class="s2">&quot;create_arfima_model&quot;</span><span class="p">,</span>
     <span class="s2">&quot;create_mrw_model&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;create_alpha_stable_model&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 

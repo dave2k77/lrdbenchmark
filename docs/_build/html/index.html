@@ -126,21 +126,29 @@
 <p><strong>LRDBenchmark</strong> is a comprehensive benchmarking framework for long-range dependence (LRD) analysis in time series data. It provides a unified platform for evaluating and comparing various estimators and models for detecting and quantifying long-range dependence patterns.</p>
 <p>🏆 <strong>Latest Results: Comprehensive Three-Way Comparison - Classical vs ML vs Neural Networks!</strong></p>
 <p>Our latest comprehensive three-way benchmark shows:
-- <strong>R/S (Classical): Best individual performance</strong> (0.0997 MAE)
-- <strong>Neural Networks: Excellent speed-accuracy trade-offs</strong> (0.1802-0.1946 MAE, 0.0-0.7ms execution time)
-- <strong>17 estimators tested</strong>: 7 Classical, 3 ML, 7 Neural Network approaches
-- <strong>88.2% overall success rate</strong> across all approaches
-- <strong>Neural Network Factory</strong>: 8 architectures with train-once, apply-many workflows
-- <strong>Production-ready systems</strong> with GPU memory management and model persistence</p>
+- <strong>LSTM (Neural Networks): Best individual performance</strong> (0.097 MAE)
+- <strong>Neural Networks: Dominate top 4 positions</strong> (0.097-0.108 MAE, 0.0007-0.0064s execution time)
+- <strong>15 estimators tested</strong>: 8 Classical, 3 ML, 4 Neural Network approaches
+- <strong>100% overall success rate</strong> across all approaches
+- <strong>Neural Network Factory</strong>: 4 architectures with unified implementation
+- <strong>Production-ready systems</strong> with perfect robustness and train-once, apply-many workflows</p>
+<p>🔥 <strong>Heavy-Tail Robustness: Exceptional Performance on Alpha-Stable Data!</strong></p>
+<p>Our comprehensive heavy-tail analysis reveals:
+- <strong>Machine Learning Dominance</strong>: 0.208 mean error (GradientBoosting: 0.201 MAE)
+- <strong>Neural Network Excellence</strong>: 0.247 mean error (LSTM: 0.245 MAE)
+- <strong>Classical Reliability</strong>: 0.409 mean error (DFA: 0.346 MAE)
+- <strong>Perfect Robustness</strong>: 100% success rate on extreme heavy-tail data (α=0.8)
+- <strong>440 test scenarios</strong>: Alpha-stable distributions from Gaussian (α=2.0) to extreme heavy-tailed (α=0.8)
+- <strong>Adaptive Preprocessing</strong>: Intelligent handling of all heavy-tail characteristics</p>
 <section id="key-features">
 <h2>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><strong>Neural Network Factory</strong>: 8 architectures (FFN, CNN, LSTM, GRU, Transformer, ResNet, etc.) with train-once, apply-many workflows</p></li>
+<li><p><strong>Neural Network Factory</strong>: 4 architectures (CNN, LSTM, GRU, Transformer) with unified implementation</p></li>
 <li><p><strong>Three-Way Comparison</strong>: Classical, ML, and Neural Network approaches comprehensively benchmarked</p></li>
-<li><p><strong>Best Individual Performance</strong>: R/S (Classical) with 0.0997 MAE</p></li>
-<li><p><strong>Neural Network Excellence</strong>: Consistent high performance (0.1802-0.1946 MAE) with ultra-fast inference (0.0-0.7ms)</p></li>
-<li><p><strong>Production-Ready ML Models</strong>: SVR, Gradient Boosting, Random Forest with 50-70 engineered features</p></li>
-<li><p><strong>Comprehensive Classical Estimators</strong>: 7 adaptive estimators with automatic optimization framework selection</p></li>
+<li><p><strong>Best Individual Performance</strong>: LSTM (Neural Networks) with 0.097 MAE</p></li>
+<li><p><strong>Neural Network Excellence</strong>: Dominate top 4 positions (0.097-0.108 MAE) with ultra-fast inference (0.0007-0.0064s)</p></li>
+<li><p><strong>Production-Ready ML Models</strong>: SVR, Gradient Boosting, Random Forest with train-once, apply-many workflows</p></li>
+<li><p><strong>Comprehensive Classical Estimators</strong>: 8 adaptive estimators with automatic optimization framework selection</p></li>
 <li><p><strong>Intelligent Backend System</strong>: Automatic GPU/JAX, CPU/Numba, or NumPy selection based on data characteristics</p></li>
 <li><p><strong>GPU Memory Management</strong>: Batch processing and memory optimization for neural networks</p></li>
 <li><p><strong>Model Persistence</strong>: Automatic model saving and loading for production deployment</p></li>

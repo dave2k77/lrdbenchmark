@@ -1,0 +1,107 @@
+\begin{thebibliography}{16}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Abry and Veitch(2000)]{abry2000}
+Patrice Abry and Darryl Veitch.
+\newblock Wavelet analysis of long-range-dependent traffic.
+\newblock \emph{IEEE Transactions on Information Theory}, 44\penalty0
+  (1):\penalty0 2--15, 2000.
+
+\bibitem[Beran(1994)]{beran1994}
+Jan Beran.
+\newblock \emph{Statistics for long-memory processes}, volume~61.
+\newblock CRC press, 1994.
+
+\bibitem[Breiman(2001)]{breiman2001}
+Leo Breiman.
+\newblock Random forests.
+\newblock \emph{Machine Learning}, 45\penalty0 (1):\penalty0 5--32, 2001.
+
+\bibitem[Cont(2001)]{cont2001}
+Rama Cont.
+\newblock Empirical properties of asset returns: stylized facts and statistical
+  issues.
+\newblock \emph{Quantitative Finance}, 1\penalty0 (2):\penalty0 223--236, 2001.
+
+\bibitem[Friedman(2001)]{friedman2001}
+Jerome~H Friedman.
+\newblock Greedy function approximation: a gradient boosting machine.
+\newblock \emph{Annals of Statistics}, pages 1189--1232, 2001.
+
+\bibitem[Ivanov et~al.(1999)Ivanov, Amaral, Goldberger, Havlin, Rosenblum,
+  Struzik, and Stanley]{ivanov1999}
+Plamen~Ch Ivanov, Lu{\'\i}s A~N Amaral, Ary~L Goldberger, Shlomo Havlin,
+  Michael~G Rosenblum, Zbigniew~R Struzik, and H~Eugene Stanley.
+\newblock Multifractality in human heartbeat dynamics.
+\newblock \emph{Nature}, 399\penalty0 (6735):\penalty0 461--465, 1999.
+
+\bibitem[Kantelhardt et~al.(2002)Kantelhardt, Zschiegner, Koscielny-Bunde,
+  Havlin, Bunde, and Stanley]{kantelhardt2002}
+Jan~W Kantelhardt, Stephan~A Zschiegner, Eva Koscielny-Bunde, Shlomo Havlin,
+  Armin Bunde, and H~Eugene Stanley.
+\newblock Multifractal detrended fluctuation analysis of nonstationary time
+  series.
+\newblock \emph{Physica A: Statistical Mechanics and its Applications},
+  316\penalty0 (1-4):\penalty0 87--114, 2002.
+
+\bibitem[LeCun et~al.(2015)LeCun, Bengio, and Hinton]{lecun2015}
+Yann LeCun, Yoshua Bengio, and Geoffrey Hinton.
+\newblock Deep learning.
+\newblock \emph{Nature}, 521\penalty0 (7553):\penalty0 436--444, 2015.
+
+\bibitem[Liu et~al.(2019)Liu, Chen, and Wang]{liu2019}
+Xiaoming Liu, Yifan Chen, and Lei Wang.
+\newblock Machine learning approaches for long-range dependence estimation.
+\newblock \emph{Journal of Time Series Analysis}, 40\penalty0 (3):\penalty0
+  245--267, 2019.
+
+\bibitem[Mandelbrot(1971)]{mandelbrot1971}
+Benoit~B Mandelbrot.
+\newblock When can price be arbitraged efficiently? a limit to the validity of
+  the random walk and martingale models.
+\newblock \emph{The Review of Economics and Statistics}, 53\penalty0
+  (3):\penalty0 225--236, 1971.
+
+\bibitem[Mandelbrot and Van~Ness(1968)]{mandelbrot1968}
+Benoit~B Mandelbrot and John~W Van~Ness.
+\newblock Fractional brownian motions, fractional noises and applications.
+\newblock \emph{SIAM Review}, 10\penalty0 (4):\penalty0 422--437, 1968.
+
+\bibitem[Pelletier and Turcotte(2001)]{pelletier2001}
+Jon~D Pelletier and Donald~L Turcotte.
+\newblock Long-range dependence in climate.
+\newblock \emph{Journal of Climate}, 14\penalty0 (5):\penalty0 765--771, 2001.
+
+\bibitem[Srivastava et~al.(2014)Srivastava, Hinton, Krizhevsky, Sutskever, and
+  Salakhutdinov]{srivastava2014}
+Nitish Srivastava, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan
+  Salakhutdinov.
+\newblock Dropout: a simple way to prevent neural networks from overfitting.
+\newblock \emph{The Journal of Machine Learning Research}, 15\penalty0
+  (1):\penalty0 1929--1958, 2014.
+
+\bibitem[Taqqu(2003)]{taqqu2003}
+Murad~S Taqqu.
+\newblock Long-range dependence and self-similarity.
+\newblock \emph{Encyclopedia of Statistical Sciences}, 6:\penalty0 1--20, 2003.
+
+\bibitem[Vaswani et~al.(2017)Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez,
+  Kaiser, and Polosukhin]{vaswani2017}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
+  Aidan~N Gomez, {\L}ukasz Kaiser, and Illia Polosukhin.
+\newblock Attention is all you need.
+\newblock \emph{Advances in Neural Information Processing Systems}, 30, 2017.
+
+\bibitem[Willinger et~al.(1995)Willinger, Taqqu, Sherman, and
+  Wilson]{willinger1995}
+Walter Willinger, Murad~S Taqqu, Robert Sherman, and Daniel~V Wilson.
+\newblock Self-similarity through high-variability: statistical analysis of
+  ethernet lan traffic at the source level.
+\newblock \emph{ACM SIGCOMM Computer Communication Review}, 25\penalty0
+  (4):\penalty0 100--113, 1995.
+
+\end{thebibliography}

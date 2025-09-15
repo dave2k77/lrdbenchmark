@@ -25,7 +25,7 @@ Install lrdbenchmark from PyPI:
 
    pip install lrdbenchmark
 
-This will install lrdbenchmark with all required dependencies including production-ready ML estimators (SVR, Gradient Boosting, Random Forest, CNN) that achieve **74% better accuracy** than classical methods.
+This will install lrdbenchmark with all required dependencies including production-ready ML estimators (SVR, Gradient Boosting, Random Forest) and neural network estimators (CNN, LSTM, GRU, Transformer) that achieve **superior accuracy** with perfect robustness.
 
 Installation with Optional Dependencies
 --------------------------------------
@@ -167,5 +167,5 @@ Next Steps
 After successful installation, proceed to:
 
 * :doc:`quickstart` - Get started with LRDBench
-* :doc:`user_guide/getting_started` - Detailed getting started guide
-* :doc:`user_guide/examples` - Example notebooks and scripts
+* :doc:`api/estimators` - Detailed estimator documentation
+* :doc:`examples/comprehensive_demo` - Example notebooks and scripts
