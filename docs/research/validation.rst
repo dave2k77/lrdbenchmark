@@ -327,8 +327,8 @@ The breakdown point is the smallest fraction of contaminated data that can cause
        
        return breakdown_point
 
-Statistical Tests
-=================
+Validation Statistical Tests
+============================
 
 Hypothesis Testing
 ------------------
@@ -512,8 +512,8 @@ where n is the sample size.
        
        return results
 
-Performance Metrics
-===================
+Validation Performance Metrics
+==============================
 
 Accuracy Metrics
 ----------------
@@ -1044,121 +1044,6 @@ Comprehensive Validation Workflow
            }
        
        return results
-
-Quality Assurance
-=================
-
-Data Quality Checks
-------------------
-
-**1. Stationarity Tests**:
-
-- **Augmented Dickey-Fuller Test**: Tests for unit roots
-- **KPSS Test**: Tests for stationarity around a deterministic trend
-- **Phillips-Perron Test**: Non-parametric version of ADF test
-
-**2. Normality Tests**:
-
-- **Shapiro-Wilk Test**: Tests for normality
-- **Anderson-Darling Test**: Tests for normality with emphasis on tails
-- **Jarque-Bera Test**: Tests for normality based on skewness and kurtosis
-
-**Implementation**:
-
-.. code-block:: python
-
-   from statsmodels.tsa.stattools import adfuller, kpss
-   from scipy import stats
-   
-   def data_quality_checks(data):
-       """Perform comprehensive data quality checks."""
-       results = {}
-       
-       # Stationarity tests
-       adf_result = adfuller(data)
-       results['adf_test'] = {
-           'statistic': adf_result[0],
-           'p_value': adf_result[1],
-           'critical_values': adf_result[4]
-       }
-       
-       kpss_result = kpss(data)
-       results['kpss_test'] = {
-           'statistic': kpss_result[0],
-           'p_value': kpss_result[1],
-           'critical_values': kpss_result[3]
-       }
-       
-       # Normality tests
-       shapiro_result = stats.shapiro(data)
-       results['shapiro_test'] = {
-           'statistic': shapiro_result[0],
-           'p_value': shapiro_result[1]
-       }
-       
-       jarque_bera_result = stats.jarque_bera(data)
-       results['jarque_bera_test'] = {
-           'statistic': jarque_bera_result[0],
-           'p_value': jarque_bera_result[1]
-       }
-       
-       # Basic statistics
-       results['basic_stats'] = {
-           'mean': np.mean(data),
-           'std': np.std(data),
-           'skewness': stats.skew(data),
-           'kurtosis': stats.kurtosis(data),
-           'min': np.min(data),
-           'max': np.max(data)
-       }
-       
-       return results
-
-Estimator Validation
--------------------
-
-**1. Consistency Checks**: Verify estimator converges to true value as sample size increases
-**2. Unbiasedness Checks**: Verify estimator is unbiased across different parameter values
-**3. Efficiency Checks**: Compare estimator variance to theoretical bounds
-
-**Implementation**:
-
-.. code-block:: python
-
-   def estimator_validation(estimator_func, true_H_values, sample_sizes, n_replicates=100):
-       """Validate estimator properties."""
-       validation_results = {}
-       
-       for H in true_H_values:
-           validation_results[H] = {}
-           
-           for n in sample_sizes:
-               estimates = []
-               
-               for _ in range(n_replicates):
-                   # Generate data with known H
-                   model = FBMModel(H=H, sigma=1.0)
-                   data = model.generate(n, seed=np.random.randint(10000))
-                   
-                   # Apply estimator
-                   estimate = estimator_func(data)
-                   estimates.append(estimate)
-               
-               # Calculate validation metrics
-               estimates = np.array(estimates)
-               bias = np.mean(estimates) - H
-               variance = np.var(estimates)
-               mse = bias**2 + variance
-               
-               validation_results[H][n] = {
-                   'bias': bias,
-                   'variance': variance,
-                   'mse': mse,
-                   'consistency': abs(bias) < 0.1,  # Bias < 0.1
-                   'efficiency': variance < 0.01    # Variance < 0.01
-               }
-       
-       return validation_results
 
 Validation References
 =====================
