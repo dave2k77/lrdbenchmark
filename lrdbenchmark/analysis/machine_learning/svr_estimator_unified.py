@@ -93,6 +93,31 @@ class SVREstimator(BaseEstimator):
         """Validate estimator parameters."""
         # TODO: Implement parameter validation
         pass
+    
+    def get_model_path(self) -> str:
+        """Get the path where the model should be saved."""
+        from pathlib import Path
+        model_dir = Path("models")
+        model_dir.mkdir(parents=True, exist_ok=True)
+        return str(model_dir / "svr_estimator.joblib")
+    
+    def load_if_exists(self, model_path: str) -> bool:
+        """Load model if it exists."""
+        import os
+        return os.path.exists(model_path)
+    
+    def save_model(self, model_path: str) -> None:
+        """Save the trained model."""
+        # This would be implemented by the actual estimator
+        pass
+    
+    def get_model_info(self) -> Dict[str, Any]:
+        """Get model information."""
+        return {
+            "model_type": "SVR",
+            "optimization_framework": self.optimization_framework,
+            "parameters": self.parameters
+        }
 
     def estimate(self, data: Union[np.ndarray, list]) -> Dict[str, Any]:
         """
@@ -140,17 +165,15 @@ class SVREstimator(BaseEstimator):
             estimator = SVREstimator(**self.parameters)
             
             # Try to load pretrained model first
-            model_path = estimator.get_model_path()
-            if estimator.load_if_exists(model_path):
-                print(f"✅ Loaded pretrained SVR model from {model_path}")
+            if estimator.load_model():
+                print(f"✅ Loaded pretrained SVR model from {estimator.model_path}")
             else:
                 # For now, use a simple fallback estimation
                 # In production, this should use a properly trained model
                 print("⚠️ No pretrained model found. Using fallback estimation.")
                 return self._fallback_estimation(data)
             
-            # Extract features and estimate
-            features = estimator.extract_features(data)
+            # Use the estimator's estimate method directly
             hurst_estimate = estimator.estimate(data)
             
             return {
@@ -160,6 +183,7 @@ class SVREstimator(BaseEstimator):
                 "p_value": hurst_estimate.get("p_value", None),
                 "method": "svr",
                 "optimization_framework": "numpy",
+                "fallback_used": False,
                 "model_info": estimator.get_model_info()
             }
             

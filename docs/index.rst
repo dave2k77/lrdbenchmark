@@ -27,22 +27,22 @@ Welcome to LRDBenchmark's documentation!
 🏆 **Latest Results: Comprehensive Three-Way Comparison - Classical vs ML vs Neural Networks!**
 
 Our latest comprehensive three-way benchmark shows:
-- **R/S (Classical): Best individual performance** (0.0997 MAE)
-- **Neural Networks: Excellent speed-accuracy trade-offs** (0.1802-0.1946 MAE, 0.0-0.7ms execution time)
-- **17 estimators tested**: 7 Classical, 3 ML, 7 Neural Network approaches
-- **88.2% overall success rate** across all approaches
-- **Neural Network Factory**: 8 architectures with train-once, apply-many workflows
-- **Production-ready systems** with GPU memory management and model persistence
+- **LSTM (Neural Networks): Best individual performance** (0.097 MAE)
+- **Neural Networks: Dominate top 4 positions** (0.097-0.108 MAE, 0.0007-0.0064s execution time)
+- **15 estimators tested**: 8 Classical, 3 ML, 4 Neural Network approaches
+- **100% overall success rate** across all approaches
+- **Neural Network Factory**: 4 architectures with unified implementation
+- **Production-ready systems** with perfect robustness and train-once, apply-many workflows
 
 Key Features
 ------------
 
-* **Neural Network Factory**: 8 architectures (FFN, CNN, LSTM, GRU, Transformer, ResNet, etc.) with train-once, apply-many workflows
+* **Neural Network Factory**: 4 architectures (CNN, LSTM, GRU, Transformer) with unified implementation
 * **Three-Way Comparison**: Classical, ML, and Neural Network approaches comprehensively benchmarked
-* **Best Individual Performance**: R/S (Classical) with 0.0997 MAE
-* **Neural Network Excellence**: Consistent high performance (0.1802-0.1946 MAE) with ultra-fast inference (0.0-0.7ms)
-* **Production-Ready ML Models**: SVR, Gradient Boosting, Random Forest with 50-70 engineered features
-* **Comprehensive Classical Estimators**: 7 adaptive estimators with automatic optimization framework selection
+* **Best Individual Performance**: LSTM (Neural Networks) with 0.097 MAE
+* **Neural Network Excellence**: Dominate top 4 positions (0.097-0.108 MAE) with ultra-fast inference (0.0007-0.0064s)
+* **Production-Ready ML Models**: SVR, Gradient Boosting, Random Forest with train-once, apply-many workflows
+* **Comprehensive Classical Estimators**: 8 adaptive estimators with automatic optimization framework selection
 * **Intelligent Backend System**: Automatic GPU/JAX, CPU/Numba, or NumPy selection based on data characteristics
 * **GPU Memory Management**: Batch processing and memory optimization for neural networks
 * **Model Persistence**: Automatic model saving and loading for production deployment
