@@ -380,101 +380,14 @@ The multifractal spectrum :math:`f(\alpha)` is obtained via Legendre transform:
 
    \alpha = h(q) + qh'(q), \quad f(\alpha) = q[\alpha - h(q)] + 1
 
-Validation Techniques
-=====================
-
-For comprehensive coverage of validation techniques, statistical tests, and quality assurance methods, see the dedicated :doc:`Validation Guide <../research/validation>`.
-
-This includes:
-- Monte Carlo validation methods
-- Bootstrap techniques
-- Cross-validation approaches
-- Robustness analysis
-- Statistical testing procedures
-
-Performance Metrics
-===================
-
-Accuracy Metrics
-----------------
-
-**Mean Absolute Error (MAE)**:
-.. math::
-
-   \text{MAE} = \frac{1}{n} \sum_{i=1}^n |\hat{H}_i - H_i|
-
-**Mean Relative Error (MRE)**:
-.. math::
-
-   \text{MRE} = \frac{1}{n} \sum_{i=1}^n \left|\frac{\hat{H}_i - H_i}{H_i}\right|
-
-Precision Metrics
------------------
-
-**Standard Error**:
-.. math::
-
-   \text{SE} = \sqrt{\frac{1}{n-1} \sum_{i=1}^n (\hat{H}_i - \bar{H})^2}
-
-**Coefficient of Variation**:
-.. math::
-
-   \text{CV} = \frac{\text{SE}}{\bar{H}} \times 100\%
-
-**Confidence Interval Width**:
-.. math::
-
-   \text{CI Width} = \hat{H}_{1-\alpha/2} - \hat{H}_{\alpha/2}
-
-Efficiency Metrics
-------------------
+Theoretical Performance Considerations
+=====================================
 
 **Computational Complexity**: Big-O notation for time and space complexity
 **Convergence Rate**: Rate at which estimator approaches true value
 **Asymptotic Efficiency**: Ratio of estimator variance to Cramér-Rao lower bound
 
-Statistical Tests
-=================
-
-Hypothesis Testing
-------------------
-
-**Null Hypothesis**: :math:`H_0: H = H_0`
-**Alternative Hypothesis**: :math:`H_1: H \neq H_0`
-
-**Test Statistic**:
-.. math::
-
-   T = \frac{\hat{H} - H_0}{\text{SE}(\hat{H})}
-
-**Decision Rule**: Reject :math:`H_0` if :math:`|T| > z_{\alpha/2}`
-
-Goodness-of-Fit Tests
----------------------
-
-**Kolmogorov-Smirnov Test**:
-Tests whether empirical distribution matches theoretical distribution.
-
-**Anderson-Darling Test**:
-Weighted version of KS test, more sensitive to tails.
-
-**Chi-Square Test**:
-Tests fit of observed frequencies to expected frequencies.
-
-Model Selection
----------------
-
-**Akaike Information Criterion (AIC)**:
-.. math::
-
-   \text{AIC} = 2k - 2\ln(L)
-
-**Bayesian Information Criterion (BIC)**:
-.. math::
-
-   \text{BIC} = \ln(n)k - 2\ln(L)
-
-where :math:`k` is the number of parameters and :math:`L` is the likelihood.
+For detailed performance metrics, statistical tests, and validation procedures, see the :doc:`validation` section.
 
 Practical Examples
 ==================
