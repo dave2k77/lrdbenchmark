@@ -11,15 +11,17 @@ Generate synthetic data and run a benchmark:
 .. code-block:: python
 
    import numpy as np
-   from lrdbenchmark import FBMModel, RSEstimator
+   from lrdbenchmark.models.data_models.fbm.fbm_model import FractionalBrownianMotion
+   from lrdbenchmark.analysis.temporal.rs.rs_estimator_unified import RSEstimator
    
    # Generate Fractional Brownian Motion data
-   model = FBMModel(H=0.7, sigma=1.0)
+   model = FractionalBrownianMotion(H=0.7, sigma=1.0)
    data = model.generate(1000, seed=42)
    
    # Estimate Hurst parameter using R/S analysis
    rs_estimator = RSEstimator()
-   hurst_estimate = rs_estimator.estimate(data)
+   result = rs_estimator.estimate(data)
+   hurst_estimate = result["hurst_parameter"]
    
    print(f"True Hurst: 0.7, Estimated: {hurst_estimate:.3f}")
 
@@ -142,14 +144,17 @@ LRDBenchmark provides several synthetic data models:
 
 .. code-block:: python
 
-   from lrdbenchmark import FBMModel, FGNModel, ARFIMAModel, MRWModel
+   from lrdbenchmark.models.data_models.fbm.fbm_model import FractionalBrownianMotion
+   from lrdbenchmark.models.data_models.fgn.fgn_model import FractionalGaussianNoise
+   from lrdbenchmark.models.data_models.arfima.arfima_model import ARFIMAModel
+   from lrdbenchmark.models.data_models.mrw.mrw_model import MultifractalRandomWalk
    
    # Fractional Brownian Motion
-   fbm = FBMModel(H=0.7, sigma=1.0)
+   fbm = FractionalBrownianMotion(H=0.7, sigma=1.0)
    fbm_data = fbm.generate(1000)
    
    # Fractional Gaussian Noise
-   fgn = FGNModel(H=0.6, sigma=1.0)
+   fgn = FractionalGaussianNoise(H=0.6, sigma=1.0)
    fgn_data = fgn.generate(1000)
    
    # ARFIMA process
@@ -157,7 +162,7 @@ LRDBenchmark provides several synthetic data models:
    arfima_data = arfima.generate(1000)
    
    # Multifractal Random Walk
-   mrw = MRWModel(H=0.7, lambda_param=0.1, sigma=1.0)
+   mrw = MultifractalRandomWalk(H=0.7, lambda_param=0.1, sigma=1.0)
    mrw_data = mrw.generate(1000)
 
 Individual Estimators
@@ -167,16 +172,18 @@ Use specific estimators directly:
 
 .. code-block:: python
 
-   from lrdbenchmark.analysis.temporal.dfa.dfa_estimator import DFAEstimator
-   from lrdbenchmark.analysis.spectral.gph.gph_estimator import GPHEstimator
+   from lrdbenchmark.analysis.temporal.dfa.dfa_estimator_unified import DFAEstimator
+   from lrdbenchmark.analysis.spectral.gph.gph_estimator_unified import GPHEstimator
    
    # Detrended Fluctuation Analysis
    dfa = DFAEstimator()
-   H_dfa = dfa.estimate(data)
+   dfa_result = dfa.estimate(data)
+   H_dfa = dfa_result["hurst_parameter"]
    
    # Geweke-Porter-Hudak estimator
    gph = GPHEstimator()
-   H_gph = gph.estimate(data)
+   gph_result = gph.estimate(data)
+   H_gph = gph_result["hurst_parameter"]
    
    print(f"DFA H estimate: {H_dfa:.3f}")
    print(f"GPH H estimate: {H_gph:.3f}")

@@ -109,12 +109,13 @@ After installation, verify that LRDBenchmark is working correctly:
    print(f"lrdbenchmark version: {lrdbenchmark.__version__}")
    
    # Test enhanced ML and neural network estimators
-   from lrdbenchmark import CNNEstimator, LSTMEstimator
+   from lrdbenchmark.analysis.machine_learning.cnn_estimator_unified import CNNEstimator
+   from lrdbenchmark.analysis.machine_learning.lstm_estimator_unified import LSTMEstimator
    print("Enhanced estimators imported successfully!")
    
    # Test basic functionality
-   from lrdbenchmark import FBMModel
-   model = FBMModel(H=0.7)
+   from lrdbenchmark.models.data_models.fbm.fbm_model import FractionalBrownianMotion
+   model = FractionalBrownianMotion(H=0.7)
    data = model.generate(100)
    print(f"Generated {len(data)} samples")
 
