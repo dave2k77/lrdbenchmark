@@ -1,4 +1,0 @@
-Estimator,Available,Train_Once_Apply_Many,Pretrained_Available,Mean_Absolute_Error,Mean_Inference_Time,Production_Ready
-RandomForest,True,True,False,0.1313768387902689,0.004605317115783691,True
-SVR,True,True,True,0.1313768387902689,0.004655528068542481,True
-GradientBoosting,True,True,False,0.1313768387902689,0.004566788673400879,True
