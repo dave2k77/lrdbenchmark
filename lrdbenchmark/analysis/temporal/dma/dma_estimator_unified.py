@@ -9,7 +9,7 @@ selection (JAX, Numba, NumPy) for the best performance on the available hardware
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
-from typing import Dict, Any, Optional, Union, Tuple, List
+from typing import Dict, Any, Optional, Union, Tuple, List, Sequence
 import warnings
 
 # Import optimization frameworks
@@ -29,16 +29,7 @@ except ImportError:
     NUMBA_AVAILABLE = False
 
 # Import base estimator
-try:
-    from lrdbenchmark.analysis.base_estimator import BaseEstimator
-except ImportError:
-    try:
-        from models.estimators.base_estimator import BaseEstimator
-    except ImportError:
-        # Fallback if base estimator not available
-        class BaseEstimator:
-            def __init__(self, **kwargs):
-                self.parameters = kwargs
+from lrdbenchmark.models.estimators.base_estimator import BaseEstimator
 
 
 class DMAEstimator(BaseEstimator):
@@ -68,19 +59,55 @@ class DMAEstimator(BaseEstimator):
 
     def __init__(
         self,
-        min_scale: int = 10,
+        min_scale: Optional[int] = None,
         max_scale: Optional[int] = None,
-        num_scales: int = 10,
+        num_scales: Optional[int] = None,
         use_optimization: str = "auto",
+        *,
+        min_window_size: Optional[int] = None,
+        max_window_size: Optional[int] = None,
+        num_windows: Optional[int] = None,
+        window_sizes: Optional[Sequence[int]] = None,
+        overlap: bool = True,
     ):
         super().__init__()
-        
-        # Estimator parameters
-        self.parameters = {
-            "min_scale": min_scale,
-            "max_scale": max_scale,
-            "num_scales": num_scales,
+
+        if min_window_size is not None:
+            min_scale = min_window_size
+        if max_window_size is not None:
+            max_scale = max_window_size
+        if num_windows is not None:
+            num_scales = num_windows
+
+        min_scale = 4 if min_scale is None else int(min_scale)
+        num_scales = 10 if num_scales is None else int(num_scales)
+
+        sanitized_windows = None
+        if window_sizes is not None:
+            sanitized_windows = self._sanitize_window_sizes(window_sizes)
+
+        # Estimator parameters with legacy aliases
+        param_dict = {
+            "min_scale": int(min_scale),
+            "max_scale": int(max_scale) if max_scale is not None else None,
+            "num_scales": int(num_scales),
+            "min_window_size": int(min_scale),
+            "max_window_size": int(max_scale) if max_scale is not None else None,
+            "num_windows": int(num_scales),
+            "window_sizes": sanitized_windows.tolist() if sanitized_windows is not None else None,
+            "overlap": bool(overlap),
         }
+
+        if sanitized_windows is not None and len(sanitized_windows) > 0:
+            param_dict["min_scale"] = int(sanitized_windows[0])
+            param_dict["min_window_size"] = int(sanitized_windows[0])
+            param_dict["max_scale"] = int(sanitized_windows[-1])
+            param_dict["max_window_size"] = int(sanitized_windows[-1])
+            param_dict["num_scales"] = len(sanitized_windows)
+            param_dict["num_windows"] = len(sanitized_windows)
+
+        super().__init__(**param_dict)
+        self.parameters = param_dict
         
         # Optimization framework
         self.optimization_framework = self._select_optimization_framework(use_optimization)
@@ -109,11 +136,62 @@ class DMAEstimator(BaseEstimator):
 
     def _validate_parameters(self) -> None:
         """Validate estimator parameters."""
-        if self.parameters["min_scale"] < 4:
-            raise ValueError("min_scale must be at least 4")
-        
-        if self.parameters["num_scales"] < 3:
-            raise ValueError("num_scales must be at least 3")
+        if self.parameters["window_sizes"] is not None:
+            windows = np.asarray(self.parameters["window_sizes"], dtype=int)
+            if np.any(windows < 3):
+                raise ValueError("All window sizes must be at least 3")
+            if not np.all(np.diff(windows) > 0):
+                raise ValueError("Window sizes must be in ascending order")
+            if len(windows) < 3:
+                raise ValueError("Need at least 3 window sizes")
+
+        if self.parameters["min_scale"] < 3:
+            raise ValueError("min_window_size must be at least 3")
+
+        max_scale = self.parameters["max_scale"]
+        if max_scale is not None and max_scale <= self.parameters["min_scale"]:
+            raise ValueError("max_window_size must be greater than min_window_size")
+
+        if self.parameters["num_scales"] < 3 and self.parameters["window_sizes"] is None:
+            raise ValueError("Need at least 3 window sizes")
+
+    def _sanitize_window_sizes(self, window_sizes: Sequence[int]) -> np.ndarray:
+        windows = np.array(window_sizes, dtype=int)
+        if np.any(windows <= 0):
+            raise ValueError("Window sizes must be positive integers")
+        return windows
+
+    def _resolve_scales(self, n: int) -> np.ndarray:
+        if self.parameters["window_sizes"] is not None:
+            windows = np.asarray(self.parameters["window_sizes"], dtype=int)
+        else:
+            max_scale = self.parameters["max_scale"]
+            if max_scale is None:
+                max_scale = max(self.parameters["min_scale"] + 1, n // 4)
+            windows = np.logspace(
+                np.log10(self.parameters["min_scale"]),
+                np.log10(max_scale),
+                self.parameters["num_scales"],
+                dtype=int,
+            )
+            windows = np.unique(windows)
+
+        valid = windows[(windows >= self.parameters["min_scale"]) & (windows <= n // 2)]
+        if len(valid) < 3:
+            raise ValueError("Need at least 3 window sizes")
+        return valid
+
+    def _confidence_interval(
+        self, hurst: float, std_err: float, sample_size: int, confidence_level: float = 0.95
+    ) -> List[float]:
+        if not np.isfinite(std_err) or std_err <= 0 or sample_size < 3:
+            return [float("nan"), float("nan")]
+
+        alpha = 1 - confidence_level
+        dof = max(sample_size - 2, 1)
+        critical = stats.t.ppf(1 - alpha / 2, dof)
+        margin = critical * std_err
+        return [float(hurst - margin), float(hurst + margin)]
 
     def estimate(self, data: Union[np.ndarray, list]) -> Dict[str, Any]:
         """
@@ -137,6 +215,9 @@ class DMAEstimator(BaseEstimator):
         """
         data = np.asarray(data)
         n = len(data)
+
+        if n < 10:
+            raise ValueError("Data length must be at least 10")
 
         if n < 100:
             warnings.warn("Data length is small, results may be unreliable")
@@ -162,36 +243,25 @@ class DMAEstimator(BaseEstimator):
         n = len(data)
         
         # Set max scale if not provided
-        if self.parameters["max_scale"] is None:
-            self.parameters["max_scale"] = n // 4
-        
-        # Generate scales
-        scales = np.logspace(
-            np.log10(self.parameters["min_scale"]),
-            np.log10(self.parameters["max_scale"]),
-            self.parameters["num_scales"],
-            dtype=int
-        )
-        
-        # Ensure scales are unique and valid
-        scales = np.unique(scales)
-        scales = scales[scales <= n // 2]
-        
+        scales = self._resolve_scales(n)
+
         if len(scales) < 3:
-            raise ValueError("Insufficient valid scales for analysis")
+            raise ValueError("Need at least 3 window sizes")
         
         # Calculate fluctuation values for each scale
         fluctuation_values = []
         for scale in scales:
-            fluct_val = self._calculate_fluctuation_numpy(data, scale)
+            fluct_val = self._calculate_fluctuation_numpy(
+                data, scale, overlap=self.parameters["overlap"]
+            )
             fluctuation_values.append(fluct_val)
-        
+
         fluctuation_values = np.array(fluctuation_values)
         
         # Filter out invalid values
         valid_mask = (fluctuation_values > 0) & ~np.isnan(fluctuation_values)
         if np.sum(valid_mask) < 3:
-            raise ValueError("Insufficient valid fluctuation values for analysis")
+            raise ValueError("Need at least 3 window sizes")
         
         valid_scales = scales[valid_mask]
         valid_fluctuations = fluctuation_values[valid_mask]
@@ -211,7 +281,10 @@ class DMAEstimator(BaseEstimator):
         # Hurst parameter is the slope
         hurst_parameter = slope
         
-        # Store results
+        confidence_interval = self._confidence_interval(
+            hurst_parameter, std_err, len(log_scales)
+        )
+
         self.results = {
             "hurst_parameter": float(hurst_parameter),
             "r_squared": float(r_squared),
@@ -220,20 +293,23 @@ class DMAEstimator(BaseEstimator):
             "p_value": float(p_value),
             "std_error": float(std_err),
             "scales": valid_scales.tolist(),
+            "window_sizes": valid_scales.tolist(),
             "fluctuation_values": valid_fluctuations.tolist(),
             "log_scales": log_scales.tolist(),
             "log_fluctuations": log_fluctuations.tolist(),
+            "confidence_interval": confidence_interval,
             "method": "numpy",
-            "optimization_framework": self.optimization_framework,
+            "optimization_framework": "numpy",
         }
-        
+
         return self.results
 
     def _estimate_numba(self, data: np.ndarray) -> Dict[str, Any]:
         """Numba-optimized implementation of DMA estimation."""
-        # For now, use NumPy implementation with Numba JIT compilation
-        # This can be enhanced with custom Numba kernels for specific operations
-        return self._estimate_numpy(data)
+        result = self._estimate_numpy(data)
+        result["method"] = "numba"
+        result["optimization_framework"] = "numba"
+        return result
 
     def _estimate_jax(self, data: np.ndarray) -> Dict[str, Any]:
         """JAX-optimized implementation of DMA estimation."""
@@ -245,27 +321,33 @@ class DMAEstimator(BaseEstimator):
         # So we'll use the NumPy implementation for now
         # This can be enhanced with JAX-specific optimizations
         
-        # For now, fall back to NumPy implementation
-        return self._estimate_numpy(data)
+        result = self._estimate_numpy(np.array(data_jax))
+        result["method"] = "jax"
+        result["optimization_framework"] = "jax"
+        return result
 
-    def _calculate_fluctuation_numpy(self, data: np.ndarray, scale: int) -> float:
+    def _calculate_fluctuation_numpy(self, data: np.ndarray, scale: int, overlap: bool) -> float:
         """Calculate fluctuation value for a given scale using NumPy."""
         n = len(data)
         
         if scale >= n:
             return np.nan
-        
-        # Calculate moving average
-        window_size = scale
-        moving_avg = np.convolve(data, np.ones(window_size)/window_size, mode='valid')
-        
-        # Detrend the data
-        detrended = data[window_size-1:] - moving_avg
-        
-        # Calculate RMS fluctuation
+
+        if overlap:
+            moving_avg = np.convolve(data, np.ones(scale) / scale, mode="valid")
+            detrended = data[scale - 1 :] - moving_avg
+            return float(np.sqrt(np.mean(detrended**2)))
+
+        # Non-overlapping case
+        n_segments = n // scale
+        if n_segments == 0:
+            return np.nan
+
+        trimmed = data[: n_segments * scale]
+        segments = trimmed.reshape(n_segments, scale)
+        detrended = segments - segments.mean(axis=1, keepdims=True)
         fluctuation = np.sqrt(np.mean(detrended**2))
-        
-        return fluctuation
+        return float(fluctuation)
 
     def get_optimization_info(self) -> Dict[str, Any]:
         """Get information about available optimizations and current selection."""
@@ -275,6 +357,45 @@ class DMAEstimator(BaseEstimator):
             "numba_available": NUMBA_AVAILABLE,
             "recommended_framework": self._get_recommended_framework()
         }
+
+    def get_confidence_intervals(self, confidence_level: float = 0.95) -> Dict[str, Tuple[float, float]]:
+        if not self.results:
+            raise ValueError("No estimation results available")
+
+        ci = self._confidence_interval(
+            self.results["hurst_parameter"],
+            self.results["std_error"],
+            len(self.results["scales"]),
+            confidence_level,
+        )
+
+        return {"hurst_parameter": tuple(ci)}
+
+    def get_estimation_quality(self) -> Dict[str, Any]:
+        if not self.results:
+            raise ValueError("No estimation results available")
+
+        return {
+            "r_squared": self.results["r_squared"],
+            "p_value": self.results["p_value"],
+            "std_error": self.results["std_error"],
+            "n_windows": len(self.results["scales"]),
+        }
+
+    def plot_scaling(self, **kwargs) -> None:
+        if not self.results:
+            raise ValueError("No estimation results available")
+
+        self.plot_analysis(**kwargs)
+
+    def _calculate_fluctuation(self, data: Union[np.ndarray, list], window_size: int) -> float:
+        """Backward-compatible helper for direct fluctuation calculation."""
+
+        return float(
+            self._calculate_fluctuation_numpy(
+                np.asarray(data), int(window_size), self.parameters.get("overlap", True)
+            )
+        )
 
     def _get_recommended_framework(self) -> str:
         """Get the recommended optimization framework."""
@@ -288,7 +409,7 @@ class DMAEstimator(BaseEstimator):
     def plot_analysis(self, figsize: Tuple[int, int] = (12, 8), save_path: Optional[str] = None) -> None:
         """Plot the DMA analysis results."""
         if not self.results:
-            raise ValueError("No results available. Run estimate() first.")
+            raise ValueError("No estimation results available")
 
         fig, axes = plt.subplots(2, 2, figsize=figsize)
         fig.suptitle('DMA Analysis Results', fontsize=16)

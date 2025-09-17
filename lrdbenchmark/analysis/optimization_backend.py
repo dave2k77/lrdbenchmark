@@ -92,8 +92,7 @@ class OptimizationBackend:
         cache_dir : str, optional
             Directory to cache performance profiles. If None, uses default.
         """
-        self.cache_dir = Path(cache_dir) if cache_dir else Path.home() / ".lrdbenchmark" / "optimization_cache"
-        self.cache_dir.mkdir(parents=True, exist_ok=True)
+        self.cache_dir = self._initialise_cache_dir(cache_dir)
         
         self.performance_profiles: List[PerformanceProfile] = []
         self.hardware_info = self._detect_hardware()
@@ -108,17 +107,47 @@ class OptimizationBackend:
             'medium_data': 0.01,    # 1000-10000 points
             'large_data': 0.1,      # > 10000 points
         }
-        
-        print(f"Optimization Backend initialized:")
-        print(f"  Hardware: {self.hardware_info.cpu_cores} cores, "
-              f"{self.hardware_info.memory_gb:.1f}GB RAM")
-        print(f"  GPU: {'Available' if self.hardware_info.has_gpu else 'Not available'}")
-        print(f"  Frameworks: JAX={self.hardware_info.jax_available}, "
-              f"Numba={self.hardware_info.numba_available}")
+
+        self.initialization_summary = {
+            "cache_dir": str(self.cache_dir),
+            "hardware": {
+                "cpu_cores": self.hardware_info.cpu_cores,
+                "memory_gb": self.hardware_info.memory_gb,
+                "has_gpu": self.hardware_info.has_gpu,
+                "jax_available": self.hardware_info.jax_available,
+                "numba_available": self.hardware_info.numba_available,
+            },
+        }
+
+    def _initialise_cache_dir(self, cache_dir: Optional[str]) -> Path:
+        """Determine a writable cache directory without noisy side effects."""
+
+        candidates: List[Path] = []
+
+        if cache_dir:
+            candidates.append(Path(cache_dir))
+        else:
+            env_dir = os.environ.get("LRDBENCHMARK_CACHE_DIR")
+            if env_dir:
+                candidates.append(Path(env_dir))
+            try:
+                candidates.append(Path.home() / ".lrdbenchmark" / "optimization_cache")
+            except Exception:
+                pass
+            candidates.append(Path.cwd() / ".lrdbenchmark" / "optimization_cache")
+
+        for directory in candidates:
+            try:
+                directory.mkdir(parents=True, exist_ok=True)
+                return directory
+            except OSError:
+                continue
+
+        raise RuntimeError("Unable to determine a writable cache directory for optimization backend")
     
     def _detect_hardware(self) -> HardwareInfo:
         """Detect available hardware capabilities."""
-        cpu_cores = psutil.cpu_count(logical=False)
+        cpu_cores = psutil.cpu_count(logical=False) or psutil.cpu_count(logical=True) or 1
         memory_gb = psutil.virtual_memory().total / (1024**3)
         
         gpu_memory_gb = None

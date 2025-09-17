@@ -26,7 +26,8 @@ except ImportError:
     JAX_AVAILABLE = False
 
 try:
-    # NUMBA imports available but not used in this implementation
+    import numba  # noqa: F401
+
     NUMBA_AVAILABLE = True
 except ImportError:
     NUMBA_AVAILABLE = False

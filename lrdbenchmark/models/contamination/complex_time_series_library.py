@@ -14,15 +14,26 @@ from typing import Dict, List, Tuple, Optional, Any
 from dataclasses import dataclass
 from enum import Enum
 
-from models.contamination.contamination_models import (
-    ContaminationModel,
-    ContaminationType,
-    ContaminationConfig,
-)
-from models.data_models.fbm.fbm_model import FractionalBrownianMotion
-from models.data_models.fgn.fgn_model import FractionalGaussianNoise
-from models.data_models.arfima.arfima_model import ARFIMAModel
-from models.data_models.mrw.mrw_model import MultifractalRandomWalk
+try:
+    from lrdbenchmark.models.contamination.contamination_models import (
+        ContaminationModel,
+        ContaminationType,
+        ContaminationConfig,
+    )
+    from lrdbenchmark.models.data_models.fbm.fbm_model import FractionalBrownianMotion
+    from lrdbenchmark.models.data_models.fgn.fgn_model import FractionalGaussianNoise
+    from lrdbenchmark.models.data_models.arfima.arfima_model import ARFIMAModel
+    from lrdbenchmark.models.data_models.mrw.mrw_model import MultifractalRandomWalk
+except ImportError:  # pragma: no cover
+    from models.contamination.contamination_models import (  # type: ignore
+        ContaminationModel,
+        ContaminationType,
+        ContaminationConfig,
+    )
+    from models.data_models.fbm.fbm_model import FractionalBrownianMotion  # type: ignore
+    from models.data_models.fgn.fgn_model import FractionalGaussianNoise  # type: ignore
+    from models.data_models.arfima.arfima_model import ARFIMAModel  # type: ignore
+    from models.data_models.mrw.mrw_model import MultifractalRandomWalk  # type: ignore
 
 
 class ComplexTimeSeriesType(Enum):

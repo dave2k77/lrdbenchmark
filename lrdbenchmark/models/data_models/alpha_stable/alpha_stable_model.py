@@ -265,7 +265,7 @@ class AlphaStableModel(BaseModel):
         @jit
         def cms_core_jax(alpha, beta, sigma, mu, key, n):
             key1, key2 = jax.random.split(key)
-            U = jax.random.uniform(key1, (n,), -np.pi/2, np.pi/2)
+            U = jax.random.uniform(key1, (n,), minval=-np.pi / 2, maxval=np.pi / 2)
             W = jax.random.exponential(key2, (n,))
             
             if alpha == 1:

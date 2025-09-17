@@ -6,9 +6,10 @@ This module implements the R/S estimator with automatic optimization framework
 selection (JAX, Numba, NumPy) for the best performance on the available hardware.
 """
 
+import math
 import numpy as np
 import matplotlib.pyplot as plt
-from typing import Dict, Any, Optional, Union, Tuple, List
+from typing import Dict, Any, Optional, Union, Tuple, List, Sequence
 import warnings
 
 # Import optimization frameworks
@@ -27,17 +28,15 @@ try:
 except ImportError:
     NUMBA_AVAILABLE = False
 
-# Import base estimator
 try:
-    from lrdbenchmark.analysis.base_estimator import BaseEstimator
+    from scipy import stats
+
+    SCIPY_AVAILABLE = True
 except ImportError:
-    try:
-        from models.estimators.base_estimator import BaseEstimator
-    except ImportError:
-        # Fallback if base estimator not available
-        class BaseEstimator:
-            def __init__(self, **kwargs):
-                self.parameters = kwargs
+    SCIPY_AVAILABLE = False
+
+# Import base estimator
+from lrdbenchmark.models.estimators.base_estimator import BaseEstimator
 
 
 class RSEstimator(BaseEstimator):
@@ -67,20 +66,48 @@ class RSEstimator(BaseEstimator):
 
     def __init__(
         self,
-        min_block_size: int = 10,
+        min_block_size: Optional[int] = None,
         max_block_size: Optional[int] = None,
-        num_blocks: int = 10,
+        num_blocks: Optional[int] = None,
         use_optimization: str = "auto",
+        *,
+        min_window_size: Optional[int] = None,
+        max_window_size: Optional[int] = None,
+        num_windows: Optional[int] = None,
+        window_sizes: Optional[Sequence[int]] = None,
+        overlap: bool = False,
     ):
-        super().__init__()
-        
-        # Estimator parameters
-        self.parameters = {
-            "min_block_size": min_block_size,
-            "max_block_size": max_block_size,
-            "num_blocks": num_blocks,
+        # Prefer explicit window-based parameters when provided for backward compatibility
+        if min_window_size is not None:
+            min_block_size = min_window_size
+        if max_window_size is not None:
+            max_block_size = max_window_size
+        if num_windows is not None:
+            num_blocks = num_windows
+
+        # Apply defaults if still unset
+        min_block_size = 10 if min_block_size is None else int(min_block_size)
+        num_blocks = 10 if num_blocks is None else int(num_blocks)
+
+        sanitized_windows = None
+        if window_sizes is not None:
+            sanitized_windows = self._sanitize_window_sizes(window_sizes)
+
+        # Estimator parameters (keep legacy aliases for get_parameters())
+        param_dict = {
+            "min_block_size": int(min_block_size),
+            "max_block_size": int(max_block_size) if max_block_size is not None else None,
+            "num_blocks": int(num_blocks),
+            "min_window_size": int(min_block_size),
+            "max_window_size": int(max_block_size) if max_block_size is not None else None,
+            "num_windows": int(num_blocks),
+            "window_sizes": sanitized_windows.tolist() if sanitized_windows is not None else None,
+            "overlap": bool(overlap),
         }
-        
+
+        super().__init__(**param_dict)
+        self.parameters = param_dict
+
         # Optimization framework
         self.optimization_framework = self._select_optimization_framework(use_optimization)
         
@@ -109,10 +136,143 @@ class RSEstimator(BaseEstimator):
     def _validate_parameters(self) -> None:
         """Validate estimator parameters."""
         if self.parameters["min_block_size"] < 4:
-            raise ValueError("min_block_size must be at least 4")
-        
-        if self.parameters["num_blocks"] < 3:
+            raise ValueError("min_window_size must be at least 4")
+
+        max_block = self.parameters["max_block_size"]
+        if max_block is not None and max_block <= self.parameters["min_block_size"]:
+            raise ValueError("max_window_size must be greater than min_window_size")
+
+        if self.parameters["num_blocks"] < 3 and self.parameters["window_sizes"] is None:
             raise ValueError("num_blocks must be at least 3")
+
+        if self.parameters["window_sizes"] is not None:
+            windows = np.asarray(self.parameters["window_sizes"], dtype=int)
+            if np.any(windows < 4):
+                raise ValueError("All window sizes must be at least 4")
+            if np.any(np.diff(windows) <= 0):
+                raise ValueError("Window sizes must be in ascending order")
+            if len(windows) < 3:
+                raise ValueError("Need at least 3 window sizes")
+
+    # ------------------------------------------------------------------
+    # Helper utilities
+    # ------------------------------------------------------------------
+
+    def _sanitize_window_sizes(self, window_sizes: Sequence[int]) -> np.ndarray:
+        """Validate and sanitize a sequence of window sizes."""
+
+        windows = np.array(window_sizes, dtype=int)
+        if np.any(windows <= 0):
+            raise ValueError("Window sizes must be positive integers")
+        return windows
+
+    def _resolve_block_sizes(self, n: int) -> np.ndarray:
+        """Construct the block/window sizes used for the R/S analysis."""
+
+        if self.parameters["window_sizes"] is not None:
+            windows = np.asarray(self.parameters["window_sizes"], dtype=int)
+        else:
+            max_block = self.parameters["max_block_size"]
+            if max_block is None:
+                max_block = max(self.parameters["min_block_size"] + 1, n // 4)
+            block_sizes = np.logspace(
+                np.log10(self.parameters["min_block_size"]),
+                np.log10(max_block),
+                self.parameters["num_blocks"],
+                dtype=int,
+            )
+            windows = np.unique(block_sizes)
+
+        # Keep only meaningful windows
+        valid = windows[(windows >= self.parameters["min_block_size"]) & (windows <= n // 2)]
+        if len(valid) < 3:
+            raise ValueError("Need at least 3 window sizes")
+        return valid
+
+    def _linear_regression(self, x: np.ndarray, y: np.ndarray) -> Tuple[float, float, float, float, float]:
+        """Perform linear regression and return slope statistics."""
+
+        if SCIPY_AVAILABLE:
+            slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+            r_squared = r_value ** 2
+            return slope, intercept, r_squared, p_value, std_err
+
+        # Manual fallback (no SciPy available)
+        slope, intercept = np.polyfit(x, y, 1)
+        y_pred = slope * x + intercept
+        residuals = y - y_pred
+        ss_res = np.sum(residuals**2)
+        ss_tot = np.sum((y - np.mean(y)) ** 2)
+        r_squared = 1 - (ss_res / ss_tot)
+
+        dof = max(len(x) - 2, 1)
+        denom = np.sum((x - np.mean(x)) ** 2)
+        std_err = math.sqrt((ss_res / dof) / denom) if denom > 0 else float("nan")
+        return slope, intercept, r_squared, float("nan"), std_err
+
+    def _build_results(
+        self,
+        *,
+        block_sizes: np.ndarray,
+        rs_values: np.ndarray,
+        method: str,
+        framework: str,
+    ) -> Dict[str, Any]:
+        """Package regression outcomes and diagnostics."""
+
+        log_block_sizes = np.log(block_sizes)
+        log_rs_values = np.log(rs_values)
+
+        slope, intercept, r_squared, p_value, std_err = self._linear_regression(
+            log_block_sizes, log_rs_values
+        )
+
+        hurst_parameter = slope
+        confidence_interval = self._compute_confidence_interval(
+            hurst_parameter, std_err, len(log_block_sizes)
+        )
+
+        results = {
+            "hurst_parameter": float(hurst_parameter),
+            "r_squared": float(r_squared),
+            "slope": float(slope),
+            "intercept": float(intercept),
+            "p_value": float(p_value) if not math.isnan(p_value) else np.nan,
+            "std_error": float(std_err) if not math.isnan(std_err) else np.nan,
+            "block_sizes": block_sizes.tolist(),
+            "window_sizes": block_sizes.tolist(),
+            "rs_values": rs_values.tolist(),
+            "log_block_sizes": log_block_sizes.tolist(),
+            "log_rs_values": log_rs_values.tolist(),
+            "confidence_interval": confidence_interval,
+            "method": method,
+            "optimization_framework": framework,
+        }
+
+        self.results = results
+        return results
+
+    def _compute_confidence_interval(
+        self, hurst: float, std_err: float, sample_size: int, confidence_level: float = 0.95
+    ) -> List[float]:
+        """Compute a confidence interval for the Hurst estimate."""
+
+        if not np.isfinite(std_err) or std_err <= 0 or sample_size < 3:
+            return [float("nan"), float("nan")]
+
+        alpha = 1.0 - confidence_level
+        dof = max(sample_size - 2, 1)
+
+        if SCIPY_AVAILABLE:
+            critical = stats.t.ppf(1 - alpha / 2, dof)
+        else:
+            # Normal approximation fallback
+            critical = 1.96
+
+        margin = critical * std_err
+        lower = float(hurst - margin)
+        upper = float(hurst + margin)
+        return [lower, upper]
 
     def estimate(self, data: Union[np.ndarray, list]) -> Dict[str, Any]:
         """
@@ -161,24 +321,8 @@ class RSEstimator(BaseEstimator):
         n = len(data)
         
         # Set max block size if not provided
-        if self.parameters["max_block_size"] is None:
-            self.parameters["max_block_size"] = n // 4
-        
-        # Generate block sizes
-        block_sizes = np.logspace(
-            np.log10(self.parameters["min_block_size"]),
-            np.log10(self.parameters["max_block_size"]),
-            self.parameters["num_blocks"],
-            dtype=int
-        )
-        
-        # Ensure block sizes are unique and valid
-        block_sizes = np.unique(block_sizes)
-        block_sizes = block_sizes[block_sizes <= n // 2]
-        
-        if len(block_sizes) < 3:
-            raise ValueError("Insufficient valid block sizes for analysis")
-        
+        block_sizes = self._resolve_block_sizes(n)
+
         # Calculate R/S values for each block size
         rs_values = []
         for block_size in block_sizes:
@@ -190,46 +334,16 @@ class RSEstimator(BaseEstimator):
         # Filter out invalid values
         valid_mask = (rs_values > 0) & ~np.isnan(rs_values)
         if np.sum(valid_mask) < 3:
-            raise ValueError("Insufficient valid R/S values for analysis")
+            raise ValueError("Need at least 3 window sizes")
         
         valid_block_sizes = block_sizes[valid_mask]
         valid_rs_values = rs_values[valid_mask]
-        
-        # Log-log regression
-        log_block_sizes = np.log(valid_block_sizes)
-        log_rs_values = np.log(valid_rs_values)
-        
-        # Linear regression
-        coeffs = np.polyfit(log_block_sizes, log_rs_values, 1)
-        slope = coeffs[0]
-        intercept = coeffs[1]
-        
-        # Calculate R-squared
-        y_pred = slope * log_block_sizes + intercept
-        ss_res = np.sum((log_rs_values - y_pred) ** 2)
-        ss_tot = np.sum((log_rs_values - np.mean(log_rs_values)) ** 2)
-        r_squared = 1 - (ss_res / ss_tot)
-        
-        # Hurst parameter is the slope
-        hurst_parameter = slope
-        
-        # Store results
-        self.results = {
-            "hurst_parameter": float(hurst_parameter),
-            "r_squared": float(r_squared),
-            "slope": float(slope),
-            "intercept": float(intercept),
-            "p_value": np.nan,  # Not available with simple polyfit
-            "std_error": np.nan,  # Not available with simple polyfit
-            "block_sizes": valid_block_sizes.tolist(),
-            "rs_values": valid_rs_values.tolist(),
-            "log_block_sizes": log_block_sizes.tolist(),
-            "log_rs_values": log_rs_values.tolist(),
-            "method": "numpy",
-            "optimization_framework": self.optimization_framework,
-        }
-        
-        return self.results
+        return self._build_results(
+            block_sizes=valid_block_sizes,
+            rs_values=valid_rs_values,
+            method="numpy",
+            framework="numpy",
+        )
 
     def _estimate_numba(self, data: np.ndarray) -> Dict[str, Any]:
         """Numba-optimized implementation of R/S estimation."""
@@ -248,25 +362,8 @@ class RSEstimator(BaseEstimator):
         """Actual Numba-optimized implementation."""
         n = len(data)
         
-        # Set max block size if not provided
-        if self.parameters["max_block_size"] is None:
-            self.parameters["max_block_size"] = n // 4
-        
-        # Generate block sizes
-        block_sizes = np.logspace(
-            np.log10(self.parameters["min_block_size"]),
-            np.log10(self.parameters["max_block_size"]),
-            self.parameters["num_blocks"],
-            dtype=int
-        )
-        
-        # Ensure block sizes are unique and valid
-        block_sizes = np.unique(block_sizes)
-        block_sizes = block_sizes[block_sizes <= n // 2]
-        
-        if len(block_sizes) < 3:
-            raise ValueError("Insufficient valid block sizes for analysis")
-        
+        block_sizes = self._resolve_block_sizes(n)
+
         # Calculate R/S values using Numba-optimized function
         rs_values = []
         for block_size in block_sizes:
@@ -278,54 +375,16 @@ class RSEstimator(BaseEstimator):
         # Filter out invalid values
         valid_mask = (rs_values > 0) & ~np.isnan(rs_values)
         if np.sum(valid_mask) < 3:
-            raise ValueError("Insufficient valid R/S values for analysis")
+            raise ValueError("Need at least 3 window sizes")
         
         valid_block_sizes = block_sizes[valid_mask]
         valid_rs_values = rs_values[valid_mask]
-        
-        # Log-log regression
-        log_block_sizes = np.log(valid_block_sizes)
-        log_rs_values = np.log(valid_rs_values)
-        
-        # Linear regression
-        coeffs = np.polyfit(log_block_sizes, log_rs_values, 1)
-        slope = coeffs[0]
-        intercept = coeffs[1]
-        
-        # Calculate R-squared
-        y_pred = slope * log_block_sizes + intercept
-        ss_res = np.sum((log_rs_values - y_pred) ** 2)
-        ss_tot = np.sum((log_rs_values - np.mean(log_rs_values)) ** 2)
-        r_squared = 1 - (ss_res / ss_tot)
-        
-        # Hurst parameter is the slope
-        hurst_parameter = slope
-        
-        # Calculate p-value and standard error
-        try:
-            # Use scipy for statistical tests
-            from scipy import stats
-            slope, intercept, r_value, p_value, std_error = stats.linregress(
-                log_block_sizes, log_rs_values
-            )
-        except ImportError:
-            p_value = None
-            std_error = None
-        
-        return {
-            "hurst_parameter": hurst_parameter,
-            "r_squared": r_squared,
-            "slope": slope,
-            "intercept": intercept,
-            "p_value": p_value,
-            "std_error": std_error,
-            "block_sizes": valid_block_sizes,
-            "rs_values": valid_rs_values,
-            "log_block_sizes": log_block_sizes,
-            "log_rs_values": log_rs_values,
-            "method": "numba",
-            "optimization_framework": "numba"
-        }
+        return self._build_results(
+            block_sizes=valid_block_sizes,
+            rs_values=valid_rs_values,
+            method="numba",
+            framework="numba",
+        )
 
     def _estimate_jax(self, data: np.ndarray) -> Dict[str, Any]:
         """JAX-optimized implementation of R/S estimation."""
@@ -344,24 +403,7 @@ class RSEstimator(BaseEstimator):
         """Actual JAX-optimized implementation."""
         n = len(data)
         
-        # Set max block size if not provided
-        if self.parameters["max_block_size"] is None:
-            self.parameters["max_block_size"] = n // 4
-        
-        # Generate block sizes
-        block_sizes = np.logspace(
-            np.log10(self.parameters["min_block_size"]),
-            np.log10(self.parameters["max_block_size"]),
-            self.parameters["num_blocks"],
-            dtype=int
-        )
-        
-        # Ensure block sizes are unique and valid
-        block_sizes = np.unique(block_sizes)
-        block_sizes = block_sizes[block_sizes <= n // 2]
-        
-        if len(block_sizes) < 3:
-            raise ValueError("Insufficient valid block sizes for analysis")
+        block_sizes = self._resolve_block_sizes(n)
         
         # Convert to JAX arrays
         data_jax = jnp.array(data)
@@ -378,54 +420,16 @@ class RSEstimator(BaseEstimator):
         # Filter out invalid values
         valid_mask = (rs_values > 0) & ~np.isnan(rs_values)
         if np.sum(valid_mask) < 3:
-            raise ValueError("Insufficient valid R/S values for analysis")
+            raise ValueError("Need at least 3 window sizes")
         
         valid_block_sizes = block_sizes[valid_mask]
         valid_rs_values = rs_values[valid_mask]
-        
-        # Log-log regression
-        log_block_sizes = np.log(valid_block_sizes)
-        log_rs_values = np.log(valid_rs_values)
-        
-        # Linear regression
-        coeffs = np.polyfit(log_block_sizes, log_rs_values, 1)
-        slope = coeffs[0]
-        intercept = coeffs[1]
-        
-        # Calculate R-squared
-        y_pred = slope * log_block_sizes + intercept
-        ss_res = np.sum((log_rs_values - y_pred) ** 2)
-        ss_tot = np.sum((log_rs_values - np.mean(log_rs_values)) ** 2)
-        r_squared = 1 - (ss_res / ss_tot)
-        
-        # Hurst parameter is the slope
-        hurst_parameter = slope
-        
-        # Calculate p-value and standard error
-        try:
-            # Use scipy for statistical tests
-            from scipy import stats
-            slope, intercept, r_value, p_value, std_error = stats.linregress(
-                log_block_sizes, log_rs_values
-            )
-        except ImportError:
-            p_value = None
-            std_error = None
-        
-        return {
-            "hurst_parameter": hurst_parameter,
-            "r_squared": r_squared,
-            "slope": slope,
-            "intercept": intercept,
-            "p_value": p_value,
-            "std_error": std_error,
-            "block_sizes": valid_block_sizes,
-            "rs_values": valid_rs_values,
-            "log_block_sizes": log_block_sizes,
-            "log_rs_values": log_rs_values,
-            "method": "jax",
-            "optimization_framework": "jax"
-        }
+        return self._build_results(
+            block_sizes=valid_block_sizes,
+            rs_values=valid_rs_values,
+            method="jax",
+            framework="jax",
+        )
 
     def _calculate_rs_numpy(self, data: np.ndarray, block_size: int) -> float:
         """Calculate R/S value for a given block size using NumPy."""
@@ -436,7 +440,7 @@ class RSEstimator(BaseEstimator):
             return np.nan
         
         rs_values = []
-        
+
         for i in range(n_blocks):
             start_idx = i * block_size
             end_idx = start_idx + block_size
@@ -458,14 +462,14 @@ class RSEstimator(BaseEstimator):
         
         if len(rs_values) == 0:
             return np.nan
-        
+
         return np.mean(rs_values)
     
     def _calculate_rs_numba(self, data: np.ndarray, block_size: int) -> float:
         """Calculate R/S value for a given block size using Numba optimization."""
         if not NUMBA_AVAILABLE:
             return self._calculate_rs_numpy(data, block_size)
-        
+
         try:
             # Use Numba-optimized calculation
             return self._calculate_rs_numba_optimized(data, block_size)
@@ -490,56 +494,55 @@ class RSEstimator(BaseEstimator):
         if n_blocks == 0:
             return np.nan
         
-        rs_values = []
-        
+        rs_values = np.empty(n_blocks, dtype=np.float64)
+        count = 0
+
         for i in range(n_blocks):
             start_idx = i * block_size
             end_idx = start_idx + block_size
             block_data = data[start_idx:end_idx]
-            
+
             # Calculate cumulative deviation
             mean_val = 0.0
             for j in range(block_size):
                 mean_val += block_data[j]
             mean_val /= block_size
-            
-            dev = np.zeros(block_size)
+
+            dev = np.empty(block_size, dtype=np.float64)
             for j in range(block_size):
                 dev[j] = block_data[j] - mean_val
-            
-            cum_dev = np.zeros(block_size)
+
+            cum_dev = np.empty(block_size, dtype=np.float64)
             cum_dev[0] = dev[0]
             for j in range(1, block_size):
-                cum_dev[j] = cum_dev[j-1] + dev[j]
-            
+                cum_dev[j] = cum_dev[j - 1] + dev[j]
+
             # Calculate range
             min_val = cum_dev[0]
             max_val = cum_dev[0]
             for j in range(1, block_size):
-                if cum_dev[j] < min_val:
-                    min_val = cum_dev[j]
-                if cum_dev[j] > max_val:
-                    max_val = cum_dev[j]
+                val = cum_dev[j]
+                if val < min_val:
+                    min_val = val
+                if val > max_val:
+                    max_val = val
             R = max_val - min_val
-            
+
             # Calculate standard deviation
             sum_sq = 0.0
             for j in range(block_size):
                 diff = dev[j]
                 sum_sq += diff * diff
             S = np.sqrt(sum_sq / (block_size - 1))
-            
+
             if S > 0:
-                rs_values.append(R / S)
-        
-        if len(rs_values) == 0:
+                rs_values[count] = R / S
+                count += 1
+
+        if count == 0:
             return np.nan
-        
-        # Calculate mean
-        total = 0.0
-        for val in rs_values:
-            total += val
-        return total / len(rs_values)
+
+        return float(np.mean(rs_values[:count]))
     
     def _calculate_rs_jax(self, data: jnp.ndarray, block_size: int) -> float:
         """Calculate R/S value for a given block size using JAX optimization."""
@@ -596,6 +599,59 @@ class RSEstimator(BaseEstimator):
             "recommended_framework": self._get_recommended_framework()
         }
 
+    # ------------------------------------------------------------------
+    # Public API extensions for backward compatibility
+    # ------------------------------------------------------------------
+
+    def get_confidence_intervals(self, confidence_level: float = 0.95) -> Dict[str, Tuple[float, float]]:
+        """Return confidence intervals for the Hurst exponent."""
+
+        if not self.results:
+            raise ValueError("No estimation results available")
+
+        ci = self._compute_confidence_interval(
+            self.results["hurst_parameter"],
+            self.results["std_error"],
+            len(self.results["block_sizes"]),
+            confidence_level,
+        )
+
+        return {"hurst_parameter": tuple(ci)}
+
+    def get_estimation_quality(self) -> Dict[str, Any]:
+        """Provide diagnostic metrics for the last estimation."""
+
+        if not self.results:
+            raise ValueError("No estimation results available")
+
+        quality = {
+            "r_squared": self.results["r_squared"],
+            "p_value": self.results["p_value"],
+            "std_error": self.results["std_error"],
+            "n_windows": len(self.results["block_sizes"]),
+        }
+        return quality
+
+    def plot_scaling(self, **kwargs) -> None:
+        """Legacy-compatible wrapper for plotting the R/S scaling behaviour."""
+
+        if not self.results:
+            raise ValueError("No estimation results available")
+
+        self.plot_analysis(**kwargs)
+
+    # ------------------------------------------------------------------
+    # Legacy helper methods
+    # ------------------------------------------------------------------
+
+    def _calculate_rs_statistic(self, data: Union[np.ndarray, list], window_size: int) -> float:
+        """Compute the R/S statistic for a single window size (legacy API)."""
+
+        value = self._calculate_rs_numpy(np.asarray(data), int(window_size))
+        if not np.isfinite(value) or value <= 0:
+            raise ValueError("No valid R/S values calculated")
+        return float(value)
+
     def _get_recommended_framework(self) -> str:
         """Get the recommended optimization framework."""
         if JAX_AVAILABLE:
@@ -608,7 +664,7 @@ class RSEstimator(BaseEstimator):
     def plot_analysis(self, figsize: Tuple[int, int] = (12, 8), save_path: Optional[str] = None) -> None:
         """Plot the R/S analysis results."""
         if not self.results:
-            raise ValueError("No results available. Run estimate() first.")
+            raise ValueError("No estimation results available")
 
         fig, axes = plt.subplots(2, 2, figsize=figsize)
         fig.suptitle('R/S Analysis Results', fontsize=16)
