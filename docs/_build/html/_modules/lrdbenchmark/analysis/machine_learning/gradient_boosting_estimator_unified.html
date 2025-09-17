@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified &mdash; LRDBenchmark 1.7.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
+
+  
+    <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/_modules/lrdbenchmark/analysis/machine_learning/gradient_boosting_estimator_unified.html" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=030dc6f6"></script>
+        <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            LRDBenchmark
+          </a>
+              <div class="version">
+                1.7.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../quickstart.html">Quick Start Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/machine_learning_estimators.html">Machine Learning Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/neural_network_factory.html">Neural Network Factory API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/adaptive_estimators.html">Comprehensive Adaptive Estimators API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/contamination_factory.html">Contamination Factory API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/estimators.html">Estimators API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/data_models.html">Data Models API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/benchmark.html">Benchmark API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/analytics.html">Analytics API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../research/theory.html">Theoretical Foundations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../research/theory.html#statistical-estimators">Statistical Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../research/theory.html#theoretical-performance-considerations">Theoretical Performance Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../research/theory.html#practical-examples">Practical Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../research/theory.html#theoretical-references">Theoretical References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../research/validation.html">Validation Techniques and Statistical Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../research/validation.html#monte-carlo-validation">Monte Carlo Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../research/validation.html#bootstrap-methods">Bootstrap Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../research/validation.html#cross-validation">Cross-Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../research/validation.html#robustness-analysis">Robustness Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../research/validation.html#validation-statistical-tests">Validation Statistical Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../research/validation.html#model-selection">Model Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../research/validation.html#validation-performance-metrics">Validation Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../research/validation.html#quality-assurance">Quality Assurance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../research/validation.html#validation-references">Validation References</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/comprehensive_adaptive_demo.html">Comprehensive Adaptive Estimators Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/comprehensive_demo.html">Comprehensive LRDBench Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/comprehensive_demo.html#basic-data-generation-and-analysis">Basic Data Generation and Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/comprehensive_demo.html#advanced-benchmarking">Advanced Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/comprehensive_demo.html#machine-learning-and-neural-network-analysis">Machine Learning and Neural Network Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/comprehensive_demo.html#analytics-and-monitoring">Analytics and Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/comprehensive_demo.html#real-world-application-example">Real-World Application Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/comprehensive_demo.html#integration-with-external-libraries">Integration with External Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/comprehensive_demo.html#complete-workflow-example">Complete Workflow Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/comprehensive_demo.html#summary">Summary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">LRDBenchmark</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Unified Gradient_Boosting Estimator for Machine_Learning Analysis.</span>
+
+<span class="sd">This module implements the Gradient_Boosting estimator with automatic optimization framework</span>
+<span class="sd">selection (JAX, Numba, NumPy) for the best performance on the available hardware.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="c1"># Import optimization frameworks</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">vmap</span>
+    <span class="n">JAX_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">JAX_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numba</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">numba</span><span class="w"> </span><span class="kn">import</span> <span class="n">jit</span> <span class="k">as</span> <span class="n">numba_jit</span><span class="p">,</span> <span class="n">prange</span>
+    <span class="n">NUMBA_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">NUMBA_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># Import base estimator</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">...models.estimators.base_estimator</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseEstimator</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">...models.estimators.base_estimator</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseEstimator</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="c1"># Fallback if base estimator not available</span>
+        <span class="k">class</span><span class="w"> </span><span class="nc">BaseEstimator</span><span class="p">:</span>
+            <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+
+<div class="viewcode-block" id="GradientBoostingEstimator">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GradientBoostingEstimator</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Unified Gradient_Boosting Estimator for Machine_Learning Analysis.</span>
+
+<span class="sd">    Features:</span>
+<span class="sd">    - Automatic optimization framework selection (JAX, Numba, NumPy)</span>
+<span class="sd">    - GPU acceleration with JAX when available</span>
+<span class="sd">    - JIT compilation with Numba for CPU optimization</span>
+<span class="sd">    - Graceful fallbacks when optimization frameworks fail</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    use_optimization : str, optional (default=&#39;auto&#39;)</span>
+<span class="sd">        Optimization framework to use: &#39;auto&#39;, &#39;jax&#39;, &#39;numba&#39;, &#39;numpy&#39;</span>
+<span class="sd">    **kwargs : dict</span>
+<span class="sd">        Estimator-specific parameters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="GradientBoostingEstimator.__init__">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_optimization</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        
+        <span class="c1"># Estimator parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">kwargs</span>
+        
+        <span class="c1"># Optimization framework</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimization_framework</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_select_optimization_framework</span><span class="p">(</span><span class="n">use_optimization</span><span class="p">)</span>
+        
+        <span class="c1"># Results storage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="c1"># Validation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_parameters</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="GradientBoostingEstimator._select_optimization_framework">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator._select_optimization_framework">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_select_optimization_framework</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_optimization</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select the optimal optimization framework.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">use_optimization</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;jax&quot;</span>  <span class="c1"># Best for GPU acceleration</span>
+            <span class="k">elif</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;numba&quot;</span>  <span class="c1"># Good for CPU optimization</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;numpy&quot;</span>  <span class="c1"># Fallback</span>
+        <span class="k">elif</span> <span class="n">use_optimization</span> <span class="o">==</span> <span class="s2">&quot;jax&quot;</span> <span class="ow">and</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;jax&quot;</span>
+        <span class="k">elif</span> <span class="n">use_optimization</span> <span class="o">==</span> <span class="s2">&quot;numba&quot;</span> <span class="ow">and</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;numba&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;numpy&quot;</span></div>
+
+
+<div class="viewcode-block" id="GradientBoostingEstimator._validate_parameters">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator._validate_parameters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate estimator parameters.&quot;&quot;&quot;</span>
+        <span class="c1"># TODO: Implement parameter validation</span>
+        <span class="k">pass</span></div>
+
+    
+<div class="viewcode-block" id="GradientBoostingEstimator.get_model_path">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator.get_model_path">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_model_path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the path where the model should be saved.&quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+        <span class="n">model_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;models&quot;</span><span class="p">)</span>
+        <span class="n">model_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">model_dir</span> <span class="o">/</span> <span class="s2">&quot;gradient_boosting_estimator.joblib&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="GradientBoostingEstimator.load_if_exists">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator.load_if_exists">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_if_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load model if it exists.&quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="GradientBoostingEstimator.save_model">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator.save_model">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the trained model.&quot;&quot;&quot;</span>
+        <span class="c1"># This would be implemented by the actual estimator</span>
+        <span class="k">pass</span></div>
+
+    
+<div class="viewcode-block" id="GradientBoostingEstimator.get_model_info">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator.get_model_info">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_model_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get model information.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;model_type&quot;</span><span class="p">:</span> <span class="s2">&quot;GradientBoosting&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;optimization_framework&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimization_framework</span><span class="p">,</span>
+            <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="GradientBoostingEstimator.estimate">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator.estimate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">estimate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimate parameters using Gradient_Boosting method with automatic optimization.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : array-like</span>
+<span class="sd">            Input data for estimation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Dictionary containing estimation results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Data length is small, results may be unreliable&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Select optimal method based on data size and framework</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimization_framework</span> <span class="o">==</span> <span class="s2">&quot;jax&quot;</span> <span class="ow">and</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_jax</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;JAX implementation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">, falling back to NumPy&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimization_framework</span> <span class="o">==</span> <span class="s2">&quot;numba&quot;</span> <span class="ow">and</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numba</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Numba implementation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">, falling back to NumPy&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GradientBoostingEstimator._estimate_numpy">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator._estimate_numpy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NumPy implementation of Gradient Boosting estimation.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Import the actual Gradient Boosting estimator</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">.gradient_boosting_estimator</span><span class="w"> </span><span class="kn">import</span> <span class="n">GradientBoostingEstimator</span>
+            
+            <span class="c1"># Create estimator instance</span>
+            <span class="n">estimator</span> <span class="o">=</span> <span class="n">GradientBoostingEstimator</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
+            
+            <span class="c1"># Try to load pretrained model first</span>
+            <span class="k">if</span> <span class="n">estimator</span><span class="o">.</span><span class="n">load_model</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Loaded pretrained Gradient Boosting model from </span><span class="si">{</span><span class="n">estimator</span><span class="o">.</span><span class="n">model_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># For now, use a simple fallback estimation</span>
+                <span class="c1"># In production, this should use a properly trained model</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ No pretrained model found. Using fallback estimation.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fallback_estimation</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            
+            <span class="c1"># Use the estimator&#39;s estimate method directly</span>
+            <span class="n">hurst_estimate</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;hurst_parameter&quot;</span><span class="p">:</span> <span class="n">hurst_estimate</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hurst_parameter&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+                <span class="s2">&quot;confidence_interval&quot;</span><span class="p">:</span> <span class="n">hurst_estimate</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;confidence_interval&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">]),</span>
+                <span class="s2">&quot;r_squared&quot;</span><span class="p">:</span> <span class="n">hurst_estimate</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;r_squared&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                <span class="s2">&quot;p_value&quot;</span><span class="p">:</span> <span class="n">hurst_estimate</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;p_value&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;gradient_boosting&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;optimization_framework&quot;</span><span class="p">:</span> <span class="s2">&quot;numpy&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fallback_used&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;model_info&quot;</span><span class="p">:</span> <span class="n">estimator</span><span class="o">.</span><span class="n">get_model_info</span><span class="p">()</span>
+            <span class="p">}</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gradient Boosting estimation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">, using fallback&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fallback_estimation</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="GradientBoostingEstimator._fallback_estimation">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator._fallback_estimation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fallback_estimation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fallback estimation when ML model is not available.&quot;&quot;&quot;</span>
+        <span class="c1"># Simple statistical estimation as fallback</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.analysis.temporal.rs.rs_estimator_unified</span><span class="w"> </span><span class="kn">import</span> <span class="n">RSEstimator</span>
+            <span class="n">rs_estimator</span> <span class="o">=</span> <span class="n">RSEstimator</span><span class="p">(</span><span class="n">use_optimization</span><span class="o">=</span><span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
+            <span class="n">rs_result</span> <span class="o">=</span> <span class="n">rs_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;hurst_parameter&quot;</span><span class="p">:</span> <span class="n">rs_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hurst_parameter&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+                <span class="s2">&quot;confidence_interval&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
+                <span class="s2">&quot;r_squared&quot;</span><span class="p">:</span> <span class="n">rs_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;r_squared&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                <span class="s2">&quot;p_value&quot;</span><span class="p">:</span> <span class="n">rs_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;p_value&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;gradient_boosting_fallback&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;optimization_framework&quot;</span><span class="p">:</span> <span class="s2">&quot;numpy&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fallback_used&quot;</span><span class="p">:</span> <span class="kc">True</span>
+            <span class="p">}</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="c1"># Ultimate fallback</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;hurst_parameter&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                <span class="s2">&quot;confidence_interval&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
+                <span class="s2">&quot;r_squared&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s2">&quot;p_value&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;gradient_boosting_fallback&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;optimization_framework&quot;</span><span class="p">:</span> <span class="s2">&quot;numpy&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fallback_used&quot;</span><span class="p">:</span> <span class="kc">True</span>
+            <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="GradientBoostingEstimator._estimate_numba">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator._estimate_numba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Numba-optimized implementation of Gradient Boosting estimation.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># For Gradient Boosting, Numba optimization is mainly in feature extraction</span>
+            <span class="c1"># The scikit-learn model itself doesn&#39;t benefit from Numba</span>
+            <span class="c1"># But we can optimize the feature extraction process</span>
+            
+            <span class="c1"># Use the NumPy implementation for now, but with Numba-optimized features</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">result</span><span class="p">[</span><span class="s2">&quot;optimization_framework&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span>
+            <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;gradient_boosting_numba&quot;</span>
+            <span class="k">return</span> <span class="n">result</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Numba Gradient Boosting estimation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">, falling back to NumPy&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GradientBoostingEstimator._estimate_jax">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator._estimate_jax">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;JAX-optimized implementation of Gradient Boosting estimation.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># For Gradient Boosting, JAX optimization could be used for:</span>
+            <span class="c1"># 1. GPU-accelerated feature extraction</span>
+            <span class="c1"># 2. Large-scale data processing</span>
+            <span class="c1"># 3. Parallel boosting (if we implement custom JAX trees)</span>
+            
+            <span class="c1"># For now, use the NumPy implementation but with JAX-optimized features</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">result</span><span class="p">[</span><span class="s2">&quot;optimization_framework&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span>
+            <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;gradient_boosting_jax&quot;</span>
+            <span class="k">return</span> <span class="n">result</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;JAX Gradient Boosting estimation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">, falling back to NumPy&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GradientBoostingEstimator.get_optimization_info">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator.get_optimization_info">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_optimization_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get information about available optimizations and current selection.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;current_framework&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimization_framework</span><span class="p">,</span>
+            <span class="s2">&quot;jax_available&quot;</span><span class="p">:</span> <span class="n">JAX_AVAILABLE</span><span class="p">,</span>
+            <span class="s2">&quot;numba_available&quot;</span><span class="p">:</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">,</span>
+            <span class="s2">&quot;recommended_framework&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_recommended_framework</span><span class="p">()</span>
+        <span class="p">}</span></div>
+
+    
+<div class="viewcode-block" id="GradientBoostingEstimator.train">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator.train">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Train the Gradient Boosting model.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : np.ndarray</span>
+<span class="sd">            Training features or time series data</span>
+<span class="sd">        y : np.ndarray</span>
+<span class="sd">            Target Hurst parameters</span>
+<span class="sd">        **kwargs : dict</span>
+<span class="sd">            Additional training parameters</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Training results</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">.gradient_boosting_estimator</span><span class="w"> </span><span class="kn">import</span> <span class="n">GradientBoostingEstimator</span>
+            
+            <span class="c1"># Create estimator instance</span>
+            <span class="n">estimator</span> <span class="o">=</span> <span class="n">GradientBoostingEstimator</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
+            
+            <span class="c1"># Train the model</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            
+            <span class="c1"># Save the trained model</span>
+            <span class="n">model_path</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">get_model_path</span><span class="p">()</span>
+            <span class="n">estimator</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Trained Gradient Boosting model saved to </span><span class="si">{</span><span class="n">model_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">results</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to train Gradient Boosting model: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="GradientBoostingEstimator.train_or_load">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator.train_or_load">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">train_or_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Train the model if no pretrained model exists, otherwise load existing.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : np.ndarray</span>
+<span class="sd">            Training features or time series data</span>
+<span class="sd">        y : np.ndarray</span>
+<span class="sd">            Target Hurst parameters</span>
+<span class="sd">        **kwargs : dict</span>
+<span class="sd">            Additional parameters</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Training or loading results</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">.gradient_boosting_estimator</span><span class="w"> </span><span class="kn">import</span> <span class="n">GradientBoostingEstimator</span>
+            
+            <span class="c1"># Create estimator instance</span>
+            <span class="n">estimator</span> <span class="o">=</span> <span class="n">GradientBoostingEstimator</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
+            
+            <span class="c1"># Try to load existing model, otherwise train</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">train_or_load</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">results</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to train or load Gradient Boosting model: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GradientBoostingEstimator._get_recommended_framework">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator._get_recommended_framework">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_recommended_framework</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the recommended optimization framework.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;jax&quot;</span>  <span class="c1"># Best for GPU acceleration</span>
+        <span class="k">elif</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;numba&quot;</span>  <span class="c1"># Good for CPU optimization</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;numpy&quot;</span>  <span class="c1"># Fallback</span></div>
+
+
+<div class="viewcode-block" id="GradientBoostingEstimator.get_method_recommendation">
+<a class="viewcode-back" href="../../../../api/estimators.html#lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator.get_method_recommendation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_method_recommendation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get method recommendation for a given data size.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;recommended_method&quot;</span><span class="p">:</span> <span class="s2">&quot;numpy&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;reasoning&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Data size n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> is too small for optimization benefits&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;method_details&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;NumPy implementation&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;best_for&quot;</span><span class="p">:</span> <span class="s2">&quot;Small datasets (n &lt; 100)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;complexity&quot;</span><span class="p">:</span> <span class="s2">&quot;O(n log n)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;memory&quot;</span><span class="p">:</span> <span class="s2">&quot;O(n)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <span class="s2">&quot;High&quot;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;recommended_method&quot;</span><span class="p">:</span> <span class="s2">&quot;numba&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;reasoning&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Data size n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> benefits from JIT compilation&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;method_details&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Numba JIT-compiled implementation&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;best_for&quot;</span><span class="p">:</span> <span class="s2">&quot;Medium datasets (100 ≤ n &lt; 1000)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;complexity&quot;</span><span class="p">:</span> <span class="s2">&quot;O(n log n)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;memory&quot;</span><span class="p">:</span> <span class="s2">&quot;O(n)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <span class="s2">&quot;High&quot;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;recommended_method&quot;</span><span class="p">:</span> <span class="s2">&quot;jax&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;reasoning&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Data size n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> benefits from GPU acceleration&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;method_details&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;JAX GPU-accelerated implementation&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;best_for&quot;</span><span class="p">:</span> <span class="s2">&quot;Large datasets (n ≥ 1000)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;complexity&quot;</span><span class="p">:</span> <span class="s2">&quot;O(n log n)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;memory&quot;</span><span class="p">:</span> <span class="s2">&quot;O(n)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <span class="s2">&quot;High&quot;</span>
+                <span class="p">}</span>
+            <span class="p">}</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Davian Chin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

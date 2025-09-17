@@ -1,0 +1,117 @@
+{
+  "metadata": {
+    "timestamp": "2025-09-13T05:23:23.182613",
+    "categories_compared": [
+      "Classical",
+      "ML",
+      "Neural Networks"
+    ],
+    "total_estimators": 15
+  },
+  "category_analysis": {
+    "Classical": {
+      "count": 8,
+      "mean_mae": 0.3186042650389229,
+      "std_mae": 0.16078894294161244,
+      "mean_execution_time": 0.05713121592998498,
+      "std_execution_time": 0.11948938293142317,
+      "mean_robustness": 10.0,
+      "mean_realistic": NaN,
+      "mean_overall_score": 8.406978674805385,
+      "best_mae": 0.0988756405742225,
+      "best_execution_time": 0.0002201795578002,
+      "best_overall_score": 9.505621797128889
+    },
+    "ML": {
+      "count": 3,
+      "mean_mae": 0.19884298469767858,
+      "std_mae": 0.00541634338043813,
+      "mean_execution_time": 0.7073269175986449,
+      "std_execution_time": 1.2056420995799824,
+      "mean_robustness": 10.0,
+      "mean_realistic": 10.0,
+      "mean_overall_score": 9.337190051007738,
+      "best_mae": 0.1925915649433322,
+      "best_execution_time": 0.0091797895729541,
+      "best_overall_score": 9.35802811685556
+    },
+    "Neural Networks": {
+      "count": 4,
+      "mean_mae": 0.10334448063184715,
+      "std_mae": 0.004949689769474098,
+      "mean_execution_time": 0.0027073770761489252,
+      "std_execution_time": 0.0025710239652565058,
+      "mean_robustness": 10.0,
+      "mean_realistic": 10.0,
+      "mean_overall_score": 9.655518397893843,
+      "best_mae": 0.0966217417828387,
+      "best_execution_time": 0.000728373726209,
+      "best_overall_score": 9.677927527390535
+    }
+  },
+  "comparison_table": [
+    {
+      "Category": "Classical",
+      "Estimators": 8,
+      "Mean MAE": "0.319",
+      "Best MAE": "0.099",
+      "Mean Execution Time (s)": "0.0571",
+      "Fastest (s)": "0.0002",
+      "Mean Robustness": "10.0/10",
+      "Mean Realistic": "N/A",
+      "Mean Overall Score": "8.41/10",
+      "Best Overall Score": "9.51/10"
+    },
+    {
+      "Category": "ML",
+      "Estimators": 3,
+      "Mean MAE": "0.199",
+      "Best MAE": "0.193",
+      "Mean Execution Time (s)": "0.7073",
+      "Fastest (s)": "0.0092",
+      "Mean Robustness": "10.0/10",
+      "Mean Realistic": "10.0/10",
+      "Mean Overall Score": "9.34/10",
+      "Best Overall Score": "9.36/10"
+    },
+    {
+      "Category": "Neural Networks",
+      "Estimators": 4,
+      "Mean MAE": "0.103",
+      "Best MAE": "0.097",
+      "Mean Execution Time (s)": "0.0027",
+      "Fastest (s)": "0.0007",
+      "Mean Robustness": "10.0/10",
+      "Mean Realistic": "10.0/10",
+      "Mean Overall Score": "9.66/10",
+      "Best Overall Score": "9.68/10"
+    }
+  ],
+  "top_performers": {
+    "Best Accuracy (Lowest MAE)": {
+      "estimator": "LSTM",
+      "category": "Neural Networks",
+      "value": "N/A"
+    },
+    "Fastest Execution": {
+      "estimator": "GRU",
+      "category": "Neural Networks",
+      "value": "N/A"
+    },
+    "Most Robust": {
+      "estimator": "R/S",
+      "category": "Classical",
+      "value": "N/A"
+    },
+    "Best Realistic Performance": {
+      "estimator": "RandomForest",
+      "category": "ML",
+      "value": "N/A"
+    },
+    "Highest Overall Score": {
+      "estimator": "LSTM",
+      "category": "Neural Networks",
+      "value": "N/A"
+    }
+  }
+}

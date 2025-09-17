@@ -1,0 +1,38 @@
+{
+  "enhanced_feedforward": {
+    "success": false,
+    "error": "operands could not be broadcast together with shapes (5,1000) (20,1) ",
+    "training_time": null,
+    "final_train_loss": null,
+    "final_val_loss": null,
+    "mae": null,
+    "parameters": null
+  },
+  "enhanced_cnn": {
+    "success": false,
+    "error": "Given groups=1, weight of size [128, 1, 5], expected input[16, 1000, 1] to have 1 channels, but got 1000 channels instead",
+    "training_time": null,
+    "final_train_loss": null,
+    "final_val_loss": null,
+    "mae": null,
+    "parameters": null
+  },
+  "enhanced_lstm": {
+    "success": false,
+    "error": "CUDA out of memory. Tried to allocate 490.00 MiB. GPU 0 has a total capacity of 3.68 GiB of which 66.44 MiB is free. Including non-PyTorch memory, this process has 3.55 GiB memory in use. Of the allocated memory 663.76 MiB is allocated by PyTorch, and 16.24 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+    "training_time": null,
+    "final_train_loss": null,
+    "final_val_loss": null,
+    "mae": null,
+    "parameters": null
+  },
+  "enhanced_transformer": {
+    "success": false,
+    "error": "operands could not be broadcast together with shapes (5,1000) (20,1) ",
+    "training_time": null,
+    "final_train_loss": null,
+    "final_val_loss": null,
+    "mae": null,
+    "parameters": null
+  }
+}

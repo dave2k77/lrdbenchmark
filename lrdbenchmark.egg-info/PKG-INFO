@@ -1,0 +1,116 @@
+Metadata-Version: 2.4
+Name: lrdbenchmark
+Version: 2.1.5
+Summary: Comprehensive Long-Range Dependence Benchmarking Framework with Neural Network Factory - Three-Way Comparison: Classical vs ML vs Neural Networks
+Author-email: "Davian R. Chin" <d.r.chin@reading.ac.uk>
+License: MIT
+Project-URL: Homepage, https://github.com/dave2k77/LRDBenchmark
+Project-URL: Documentation, https://lrdbenchmark.readthedocs.io/
+Project-URL: Repository, https://github.com/dave2k77/LRDBenchmark.git
+Project-URL: Issues, https://github.com/dave2k77/LRDBenchmark/issues
+Project-URL: Download, https://pypi.org/project/lrdbenchmark/
+Project-URL: Source, https://github.com/dave2k77/LRDBenchmark
+Keywords: long-range dependence,hurst parameter,time series analysis,benchmarking,machine learning,neural networks,reproducible research,fractional brownian motion,wavelet analysis,spectral analysis
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Classifier: Topic :: Scientific/Engineering :: Physics
+Classifier: Topic :: Scientific/Engineering :: Information Analysis
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy>=1.21.0
+Requires-Dist: scipy>=1.7.0
+Requires-Dist: scikit-learn>=1.0.0
+Requires-Dist: pandas>=1.3.0
+Requires-Dist: torch>=1.9.0
+Requires-Dist: jax>=0.3.0
+Requires-Dist: jaxlib>=0.3.0
+Requires-Dist: numba>=0.56.0
+Requires-Dist: pywavelets>=1.3.0
+Requires-Dist: matplotlib>=3.5.0
+Requires-Dist: seaborn>=0.11.0
+Requires-Dist: psutil>=5.8.0
+Requires-Dist: networkx>=2.6.0
+Requires-Dist: optuna>=3.0.0
+Requires-Dist: numpyro>=0.12.0
+Provides-Extra: dev
+Requires-Dist: pytest>=6.0; extra == "dev"
+Requires-Dist: pytest-cov>=2.12; extra == "dev"
+Requires-Dist: black>=21.0; extra == "dev"
+Requires-Dist: flake8>=3.9; extra == "dev"
+Requires-Dist: mypy>=0.910; extra == "dev"
+Provides-Extra: docs
+Requires-Dist: sphinx>=4.0; extra == "docs"
+Requires-Dist: sphinx-rtd-theme>=0.5; extra == "docs"
+Requires-Dist: myst-parser>=0.15; extra == "docs"
+Provides-Extra: dashboard
+Requires-Dist: streamlit>=1.28.0; extra == "dashboard"
+Requires-Dist: plotly>=5.15.0; extra == "dashboard"
+Dynamic: license-file
+
+# LRDBenchmark
+
+A comprehensive, reproducible framework for Long‑Range Dependence (LRD) estimation and benchmarking across Classical, Machine Learning, and Neural Network methods. It provides:
+
+- Unified estimator API (8+ classical, 3 ML, 4 NN; includes the Generalised Hurst Exponent).
+- Heavy‑tailed robustness evaluation using α‑stable models with adaptive preprocessing (standardisation/winsorisation/log‑winsorisation/detrending).
+- Intelligent optimisation back‑end with graceful fallbacks (JAX/Numba/NumPy) for reliable execution on diverse hardware.
+- End‑to‑end benchmarking scripts, statistical analysis (CIs, significance tests, effect sizes), and comprehensive leaderboards (including heavy‑tail performance).
+
+## Quick start
+
+```python
+from lrdbenchmark.analysis.temporal.rs.rs_estimator_unified import RSEstimator
+from lrdbenchmark.models.data_models.fbm.fbm_model import FractionalBrownianMotion
+
+# Generate synthetic data
+fbm = FractionalBrownianMotion(H=0.7, sigma=1.0)
+x = fbm.generate(n=1000, seed=42)
+
+# Estimate H
+est = RSEstimator()
+result = est.estimate(x)
+print(result["hurst_parameter"])  # ~0.7
+```
+
+## Documentation
+
+- ReadTheDocs: https://lrdbenchmark.readthedocs.io/
+- Examples: see `docs/quickstart.rst` and `docs/examples/`
+
+## Installation
+
+```bash
+pip install lrdbenchmark
+```
+
+Optional extras for docs/development are available in `pyproject.toml`.
+
+## Citation
+
+If you use LRDBenchmark in your research, please cite the accompanying manuscript (see `research/`).
+
+## Licence
+
+MIT Licence. See `LICENSE`.
+
+
+
+
+
+
+
+
+

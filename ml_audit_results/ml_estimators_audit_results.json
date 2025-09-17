@@ -1,0 +1,503 @@
+{
+  "metadata": {
+    "timestamp": "2025-09-13T04:34:46.716709",
+    "audit_type": "ML Estimators Comprehensive Audit",
+    "pretrained_models_found": 15,
+    "test_data_info": {
+      "n_training_samples": 1000,
+      "n_test_samples": 40,
+      "sequence_length": 1000
+    }
+  },
+  "audit_results": {
+    "estimator_availability": {
+      "RandomForest": {
+        "status": "available",
+        "class": "RandomForestEstimator",
+        "execution_time": 0.005468130111694336,
+        "result_keys": [
+          "hurst_parameter",
+          "confidence_interval",
+          "r_squared",
+          "p_value",
+          "method",
+          "optimization_framework",
+          "fallback_used"
+        ]
+      },
+      "SVR": {
+        "status": "available",
+        "class": "SVREstimator",
+        "execution_time": 0.004868507385253906,
+        "result_keys": [
+          "hurst_parameter",
+          "confidence_interval",
+          "r_squared",
+          "p_value",
+          "method",
+          "optimization_framework",
+          "fallback_used"
+        ]
+      },
+      "GradientBoosting": {
+        "status": "available",
+        "class": "GradientBoostingEstimator",
+        "execution_time": 0.005198001861572266,
+        "result_keys": [
+          "hurst_parameter",
+          "confidence_interval",
+          "r_squared",
+          "p_value",
+          "method",
+          "optimization_framework",
+          "fallback_used"
+        ]
+      }
+    },
+    "implementation_quality": {},
+    "train_once_apply_many": {
+      "RandomForest": {
+        "pipeline_available": true,
+        "training_successful": true,
+        "model_saving": true,
+        "model_loading": true,
+        "inference_successful": true
+      },
+      "SVR": {
+        "pipeline_available": true,
+        "training_successful": true,
+        "model_saving": true,
+        "model_loading": true,
+        "inference_successful": true
+      },
+      "GradientBoosting": {
+        "pipeline_available": true,
+        "training_successful": true,
+        "model_saving": true,
+        "model_loading": true,
+        "inference_successful": true
+      }
+    },
+    "pretrained_model_usage": {
+      "RandomForest": {
+        "pretrained_available": false,
+        "model_loading": false,
+        "inference_successful": false,
+        "error": "No pretrained model found"
+      },
+      "SVR": {
+        "pretrained_available": true,
+        "model_loading": false,
+        "inference_successful": false,
+        "error": "X has 4 features, but SVR is expecting 8 features as input."
+      },
+      "GradientBoosting": {
+        "pretrained_available": false,
+        "model_loading": false,
+        "inference_successful": false,
+        "error": "No pretrained model found"
+      }
+    },
+    "performance_assessment": {}
+  },
+  "benchmark_results": {
+    "training_performance": {},
+    "inference_performance": {
+      "RandomForest": {
+        "mean_inference_time": 0.004605317115783691,
+        "std_inference_time": 0.00014903729980306774,
+        "n_tests": 10
+      },
+      "SVR": {
+        "mean_inference_time": 0.004655528068542481,
+        "std_inference_time": 0.00027455327580316153,
+        "n_tests": 10
+      },
+      "GradientBoosting": {
+        "mean_inference_time": 0.004566788673400879,
+        "std_inference_time": 0.0002027910636581939,
+        "n_tests": 10
+      }
+    },
+    "accuracy_assessment": {
+      "RandomForest": {
+        "mean_absolute_error": 0.1313768387902689,
+        "std_absolute_error": 0.0,
+        "mean_prediction": 0.1686231612097311,
+        "n_predictions": 10
+      },
+      "SVR": {
+        "mean_absolute_error": 0.1313768387902689,
+        "std_absolute_error": 0.0,
+        "mean_prediction": 0.1686231612097311,
+        "n_predictions": 10
+      },
+      "GradientBoosting": {
+        "mean_absolute_error": 0.1313768387902689,
+        "std_absolute_error": 0.0,
+        "mean_prediction": 0.1686231612097311,
+        "n_predictions": 10
+      }
+    },
+    "pretrained_model_performance": {}
+  },
+  "production_assessment": {
+    "train_once_apply_many": true,
+    "pretrained_models": true,
+    "error_handling": true,
+    "performance_optimization": true,
+    "deployment_ready": true
+  },
+  "analysis": {
+    "overall_assessment": {
+      "estimators_available": 3,
+      "total_estimators": 3,
+      "availability_rate": 1.0,
+      "pretrained_models_count": 15,
+      "train_once_apply_many_available": true,
+      "production_system_available": true
+    },
+    "implementation_quality": {
+      "average_score": 1.6666666666666667,
+      "max_score": 2.0,
+      "scores": [
+        1.5,
+        2.0,
+        1.5
+      ]
+    },
+    "performance_analysis": {
+      "mean_accuracy": 0.1313768387902689,
+      "best_accuracy": 0.1313768387902689,
+      "mean_inference_time": 0.004609211285909017,
+      "fastest_inference": 0.004566788673400879
+    },
+    "production_readiness": {
+      "train_once_apply_many": true,
+      "pretrained_models": true,
+      "error_handling": true,
+      "performance_optimization": true,
+      "deployment_ready": true
+    },
+    "recommendations": []
+  },
+  "pretrained_models": {
+    "gradient_boosting_estimator_fixed": {
+      "file_path": "models/gradient_boosting_estimator_fixed.joblib",
+      "model_type": "GradientBoostingRegressor",
+      "status": "available",
+      "model": "GradientBoostingRegressor(random_state=42)"
+    },
+    "random_forest_estimator_fixed": {
+      "file_path": "models/random_forest_estimator_fixed.joblib",
+      "model_type": "RandomForestRegressor",
+      "status": "available",
+      "model": "RandomForestRegressor(n_jobs=-1, random_state=42)"
+    },
+    "svr_estimator_fixed": {
+      "file_path": "models/svr_estimator_fixed.joblib",
+      "model_type": "SVR",
+      "status": "available",
+      "model": "SVR()"
+    },
+    "feedforward_neural_network_config": {
+      "file_path": "models/feedforward_neural_network_config.json",
+      "model_type": "neural_network_config",
+      "status": "config_available",
+      "config": {
+        "architecture": "feedforward",
+        "input_length": 1000,
+        "hidden_dims": [
+          128,
+          64,
+          32
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "batch_size": 32,
+        "epochs": 30,
+        "activation": "relu",
+        "optimizer": "adam",
+        "weight_decay": 0.0001,
+        "conv_filters": 64,
+        "conv_kernel_size": 3,
+        "lstm_units": 64,
+        "transformer_heads": 8,
+        "transformer_layers": 2,
+        "resnet_blocks": 2
+      }
+    },
+    "CNN_neural_network_config": {
+      "file_path": "models/CNN_neural_network_config.json",
+      "model_type": "neural_network_config",
+      "status": "config_available",
+      "config": {
+        "architecture": "convolutional",
+        "input_length": 1000,
+        "hidden_dims": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "batch_size": 32,
+        "epochs": 10,
+        "activation": "relu",
+        "optimizer": "adam",
+        "weight_decay": 0.0001,
+        "conv_filters": 32,
+        "conv_kernel_size": 3,
+        "lstm_units": 64,
+        "transformer_heads": 8,
+        "transformer_layers": 2,
+        "resnet_blocks": 2
+      }
+    },
+    "enhanced_feedforward_config": {
+      "file_path": "models/enhanced_feedforward_config.json",
+      "model_type": "neural_network_config",
+      "status": "config_available",
+      "config": {
+        "architecture": "feedforward",
+        "input_length": 1000,
+        "hidden_dims": [
+          128,
+          64,
+          32
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "batch_size": 16,
+        "epochs": 30,
+        "activation": "relu",
+        "optimizer": "adam",
+        "weight_decay": 0.0001
+      }
+    },
+    "gru_neural_network_config": {
+      "file_path": "models/gru_neural_network_config.json",
+      "model_type": "neural_network_config",
+      "status": "config_available",
+      "config": {
+        "architecture": "gru",
+        "input_length": 1000,
+        "hidden_dims": [
+          32
+        ],
+        "dropout_rate": 0.1,
+        "learning_rate": 0.001,
+        "batch_size": 32,
+        "epochs": 30,
+        "activation": "relu",
+        "optimizer": "adam",
+        "weight_decay": 0.0001,
+        "conv_filters": 64,
+        "conv_kernel_size": 3,
+        "lstm_units": 64,
+        "transformer_heads": 8,
+        "transformer_layers": 2,
+        "resnet_blocks": 2
+      }
+    },
+    "transformer_neural_network_config": {
+      "file_path": "models/transformer_neural_network_config.json",
+      "model_type": "neural_network_config",
+      "status": "config_available",
+      "config": {
+        "architecture": "transformer",
+        "input_length": 1000,
+        "hidden_dims": [
+          32
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "batch_size": 32,
+        "epochs": 30,
+        "activation": "relu",
+        "optimizer": "adam",
+        "weight_decay": 0.0001,
+        "conv_filters": 64,
+        "conv_kernel_size": 3,
+        "lstm_units": 64,
+        "transformer_heads": 4,
+        "transformer_layers": 2,
+        "resnet_blocks": 2
+      }
+    },
+    "convolutional_neural_network_config": {
+      "file_path": "models/convolutional_neural_network_config.json",
+      "model_type": "neural_network_config",
+      "status": "config_available",
+      "config": {
+        "architecture": "convolutional",
+        "input_length": 1000,
+        "hidden_dims": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "batch_size": 32,
+        "epochs": 30,
+        "activation": "relu",
+        "optimizer": "adam",
+        "weight_decay": 0.0001,
+        "conv_filters": 32,
+        "conv_kernel_size": 3,
+        "lstm_units": 64,
+        "transformer_heads": 8,
+        "transformer_layers": 2,
+        "resnet_blocks": 2
+      }
+    },
+    "LSTM_neural_network_config": {
+      "file_path": "models/LSTM_neural_network_config.json",
+      "model_type": "neural_network_config",
+      "status": "config_available",
+      "config": {
+        "architecture": "lstm",
+        "input_length": 1000,
+        "hidden_dims": [
+          32
+        ],
+        "dropout_rate": 0.1,
+        "learning_rate": 0.001,
+        "batch_size": 32,
+        "epochs": 10,
+        "activation": "relu",
+        "optimizer": "adam",
+        "weight_decay": 0.0001,
+        "conv_filters": 64,
+        "conv_kernel_size": 3,
+        "lstm_units": 64,
+        "transformer_heads": 8,
+        "transformer_layers": 2,
+        "resnet_blocks": 2
+      }
+    },
+    "bidirectional_lstm_neural_network_config": {
+      "file_path": "models/bidirectional_lstm_neural_network_config.json",
+      "model_type": "neural_network_config",
+      "status": "config_available",
+      "config": {
+        "architecture": "bidirectional_lstm",
+        "input_length": 1000,
+        "hidden_dims": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "batch_size": 32,
+        "epochs": 50,
+        "activation": "relu",
+        "optimizer": "adam",
+        "weight_decay": 0.0001,
+        "conv_filters": 64,
+        "conv_kernel_size": 3,
+        "lstm_units": 64,
+        "transformer_heads": 8,
+        "transformer_layers": 2,
+        "resnet_blocks": 2
+      }
+    },
+    "enhanced_transformer_config": {
+      "file_path": "models/enhanced_transformer_config.json",
+      "model_type": "neural_network_config",
+      "status": "config_available",
+      "config": {
+        "architecture": "transformer",
+        "input_length": 1000,
+        "hidden_dims": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "batch_size": 16,
+        "epochs": 30,
+        "activation": "relu",
+        "optimizer": "adam",
+        "weight_decay": 0.0001
+      }
+    },
+    "lstm_neural_network_config": {
+      "file_path": "models/lstm_neural_network_config.json",
+      "model_type": "neural_network_config",
+      "status": "config_available",
+      "config": {
+        "architecture": "lstm",
+        "input_length": 1000,
+        "hidden_dims": [
+          32
+        ],
+        "dropout_rate": 0.1,
+        "learning_rate": 0.001,
+        "batch_size": 32,
+        "epochs": 30,
+        "activation": "relu",
+        "optimizer": "adam",
+        "weight_decay": 0.0001,
+        "conv_filters": 64,
+        "conv_kernel_size": 3,
+        "lstm_units": 64,
+        "transformer_heads": 8,
+        "transformer_layers": 2,
+        "resnet_blocks": 2
+      }
+    },
+    "resnet_neural_network_config": {
+      "file_path": "models/resnet_neural_network_config.json",
+      "model_type": "neural_network_config",
+      "status": "config_available",
+      "config": {
+        "architecture": "resnet",
+        "input_length": 1000,
+        "hidden_dims": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "batch_size": 32,
+        "epochs": 30,
+        "activation": "relu",
+        "optimizer": "adam",
+        "weight_decay": 0.0001,
+        "conv_filters": 64,
+        "conv_kernel_size": 3,
+        "lstm_units": 64,
+        "transformer_heads": 8,
+        "transformer_layers": 2,
+        "resnet_blocks": 2
+      }
+    },
+    "Feedforward_neural_network_config": {
+      "file_path": "models/Feedforward_neural_network_config.json",
+      "model_type": "neural_network_config",
+      "status": "config_available",
+      "config": {
+        "architecture": "feedforward",
+        "input_length": 1000,
+        "hidden_dims": [
+          128,
+          64,
+          32
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "batch_size": 32,
+        "epochs": 20,
+        "activation": "relu",
+        "optimizer": "adam",
+        "weight_decay": 0.0001,
+        "conv_filters": 64,
+        "conv_kernel_size": 3,
+        "lstm_units": 64,
+        "transformer_heads": 8,
+        "transformer_layers": 2,
+        "resnet_blocks": 2
+      }
+    }
+  }
+}

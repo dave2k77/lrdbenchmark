@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comprehensive Adaptive Estimators Demo &mdash; LRDBenchmark 1.7.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+    <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/examples/comprehensive_adaptive_demo.html" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=030dc6f6"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Comprehensive LRDBench Demonstration" href="comprehensive_demo.html" />
+    <link rel="prev" title="Validation Techniques and Statistical Tests" href="../research/validation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LRDBenchmark
+          </a>
+              <div class="version">
+                1.7.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/machine_learning_estimators.html">Machine Learning Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/neural_network_factory.html">Neural Network Factory API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/adaptive_estimators.html">Comprehensive Adaptive Estimators API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/contamination_factory.html">Contamination Factory API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/estimators.html">Estimators API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/data_models.html">Data Models API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/benchmark.html">Benchmark API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/analytics.html">Analytics API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html">Theoretical Foundations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html#statistical-estimators">Statistical Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html#theoretical-performance-considerations">Theoretical Performance Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html#practical-examples">Practical Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/theory.html#theoretical-references">Theoretical References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html">Validation Techniques and Statistical Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#monte-carlo-validation">Monte Carlo Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#bootstrap-methods">Bootstrap Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#cross-validation">Cross-Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#robustness-analysis">Robustness Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#validation-statistical-tests">Validation Statistical Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#model-selection">Model Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#validation-performance-metrics">Validation Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#quality-assurance">Quality Assurance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/validation.html#validation-references">Validation References</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Comprehensive Adaptive Estimators Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comprehensive_demo.html">Comprehensive LRDBench Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comprehensive_demo.html#basic-data-generation-and-analysis">Basic Data Generation and Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comprehensive_demo.html#advanced-benchmarking">Advanced Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comprehensive_demo.html#machine-learning-and-neural-network-analysis">Machine Learning and Neural Network Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comprehensive_demo.html#analytics-and-monitoring">Analytics and Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comprehensive_demo.html#real-world-application-example">Real-World Application Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comprehensive_demo.html#integration-with-external-libraries">Integration with External Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comprehensive_demo.html#complete-workflow-example">Complete Workflow Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comprehensive_demo.html#summary">Summary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LRDBenchmark</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Comprehensive Adaptive Estimators Demo</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/examples/comprehensive_adaptive_demo.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="comprehensive-adaptive-estimators-demo">
+<h1>Comprehensive Adaptive Estimators Demo<a class="headerlink" href="#comprehensive-adaptive-estimators-demo" title="Link to this heading"></a></h1>
+<p>This comprehensive demo showcases the new adaptive estimator system with automatic framework selection, robust error handling, and EEG contamination testing.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The comprehensive adaptive estimators provide:</p>
+<ul class="simple">
+<li><p><strong>Automatic Framework Selection</strong>: GPU/JAX, CPU/Numba, or NumPy based on data characteristics</p></li>
+<li><p><strong>Robust Error Handling</strong>: Adaptive parameter selection and progressive fallbacks</p></li>
+<li><p><strong>Performance Profiling</strong>: Built-in performance monitoring and optimization</p></li>
+<li><p><strong>EEG Contamination Testing</strong>: Realistic artifact scenarios for biomedical applications</p></li>
+<li><p><strong>Mathematical Verification</strong>: All estimators verified against theoretical foundations</p></li>
+</ul>
+</section>
+<section id="basic-usage">
+<h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.analysis.comprehensive_adaptive_estimators</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_all_comprehensive_adaptive_classical_estimators</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.data_models.fbm.fbm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Get all comprehensive adaptive estimators</span>
+<span class="n">estimators</span> <span class="o">=</span> <span class="n">get_all_comprehensive_adaptive_classical_estimators</span><span class="p">()</span>
+
+<span class="c1"># Generate test data</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Comprehensive Adaptive Estimators Demo&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated FBM data with true H = 0.7&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data mean: </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, std: </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Test all estimators</span>
+<span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">estimator</span> <span class="ow">in</span> <span class="n">estimators</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">25s</span><span class="si">}</span><span class="s2">: H=</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;hurst_parameter&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;Framework=</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;framework_used&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">15s</span><span class="si">}</span><span class="s2">, &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;Time=</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;execution_time&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">25s</span><span class="si">}</span><span class="s2">: Failed - </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Calculate average error</span>
+<span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;hurst_parameter&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Average absolute error: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best estimator: </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span><span class="w"> </span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span><span class="w"> </span><span class="n">k</span><span class="p">:</span><span class="w"> </span><span class="nb">abs</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;hurst_parameter&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">0.7</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="performance-comparison">
+<h2>Performance Comparison<a class="headerlink" href="#performance-comparison" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.analysis.comprehensive_adaptive_estimators</span><span class="w"> </span><span class="kn">import</span> <span class="n">ComprehensiveAdaptiveRS</span><span class="p">,</span> <span class="n">ComprehensiveAdaptiveDFA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.data_models.fbm.fbm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="c1"># Generate test data</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Performance Comparison Demo&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Test R/S estimator</span>
+<span class="n">rs_estimator</span> <span class="o">=</span> <span class="n">ComprehensiveAdaptiveRS</span><span class="p">(</span><span class="n">enable_profiling</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">rs_result</span> <span class="o">=</span> <span class="n">rs_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">rs_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+
+<span class="c1"># Test DFA estimator</span>
+<span class="n">dfa_estimator</span> <span class="o">=</span> <span class="n">ComprehensiveAdaptiveDFA</span><span class="p">(</span><span class="n">enable_profiling</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">dfa_result</span> <span class="o">=</span> <span class="n">dfa_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">dfa_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R/S Analysis:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Hurst estimate: </span><span class="si">{</span><span class="n">rs_result</span><span class="p">[</span><span class="s1">&#39;hurst_parameter&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Framework used: </span><span class="si">{</span><span class="n">rs_result</span><span class="p">[</span><span class="s1">&#39;framework_used&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Execution time: </span><span class="si">{</span><span class="n">rs_time</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Framework reasoning: </span><span class="si">{</span><span class="n">rs_result</span><span class="p">[</span><span class="s1">&#39;framework_reasoning&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">DFA Analysis:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Hurst estimate: </span><span class="si">{</span><span class="n">dfa_result</span><span class="p">[</span><span class="s1">&#39;hurst_parameter&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Framework used: </span><span class="si">{</span><span class="n">dfa_result</span><span class="p">[</span><span class="s1">&#39;framework_used&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Execution time: </span><span class="si">{</span><span class="n">dfa_time</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Framework reasoning: </span><span class="si">{</span><span class="n">dfa_result</span><span class="p">[</span><span class="s1">&#39;framework_reasoning&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Get performance information</span>
+<span class="n">rs_perf</span> <span class="o">=</span> <span class="n">rs_estimator</span><span class="o">.</span><span class="n">get_performance_info</span><span class="p">()</span>
+<span class="n">dfa_perf</span> <span class="o">=</span> <span class="n">dfa_estimator</span><span class="o">.</span><span class="n">get_performance_info</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Performance Summary:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R/S total runs: </span><span class="si">{</span><span class="n">rs_perf</span><span class="p">[</span><span class="s1">&#39;total_runs&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DFA total runs: </span><span class="si">{</span><span class="n">dfa_perf</span><span class="p">[</span><span class="s1">&#39;total_runs&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="eeg-contamination-testing">
+<h2>EEG Contamination Testing<a class="headerlink" href="#eeg-contamination-testing" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.analysis.comprehensive_adaptive_estimators</span><span class="w"> </span><span class="kn">import</span> <span class="n">ComprehensiveAdaptiveDFA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.contamination.contamination_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContaminationFactory</span><span class="p">,</span> <span class="n">ConfoundingScenario</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.data_models.fbm.fbm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create estimator and contamination factory</span>
+<span class="n">estimator</span> <span class="o">=</span> <span class="n">ComprehensiveAdaptiveDFA</span><span class="p">()</span>
+<span class="n">contamination_factory</span> <span class="o">=</span> <span class="n">ContaminationFactory</span><span class="p">()</span>
+
+<span class="c1"># Generate pure data</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">pure_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Get pure data estimate</span>
+<span class="n">pure_result</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">pure_data</span><span class="p">)</span>
+<span class="n">pure_h</span> <span class="o">=</span> <span class="n">pure_result</span><span class="p">[</span><span class="s1">&#39;hurst_parameter&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;EEG Contamination Testing Demo&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pure data H estimate: </span><span class="si">{</span><span class="n">pure_h</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pure data framework: </span><span class="si">{</span><span class="n">pure_result</span><span class="p">[</span><span class="s1">&#39;framework_used&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># EEG contamination scenarios</span>
+<span class="n">eeg_scenarios</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_OCULAR_ARTIFACTS</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_MUSCLE_ARTIFACTS</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_CARDIAC_ARTIFACTS</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_ELECTRODE_POPPING</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_ELECTRODE_DRIFT</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_60HZ_NOISE</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_SWEAT_ARTIFACTS</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_MOVEMENT_ARTIFACTS</span>
+<span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">EEG Contamination Results:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Scenario&#39;</span><span class="si">:</span><span class="s2">&lt;25s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;H Estimate&#39;</span><span class="si">:</span><span class="s2">&lt;12s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Error&#39;</span><span class="si">:</span><span class="s2">&lt;8s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Framework&#39;</span><span class="si">:</span><span class="s2">&lt;15s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="n">eeg_scenarios</span><span class="p">:</span>
+    <span class="n">contaminated_data</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="n">contamination_factory</span><span class="o">.</span><span class="n">apply_confounding</span><span class="p">(</span>
+        <span class="n">pure_data</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="mf">0.3</span>
+    <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">contaminated_data</span><span class="p">)</span>
+
+    <span class="n">h_est</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;hurst_parameter&#39;</span><span class="p">]</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">h_est</span> <span class="o">-</span> <span class="n">pure_h</span><span class="p">)</span>
+    <span class="n">framework</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;framework_used&#39;</span><span class="p">]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scenario</span><span class="o">.</span><span class="n">value</span><span class="si">:</span><span class="s2">&lt;25s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">h_est</span><span class="si">:</span><span class="s2">&lt;12.4f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">error</span><span class="si">:</span><span class="s2">&lt;8.4f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">framework</span><span class="si">:</span><span class="s2">&lt;15s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Calculate robustness metrics</span>
+<span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="n">eeg_scenarios</span><span class="p">:</span>
+    <span class="n">contaminated_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">contamination_factory</span><span class="o">.</span><span class="n">apply_confounding</span><span class="p">(</span>
+        <span class="n">pure_data</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="mf">0.3</span>
+    <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">contaminated_data</span><span class="p">)</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;hurst_parameter&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">pure_h</span><span class="p">)</span>
+    <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Robustness Summary:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Average error: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Max error: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Min error: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Std error: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="data-length-robustness-testing">
+<h2>Data Length Robustness Testing<a class="headerlink" href="#data-length-robustness-testing" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.analysis.comprehensive_adaptive_estimators</span><span class="w"> </span><span class="kn">import</span> <span class="n">ComprehensiveAdaptiveGPH</span><span class="p">,</span> <span class="n">ComprehensiveAdaptiveCWT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.data_models.fbm.fbm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create estimators</span>
+<span class="n">gph_estimator</span> <span class="o">=</span> <span class="n">ComprehensiveAdaptiveGPH</span><span class="p">()</span>
+<span class="n">cwt_estimator</span> <span class="o">=</span> <span class="n">ComprehensiveAdaptiveCWT</span><span class="p">()</span>
+
+<span class="c1"># Generate test data</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="c1"># Test different data lengths</span>
+<span class="n">data_lengths</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data Length Robustness Testing&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Length&#39;</span><span class="si">:</span><span class="s2">&lt;8s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;GPH H&#39;</span><span class="si">:</span><span class="s2">&lt;8s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;GPH Error&#39;</span><span class="si">:</span><span class="s2">&lt;10s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;CWT H&#39;</span><span class="si">:</span><span class="s2">&lt;8s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;CWT Error&#39;</span><span class="si">:</span><span class="s2">&lt;10s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">data_lengths</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+    <span class="c1"># Test GPH</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">gph_result</span> <span class="o">=</span> <span class="n">gph_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">gph_h</span> <span class="o">=</span> <span class="n">gph_result</span><span class="p">[</span><span class="s1">&#39;hurst_parameter&#39;</span><span class="p">]</span>
+        <span class="n">gph_error</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">gph_h</span> <span class="o">-</span> <span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">gph_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gph_h</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">gph_err_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gph_error</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">gph_str</span> <span class="o">=</span> <span class="s2">&quot;Failed&quot;</span>
+        <span class="n">gph_err_str</span> <span class="o">=</span> <span class="s2">&quot;N/A&quot;</span>
+
+    <span class="c1"># Test CWT</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cwt_result</span> <span class="o">=</span> <span class="n">cwt_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">cwt_h</span> <span class="o">=</span> <span class="n">cwt_result</span><span class="p">[</span><span class="s1">&#39;hurst_parameter&#39;</span><span class="p">]</span>
+        <span class="n">cwt_error</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">cwt_h</span> <span class="o">-</span> <span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">cwt_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cwt_h</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">cwt_err_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cwt_error</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">cwt_str</span> <span class="o">=</span> <span class="s2">&quot;Failed&quot;</span>
+        <span class="n">cwt_err_str</span> <span class="o">=</span> <span class="s2">&quot;N/A&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">length</span><span class="si">:</span><span class="s2">&lt;8d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">gph_str</span><span class="si">:</span><span class="s2">&lt;8s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">gph_err_str</span><span class="si">:</span><span class="s2">&lt;10s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">cwt_str</span><span class="si">:</span><span class="s2">&lt;8s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">cwt_err_str</span><span class="si">:</span><span class="s2">&lt;10s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="framework-selection-analysis">
+<h2>Framework Selection Analysis<a class="headerlink" href="#framework-selection-analysis" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.analysis.comprehensive_adaptive_estimators</span><span class="w"> </span><span class="kn">import</span> <span class="n">ComprehensiveAdaptiveRS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.data_models.fbm.fbm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create estimator with profiling</span>
+<span class="n">estimator</span> <span class="o">=</span> <span class="n">ComprehensiveAdaptiveRS</span><span class="p">(</span><span class="n">enable_profiling</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Generate test data</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="c1"># Test with different data sizes</span>
+<span class="n">data_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">10000</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Framework Selection Analysis&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Data Size&#39;</span><span class="si">:</span><span class="s2">&lt;10s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Framework&#39;</span><span class="si">:</span><span class="s2">&lt;15s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Time (s)&#39;</span><span class="si">:</span><span class="s2">&lt;10s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;H Estimate&#39;</span><span class="si">:</span><span class="s2">&lt;12s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">data_sizes</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">size</span><span class="si">:</span><span class="s2">&lt;10d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;framework_used&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;15s</span><span class="si">}</span><span class="s2"> &quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;execution_time&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;10.4f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;hurst_parameter&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;12.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Get performance information</span>
+<span class="n">perf_info</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">get_performance_info</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Performance Summary:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total runs: </span><span class="si">{</span><span class="n">perf_info</span><span class="p">[</span><span class="s1">&#39;total_runs&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Frameworks used: </span><span class="si">{</span><span class="n">perf_info</span><span class="p">[</span><span class="s1">&#39;frameworks_used&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="comprehensive-benchmark">
+<h2>Comprehensive Benchmark<a class="headerlink" href="#comprehensive-benchmark" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.analysis.comprehensive_adaptive_estimators</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_all_comprehensive_adaptive_classical_estimators</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.contamination.contamination_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContaminationFactory</span><span class="p">,</span> <span class="n">ConfoundingScenario</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.data_models.fbm.fbm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.data_models.fgn.fgn_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">FGNModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Get all estimators</span>
+<span class="n">estimators</span> <span class="o">=</span> <span class="n">get_all_comprehensive_adaptive_classical_estimators</span><span class="p">()</span>
+<span class="n">contamination_factory</span> <span class="o">=</span> <span class="n">ContaminationFactory</span><span class="p">()</span>
+
+<span class="c1"># Test scenarios</span>
+<span class="n">data_models</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;FBM&#39;</span><span class="p">:</span> <span class="n">FBMModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="s1">&#39;FGN&#39;</span><span class="p">:</span> <span class="n">FGNModel</span><span class="p">(</span><span class="n">H</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">contamination_scenarios</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">PURE</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">GAUSSIAN_NOISE</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_OCULAR_ARTIFACTS</span><span class="p">,</span>
+    <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">EEG_MUSCLE_ARTIFACTS</span>
+<span class="p">]</span>
+
+<span class="n">data_lengths</span> <span class="o">=</span> <span class="p">[</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Comprehensive Benchmark Demo&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+
+<span class="c1"># Store results</span>
+<span class="n">all_results</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">data_models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">data_lengths</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="n">contamination_scenarios</span><span class="p">:</span>
+            <span class="c1"># Generate data</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+            <span class="c1"># Apply contamination</span>
+            <span class="k">if</span> <span class="n">scenario</span> <span class="o">!=</span> <span class="n">ConfoundingScenario</span><span class="o">.</span><span class="n">PURE</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="n">contamination_factory</span><span class="o">.</span><span class="n">apply_confounding</span><span class="p">(</span>
+                    <span class="n">data</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="mf">0.3</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Test all estimators</span>
+            <span class="k">for</span> <span class="n">est_name</span><span class="p">,</span> <span class="n">estimator</span> <span class="ow">in</span> <span class="n">estimators</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                    <span class="n">all_results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                        <span class="s1">&#39;Model&#39;</span><span class="p">:</span> <span class="n">model_name</span><span class="p">,</span>
+                        <span class="s1">&#39;Length&#39;</span><span class="p">:</span> <span class="n">length</span><span class="p">,</span>
+                        <span class="s1">&#39;Scenario&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="s1">&#39;Estimator&#39;</span><span class="p">:</span> <span class="n">est_name</span><span class="p">,</span>
+                        <span class="s1">&#39;H_Estimate&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;hurst_parameter&#39;</span><span class="p">],</span>
+                        <span class="s1">&#39;Framework&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;framework_used&#39;</span><span class="p">],</span>
+                        <span class="s1">&#39;Time&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;execution_time&#39;</span><span class="p">],</span>
+                        <span class="s1">&#39;Success&#39;</span><span class="p">:</span> <span class="kc">True</span>
+                    <span class="p">})</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">all_results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                        <span class="s1">&#39;Model&#39;</span><span class="p">:</span> <span class="n">model_name</span><span class="p">,</span>
+                        <span class="s1">&#39;Length&#39;</span><span class="p">:</span> <span class="n">length</span><span class="p">,</span>
+                        <span class="s1">&#39;Scenario&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="s1">&#39;Estimator&#39;</span><span class="p">:</span> <span class="n">est_name</span><span class="p">,</span>
+                        <span class="s1">&#39;H_Estimate&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                        <span class="s1">&#39;Framework&#39;</span><span class="p">:</span> <span class="s1">&#39;Failed&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;Time&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="s1">&#39;Success&#39;</span><span class="p">:</span> <span class="kc">False</span>
+                    <span class="p">})</span>
+
+<span class="c1"># Create DataFrame</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_results</span><span class="p">)</span>
+
+<span class="c1"># Calculate success rate</span>
+<span class="n">success_rate</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Success&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Overall success rate: </span><span class="si">{</span><span class="n">success_rate</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+
+<span class="c1"># Calculate average error (for successful estimates)</span>
+<span class="n">successful_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Success&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span>
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">successful_df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="c1"># Calculate error for FBM (true H = 0.7)</span>
+    <span class="n">fbm_df</span> <span class="o">=</span> <span class="n">successful_df</span><span class="p">[</span><span class="n">successful_df</span><span class="p">[</span><span class="s1">&#39;Model&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;FBM&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fbm_df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">fbm_df</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fbm_df</span><span class="p">[</span><span class="s1">&#39;H_Estimate&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">avg_error</span> <span class="o">=</span> <span class="n">fbm_df</span><span class="p">[</span><span class="s1">&#39;Error&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Average error (FBM): </span><span class="si">{</span><span class="n">avg_error</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Framework usage statistics</span>
+<span class="n">framework_usage</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Framework&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Framework usage:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">framework</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">framework_usage</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">framework</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">count</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Estimator performance</span>
+<span class="n">estimator_success</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Estimator&#39;</span><span class="p">)[</span><span class="s1">&#39;Success&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Estimator success rates:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">success_rate</span> <span class="ow">in</span> <span class="n">estimator_success</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">estimator</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">success_rate</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Use Comprehensive Adaptive Estimators</strong>: They provide the most robust and efficient estimation</p></li>
+<li><p><strong>Enable Performance Profiling</strong>: Monitor framework selection and performance</p></li>
+<li><p><strong>Test with Contamination</strong>: Use realistic contamination scenarios for robustness testing</p></li>
+<li><p><strong>Compare Multiple Estimators</strong>: Different estimators may perform better for different data types</p></li>
+<li><p><strong>Validate with Known Data</strong>: Test on synthetic data with known Hurst parameters</p></li>
+<li><p><strong>Monitor Framework Selection</strong>: Understand which frameworks are being used and why</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The comprehensive adaptive estimators automatically handle most edge cases and
+provide the most reliable way to estimate Hurst parameters from time series data.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>While the adaptive system is robust, very short data (&lt; 50 points) may still
+produce unreliable results regardless of the framework used.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../research/validation.html" class="btn btn-neutral float-left" title="Validation Techniques and Statistical Tests" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="comprehensive_demo.html" class="btn btn-neutral float-right" title="Comprehensive LRDBench Demonstration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Davian Chin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

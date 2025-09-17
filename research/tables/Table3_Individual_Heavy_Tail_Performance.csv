@@ -1,0 +1,16 @@
+Rank,Estimator,Category,Heavy_Tail_MAE,Success_Rate,Robustness
+1,CNN,Neural,0.236,100,Excellent
+2,LSTM,Neural,0.236,100,Excellent
+3,GRU,Neural,0.236,100,Excellent
+4,Transformer,Neural,0.236,100,Excellent
+5,GradientBoosting,ML,0.219,100,Excellent
+6,SVR,ML,0.219,100,Excellent
+7,RandomForest,ML,0.219,100,Excellent
+8,R/S,Classical,0.277,100,Good
+9,Whittle,Classical,0.277,100,Good
+10,Periodogram,Classical,0.277,75,Good
+11,CWT,Classical,0.277,75,Good
+12,GPH,Classical,0.277,75,Good
+13,DFA,Classical,0.277,75,Good
+14,DMA,Classical,0.277,75,Good
+15,Higuchi,Classical,0.277,75,Good

@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lrdbenchmark.analysis.comprehensive_adaptive_estimators &mdash; LRDBenchmark 1.7.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+    <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/_modules/lrdbenchmark/analysis/comprehensive_adaptive_estimators.html" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=030dc6f6"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LRDBenchmark
+          </a>
+              <div class="version">
+                1.7.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/machine_learning_estimators.html">Machine Learning Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/neural_network_factory.html">Neural Network Factory API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/adaptive_estimators.html">Comprehensive Adaptive Estimators API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/contamination_factory.html">Contamination Factory API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/estimators.html">Estimators API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/data_models.html">Data Models API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/benchmark.html">Benchmark API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/analytics.html">Analytics API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html">Theoretical Foundations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#statistical-estimators">Statistical Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#theoretical-performance-considerations">Theoretical Performance Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#practical-examples">Practical Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#theoretical-references">Theoretical References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html">Validation Techniques and Statistical Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#monte-carlo-validation">Monte Carlo Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#bootstrap-methods">Bootstrap Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#cross-validation">Cross-Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#robustness-analysis">Robustness Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#validation-statistical-tests">Validation Statistical Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#model-selection">Model Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#validation-performance-metrics">Validation Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#quality-assurance">Quality Assurance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#validation-references">Validation References</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_adaptive_demo.html">Comprehensive Adaptive Estimators Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html">Comprehensive LRDBench Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#basic-data-generation-and-analysis">Basic Data Generation and Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#advanced-benchmarking">Advanced Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#machine-learning-and-neural-network-analysis">Machine Learning and Neural Network Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#analytics-and-monitoring">Analytics and Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#real-world-application-example">Real-World Application Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#integration-with-external-libraries">Integration with External Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#complete-workflow-example">Complete Workflow Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#summary">Summary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LRDBenchmark</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">lrdbenchmark.analysis.comprehensive_adaptive_estimators</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lrdbenchmark.analysis.comprehensive_adaptive_estimators</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Comprehensive Adaptive Classical Estimators for LRDBenchmark</span>
+
+<span class="sd">This module provides comprehensive adaptive versions of all classical LRD estimators that</span>
+<span class="sd">automatically select the optimal computation framework (GPU/JAX, CPU/Numba, or NumPy)</span>
+<span class="sd">and include improved implementations with robust error handling.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.optimization_backend</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_optimization_backend</span><span class="p">,</span> 
+    <span class="n">OptimizationFramework</span><span class="p">,</span> 
+    <span class="n">OptimizationBackend</span>
+<span class="p">)</span>
+
+<span class="c1"># Import optimization frameworks</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">vmap</span>
+    <span class="n">JAX_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">JAX_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numba</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">numba</span><span class="w"> </span><span class="kn">import</span> <span class="n">jit</span> <span class="k">as</span> <span class="n">numba_jit</span><span class="p">,</span> <span class="n">prange</span>
+    <span class="n">NUMBA_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">NUMBA_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># Import existing unified estimators</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.temporal.rs.rs_estimator_unified</span><span class="w"> </span><span class="kn">import</span> <span class="n">RSEstimator</span> <span class="k">as</span> <span class="n">BaseRSEstimator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.temporal.dfa.dfa_estimator_unified</span><span class="w"> </span><span class="kn">import</span> <span class="n">DFAEstimator</span> <span class="k">as</span> <span class="n">BaseDFAEstimator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.temporal.dma.dma_estimator_unified</span><span class="w"> </span><span class="kn">import</span> <span class="n">DMAEstimator</span> <span class="k">as</span> <span class="n">BaseDMAEstimator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.temporal.higuchi.higuchi_estimator_unified</span><span class="w"> </span><span class="kn">import</span> <span class="n">HiguchiEstimator</span> <span class="k">as</span> <span class="n">BaseHiguchiEstimator</span>
+
+<span class="c1"># Import improved estimators</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.spectral.gph.gph_estimator_improved</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImprovedGPHEstimator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.spectral.periodogram.periodogram_estimator_improved</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImprovedPeriodogramEstimator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.spectral.whittle.whittle_estimator_unified</span><span class="w"> </span><span class="kn">import</span> <span class="n">WhittleEstimator</span> <span class="k">as</span> <span class="n">BaseWhittleEstimator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.wavelet.cwt.cwt_estimator_improved</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImprovedCWTEstimator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.wavelet.variance.variance_estimator_unified</span><span class="w"> </span><span class="kn">import</span> <span class="n">WaveletVarianceEstimator</span> <span class="k">as</span> <span class="n">BaseWaveletVarianceEstimator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.wavelet.log_variance.log_variance_estimator_unified</span><span class="w"> </span><span class="kn">import</span> <span class="n">WaveletLogVarianceEstimator</span> <span class="k">as</span> <span class="n">BaseWaveletLogVarianceEstimator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.wavelet.whittle.whittle_estimator_unified</span><span class="w"> </span><span class="kn">import</span> <span class="n">WaveletWhittleEstimator</span> <span class="k">as</span> <span class="n">BaseWaveletWhittleEstimator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.multifractal.mfdfa.mfdfa_estimator_unified</span><span class="w"> </span><span class="kn">import</span> <span class="n">MFDFAEstimator</span> <span class="k">as</span> <span class="n">BaseMFDFAEstimator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.multifractal.wavelet_leaders.wavelet_leaders_estimator_unified</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultifractalWaveletLeadersEstimator</span> <span class="k">as</span> <span class="n">BaseMultifractalWaveletLeadersEstimator</span>
+
+
+<div class="viewcode-block" id="ComprehensiveAdaptiveEstimator">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveEstimator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComprehensiveAdaptiveEstimator</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for comprehensive adaptive classical estimators that automatically select optimal</span>
+<span class="sd">    computation frameworks and include robust error handling.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">estimator_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">backend</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">OptimizationBackend</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">enable_profiling</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the adaptive estimator.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator_name : str</span>
+<span class="sd">            Name of the estimator</span>
+<span class="sd">        backend : OptimizationBackend, optional</span>
+<span class="sd">            Optimization backend to use. If None, uses global backend.</span>
+<span class="sd">        enable_profiling : bool</span>
+<span class="sd">            Whether to enable performance profiling</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimator_name</span> <span class="o">=</span> <span class="n">estimator_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span> <span class="ow">or</span> <span class="n">get_optimization_backend</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enable_profiling</span> <span class="o">=</span> <span class="n">enable_profiling</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="c1"># Performance tracking</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">performance_history</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_framework</span> <span class="o">=</span> <span class="kc">None</span>
+        
+    <span class="k">def</span><span class="w"> </span><span class="nf">estimate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimate parameters using the adaptive framework selection.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : array-like</span>
+<span class="sd">            Input time series data</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Estimation results</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="c1"># Get framework recommendation</span>
+        <span class="n">recommendation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_framework_recommendation</span><span class="p">(</span>
+            <span class="n">data_size</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> 
+            <span class="n">computation_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator_name</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_framework</span> <span class="o">=</span> <span class="n">OptimizationFramework</span><span class="p">(</span><span class="n">recommendation</span><span class="p">[</span><span class="s2">&quot;recommended_framework&quot;</span><span class="p">])</span>
+        
+        <span class="c1"># Select the appropriate implementation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_framework</span> <span class="o">==</span> <span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">JAX</span> <span class="ow">and</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_jax</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">result</span><span class="p">[</span><span class="s2">&quot;framework_used&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span>
+                <span class="n">result</span><span class="p">[</span><span class="s2">&quot;framework_reasoning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">recommendation</span><span class="p">[</span><span class="s2">&quot;reasoning&quot;</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;JAX implementation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">, falling back to NumPy&quot;</span><span class="p">)</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">result</span><span class="p">[</span><span class="s2">&quot;framework_used&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy_fallback&quot;</span>
+                <span class="n">result</span><span class="p">[</span><span class="s2">&quot;framework_reasoning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;JAX failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_framework</span> <span class="o">==</span> <span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">NUMBA</span> <span class="ow">and</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numba</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">result</span><span class="p">[</span><span class="s2">&quot;framework_used&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span>
+                <span class="n">result</span><span class="p">[</span><span class="s2">&quot;framework_reasoning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">recommendation</span><span class="p">[</span><span class="s2">&quot;reasoning&quot;</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Numba implementation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">, falling back to NumPy&quot;</span><span class="p">)</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">result</span><span class="p">[</span><span class="s2">&quot;framework_used&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy_fallback&quot;</span>
+                <span class="n">result</span><span class="p">[</span><span class="s2">&quot;framework_reasoning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Numba failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">result</span><span class="p">[</span><span class="s2">&quot;framework_used&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+            <span class="n">result</span><span class="p">[</span><span class="s2">&quot;framework_reasoning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">recommendation</span><span class="p">[</span><span class="s2">&quot;reasoning&quot;</span><span class="p">]</span>
+        
+        <span class="c1"># Profile the computation if enabled</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enable_profiling</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_profile_computation</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        
+        <span class="c1"># Store results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="n">result</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_profile_computation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Profile the computation and update performance history.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;execution_time&quot;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">profile_computation</span><span class="p">(</span>
+                <span class="n">func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_with_framework</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_framework</span><span class="p">),</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                <span class="n">framework</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_framework</span><span class="p">,</span>
+                <span class="n">computation_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator_name</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">performance_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_with_framework</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">framework</span><span class="p">:</span> <span class="n">OptimizationFramework</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Estimate using a specific framework.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">framework</span> <span class="o">==</span> <span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">JAX</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_jax</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">framework</span> <span class="o">==</span> <span class="n">OptimizationFramework</span><span class="o">.</span><span class="n">NUMBA</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numba</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NumPy implementation of the estimator.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Numba implementation of the estimator.&quot;&quot;&quot;</span>
+        <span class="c1"># Default: fall back to NumPy implementation</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;JAX implementation of the estimator.&quot;&quot;&quot;</span>
+        <span class="c1"># Default: fall back to NumPy implementation</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_performance_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get performance information for this estimator.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">performance_history</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No performance data available&quot;</span><span class="p">}</span>
+        
+        <span class="n">frameworks_used</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">profile</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">performance_history</span><span class="p">:</span>
+            <span class="n">framework</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">framework</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">if</span> <span class="n">framework</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">frameworks_used</span><span class="p">:</span>
+                <span class="n">frameworks_used</span><span class="p">[</span><span class="n">framework</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;total_time&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                    <span class="s2">&quot;success_rate&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                    <span class="s2">&quot;avg_accuracy&quot;</span><span class="p">:</span> <span class="mf">0.0</span>
+                <span class="p">}</span>
+            
+            <span class="n">frameworks_used</span><span class="p">[</span><span class="n">framework</span><span class="p">][</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">frameworks_used</span><span class="p">[</span><span class="n">framework</span><span class="p">][</span><span class="s2">&quot;total_time&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">profile</span><span class="o">.</span><span class="n">execution_time</span>
+            <span class="k">if</span> <span class="n">profile</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+                <span class="n">frameworks_used</span><span class="p">[</span><span class="n">framework</span><span class="p">][</span><span class="s2">&quot;success_rate&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">frameworks_used</span><span class="p">[</span><span class="n">framework</span><span class="p">][</span><span class="s2">&quot;avg_accuracy&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">profile</span><span class="o">.</span><span class="n">accuracy</span>
+        
+        <span class="c1"># Calculate averages</span>
+        <span class="k">for</span> <span class="n">framework</span> <span class="ow">in</span> <span class="n">frameworks_used</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">frameworks_used</span><span class="p">[</span><span class="n">framework</span><span class="p">][</span><span class="s2">&quot;count&quot;</span><span class="p">]</span>
+            <span class="n">frameworks_used</span><span class="p">[</span><span class="n">framework</span><span class="p">][</span><span class="s2">&quot;success_rate&quot;</span><span class="p">]</span> <span class="o">/=</span> <span class="n">count</span>
+            <span class="n">frameworks_used</span><span class="p">[</span><span class="n">framework</span><span class="p">][</span><span class="s2">&quot;avg_accuracy&quot;</span><span class="p">]</span> <span class="o">/=</span> <span class="n">count</span>
+            <span class="n">frameworks_used</span><span class="p">[</span><span class="n">framework</span><span class="p">][</span><span class="s2">&quot;avg_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">frameworks_used</span><span class="p">[</span><span class="n">framework</span><span class="p">][</span><span class="s2">&quot;total_time&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">count</span>
+            <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;estimator_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_name</span><span class="p">,</span>
+            <span class="s2">&quot;total_runs&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">performance_history</span><span class="p">),</span>
+            <span class="s2">&quot;frameworks_used&quot;</span><span class="p">:</span> <span class="n">frameworks_used</span><span class="p">,</span>
+            <span class="s2">&quot;current_framework&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_framework</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_framework</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="ComprehensiveAdaptiveRS">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveRS">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComprehensiveAdaptiveRS</span><span class="p">(</span><span class="n">ComprehensiveAdaptiveEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive adaptive R/S estimator with automatic framework selection.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveRS.__init__">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveRS.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">min_block_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                 <span class="n">max_block_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">num_blocks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;rs_analysis&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;min_block_size&quot;</span><span class="p">:</span> <span class="n">min_block_size</span><span class="p">,</span>
+            <span class="s2">&quot;max_block_size&quot;</span><span class="p">:</span> <span class="n">max_block_size</span><span class="p">,</span>
+            <span class="s2">&quot;num_blocks&quot;</span><span class="p">:</span> <span class="n">num_blocks</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">BaseRSEstimator</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveRS._estimate_numpy">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveRS._estimate_numpy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NumPy implementation of R/S estimation.&quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveRS._estimate_numba">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveRS._estimate_numba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Numba-optimized implementation of R/S estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveRS._estimate_jax">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveRS._estimate_jax">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;JAX-optimized implementation of R/S estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ComprehensiveAdaptiveDFA">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveDFA">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComprehensiveAdaptiveDFA</span><span class="p">(</span><span class="n">ComprehensiveAdaptiveEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive adaptive DFA estimator with automatic framework selection.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveDFA.__init__">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveDFA.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">min_scale</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                 <span class="n">max_scale</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">num_scales</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                 <span class="n">order</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;dfa_analysis&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;min_scale&quot;</span><span class="p">:</span> <span class="n">min_scale</span><span class="p">,</span>
+            <span class="s2">&quot;max_scale&quot;</span><span class="p">:</span> <span class="n">max_scale</span><span class="p">,</span>
+            <span class="s2">&quot;num_scales&quot;</span><span class="p">:</span> <span class="n">num_scales</span><span class="p">,</span>
+            <span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="n">order</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">BaseDFAEstimator</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveDFA._estimate_numpy">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveDFA._estimate_numpy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NumPy implementation of DFA estimation.&quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveDFA._estimate_numba">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveDFA._estimate_numba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Numba-optimized implementation of DFA estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveDFA._estimate_jax">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveDFA._estimate_jax">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;JAX-optimized implementation of DFA estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ComprehensiveAdaptiveDMA">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveDMA">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComprehensiveAdaptiveDMA</span><span class="p">(</span><span class="n">ComprehensiveAdaptiveEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive adaptive DMA estimator with automatic framework selection.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveDMA.__init__">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveDMA.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">min_scale</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                 <span class="n">max_scale</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">num_scales</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;dma_analysis&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;min_scale&quot;</span><span class="p">:</span> <span class="n">min_scale</span><span class="p">,</span>
+            <span class="s2">&quot;max_scale&quot;</span><span class="p">:</span> <span class="n">max_scale</span><span class="p">,</span>
+            <span class="s2">&quot;num_scales&quot;</span><span class="p">:</span> <span class="n">num_scales</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">BaseDMAEstimator</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveDMA._estimate_numpy">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveDMA._estimate_numpy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NumPy implementation of DMA estimation.&quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveDMA._estimate_numba">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveDMA._estimate_numba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Numba-optimized implementation of DMA estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveDMA._estimate_jax">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveDMA._estimate_jax">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;JAX-optimized implementation of DMA estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ComprehensiveAdaptiveHiguchi">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveHiguchi">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComprehensiveAdaptiveHiguchi</span><span class="p">(</span><span class="n">ComprehensiveAdaptiveEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive adaptive Higuchi estimator with automatic framework selection.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveHiguchi.__init__">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveHiguchi.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">max_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;higuchi_analysis&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;max_k&quot;</span><span class="p">:</span> <span class="n">max_k</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">BaseHiguchiEstimator</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveHiguchi._estimate_numpy">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveHiguchi._estimate_numpy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NumPy implementation of Higuchi estimation.&quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveHiguchi._estimate_numba">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveHiguchi._estimate_numba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Numba-optimized implementation of Higuchi estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveHiguchi._estimate_jax">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveHiguchi._estimate_jax">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;JAX-optimized implementation of Higuchi estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ComprehensiveAdaptiveGPH">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveGPH">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComprehensiveAdaptiveGPH</span><span class="p">(</span><span class="n">ComprehensiveAdaptiveEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive adaptive GPH estimator with improved implementation.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveGPH.__init__">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveGPH.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">min_freq_ratio</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">max_freq_ratio</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;gph_analysis&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;min_freq_ratio&quot;</span><span class="p">:</span> <span class="n">min_freq_ratio</span><span class="p">,</span>
+            <span class="s2">&quot;max_freq_ratio&quot;</span><span class="p">:</span> <span class="n">max_freq_ratio</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">ImprovedGPHEstimator</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveGPH._estimate_numpy">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveGPH._estimate_numpy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NumPy implementation of improved GPH estimation.&quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveGPH._estimate_numba">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveGPH._estimate_numba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Numba-optimized implementation of improved GPH estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveGPH._estimate_jax">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveGPH._estimate_jax">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;JAX-optimized implementation of improved GPH estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ComprehensiveAdaptiveWhittle">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWhittle">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComprehensiveAdaptiveWhittle</span><span class="p">(</span><span class="n">ComprehensiveAdaptiveEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive adaptive Whittle estimator with automatic framework selection.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWhittle.__init__">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWhittle.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">min_freq_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+                 <span class="n">max_freq_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;whittle_analysis&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;min_freq_ratio&quot;</span><span class="p">:</span> <span class="n">min_freq_ratio</span><span class="p">,</span>
+            <span class="s2">&quot;max_freq_ratio&quot;</span><span class="p">:</span> <span class="n">max_freq_ratio</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">BaseWhittleEstimator</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWhittle._estimate_numpy">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWhittle._estimate_numpy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NumPy implementation of Whittle estimation.&quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWhittle._estimate_numba">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWhittle._estimate_numba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Numba-optimized implementation of Whittle estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWhittle._estimate_jax">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWhittle._estimate_jax">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;JAX-optimized implementation of Whittle estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ComprehensiveAdaptivePeriodogram">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptivePeriodogram">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComprehensiveAdaptivePeriodogram</span><span class="p">(</span><span class="n">ComprehensiveAdaptiveEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive adaptive Periodogram estimator with improved implementation.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="ComprehensiveAdaptivePeriodogram.__init__">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptivePeriodogram.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">min_freq_ratio</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">max_freq_ratio</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;periodogram_analysis&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;min_freq_ratio&quot;</span><span class="p">:</span> <span class="n">min_freq_ratio</span><span class="p">,</span>
+            <span class="s2">&quot;max_freq_ratio&quot;</span><span class="p">:</span> <span class="n">max_freq_ratio</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">ImprovedPeriodogramEstimator</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptivePeriodogram._estimate_numpy">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptivePeriodogram._estimate_numpy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NumPy implementation of improved Periodogram estimation.&quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptivePeriodogram._estimate_numba">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptivePeriodogram._estimate_numba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Numba-optimized implementation of improved Periodogram estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptivePeriodogram._estimate_jax">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptivePeriodogram._estimate_jax">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;JAX-optimized implementation of improved Periodogram estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ComprehensiveAdaptiveCWT">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveCWT">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComprehensiveAdaptiveCWT</span><span class="p">(</span><span class="n">ComprehensiveAdaptiveEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive adaptive CWT estimator with improved implementation.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveCWT.__init__">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveCWT.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">wavelet</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cmor1.5-1.0&quot;</span><span class="p">,</span>
+                 <span class="n">scales</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;cwt_analysis&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;wavelet&quot;</span><span class="p">:</span> <span class="n">wavelet</span><span class="p">,</span>
+            <span class="s2">&quot;scales&quot;</span><span class="p">:</span> <span class="n">scales</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">ImprovedCWTEstimator</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveCWT._estimate_numpy">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveCWT._estimate_numpy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NumPy implementation of improved CWT estimation.&quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveCWT._estimate_numba">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveCWT._estimate_numba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Numba-optimized implementation of improved CWT estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveCWT._estimate_jax">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveCWT._estimate_jax">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;JAX-optimized implementation of improved CWT estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletVar">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletVar">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComprehensiveAdaptiveWaveletVar</span><span class="p">(</span><span class="n">ComprehensiveAdaptiveEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive adaptive Wavelet Variance estimator with automatic framework selection.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletVar.__init__">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletVar.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">wavelet</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db4&quot;</span><span class="p">,</span>
+                 <span class="n">scales</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;wavelet_variance_analysis&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;wavelet&quot;</span><span class="p">:</span> <span class="n">wavelet</span><span class="p">,</span>
+            <span class="s2">&quot;scales&quot;</span><span class="p">:</span> <span class="n">scales</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">BaseWaveletVarianceEstimator</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletVar._estimate_numpy">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletVar._estimate_numpy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NumPy implementation of Wavelet Variance estimation.&quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletVar._estimate_numba">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletVar._estimate_numba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Numba-optimized implementation of Wavelet Variance estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletVar._estimate_jax">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletVar._estimate_jax">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;JAX-optimized implementation of Wavelet Variance estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletLogVar">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletLogVar">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComprehensiveAdaptiveWaveletLogVar</span><span class="p">(</span><span class="n">ComprehensiveAdaptiveEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive adaptive Wavelet Log Variance estimator with automatic framework selection.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletLogVar.__init__">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletLogVar.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">wavelet</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db4&quot;</span><span class="p">,</span>
+                 <span class="n">scales</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;wavelet_log_variance_analysis&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;wavelet&quot;</span><span class="p">:</span> <span class="n">wavelet</span><span class="p">,</span>
+            <span class="s2">&quot;scales&quot;</span><span class="p">:</span> <span class="n">scales</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">BaseWaveletLogVarianceEstimator</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletLogVar._estimate_numpy">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletLogVar._estimate_numpy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NumPy implementation of Wavelet Log Variance estimation.&quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletLogVar._estimate_numba">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletLogVar._estimate_numba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Numba-optimized implementation of Wavelet Log Variance estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletLogVar._estimate_jax">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletLogVar._estimate_jax">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;JAX-optimized implementation of Wavelet Log Variance estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletWhittle">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletWhittle">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComprehensiveAdaptiveWaveletWhittle</span><span class="p">(</span><span class="n">ComprehensiveAdaptiveEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive adaptive Wavelet Whittle estimator with automatic framework selection.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletWhittle.__init__">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletWhittle.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">wavelet</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db4&quot;</span><span class="p">,</span>
+                 <span class="n">scales</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;wavelet_whittle_analysis&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;wavelet&quot;</span><span class="p">:</span> <span class="n">wavelet</span><span class="p">,</span>
+            <span class="s2">&quot;scales&quot;</span><span class="p">:</span> <span class="n">scales</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">BaseWaveletWhittleEstimator</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletWhittle._estimate_numpy">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletWhittle._estimate_numpy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NumPy implementation of Wavelet Whittle estimation.&quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletWhittle._estimate_numba">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletWhittle._estimate_numba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Numba-optimized implementation of Wavelet Whittle estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletWhittle._estimate_jax">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletWhittle._estimate_jax">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;JAX-optimized implementation of Wavelet Whittle estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ComprehensiveAdaptiveMFDFA">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveMFDFA">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComprehensiveAdaptiveMFDFA</span><span class="p">(</span><span class="n">ComprehensiveAdaptiveEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive adaptive MFDFA estimator with automatic framework selection.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveMFDFA.__init__">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveMFDFA.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">q_values</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">min_scale</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+                 <span class="n">max_scale</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;mfdfa_analysis&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;q_values&quot;</span><span class="p">:</span> <span class="n">q_values</span><span class="p">,</span>
+            <span class="s2">&quot;min_scale&quot;</span><span class="p">:</span> <span class="n">min_scale</span><span class="p">,</span>
+            <span class="s2">&quot;max_scale&quot;</span><span class="p">:</span> <span class="n">max_scale</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">BaseMFDFAEstimator</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveMFDFA._estimate_numpy">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveMFDFA._estimate_numpy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NumPy implementation of MFDFA estimation.&quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveMFDFA._estimate_numba">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveMFDFA._estimate_numba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Numba-optimized implementation of MFDFA estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveMFDFA._estimate_jax">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveMFDFA._estimate_jax">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;JAX-optimized implementation of MFDFA estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletLeaders">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletLeaders">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComprehensiveAdaptiveWaveletLeaders</span><span class="p">(</span><span class="n">ComprehensiveAdaptiveEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive adaptive Wavelet Leaders estimator with automatic framework selection.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletLeaders.__init__">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletLeaders.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">wavelet</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db4&quot;</span><span class="p">,</span>
+                 <span class="n">scales</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;wavelet_leaders_analysis&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;wavelet&quot;</span><span class="p">:</span> <span class="n">wavelet</span><span class="p">,</span>
+            <span class="s2">&quot;scales&quot;</span><span class="p">:</span> <span class="n">scales</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">BaseMultifractalWaveletLeadersEstimator</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletLeaders._estimate_numpy">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletLeaders._estimate_numpy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NumPy implementation of Wavelet Leaders estimation.&quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletLeaders._estimate_numba">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletLeaders._estimate_numba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Numba-optimized implementation of Wavelet Leaders estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">NUMBA_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numba&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="ComprehensiveAdaptiveWaveletLeaders._estimate_jax">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.ComprehensiveAdaptiveWaveletLeaders._estimate_jax">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;JAX-optimized implementation of Wavelet Leaders estimation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">JAX_AVAILABLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<span class="c1"># Factory function to get all comprehensive adaptive classical estimators</span>
+<div class="viewcode-block" id="get_all_comprehensive_adaptive_classical_estimators">
+<a class="viewcode-back" href="../../../api/adaptive_estimators.html#lrdbenchmark.analysis.comprehensive_adaptive_estimators.get_all_comprehensive_adaptive_classical_estimators">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_all_comprehensive_adaptive_classical_estimators</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ComprehensiveAdaptiveEstimator</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get all available comprehensive adaptive classical estimators.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Dictionary mapping estimator names to instances</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="c1"># Temporal estimators</span>
+        <span class="s1">&#39;Comprehensive_RS&#39;</span><span class="p">:</span> <span class="n">ComprehensiveAdaptiveRS</span><span class="p">(),</span>
+        <span class="s1">&#39;Comprehensive_DFA&#39;</span><span class="p">:</span> <span class="n">ComprehensiveAdaptiveDFA</span><span class="p">(),</span>
+        <span class="s1">&#39;Comprehensive_DMA&#39;</span><span class="p">:</span> <span class="n">ComprehensiveAdaptiveDMA</span><span class="p">(),</span>
+        <span class="s1">&#39;Comprehensive_Higuchi&#39;</span><span class="p">:</span> <span class="n">ComprehensiveAdaptiveHiguchi</span><span class="p">(),</span>
+        
+        <span class="c1"># Spectral estimators</span>
+        <span class="s1">&#39;Comprehensive_GPH&#39;</span><span class="p">:</span> <span class="n">ComprehensiveAdaptiveGPH</span><span class="p">(),</span>
+        <span class="s1">&#39;Comprehensive_Whittle&#39;</span><span class="p">:</span> <span class="n">ComprehensiveAdaptiveWhittle</span><span class="p">(),</span>
+        <span class="s1">&#39;Comprehensive_Periodogram&#39;</span><span class="p">:</span> <span class="n">ComprehensiveAdaptivePeriodogram</span><span class="p">(),</span>
+        
+        <span class="c1"># Wavelet estimators</span>
+        <span class="s1">&#39;Comprehensive_CWT&#39;</span><span class="p">:</span> <span class="n">ComprehensiveAdaptiveCWT</span><span class="p">(),</span>
+        <span class="s1">&#39;Comprehensive_WaveletVar&#39;</span><span class="p">:</span> <span class="n">ComprehensiveAdaptiveWaveletVar</span><span class="p">(),</span>
+        <span class="s1">&#39;Comprehensive_WaveletLogVar&#39;</span><span class="p">:</span> <span class="n">ComprehensiveAdaptiveWaveletLogVar</span><span class="p">(),</span>
+        <span class="s1">&#39;Comprehensive_WaveletWhittle&#39;</span><span class="p">:</span> <span class="n">ComprehensiveAdaptiveWaveletWhittle</span><span class="p">(),</span>
+        
+        <span class="c1"># Multifractal estimators</span>
+        <span class="s1">&#39;Comprehensive_MFDFA&#39;</span><span class="p">:</span> <span class="n">ComprehensiveAdaptiveMFDFA</span><span class="p">(),</span>
+        <span class="s1">&#39;Comprehensive_WaveletLeaders&#39;</span><span class="p">:</span> <span class="n">ComprehensiveAdaptiveWaveletLeaders</span><span class="p">(),</span>
+    <span class="p">}</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Davian Chin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
