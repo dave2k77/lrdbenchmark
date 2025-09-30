@@ -17,7 +17,7 @@
 - Machine learning estimators
 - Classical estimator implementations
 
-### Version 2.1.0 - Major Enhancement (December 2024)
+### Version 2.1.7 - Major Enhancement (December 2024)
 - **Enhanced Neural Network Factory**: 8 neural network architectures with modern features
 - **Intelligent Backend Framework**: Sophisticated hardware utilisation and optimisation
 - **Enhanced Evaluation Metrics**: Comprehensive performance analysis
@@ -245,5 +245,5 @@ LRDBenchmark represents a significant advancement in LRD estimation research and
 ---
 
 *Last Updated: January 2025*  
-*Framework Version: 2.1.0*  
+*Framework Version: 2.1.7*  
 *Development Status: Production Ready*

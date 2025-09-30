@@ -70,11 +70,13 @@ Using conda:
 
 .. code-block:: bash
 
-   # Create a new conda environment
-   conda create -n lrdbenchmark python=3.9
+   # Create a new conda environment with Python 3.11 (GPU-ready stack)
+   conda create -n lrdbenchmark python=3.11 pytorch==2.8.0 torchvision==0.23.0 pytorch-cuda==12.4 -c pytorch -c nvidia
    conda activate lrdbenchmark
    
-   # Install lrdbenchmark
+   # Install additional dependencies and the package
+   conda install numpy scipy pandas scikit-learn numba -c conda-forge
+   pip install "jax[cuda12_pip]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
    pip install lrdbenchmark
 
 Docker Installation

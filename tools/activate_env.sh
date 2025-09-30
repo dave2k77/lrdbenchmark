@@ -11,15 +11,15 @@ export PYTHONPATH="${PROJECT_ROOT}:${PYTHONPATH-}"
 if command -v conda >/dev/null 2>&1; then
   # Initialize conda with error handling
   if eval "$(conda shell.bash hook)" 2>/dev/null; then
-    if conda env list | awk '{print $1}' | grep -qx "lrdbenchmark_gpu"; then
+    if conda env list | awk '{print $1}' | grep -qx "lrdbenchmark"; then
       # Use a more robust activation method
-      source $(conda info --base)/etc/profile.d/conda.sh
-      conda activate lrdbenchmark_gpu
-      echo "[env] Activated conda environment: lrdbenchmark_gpu"
-    elif conda env list | awk '{print $1}' | grep -qx "lrdbenchmark"; then
       source $(conda info --base)/etc/profile.d/conda.sh
       conda activate lrdbenchmark
       echo "[env] Activated conda environment: lrdbenchmark"
+    elif conda env list | awk '{print $1}' | grep -qx "lrdbenchmark_gpu"; then
+      source $(conda info --base)/etc/profile.d/conda.sh
+      conda activate lrdbenchmark_gpu
+      echo "[env] Activated conda environment: lrdbenchmark_gpu"
     else
       echo "[env] Conda detected but environment 'lrdbenchmark_gpu' or 'lrdbenchmark' not found; will use .venv if present."
     fi

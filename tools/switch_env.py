@@ -32,21 +32,21 @@ def setup_environment():
         gpu_env = Path(conda_base) / "envs" / "lrdbenchmark_gpu"
         reg_env = Path(conda_base) / "envs" / "lrdbenchmark"
         
-        if gpu_env.exists():
-            # Use GPU environment
-            env_bin = gpu_env / "bin"
-            os.environ['PATH'] = f"{env_bin}:{os.environ['PATH']}"
-            os.environ['CONDA_DEFAULT_ENV'] = "lrdbenchmark_gpu"
-            os.environ['CONDA_PREFIX'] = str(gpu_env)
-            print(f"[env] Using lrdbenchmark_gpu environment: {gpu_env}")
-            return str(env_bin / "python")
-        elif reg_env.exists():
-            # Use regular environment
+        if reg_env.exists():
+            # Use primary environment
             env_bin = reg_env / "bin"
             os.environ['PATH'] = f"{env_bin}:{os.environ['PATH']}"
             os.environ['CONDA_DEFAULT_ENV'] = "lrdbenchmark"
             os.environ['CONDA_PREFIX'] = str(reg_env)
             print(f"[env] Using lrdbenchmark environment: {reg_env}")
+            return str(env_bin / "python")
+        elif gpu_env.exists():
+            # Fallback to GPU clone
+            env_bin = gpu_env / "bin"
+            os.environ['PATH'] = f"{env_bin}:{os.environ['PATH']}"
+            os.environ['CONDA_DEFAULT_ENV'] = "lrdbenchmark_gpu"
+            os.environ['CONDA_PREFIX'] = str(gpu_env)
+            print(f"[env] Using lrdbenchmark_gpu environment: {gpu_env}")
             return str(env_bin / "python")
     
     # Fallback to system Python

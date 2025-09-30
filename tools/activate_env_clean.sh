@@ -14,18 +14,18 @@ if command -v conda >/dev/null 2>&1; then
 fi
 
 # Try to use the GPU environment directly without conda activation
-if [[ -n "$CONDA_BASE" && -d "$CONDA_BASE/envs/lrdbenchmark_gpu" ]]; then
-    # Use direct Python path to avoid conda activation issues
-    export PATH="$CONDA_BASE/envs/lrdbenchmark_gpu/bin:$PATH"
-    export CONDA_DEFAULT_ENV="lrdbenchmark_gpu"
-    export CONDA_PREFIX="$CONDA_BASE/envs/lrdbenchmark_gpu"
-    echo "[env] Using lrdbenchmark_gpu environment (direct path)"
-elif [[ -n "$CONDA_BASE" && -d "$CONDA_BASE/envs/lrdbenchmark" ]]; then
-    # Fallback to regular lrdbenchmark environment
+if [[ -n "$CONDA_BASE" && -d "$CONDA_BASE/envs/lrdbenchmark" ]]; then
+    # Prefer lrdbenchmark environment
     export PATH="$CONDA_BASE/envs/lrdbenchmark/bin:$PATH"
     export CONDA_DEFAULT_ENV="lrdbenchmark"
     export CONDA_PREFIX="$CONDA_BASE/envs/lrdbenchmark"
     echo "[env] Using lrdbenchmark environment (direct path)"
+elif [[ -n "$CONDA_BASE" && -d "$CONDA_BASE/envs/lrdbenchmark_gpu" ]]; then
+    # Fallback to GPU clone if available
+    export PATH="$CONDA_BASE/envs/lrdbenchmark_gpu/bin:$PATH"
+    export CONDA_DEFAULT_ENV="lrdbenchmark_gpu"
+    export CONDA_PREFIX="$CONDA_BASE/envs/lrdbenchmark_gpu"
+    echo "[env] Using lrdbenchmark_gpu environment (direct path)"
 else
     # Use system Python or create venv
     if [[ -d "${PROJECT_ROOT}/.venv" ]]; then

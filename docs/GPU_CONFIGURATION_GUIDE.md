@@ -14,13 +14,13 @@
 ## Software Configuration
 
 ### PyTorch GPU Support ✅
-- **PyTorch Version**: 2.8.0+cu128
+- **PyTorch Version**: 2.8.0 (CUDA 12.4 build)
 - **CUDA Available**: True
 - **GPU Detection**: Working
 - **Neural Network Acceleration**: 5.42ms per inference (excellent performance)
 
 ### JAX GPU Support ⚠️
-- **JAX Version**: 0.7.1
+- **JAX Version**: 0.7.1 (CUDA 12 wheels)
 - **Current Status**: CPU-only (due to RTX 5070 architecture compatibility)
 - **Issue**: RTX 5070 uses sm_120 architecture (compute capability 12.0) which is not supported by JAX 0.7.1
 - **Diagnosis**: JAX CUDA plugin installed but cannot detect GPU backend
@@ -46,7 +46,7 @@
 ### 1. Environment Setup
 ```bash
 # Activate the environment
-conda activate lrdbenchmark-py311
+conda activate lrdbenchmark
 
 # Verify PyTorch GPU support
 python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
