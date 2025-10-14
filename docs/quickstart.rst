@@ -3,6 +3,13 @@ Quick Start Guide
 
 This guide will get you up and running with lrdbenchmark in minutes.
 
+**📓 For comprehensive examples, see the 5 demonstration notebooks in the `notebooks/` directory:**
+- **Data Generation & Visualization**: All stochastic models with comprehensive plots
+- **Estimation & Validation**: All estimator categories with statistical validation  
+- **Custom Models & Estimators**: Library extensibility and custom implementations
+- **Comprehensive Benchmarking**: Full benchmarking system with contamination testing
+- **Leaderboard Generation**: Performance rankings and comparative analysis
+
 Basic Usage
 -----------
 
@@ -319,7 +326,15 @@ Performance Tips
 Next Steps
 -----------
 
+* :doc:`notebooks/notebooks_overview` - **Start here**: Comprehensive demonstration notebooks
 * :doc:`installation` - Detailed installation guide
 * :doc:`api/data_models` - Learn about data models
 * :doc:`api/estimators` - Explore available estimators
 * :doc:`examples/comprehensive_demo` - More examples and use cases
+
+**Recommended Learning Path**:
+
+1. **Run the Notebooks**: Start with `notebooks/01_data_generation_and_visualisation.ipynb`
+2. **Explore API**: Use the quickstart examples above
+3. **Advanced Usage**: Try the comprehensive benchmarking examples
+4. **Custom Development**: Learn extensibility from the custom models notebook

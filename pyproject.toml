@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lrdbenchmark"
-version = "2.1.7"
-description = "Comprehensive Long-Range Dependence Benchmarking Framework with Classical, ML, and Neural Network Estimators"
+version = "2.1.9"
+description = "Comprehensive Long-Range Dependence Benchmarking Framework with Classical, ML, and Neural Network Estimators + 5 Demonstration Notebooks"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
@@ -108,6 +108,7 @@ include = ["lrdbenchmark*"]
 
 [tool.setuptools.package-data]
 lrdbenchmark = ["py.typed"]
+"*" = ["notebooks/*.ipynb", "notebooks/README.md"]
 
 [tool.black]
 line-length = 88

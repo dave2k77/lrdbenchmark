@@ -219,3 +219,4 @@ Thumbs.db
 fracnn/
 lrdbenchmark_env/
 .pypirc
+.pypi_token

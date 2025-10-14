@@ -34,6 +34,16 @@ LRDBenchmark provides state-of-the-art implementations across three categories:
 - **Heavy-Tail Robustness**: α-stable distribution modeling with adaptive preprocessing
 - **High-Performance Computing**: Intelligent backend selection (JAX → Numba → NumPy)
 
+📚 **Demonstration Notebooks**
+
+Comprehensive Jupyter notebooks showcase all library features:
+
+- **Data Generation & Visualization**: All stochastic models (FBM, FGN, ARFIMA, MRW, Alpha-Stable)
+- **Estimation & Validation**: All estimator categories with statistical validation
+- **Custom Models & Estimators**: Library extensibility and custom implementations
+- **Comprehensive Benchmarking**: Full benchmarking system with contamination testing
+- **Leaderboard Generation**: Performance rankings and comparative analysis
+
 Key Features
 ------------
 
@@ -94,6 +104,17 @@ Examples & Demos
 
    examples/comprehensive_adaptive_demo
    examples/comprehensive_demo
+
+Demonstration Notebooks
+-----------------------
+
+Comprehensive Jupyter notebooks demonstrating all library features:
+
+.. toctree::
+   :maxdepth: 2
+   :titlesonly:
+
+   notebooks/notebooks_overview
 
 Indices and tables
 ==================

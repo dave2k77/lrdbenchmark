@@ -180,107 +180,29 @@ Multifractal Wavelet Leaders
 Machine Learning Estimators
 ---------------------------
 
-Base ML Estimator
-~~~~~~~~~~~~~~~~~
+For detailed documentation of machine learning estimators, see :doc:`machine_learning_estimators`.
 
-.. autoclass:: lrdbenchmark.analysis.machine_learning.enhanced_ml_estimators.BaseMLEstimator
-   :members:
-   :undoc-members:
-   :show-inheritance:
+The following ML estimators are available:
 
-   .. automethod:: __init__
-   .. automethod:: estimate
+* **Random Forest**: Ensemble tree-based estimation with feature importance
+* **Support Vector Regression**: SVM-based estimation with RBF kernel
+* **Gradient Boosting**: Boosted tree estimation with comprehensive feature engineering
 
-Random Forest Estimator
-~~~~~~~~~~~~~~~~~~~~~~~
-
-.. autoclass:: lrdbenchmark.analysis.machine_learning.random_forest_estimator_unified.RandomForestEstimator
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-   .. automethod:: __init__
-   .. automethod:: estimate
-
-Gradient Boosting Estimator
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. autoclass:: lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-   .. automethod:: __init__
-   .. automethod:: estimate
-
-Support Vector Regression (SVR)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. autoclass:: lrdbenchmark.analysis.machine_learning.svr_estimator_unified.SVREstimator
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-   .. automethod:: __init__
-   .. automethod:: estimate
+See the dedicated :doc:`machine_learning_estimators` page for complete API documentation, performance metrics, and usage examples.
 
 Neural Network Estimators
 -------------------------
 
-Base Neural Network Estimator
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+For detailed documentation of neural network estimators, see :doc:`neural_network_factory`.
 
-.. autoclass:: lrdbenchmark.analysis.machine_learning.enhanced_ml_estimators.NeuralNetworkEstimator
-   :members:
-   :undoc-members:
-   :show-inheritance:
+The following neural network architectures are available:
 
-   .. automethod:: __init__
-   .. automethod:: estimate
+* **CNN**: Convolutional Neural Networks for spatial pattern recognition
+* **LSTM**: Long Short-Term Memory networks for temporal sequences
+* **GRU**: Gated Recurrent Units for efficient temporal modeling
+* **Transformer**: Attention-based architectures for complex patterns
 
-CNN Estimator
-~~~~~~~~~~~~~
-
-.. autoclass:: lrdbenchmark.analysis.machine_learning.cnn_estimator_unified.CNNEstimator
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-   .. automethod:: __init__
-   .. automethod:: estimate
-
-LSTM Estimator
-~~~~~~~~~~~~~~
-
-.. autoclass:: lrdbenchmark.analysis.machine_learning.lstm_estimator_unified.LSTMEstimator
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-   .. automethod:: __init__
-   .. automethod:: estimate
-
-GRU Estimator
-~~~~~~~~~~~~~
-
-.. autoclass:: lrdbenchmark.analysis.machine_learning.gru_estimator_unified.GRUEstimator
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-   .. automethod:: __init__
-   .. automethod:: estimate
-
-Transformer Estimator
-~~~~~~~~~~~~~~~~~~~~~
-
-.. autoclass:: lrdbenchmark.analysis.machine_learning.transformer_estimator_unified.TransformerEstimator
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-   .. automethod:: __init__
-   .. automethod:: estimate
+See the dedicated :doc:`neural_network_factory` page for complete API documentation, architecture details, and usage examples.
 
 High Performance Estimators
 ---------------------------
