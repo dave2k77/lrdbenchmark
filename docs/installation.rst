@@ -6,7 +6,7 @@ This guide will help you install lrdbenchmark and its dependencies.
 Requirements
 ------------
 
-* Python 3.8 or higher
+* Python 3.13 or higher
 * pip (Python package installer)
 * Optional: CUDA-compatible GPU for accelerated computations
 
@@ -28,8 +28,9 @@ Install lrdbenchmark from PyPI:
 This will install lrdbenchmark with all required dependencies including:
 
 * **15+ Estimators**: Classical, Machine Learning, and Neural Network methods
-* **Production-Ready ML**: SVR, Gradient Boosting, Random Forest with optimized hyperparameters
-* **Neural Networks**: CNN, LSTM, GRU, Transformer with pre-trained models
+* **Unified ML Features**: 76-feature extraction pipeline with pre-trained models
+* **Production-Ready ML**: SVR (29 features), Gradient Boosting (54 features), Random Forest (76 features)
+* **Neural Networks**: CNN, LSTM, GRU, Transformer with automatic device selection
 * **Comprehensive Benchmarking**: End-to-end benchmarking system with statistical analysis
 * **Demonstration Notebooks**: 5 comprehensive Jupyter notebooks showcasing all features
 
@@ -76,13 +77,18 @@ Using conda:
 
 .. code-block:: bash
 
-   # Create a new conda environment with Python 3.11 (GPU-ready stack)
-   conda create -n lrdbenchmark python=3.11 pytorch==2.8.0 torchvision==0.23.0 pytorch-cuda==12.4 -c pytorch -c nvidia
+   # Create a new conda environment with Python 3.13 (GPU-ready stack)
+   conda create -n lrdbenchmark python=3.13
    conda activate lrdbenchmark
+   
+   # Install PyTorch with CUDA 12.1 support
+   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+   
+   # Install JAX with CUDA 13 support
+   pip install "jax[cuda13_pip]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
    
    # Install additional dependencies and the package
    conda install numpy scipy pandas scikit-learn numba -c conda-forge
-   pip install "jax[cuda12_pip]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
    pip install lrdbenchmark
 
 Docker Installation

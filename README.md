@@ -3,14 +3,15 @@
 A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimation and benchmarking across Classical, Machine Learning, and Neural Network methods.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 
 ## 🚀 Features
 
 **Comprehensive Estimator Suite:**
 - **8+ Classical Methods**: R/S, DFA, DMA, Higuchi, Periodogram, GPH, Whittle, CWT, and more
-- **3 Machine Learning Models**: Random Forest, SVR, Gradient Boosting with optimized hyperparameters  
-- **4 Neural Network Architectures**: LSTM, GRU, CNN, Transformer with pre-trained models
+- **Unified ML Feature Engineering**: 76-feature extraction pipeline with pre-trained model support
+- **3 Machine Learning Models**: Random Forest (76 features), SVR (29 features), Gradient Boosting (54 features)
+- **4 Neural Network Architectures**: LSTM, GRU, CNN, Transformer with automatic device selection
 - **Generalized Hurst Exponent (GHE)**: Advanced multifractal analysis capabilities
 
 **Robust Heavy-Tail Analysis:**

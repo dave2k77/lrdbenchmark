@@ -48,8 +48,9 @@ Key Features
 ------------
 
 * **Comprehensive Estimator Suite**: 15+ estimators across classical, ML, and neural network approaches
-* **Neural Network Factory**: 4 architectures (CNN, LSTM, GRU, Transformer) with unified implementation  
-* **Production-Ready ML Models**: SVR, Gradient Boosting, Random Forest with train-once, apply-many workflows
+* **Unified ML Feature Engineering**: 76-feature extraction pipeline with pre-trained model support
+* **Neural Network Factory**: 4 architectures (CNN, LSTM, GRU, Transformer) with automatic device selection
+* **Production-Ready ML Models**: SVR (29 features), Gradient Boosting (54 features), Random Forest (76 features)
 * **Heavy-Tail Robustness**: α-stable distribution modeling with adaptive preprocessing techniques
 * **Intelligent Backend System**: Automatic GPU/JAX, CPU/Numba, or NumPy selection based on data characteristics
 * **High-Performance Computing**: GPU-accelerated implementations with graceful fallbacks
