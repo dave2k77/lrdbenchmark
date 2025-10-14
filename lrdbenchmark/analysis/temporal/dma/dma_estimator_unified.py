@@ -333,9 +333,13 @@ class DMAEstimator(BaseEstimator):
         if scale >= n:
             return np.nan
 
+        # Step 1: Calculate cumulative sum (integration) - this is the key fix!
+        y = np.cumsum(data - np.mean(data))
+
         if overlap:
-            moving_avg = np.convolve(data, np.ones(scale) / scale, mode="valid")
-            detrended = data[scale - 1 :] - moving_avg
+            # Moving average detrending on cumulative sum
+            moving_avg = np.convolve(y, np.ones(scale) / scale, mode="valid")
+            detrended = y[scale - 1 :] - moving_avg
             return float(np.sqrt(np.mean(detrended**2)))
 
         # Non-overlapping case
@@ -343,10 +347,21 @@ class DMAEstimator(BaseEstimator):
         if n_segments == 0:
             return np.nan
 
-        trimmed = data[: n_segments * scale]
+        trimmed = y[: n_segments * scale]
         segments = trimmed.reshape(n_segments, scale)
-        detrended = segments - segments.mean(axis=1, keepdims=True)
-        fluctuation = np.sqrt(np.mean(detrended**2))
+        
+        # Detrend each segment
+        detrended_segments = []
+        for segment in segments:
+            x = np.arange(scale)
+            # Linear detrending
+            coeffs = np.polyfit(x, segment, 1)
+            trend = np.polyval(coeffs, x)
+            detrended = segment - trend
+            detrended_segments.append(detrended)
+        
+        detrended_segments = np.array(detrended_segments)
+        fluctuation = np.sqrt(np.mean(detrended_segments**2))
         return float(fluctuation)
 
     def get_optimization_info(self) -> Dict[str, Any]:
