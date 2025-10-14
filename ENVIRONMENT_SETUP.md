@@ -27,33 +27,33 @@ conda activate lrdbenchmark
 ## 📦 Environment Details
 
 ### Python Version
-- **Python**: 3.11.13
+- **Python**: 3.13.7
 - **Conda Environment**: `lrdbenchmark`
 - **Location**: `/home/davianc/miniconda3/envs/lrdbenchmark`
 
 ### GPU Support
 - **GPU**: NVIDIA GeForce RTX 5070 Laptop GPU (7.5 GB VRAM)
 - **CUDA**: 13.0 available, PyTorch 2.5.1+cu121 with CUDA 12.1
-- **JAX**: 0.7.2 with CUDA support (CPU fallback available)
-- **Status**: ✅ GPU acceleration ready for LRDBenchmark
+- **JAX**: 0.7.2 with CUDA 13 support (CPU fallback available)
+- **Status**: ✅ GPU acceleration ready for LRDBenchmark with automatic device selection
 
 ### Core Dependencies
 
 #### Scientific Computing
-- **NumPy**: 2.0.1 - Numerical computing
-- **SciPy**: 1.16.0 - Scientific computing
+- **NumPy**: 2.3.3 - Numerical computing
+- **SciPy**: 1.16.2 - Scientific computing
 - **Pandas**: 2.3.3 - Data manipulation
-- **Matplotlib**: 3.10.6 - Plotting
+- **Matplotlib**: 3.10.7 - Plotting
 - **Seaborn**: 0.13.2 - Statistical visualization
 
 #### Machine Learning & Neural Networks
 - **Scikit-learn**: 1.7.2 - Machine learning
-- **PyTorch**: 2.8.0+cpu - Deep learning framework
-- **Torchvision**: 0.23.0+cpu - Computer vision
-- **Torchaudio**: 2.8.0+cpu - Audio processing
+- **PyTorch**: 2.5.1+cu121 - Deep learning framework with CUDA support
+- **Torchvision**: 0.2.0 - Computer vision
+- **Joblib**: 1.5.2 - Model persistence
 
 #### Advanced Computing
-- **JAX**: 0.7.2 - High-performance ML
+- **JAX**: 0.7.2 - High-performance ML with CUDA 13 support
 - **JAXlib**: 0.7.2 - JAX backend
 - **Numba**: 0.62.1 - JIT compilation
 - **Statsmodels**: 0.14.5 - Statistical modeling
@@ -64,9 +64,9 @@ conda activate lrdbenchmark
 - **NetworkX**: 3.3 - Graph analysis
 
 #### Development Tools
-- **Jupyter**: 7.4.5 - Interactive notebooks
-- **Notebook**: 7.4.5 - Jupyter notebook server
-- **IPython**: 8.28.0 - Enhanced Python shell
+- **Jupyter**: 1.1.1 - Interactive notebooks
+- **Notebook**: 7.4.7 - Jupyter notebook server
+- **IPython**: 9.6.0 - Enhanced Python shell
 
 ## 🧪 Testing the Environment
 
@@ -118,6 +118,20 @@ else:
 
 print("✅ GPU test completed!")
 ```
+
+## 🚀 New Features in Python 3.13 Environment
+
+### Unified Feature Extraction
+- **76-Feature Pipeline**: Comprehensive feature extraction for ML models
+- **Pre-trained Model Support**: Works with existing Random Forest, SVR, and Gradient Boosting models
+- **Automatic Device Selection**: Neural networks automatically select optimal device (GPU/CPU)
+- **Feature Subsets**: Support for 29-feature (SVR) and 54-feature (Gradient Boosting) subsets
+
+### Enhanced ML Integration
+- **Unified Estimators**: New estimator classes with unified feature extraction
+- **Pre-trained Models**: Ready-to-use models with proper feature engineering
+- **Device Compatibility**: Automatic fallback from GPU to CPU when needed
+- **Feature Engineering**: Comprehensive 76-feature set for LRD analysis
 
 ## 📚 Available Notebooks
 

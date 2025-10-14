@@ -72,26 +72,45 @@ class BaseNeuralNetwork(nn.Module):
     def __init__(self, config: NNConfig, model_name: str = None):
         super().__init__()
         self.config = config
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = self._get_optimal_device()
         self.is_trained = False
         self.training_history = None
         self.model_name = model_name or self.__class__.__name__.lower()
         self.model_dir = "models"
         os.makedirs(self.model_dir, exist_ok=True)
         # Don't move to device here, let subclasses handle it
+    
+    def _get_optimal_device(self):
+        """Select optimal device with CUDA compatibility check."""
+        if torch.cuda.is_available():
+            try:
+                # Test CUDA with small operation
+                device = torch.device('cuda')
+                test_tensor = torch.zeros(1).to(device)
+                _ = test_tensor + 1  # Test operation
+                logger.info(f"CUDA device selected: {torch.cuda.get_device_name()}")
+                return device
+            except RuntimeError as e:
+                if "CUDA" in str(e):
+                    logger.warning(f"CUDA available but incompatible: {e}. Falling back to CPU.")
+                    return torch.device('cpu')
+        logger.info("Using CPU device")
+        return torch.device('cpu')
         
     def forward(self, x):
         raise NotImplementedError("Subclasses must implement forward method")
     
     def predict(self, x: np.ndarray, batch_size: int = 32) -> np.ndarray:
-        """Make predictions on new data with batch processing to avoid GPU memory issues."""
+        """Make predictions on new data with automatic device handling."""
         if not self.is_trained:
             raise ValueError("Model must be trained before making predictions")
             
         self.eval()
         
-        # Handle single sample case
-        if len(x.shape) == 1:
+        # Convert to PyTorch tensor and ensure correct device
+        if isinstance(x, np.ndarray):
+            x = torch.FloatTensor(x)
+        if x.dim() == 1:
             x = x.unsqueeze(0)
         
         n_samples = x.shape[0]
@@ -103,8 +122,8 @@ class BaseNeuralNetwork(nn.Module):
             batch_x = x[i:batch_end]
             
             with torch.no_grad():
-                if isinstance(batch_x, np.ndarray):
-                    batch_x = torch.FloatTensor(batch_x).to(self.device)
+                # Ensure data is on correct device
+                batch_x = batch_x.to(self.device)
                 
                 # Ensure correct input shape
                 if len(batch_x.shape) == 1:
@@ -238,7 +257,7 @@ class BaseNeuralNetwork(nn.Module):
         logger.info(f"Model saved to {model_path}")
     
     def load_model(self, model_path: str = None):
-        """Load a trained model."""
+        """Load a trained model with automatic device handling."""
         if model_path is None:
             # Try to get pretrained model from package first
             pretrained_model_path, pretrained_config_path = get_neural_network_model_path(self.model_name)
@@ -255,12 +274,14 @@ class BaseNeuralNetwork(nn.Module):
             return False
             
         try:
-            checkpoint = torch.load(model_path, map_location=self.device)
+            # Load with automatic device mapping
+            checkpoint = torch.load(model_path, map_location=self.device, weights_only=False)
             self.load_state_dict(checkpoint['model_state_dict'])
+            self.to(self.device)
             self.training_history = checkpoint['training_history']
             self.is_trained = checkpoint['is_trained']
             
-            logger.info(f"Model loaded from {model_path}")
+            logger.info(f"Model loaded from {model_path} on device {self.device}")
             return True
         except Exception as e:
             logger.error(f"Failed to load model: {e}")

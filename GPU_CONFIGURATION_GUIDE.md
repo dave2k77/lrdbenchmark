@@ -23,11 +23,12 @@ This guide provides comprehensive information about GPU support in the LRDBenchm
 - **GPU Memory**: 7.5 GB available
 
 ### JAX GPU Support
-- **Status**: ✅ **STABLE** (CPU version, reliable)
-- **JAX Version**: 0.4.35
-- **Devices**: [CpuDevice(id=0)]
-- **Backend**: CPU (stable and reliable)
-- **Note**: CPU version provides consistent performance
+- **Status**: ✅ **ENHANCED** (CUDA 13 support with automatic fallback)
+- **JAX Version**: 0.7.2
+- **CUDA Support**: CUDA 13 with pip packages
+- **Devices**: [CpuDevice(id=0)] (automatic fallback)
+- **Backend**: CPU (stable with GPU capability detection)
+- **Note**: Automatic device selection with CUDA compatibility checking
 
 ## 🚀 Performance Benefits
 
@@ -35,6 +36,13 @@ This guide provides comprehensive information about GPU support in the LRDBenchm
 - **Training Speed**: 10-50x faster than CPU
 - **Memory Efficiency**: Better handling of large datasets
 - **Parallel Processing**: Multiple estimators simultaneously
+- **Automatic Device Selection**: Smart GPU/CPU selection with fallback
+
+### Unified Feature Extraction
+- **76-Feature Pipeline**: Comprehensive feature engineering for ML models
+- **Pre-trained Model Integration**: Works seamlessly with existing models
+- **Feature Subsets**: Optimized for different ML algorithms (29, 54, 76 features)
+- **Performance**: Fast feature extraction with NumPy/SciPy optimization
 
 ### Data Generation
 - **Large-scale Generation**: 5-20x faster for long time series
