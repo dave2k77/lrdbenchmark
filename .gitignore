@@ -220,3 +220,4 @@ fracnn/
 lrdbenchmark_env/
 .pypirc
 .pypi_token
+Miniconda3-latest-Linux-x86_64.sh
