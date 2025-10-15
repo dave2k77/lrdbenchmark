@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lrdbenchmark"
-version = "2.2.0"
+version = "2.2.1"
 description = "Comprehensive Long-Range Dependence Benchmarking Framework with Classical, ML, and Neural Network Estimators + 5 Demonstration Notebooks"
 readme = "README.md"
 license = {text = "MIT"}
