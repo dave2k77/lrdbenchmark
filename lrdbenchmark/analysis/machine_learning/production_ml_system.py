@@ -486,6 +486,29 @@ class ProductionMLSystem:
             }
         }
     
+    def _get_safe_device(self) -> torch.device:
+        """Get a safe device with CUDA compatibility check."""
+        if torch.cuda.is_available():
+            try:
+                # Test CUDA with small operation
+                device = torch.device('cuda')
+                test_tensor = torch.zeros(1).to(device)
+                result = test_tensor + 1  # Test operation
+                _ = result.cpu()  # Move result back to CPU to test full pipeline
+                return device
+            except RuntimeError as e:
+                if "CUDA" in str(e) or "kernel image" in str(e):
+                    print(f"⚠️ CUDA available but incompatible: {e}. Falling back to CPU.")
+                    return torch.device('cpu')
+                else:
+                    print(f"⚠️ CUDA test failed with unexpected error: {e}. Falling back to CPU.")
+                    return torch.device('cpu')
+            except Exception as e:
+                print(f"⚠️ CUDA test failed with exception: {e}. Falling back to CPU.")
+                return torch.device('cpu')
+        else:
+            return torch.device('cpu')
+
     def _train_torch(self, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
         """Train PyTorch model."""
         if not TORCH_AVAILABLE:
@@ -501,8 +524,8 @@ class ProductionMLSystem:
         else:
             raise ValueError(f"Unsupported PyTorch model type: {self.config.model_type}")
         
-        # Move to device
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # Move to device with CUDA compatibility check
+        device = self._get_safe_device()
         self.model = self.model.to(device)
         
         # Create optimizer and loss

@@ -95,9 +95,25 @@ class BaseMLModel(ABC):
         self.is_trained = False
         
     def _get_device(self) -> torch.device:
-        """Get the best available device."""
+        """Get the best available device with CUDA compatibility check."""
         if torch.cuda.is_available():
-            return torch.device("cuda")
+            try:
+                # Test CUDA with small operation
+                device = torch.device('cuda')
+                test_tensor = torch.zeros(1).to(device)
+                result = test_tensor + 1  # Test operation
+                _ = result.cpu()  # Move result back to CPU to test full pipeline
+                return device
+            except RuntimeError as e:
+                if "CUDA" in str(e) or "kernel image" in str(e):
+                    print(f"⚠️ CUDA available but incompatible: {e}. Falling back to CPU.")
+                    return torch.device('cpu')
+                else:
+                    print(f"⚠️ CUDA test failed with unexpected error: {e}. Falling back to CPU.")
+                    return torch.device('cpu')
+            except Exception as e:
+                print(f"⚠️ CUDA test failed with exception: {e}. Falling back to CPU.")
+                return torch.device('cpu')
         elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
             return torch.device("mps")
         else:

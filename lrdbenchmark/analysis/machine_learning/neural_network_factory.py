@@ -87,14 +87,21 @@ class BaseNeuralNetwork(nn.Module):
                 # Test CUDA with small operation
                 device = torch.device('cuda')
                 test_tensor = torch.zeros(1).to(device)
-                _ = test_tensor + 1  # Test operation
+                result = test_tensor + 1  # Test operation
+                _ = result.cpu()  # Move result back to CPU to test full pipeline
                 logger.info(f"CUDA device selected: {torch.cuda.get_device_name()}")
                 return device
             except RuntimeError as e:
-                if "CUDA" in str(e):
+                if "CUDA" in str(e) or "kernel image" in str(e):
                     logger.warning(f"CUDA available but incompatible: {e}. Falling back to CPU.")
                     return torch.device('cpu')
-        logger.info("Using CPU device")
+                else:
+                    logger.warning(f"CUDA test failed with unexpected error: {e}. Falling back to CPU.")
+                    return torch.device('cpu')
+            except Exception as e:
+                logger.warning(f"CUDA test failed with exception: {e}. Falling back to CPU.")
+                return torch.device('cpu')
+        logger.info("CUDA not available, using CPU device")
         return torch.device('cpu')
         
     def forward(self, x):
