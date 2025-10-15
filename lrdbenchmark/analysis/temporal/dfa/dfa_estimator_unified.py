@@ -263,28 +263,25 @@ class DFAEstimator(BaseEstimator):
         if n_segments == 0:
             return np.nan
         
-        # Step 1: Calculate cumulative sum (integration) - this is the key fix!
-        y = np.cumsum(data - np.mean(data))
-        
         fluctuation_values = []
         
         for i in range(n_segments):
             start_idx = i * scale
             end_idx = start_idx + scale
-            segment = y[start_idx:end_idx]
+            segment_data = data[start_idx:end_idx]
             
-            # Step 2: Detrend the segment
+            # Detrend the segment
             x = np.arange(scale)
             if self.parameters["order"] == 0:
                 # Remove mean
-                detrended = segment - np.mean(segment)
+                detrended = segment_data - np.mean(segment_data)
             else:
                 # Polynomial detrending
-                coeffs = np.polyfit(x, segment, self.parameters["order"])
+                coeffs = np.polyfit(x, segment_data, self.parameters["order"])
                 trend = np.polyval(coeffs, x)
-                detrended = segment - trend
+                detrended = segment_data - trend
             
-            # Step 3: Calculate RMS fluctuation
+            # Calculate RMS fluctuation
             fluctuation = np.sqrt(np.mean(detrended**2))
             fluctuation_values.append(fluctuation)
         

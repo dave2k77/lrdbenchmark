@@ -26,6 +26,9 @@ try:
     JAX_AVAILABLE = True
 except ImportError:
     JAX_AVAILABLE = False
+    # Create a dummy jnp for type hints when JAX is not available
+    import numpy as np
+    jnp = np
 
 try:
     import numba

@@ -129,15 +129,26 @@ class MissingDataContamination:
 
 
 # Import pre-trained ML models for production use
-from models.pretrained_models.ml_pretrained import (
-    RandomForestPretrainedModel,
-    SVREstimatorPretrainedModel,
-    GradientBoostingPretrainedModel,
-)
-
-# Import pre-trained neural models
-from models.pretrained_models.cnn_pretrained import CNNPretrainedModel
-from models.pretrained_models.transformer_pretrained import TransformerPretrainedModel
+try:
+    from ..models.pretrained_models.ml_pretrained import (
+        RandomForestPretrainedModel,
+        SVREstimatorPretrainedModel,
+        GradientBoostingPretrainedModel,
+    )
+    
+    # Import pre-trained neural models
+    from ..models.pretrained_models.cnn_pretrained import CNNPretrainedModel
+    from ..models.pretrained_models.transformer_pretrained import TransformerPretrainedModel
+    
+    PRETRAINED_MODELS_AVAILABLE = True
+except ImportError:
+    # Pretrained models not available
+    RandomForestPretrainedModel = None
+    SVREstimatorPretrainedModel = None
+    GradientBoostingPretrainedModel = None
+    CNNPretrainedModel = None
+    TransformerPretrainedModel = None
+    PRETRAINED_MODELS_AVAILABLE = False
 
 
 class ComprehensiveBenchmark:
