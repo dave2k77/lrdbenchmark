@@ -5,6 +5,25 @@ A comprehensive toolkit for benchmarking long-range dependence estimators
 on synthetic and real-world time series data.
 """
 
+import os
+import warnings
+import logging
+
+# Set CPU-only mode by default to avoid GPU issues
+# Users can override by setting these environment variables explicitly
+if 'CUDA_VISIBLE_DEVICES' not in os.environ:
+    os.environ['CUDA_VISIBLE_DEVICES'] = ''
+if 'JAX_PLATFORMS' not in os.environ:
+    os.environ['JAX_PLATFORMS'] = 'cpu'
+
+# Suppress JAX CUDA warnings and errors when using CPU-only mode
+warnings.filterwarnings('ignore', category=UserWarning, module='jax')
+warnings.filterwarnings('ignore', message='.*Jax plugin configuration error.*')
+warnings.filterwarnings('ignore', message='.*CUDA_ERROR_NO_DEVICE.*')
+
+# Suppress JAX logging errors
+logging.getLogger('jax._src.xla_bridge').setLevel(logging.CRITICAL)
+
 __version__ = "2.3.0"
 __author__ = "LRDBench Development Team"
 __email__ = "lrdbench@example.com"
