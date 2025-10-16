@@ -22,16 +22,49 @@ except ImportError as e:
 
 # Classical estimators
 try:
+    # Temporal estimators
     from .analysis.temporal.rs.rs_estimator_unified import RSEstimator
     from .analysis.temporal.dfa.dfa_estimator_unified import DFAEstimator
+    from .analysis.temporal.dma.dma_estimator import DMAEstimator
+    from .analysis.temporal.higuchi.higuchi_estimator import HiguchiEstimator
+    
+    # Spectral estimators
     from .analysis.spectral.whittle.whittle_estimator_unified import WhittleEstimator
     from .analysis.spectral.gph.gph_estimator_unified import GPHEstimator
+    from .analysis.spectral.periodogram.periodogram_estimator_unified import PeriodogramEstimator
+    
+    # Wavelet estimators
+    from .analysis.wavelet.cwt.cwt_estimator_unified import CWTEstimator
+    from .analysis.wavelet.variance.wavelet_variance_estimator import WaveletVarianceEstimator
+    from .analysis.wavelet.log_variance.wavelet_log_variance_estimator import WaveletLogVarianceEstimator
+    from .analysis.wavelet.whittle.wavelet_whittle_estimator import WaveletWhittleEstimator
+    
+    # Multifractal estimators
+    from .analysis.multifractal.mfdfa.mfdfa_estimator import MFDFAEstimator
+    from .analysis.multifractal.wavelet_leaders.multifractal_wavelet_leaders_estimator import MultifractalWaveletLeadersEstimator
+    
 except ImportError as e:
     print(f"Warning: Could not import classical estimators: {e}")
+    # Temporal estimators
     RSEstimator = None
     DFAEstimator = None
+    DMAEstimator = None
+    HiguchiEstimator = None
+    
+    # Spectral estimators
     WhittleEstimator = None
     GPHEstimator = None
+    PeriodogramEstimator = None
+    
+    # Wavelet estimators
+    CWTEstimator = None
+    WaveletVarianceEstimator = None
+    WaveletLogVarianceEstimator = None
+    WaveletWhittleEstimator = None
+    
+    # Multifractal estimators
+    MFDFAEstimator = None
+    MultifractalWaveletLeadersEstimator = None
 
 # Machine Learning estimators
 try:
@@ -93,9 +126,18 @@ __all__ = [
     "AlphaStableModel",
     # Classical estimators
     "RSEstimator",
-    "DFAEstimator",
+    "DFAEstimator", 
+    "DMAEstimator",
+    "HiguchiEstimator",
     "WhittleEstimator",
     "GPHEstimator",
+    "PeriodogramEstimator",
+    "CWTEstimator",
+    "WaveletVarianceEstimator",
+    "WaveletLogVarianceEstimator",
+    "WaveletWhittleEstimator",
+    "MFDFAEstimator",
+    "MultifractalWaveletLeadersEstimator",
     # Machine Learning estimators
     "RandomForestEstimator",
     "SVREstimator",
