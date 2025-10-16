@@ -18,8 +18,8 @@ Generate synthetic data and run a benchmark:
 .. code-block:: python
 
    import numpy as np
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FractionalBrownianMotion
-   from lrdbenchmark.analysis.temporal.rs.rs_estimator_unified import RSEstimator
+   from lrdbenchmark import FBMModel
+   from lrdbenchmark import RSEstimator
    
    # Generate Fractional Brownian Motion data
    model = FractionalBrownianMotion(H=0.7, sigma=1.0)
@@ -82,9 +82,7 @@ LRDBenchmark provides production-ready machine learning estimators:
 
 .. code-block:: python
 
-   from lrdbenchmark.analysis.machine_learning.svr_estimator import SVREstimator
-   from lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator import GradientBoostingEstimator
-   from lrdbenchmark.analysis.machine_learning.random_forest_estimator import RandomForestEstimator
+   from lrdbenchmark import SVREstimator, GradientBoostingEstimator, RandomForestEstimator
    import numpy as np
 
    # Generate training data
@@ -151,17 +149,15 @@ LRDBenchmark provides several synthetic data models:
 
 .. code-block:: python
 
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FractionalBrownianMotion
-   from lrdbenchmark.models.data_models.fgn.fgn_model import FractionalGaussianNoise
-   from lrdbenchmark.models.data_models.arfima.arfima_model import ARFIMAModel
-   from lrdbenchmark.models.data_models.mrw.mrw_model import MultifractalRandomWalk
+   from lrdbenchmark import FBMModel
+   from lrdbenchmark import FGNModel, ARFIMAModel, MRWModel
    
    # Fractional Brownian Motion
-   fbm = FractionalBrownianMotion(H=0.7, sigma=1.0)
+   fbm = FBMModel(H=0.7, sigma=1.0)
    fbm_data = fbm.generate(1000)
    
    # Fractional Gaussian Noise
-   fgn = FractionalGaussianNoise(H=0.6, sigma=1.0)
+   fgn = FGNModel(H=0.6, sigma=1.0)
    fgn_data = fgn.generate(1000)
    
    # ARFIMA process
@@ -169,7 +165,7 @@ LRDBenchmark provides several synthetic data models:
    arfima_data = arfima.generate(1000)
    
    # Multifractal Random Walk
-   mrw = MultifractalRandomWalk(H=0.7, lambda_param=0.1, sigma=1.0)
+   mrw = MRWModel(H=0.7, lambda_param=0.1, sigma=1.0)
    mrw_data = mrw.generate(1000)
 
 Individual Estimators
@@ -179,8 +175,7 @@ Use specific estimators directly:
 
 .. code-block:: python
 
-   from lrdbenchmark.analysis.temporal.dfa.dfa_estimator_unified import DFAEstimator
-   from lrdbenchmark.analysis.spectral.gph.gph_estimator_unified import GPHEstimator
+   from lrdbenchmark import DFAEstimator, GPHEstimator
    
    # Detrended Fluctuation Analysis
    dfa = DFAEstimator()
