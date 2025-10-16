@@ -83,6 +83,7 @@ class FractionalBrownianMotion(BaseModel):
         sigma: float = 1.0,
         method: str = "auto",
         use_optimization: str = "auto",
+        use_gpu: bool = False,
     ):
         """
         Initialize the Fractional Brownian Motion model.
@@ -97,21 +98,16 @@ class FractionalBrownianMotion(BaseModel):
             Preferred generation method (default: 'auto')
         use_optimization : str, optional
             Optimization framework preference (default: 'auto')
+        use_gpu : bool, optional
+            Whether to use GPU acceleration (default: False)
         """
         super().__init__(
-            H=H, sigma=sigma, method=method, use_optimization=use_optimization
+            H=H, sigma=sigma, method=method, use_optimization=use_optimization, use_gpu=use_gpu
         )
 
-        # Set optimization framework
-        if use_optimization == "auto":
-            if JAX_AVAILABLE:
-                self.optimization_framework = "jax"
-            elif NUMBA_AVAILABLE:
-                self.optimization_framework = "numba"
-            else:
-                self.optimization_framework = "numpy"
-        else:
-            self.optimization_framework = use_optimization
+        self.use_gpu = use_gpu
+        self.hardware_info = self._detect_hardware()
+        self.optimization_framework = self._select_optimization_framework(use_optimization)
 
         # Validate optimization framework availability
         if self.optimization_framework == "jax" and not JAX_AVAILABLE:
@@ -139,6 +135,53 @@ class FractionalBrownianMotion(BaseModel):
 
         if method not in valid_methods:
             raise ValueError(f"Method must be one of {valid_methods}")
+
+    def _select_optimization_framework(self, preference: str) -> str:
+        """Select the optimal optimization framework."""
+        if preference == "auto":
+            if JAX_AVAILABLE and self.use_gpu and self.hardware_info.has_gpu:
+                return "jax"
+            elif NUMBA_AVAILABLE:
+                return "numba"
+            else:
+                return "numpy"
+        elif preference == "jax" and JAX_AVAILABLE and self.use_gpu:
+            return "jax"
+        elif preference == "numba" and NUMBA_AVAILABLE:
+            return "numba"
+        else:
+            return "numpy"
+    
+    def _detect_hardware(self):
+        """Detect hardware capabilities."""
+        import psutil
+        
+        # Basic hardware detection
+        cpu_cores = psutil.cpu_count()
+        memory_gb = psutil.virtual_memory().total / (1024**3)
+        
+        # GPU detection
+        has_gpu = False
+        gpu_memory_gb = None
+        if JAX_AVAILABLE:
+            try:
+                devices = jax.devices()
+                has_gpu = any('gpu' in str(device).lower() or 'cuda' in str(device).lower() 
+                            for device in devices)
+                if has_gpu:
+                    # Try to get GPU memory info
+                    gpu_memory_gb = 8.0  # Default assumption, could be improved
+            except:
+                gpu_memory_gb = None
+        
+        return type('HardwareInfo', (), {
+            'cpu_cores': cpu_cores,
+            'memory_gb': memory_gb,
+            'has_gpu': has_gpu,
+            'gpu_memory_gb': gpu_memory_gb,
+            'jax_available': JAX_AVAILABLE,
+            'numba_available': NUMBA_AVAILABLE
+        })()
 
     def _select_optimal_method(self, n: int, H: float) -> str:
         """
@@ -415,6 +458,20 @@ class FractionalBrownianMotion(BaseModel):
 
     def _cholesky_jax(self, n: int, H: float, sigma: float) -> np.ndarray:
         """JAX implementation of Cholesky method."""
+        try:
+            # Ensure JAX uses CPU if GPU is not available or not requested
+            if not self.use_gpu:
+                with jax.default_device(jax.devices('cpu')[0]):
+                    return self._cholesky_jax_impl(n, H, sigma)
+            else:
+                return self._cholesky_jax_impl(n, H, sigma)
+        except Exception as e:
+            # Fallback to NumPy if JAX fails
+            print(f"JAX implementation failed: {e}, falling back to NumPy")
+            return self._cholesky_numpy(n, H, sigma)
+    
+    def _cholesky_jax_impl(self, n: int, H: float, sigma: float) -> np.ndarray:
+        """Internal JAX implementation of Cholesky method."""
         i, j = jnp.meshgrid(jnp.arange(n), jnp.arange(n), indexing="ij")
         cov_matrix = (
             sigma**2
@@ -437,6 +494,20 @@ class FractionalBrownianMotion(BaseModel):
 
     def _circulant_jax(self, n: int, H: float, sigma: float) -> np.ndarray:
         """JAX implementation of circulant method."""
+        try:
+            # Ensure JAX uses CPU if GPU is not available or not requested
+            if not self.use_gpu:
+                with jax.default_device(jax.devices('cpu')[0]):
+                    return self._circulant_jax_impl(n, H, sigma)
+            else:
+                return self._circulant_jax_impl(n, H, sigma)
+        except Exception as e:
+            # Fallback to NumPy if JAX fails
+            print(f"JAX implementation failed: {e}, falling back to NumPy")
+            return self._circulant_numpy(n, H, sigma)
+    
+    def _circulant_jax_impl(self, n: int, H: float, sigma: float) -> np.ndarray:
+        """Internal JAX implementation of circulant method."""
         lags = jnp.arange(n)
         autocov = (
             sigma**2

@@ -59,6 +59,61 @@ class BaseModel(ABC):
             Generated time series of length n
         """
         pass
+    
+    def generate_batch(self, n_series: int, n_points: int, seed: Optional[int] = None) -> np.ndarray:
+        """
+        Generate multiple time series from the model.
+
+        Parameters
+        ----------
+        n_series : int
+            Number of time series to generate
+        n_points : int
+            Length of each time series
+        seed : int, optional
+            Random seed for reproducibility
+
+        Returns
+        -------
+        np.ndarray
+            Generated time series array of shape (n_series, n_points)
+        """
+        if seed is not None:
+            np.random.seed(seed)
+        
+        batch = np.zeros((n_series, n_points))
+        for i in range(n_series):
+            # Use different seed for each series to ensure independence
+            series_seed = seed + i if seed is not None else None
+            batch[i] = self.generate(n_points, seed=series_seed)
+        
+        return batch
+    
+    def generate_streaming(self, n: int, chunk_size: int = 1000, seed: Optional[int] = None):
+        """
+        Generate data in streaming fashion for very large datasets.
+
+        Parameters
+        ----------
+        n : int
+            Total length of the time series to generate
+        chunk_size : int, default=1000
+            Size of each chunk
+        seed : int, optional
+            Random seed for reproducibility
+
+        Yields
+        ------
+        np.ndarray
+            Chunks of generated data
+        """
+        if seed is not None:
+            np.random.seed(seed)
+        
+        for start in range(0, n, chunk_size):
+            end = min(start + chunk_size, n)
+            chunk_length = end - start
+            yield self.generate(chunk_length, seed=seed + start if seed is not None else None)
 
     @abstractmethod
     def get_theoretical_properties(self) -> Dict[str, Any]:

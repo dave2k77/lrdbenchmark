@@ -96,7 +96,7 @@ class TransformerPretrainedModel(BasePretrainedModel):
     architecture without requiring training during runtime.
     """
 
-    def __init__(self, input_length: int = 500):
+    def __init__(self, input_length: int = 500, use_gpu: bool = False):
         """
         Initialize the Transformer pre-trained model.
 
@@ -104,15 +104,23 @@ class TransformerPretrainedModel(BasePretrainedModel):
         ----------
         input_length : int
             Length of input time series
+        use_gpu : bool, default=False
+            Whether to use GPU acceleration (defaults to CPU for stability)
         """
         super().__init__()
         self.input_length = input_length
+        self.use_gpu = use_gpu
+        self.device = None  # Will be set on first use
 
-        # Create and initialize the model with reasonable weights
-        self._create_model()
+        # Model will be created on first use
+        self.model = None
+        self.is_loaded = False
 
     def _get_safe_device(self):
         """Get a safe device with CUDA compatibility check."""
+        if not self.use_gpu:
+            return torch.device('cpu')
+            
         if torch.cuda.is_available():
             try:
                 # Test CUDA with small operation
@@ -136,8 +144,9 @@ class TransformerPretrainedModel(BasePretrainedModel):
 
     def _create_model(self):
         """Create and initialize the Transformer model with reasonable weights."""
-        device = self._get_safe_device()
-        self.model = SimpleTransformer(self.input_length).to(device)
+        if self.device is None:
+            self.device = self._get_safe_device()
+        self.model = SimpleTransformer(self.input_length).to(self.device)
 
         # Initialize weights for better performance
         self._initialize_weights()
@@ -175,8 +184,9 @@ class TransformerPretrainedModel(BasePretrainedModel):
         dict
             Estimation results
         """
+        # Initialize model on first use
         if not self.is_loaded:
-            raise RuntimeError("Model not loaded")
+            self._create_model()
 
         # Preprocess data
         if data.ndim == 1:

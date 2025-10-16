@@ -17,11 +17,13 @@ import time
 import psutil
 import warnings
 from typing import Dict, Any, Optional, Callable, Tuple, List
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from enum import Enum
 import json
 import os
 from pathlib import Path
+import hashlib
+from datetime import datetime, timedelta
 
 # Import optimization frameworks
 try:
@@ -64,6 +66,40 @@ class PerformanceProfile:
     accuracy: float
     success: bool
     timestamp: float
+    computation_type: str = "unknown"
+    hardware_hash: str = ""
+    error_message: str = ""
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for JSON serialization."""
+        return {
+            'framework': self.framework.value,
+            'data_size': self.data_size,
+            'execution_time': self.execution_time,
+            'memory_usage': self.memory_usage,
+            'accuracy': self.accuracy,
+            'success': self.success,
+            'timestamp': self.timestamp,
+            'computation_type': self.computation_type,
+            'hardware_hash': self.hardware_hash,
+            'error_message': self.error_message
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'PerformanceProfile':
+        """Create from dictionary."""
+        return cls(
+            framework=OptimizationFramework(data['framework']),
+            data_size=data['data_size'],
+            execution_time=data['execution_time'],
+            memory_usage=data['memory_usage'],
+            accuracy=data['accuracy'],
+            success=data['success'],
+            timestamp=data['timestamp'],
+            computation_type=data.get('computation_type', 'unknown'),
+            hardware_hash=data.get('hardware_hash', ''),
+            error_message=data.get('error_message', '')
+        )
 
 
 @dataclass
@@ -83,7 +119,7 @@ class OptimizationBackend:
     computation framework based on data characteristics and hardware.
     """
     
-    def __init__(self, cache_dir: Optional[str] = None):
+    def __init__(self, cache_dir: Optional[str] = None, enable_profiling: bool = True):
         """
         Initialize the optimization backend.
         
@@ -91,15 +127,23 @@ class OptimizationBackend:
         ----------
         cache_dir : str, optional
             Directory to cache performance profiles. If None, uses default.
+        enable_profiling : bool, default=True
+            Whether to enable performance profiling and caching
         """
         self.cache_dir = self._initialise_cache_dir(cache_dir)
+        self.enable_profiling = enable_profiling
+        self.cache_file = self.cache_dir / 'performance_cache.json'
+        self.failure_cache = self.cache_dir / 'failure_cache.json'
         
         self.performance_profiles: List[PerformanceProfile] = []
+        self.framework_failures: Dict[str, List[Dict[str, Any]]] = {}
         self.hardware_info = self._detect_hardware()
         self.framework_weights = self._initialize_framework_weights()
         
-        # Load cached performance data
-        self._load_performance_cache()
+        # Load persistent data
+        if self.enable_profiling:
+            self._load_performance_cache()
+            self._load_failure_cache()
         
         # Performance thresholds (in seconds)
         self.performance_thresholds = {
@@ -204,6 +248,14 @@ class OptimizationBackend:
         OptimizationFramework
             Selected optimization framework
         """
+        # Check for recent failures
+        for framework in OptimizationFramework:
+            failures = self._get_framework_failures(framework.value)
+            recent_failures = [f for f in failures if time.time() - f['timestamp'] < 3600]  # Last hour
+            if len(recent_failures) > 5:  # Too many recent failures
+                print(f"⚠️ Framework {framework.value} has {len(recent_failures)} recent failures, skipping")
+                continue
+        
         # Check memory constraints
         if memory_requirement and memory_requirement > self.hardware_info.memory_gb * 0.8:
             return OptimizationFramework.NUMPY  # Fallback to NumPy for memory safety
@@ -232,6 +284,91 @@ class OptimizationBackend:
                 best_framework = OptimizationFramework.JAX
         
         return best_framework
+    
+    def _get_hardware_hash(self) -> str:
+        """Get a hash representing current hardware configuration."""
+        hw_info = f"{self.hardware_info.cpu_cores}_{self.hardware_info.memory_gb}_{self.hardware_info.has_gpu}"
+        return hashlib.md5(hw_info.encode()).hexdigest()[:8]
+    
+    def _load_performance_cache(self):
+        """Load performance data from persistent cache."""
+        if not self.cache_file.exists():
+            return
+        
+        try:
+            with open(self.cache_file, 'r') as f:
+                data = json.load(f)
+            
+            # Load profiles
+            for profile_data in data.get('profiles', []):
+                profile = PerformanceProfile.from_dict(profile_data)
+                self.performance_profiles.append(profile)
+            
+            # Clean old profiles (older than 30 days)
+            cutoff_time = time.time() - (30 * 24 * 60 * 60)  # 30 days
+            self.performance_profiles = [
+                p for p in self.performance_profiles 
+                if p.timestamp > cutoff_time
+            ]
+            
+            print(f"Loaded {len(self.performance_profiles)} performance profiles from cache")
+            
+        except Exception as e:
+            warnings.warn(f"Failed to load performance cache: {e}")
+    
+    def _save_performance_cache(self):
+        """Save performance data to persistent cache."""
+        try:
+            data = {
+                'profiles': [p.to_dict() for p in self.performance_profiles],
+                'last_updated': time.time(),
+                'hardware_hash': self._get_hardware_hash()
+            }
+            
+            with open(self.cache_file, 'w') as f:
+                json.dump(data, f, indent=2)
+                
+        except Exception as e:
+            warnings.warn(f"Failed to save performance cache: {e}")
+    
+    def _load_failure_cache(self):
+        """Load framework failure data from cache."""
+        if not self.failure_cache.exists():
+            return
+        
+        try:
+            with open(self.failure_cache, 'r') as f:
+                self.framework_failures = json.load(f)
+        except Exception as e:
+            warnings.warn(f"Failed to load failure cache: {e}")
+            self.framework_failures = {}
+    
+    def _save_failure_cache(self):
+        """Save framework failure data to cache."""
+        try:
+            with open(self.failure_cache, 'w') as f:
+                json.dump(self.framework_failures, f, indent=2)
+        except Exception as e:
+            warnings.warn(f"Failed to save failure cache: {e}")
+    
+    def _record_framework_failure(self, framework: str, error_message: str):
+        """Record a framework failure."""
+        if framework not in self.framework_failures:
+            self.framework_failures[framework] = []
+        
+        self.framework_failures[framework].append({
+            'timestamp': time.time(),
+            'error': error_message
+        })
+        
+        # Keep only recent failures (last 100)
+        self.framework_failures[framework] = self.framework_failures[framework][-100:]
+        
+        self._save_failure_cache()
+    
+    def _get_framework_failures(self, framework: str) -> List[Dict[str, Any]]:
+        """Get recent failures for a framework."""
+        return self.framework_failures.get(framework, [])
     
     def _is_framework_available(self, framework: OptimizationFramework) -> bool:
         """Check if a framework is available."""
@@ -335,11 +472,22 @@ class OptimizationBackend:
             memory_usage=memory_usage,
             accuracy=accuracy,
             success=success,
-            timestamp=time.time()
+            timestamp=time.time(),
+            computation_type=computation_type,
+            hardware_hash=self._get_hardware_hash(),
+            error_message=str(e) if not success else ""
         )
         
         # Store the profile
-        self.performance_profiles.append(profile)
+        if self.enable_profiling:
+            self.performance_profiles.append(profile)
+            # Save to persistent cache every 10 profiles
+            if len(self.performance_profiles) % 10 == 0:
+                self._save_performance_cache()
+        
+        # Record failures
+        if not success:
+            self._record_framework_failure(framework.value, str(e))
         
         return profile
     
@@ -400,8 +548,93 @@ class OptimizationBackend:
         else:
             return f"NumPy selected as fallback for {computation_type} computation"
     
+    def _get_hardware_hash(self) -> str:
+        """Get a hash representing current hardware configuration."""
+        hw_info = f"{self.hardware_info.cpu_cores}_{self.hardware_info.memory_gb}_{self.hardware_info.has_gpu}"
+        return hashlib.md5(hw_info.encode()).hexdigest()[:8]
+    
     def _load_performance_cache(self):
-        """Load cached performance profiles from disk."""
+        """Load performance data from persistent cache."""
+        if not self.cache_file.exists():
+            return
+        
+        try:
+            with open(self.cache_file, 'r') as f:
+                data = json.load(f)
+            
+            # Load profiles
+            for profile_data in data.get('profiles', []):
+                profile = PerformanceProfile.from_dict(profile_data)
+                self.performance_profiles.append(profile)
+            
+            # Clean old profiles (older than 30 days)
+            cutoff_time = time.time() - (30 * 24 * 60 * 60)  # 30 days
+            self.performance_profiles = [
+                p for p in self.performance_profiles 
+                if p.timestamp > cutoff_time
+            ]
+            
+            print(f"Loaded {len(self.performance_profiles)} performance profiles from cache")
+            
+        except Exception as e:
+            warnings.warn(f"Failed to load performance cache: {e}")
+    
+    def _save_performance_cache(self):
+        """Save performance data to persistent cache."""
+        try:
+            data = {
+                'profiles': [p.to_dict() for p in self.performance_profiles],
+                'last_updated': time.time(),
+                'hardware_hash': self._get_hardware_hash()
+            }
+            
+            with open(self.cache_file, 'w') as f:
+                json.dump(data, f, indent=2)
+                
+        except Exception as e:
+            warnings.warn(f"Failed to save performance cache: {e}")
+    
+    def _load_failure_cache(self):
+        """Load framework failure data from cache."""
+        if not self.failure_cache.exists():
+            return
+        
+        try:
+            with open(self.failure_cache, 'r') as f:
+                self.framework_failures = json.load(f)
+        except Exception as e:
+            warnings.warn(f"Failed to load failure cache: {e}")
+            self.framework_failures = {}
+    
+    def _save_failure_cache(self):
+        """Save framework failure data to cache."""
+        try:
+            with open(self.failure_cache, 'w') as f:
+                json.dump(self.framework_failures, f, indent=2)
+        except Exception as e:
+            warnings.warn(f"Failed to save failure cache: {e}")
+    
+    def _record_framework_failure(self, framework: str, error_message: str):
+        """Record a framework failure."""
+        if framework not in self.framework_failures:
+            self.framework_failures[framework] = []
+        
+        self.framework_failures[framework].append({
+            'timestamp': time.time(),
+            'error': error_message
+        })
+        
+        # Keep only recent failures (last 100)
+        self.framework_failures[framework] = self.framework_failures[framework][-100:]
+        
+        self._save_failure_cache()
+    
+    def _get_framework_failures(self, framework: str) -> List[Dict[str, Any]]:
+        """Get recent failures for a framework."""
+        return self.framework_failures.get(framework, [])
+    
+    def _load_performance_cache_legacy(self):
+        """Load cached performance profiles from disk (legacy method)."""
         cache_file = self.cache_dir / "performance_profiles.json"
         if cache_file.exists():
             try:

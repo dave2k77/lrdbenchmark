@@ -5,7 +5,7 @@ A comprehensive toolkit for benchmarking long-range dependence estimators
 on synthetic and real-world time series data.
 """
 
-__version__ = "2.1.7"
+__version__ = "2.2.1"
 __author__ = "LRDBench Development Team"
 __email__ = "lrdbench@example.com"
 
@@ -60,6 +60,21 @@ except ImportError as e:
     print(f"Warning: Could not import neural network factory: {e}")
     NeuralNetworkFactory = None
 
+# GPU utilities
+try:
+    from .gpu import is_available as gpu_is_available, get_device_info, clear_cache, suggest_batch_size, get_safe_device
+    from .gpu_memory import get_gpu_memory_info, clear_gpu_cache, monitor_gpu_memory
+except ImportError as e:
+    print(f"Warning: Could not import GPU utilities: {e}")
+    gpu_is_available = lambda: False
+    get_device_info = lambda: {'available': False}
+    clear_cache = lambda: None
+    suggest_batch_size = lambda data_size, seq_len: min(32, data_size)
+    get_safe_device = lambda use_gpu=False: 'cpu'
+    get_gpu_memory_info = lambda: {'torch_available': False, 'jax_available': False}
+    clear_gpu_cache = lambda: None
+    monitor_gpu_memory = lambda op_name="operation": None
+
 # Main exports
 __all__ = [
     # Data models
@@ -82,6 +97,15 @@ __all__ = [
     "TransformerEstimator",
     # Neural Network Factory
     "NeuralNetworkFactory",
+    # GPU utilities
+    "gpu_is_available",
+    "get_device_info", 
+    "clear_cache",
+    "suggest_batch_size",
+    "get_safe_device",
+    "get_gpu_memory_info",
+    "clear_gpu_cache",
+    "monitor_gpu_memory",
     # Version info
     "__version__",
     "__author__",

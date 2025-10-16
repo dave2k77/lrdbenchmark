@@ -9,7 +9,7 @@ selection (JAX, Numba, NumPy) for the best performance on the available hardware
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-from typing import Dict, Any, Optional, Union, Tuple, List, Sequence
+from typing import Dict, Any, Optional, Union, Tuple, List, Sequence, Callable
 import warnings
 
 # Import optimization frameworks
@@ -47,24 +47,80 @@ class RSEstimator(BaseEstimator):
     Unified R/S (Rescaled Range) Estimator for Long-Range Dependence Analysis.
 
     The R/S estimator analyzes the rescaled range of time series data to estimate
-    the Hurst parameter, which characterizes long-range dependence.
+    the Hurst parameter, which characterizes long-range dependence. This implementation
+    provides automatic optimization framework selection and GPU acceleration.
+
+    The R/S statistic is calculated as:
+    R/S = (max(X) - min(X)) / S
+    
+    where X is the cumulative deviation from the mean and S is the standard deviation.
 
     Features:
     - Automatic optimization framework selection (JAX, Numba, NumPy)
     - GPU acceleration with JAX when available
     - JIT compilation with Numba for CPU optimization
     - Graceful fallbacks when optimization frameworks fail
+    - Support for both block-based and window-based analysis
 
     Parameters
     ----------
-    min_block_size : int, optional (default=10)
-        Minimum block size for analysis
-    max_block_size : int, optional (default=None)
+    min_block_size : int, optional
+        Minimum block size for analysis (default: 10)
+    max_block_size : int, optional
         Maximum block size for analysis. If None, uses data length / 4
-    num_blocks : int, optional (default=10)
-        Number of block sizes to test
-    use_optimization : str, optional (default='auto')
-        Optimization framework to use: 'auto', 'jax', 'numba', 'numpy'
+    num_blocks : int, optional
+        Number of block sizes to test (default: 10)
+    use_optimization : str, optional
+        Optimization framework to use: 'auto', 'jax', 'numba', 'numpy' (default: 'auto')
+    min_window_size : int, optional
+        Minimum window size (alias for min_block_size)
+    max_window_size : int, optional
+        Maximum window size (alias for max_block_size)
+    num_windows : int, optional
+        Number of windows (alias for num_blocks)
+    window_sizes : Sequence[int], optional
+        Explicit list of window sizes to use
+    overlap : bool, optional
+        Whether to use overlapping windows (default: False)
+
+    Attributes
+    ----------
+    parameters : Dict[str, Any]
+        Current estimator parameters
+    optimization_framework : str
+        Selected optimization framework
+    block_sizes : List[int]
+        Block sizes used for analysis
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from lrdbenchmark import RSEstimator
+    >>> 
+    >>> # Generate sample data
+    >>> data = np.random.randn(1000)
+    >>> 
+    >>> # Create estimator
+    >>> estimator = RSEstimator(min_block_size=10, max_block_size=100)
+    >>> 
+    >>> # Estimate Hurst parameter
+    >>> result = estimator.estimate(data)
+    >>> print(f"Hurst parameter: {result['hurst_parameter']:.3f}")
+    >>> print(f"Confidence interval: {result['confidence_interval']}")
+
+    Notes
+    -----
+    The R/S estimator is robust and works well for a wide range of data types.
+    However, it can be sensitive to trends and may require detrending for
+    non-stationary data.
+
+    References
+    ---------
+    .. [1] Mandelbrot, B. B., & Wallis, J. R. (1969). Robustness of the rescaled
+           range R/S in the measurement of noncyclic long run statistical dependence.
+           Water Resources Research, 5(5), 967-988.
+    .. [2] Hurst, H. E. (1951). Long-term storage capacity of reservoirs.
+           Transactions of the American Society of Civil Engineers, 116, 770-799.
     """
 
     def __init__(
@@ -79,7 +135,7 @@ class RSEstimator(BaseEstimator):
         num_windows: Optional[int] = None,
         window_sizes: Optional[Sequence[int]] = None,
         overlap: bool = False,
-    ):
+    ) -> None:
         # Prefer explicit window-based parameters when provided for backward compatibility
         if min_window_size is not None:
             min_block_size = min_window_size
@@ -162,16 +218,48 @@ class RSEstimator(BaseEstimator):
     # ------------------------------------------------------------------
 
     def _sanitize_window_sizes(self, window_sizes: Sequence[int]) -> np.ndarray:
-        """Validate and sanitize a sequence of window sizes."""
-
+        """
+        Validate and sanitize a sequence of window sizes.
+        
+        Parameters
+        ----------
+        window_sizes : Sequence[int]
+            Sequence of window sizes to validate
+            
+        Returns
+        -------
+        np.ndarray
+            Validated and sanitized window sizes
+            
+        Raises
+        ------
+        ValueError
+            If any window size is not positive
+        """
         windows = np.array(window_sizes, dtype=int)
         if np.any(windows <= 0):
             raise ValueError("Window sizes must be positive integers")
         return windows
 
     def _resolve_block_sizes(self, n: int) -> np.ndarray:
-        """Construct the block/window sizes used for the R/S analysis."""
-
+        """
+        Construct the block/window sizes used for the R/S analysis.
+        
+        Parameters
+        ----------
+        n : int
+            Length of the input data
+            
+        Returns
+        -------
+        np.ndarray
+            Array of block sizes to use for analysis
+            
+        Raises
+        ------
+        ValueError
+            If fewer than 3 valid window sizes are found
+        """
         if self.parameters["window_sizes"] is not None:
             windows = np.asarray(self.parameters["window_sizes"], dtype=int)
         else:
@@ -281,21 +369,89 @@ class RSEstimator(BaseEstimator):
         """
         Estimate the Hurst parameter using R/S analysis with automatic optimization.
 
+        This method performs R/S analysis on the input time series to estimate the
+        Hurst parameter, which characterizes long-range dependence. The method
+        automatically selects the optimal implementation (JAX, Numba, or NumPy)
+        based on the available hardware and data characteristics.
+
         Parameters
         ----------
-        data : array-like
-            Input time series data
+        data : Union[np.ndarray, list]
+            Input time series data. Should be a 1D array or list of numerical values.
+            The data will be automatically converted to a numpy array.
 
         Returns
         -------
-        dict
-            Dictionary containing estimation results including:
-            - hurst_parameter: Estimated Hurst parameter
-            - r_squared: R-squared value of the fit
-            - block_sizes: Block sizes used in the analysis
-            - rs_values: R/S values for each block size
-            - log_block_sizes: Log of block sizes
-            - log_rs_values: Log of R/S values
+        Dict[str, Any]
+            Dictionary containing comprehensive estimation results:
+            
+            - hurst_parameter : float
+                Estimated Hurst parameter (0 < H < 1)
+            - r_squared : float
+                R-squared value of the linear regression fit
+            - slope : float
+                Slope of the log-log regression line
+            - intercept : float
+                Intercept of the log-log regression line
+            - p_value : float
+                P-value of the regression (if available)
+            - std_error : float
+                Standard error of the Hurst parameter estimate
+            - block_sizes : List[int]
+                Block sizes used in the analysis
+            - rs_values : List[float]
+                R/S values for each block size
+            - log_block_sizes : List[float]
+                Logarithm of block sizes
+            - log_rs_values : List[float]
+                Logarithm of R/S values
+            - confidence_interval : List[float]
+                95% confidence interval for the Hurst parameter
+            - method : str
+                Analysis method used ('rs_analysis')
+            - optimization_framework : str
+                Optimization framework used ('jax', 'numba', or 'numpy')
+
+        Raises
+        ------
+        ValueError
+            If the input data is invalid or too short
+        RuntimeError
+            If all optimization frameworks fail
+
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from lrdbenchmark import RSEstimator
+        >>> 
+        >>> # Generate sample data with known Hurst parameter
+        >>> np.random.seed(42)
+        >>> data = np.random.randn(1000)
+        >>> 
+        >>> # Create estimator
+        >>> estimator = RSEstimator(min_block_size=10, max_block_size=100)
+        >>> 
+        >>> # Estimate Hurst parameter
+        >>> result = estimator.estimate(data)
+        >>> print(f"Hurst parameter: {result['hurst_parameter']:.3f}")
+        >>> print(f"R-squared: {result['r_squared']:.3f}")
+        >>> print(f"Confidence interval: {result['confidence_interval']}")
+
+        Notes
+        -----
+        The R/S estimator works by:
+        1. Dividing the data into blocks of different sizes
+        2. Computing the rescaled range (R/S) for each block
+        3. Fitting a linear regression to log(R/S) vs log(block_size)
+        4. The Hurst parameter is the slope of this regression line
+        
+        The method is robust but can be sensitive to trends in the data.
+        For non-stationary data, consider detrending before analysis.
+
+        See Also
+        --------
+        DFAEstimator : Detrended Fluctuation Analysis
+        WhittleEstimator : Whittle maximum likelihood estimation
         """
         data = np.asarray(data)
         n = len(data)
