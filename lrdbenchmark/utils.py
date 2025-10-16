@@ -181,12 +181,20 @@ def get_pretrained_model_path(model_name: str, format_type: str = "joblib") -> O
         Path to the pretrained model file, or None if not found
     """
     try:
-        import pkg_resources
-        package_path = pkg_resources.resource_filename('lrdbenchmark', f'models/{model_name}.{format_type}')
-        if Path(package_path).exists():
-            return package_path
-    except Exception:
-        pass
+        from importlib.metadata import files
+        package_files = files('lrdbenchmark')
+        for file in package_files:
+            if f'models/{model_name}.{format_type}' in str(file):
+                return str(file.locate())
+    except (ImportError, Exception):
+        # Fallback to pkg_resources for older Python versions
+        try:
+            import pkg_resources
+            package_path = pkg_resources.resource_filename('lrdbenchmark', f'models/{model_name}.{format_type}')
+            if Path(package_path).exists():
+                return package_path
+        except Exception:
+            pass
     
     # Fallback to local models directory
     local_path = Path(f"models/{model_name}.{format_type}")
@@ -206,14 +214,31 @@ def get_neural_network_model_path(model_name: str) -> tuple[Optional[str], Optio
         Tuple of (model_path, config_path) or (None, None) if not found
     """
     try:
-        import pkg_resources
-        model_path = pkg_resources.resource_filename('lrdbenchmark', f'models/{model_name}_neural_network.pth')
-        config_path = pkg_resources.resource_filename('lrdbenchmark', f'models/{model_name}_config.json')
+        from importlib.metadata import files
+        package_files = files('lrdbenchmark')
+        model_path = None
+        config_path = None
         
-        if Path(model_path).exists():
-            return model_path, config_path if Path(config_path).exists() else None
-    except Exception:
-        pass
+        for file in package_files:
+            file_str = str(file)
+            if f'models/{model_name}_neural_network.pth' in file_str:
+                model_path = str(file.locate())
+            elif f'models/{model_name}_config.json' in file_str:
+                config_path = str(file.locate())
+        
+        if model_path and Path(model_path).exists():
+            return model_path, config_path if config_path and Path(config_path).exists() else None
+    except (ImportError, Exception):
+        # Fallback to pkg_resources for older Python versions
+        try:
+            import pkg_resources
+            model_path = pkg_resources.resource_filename('lrdbenchmark', f'models/{model_name}_neural_network.pth')
+            config_path = pkg_resources.resource_filename('lrdbenchmark', f'models/{model_name}_config.json')
+            
+            if Path(model_path).exists():
+                return model_path, config_path if Path(config_path).exists() else None
+        except Exception:
+            pass
     
     # Fallback to local models directory
     local_model_path = Path(f"models/{model_name}_neural_network.pth")
@@ -224,9 +249,14 @@ def get_neural_network_model_path(model_name: str) -> tuple[Optional[str], Optio
     
     return None, None
 
-# Legacy imports for backward compatibility
+# Modern metadata handling
 try:
-    import pkg_resources
-    __version__ = pkg_resources.get_distribution("lrdbenchmark").version
-except Exception:
-    __version__ = "unknown"
+    from importlib.metadata import version, PackageNotFoundError
+    __version__ = version("lrdbenchmark")
+except (PackageNotFoundError, ImportError):
+    # Fallback for older Python versions or if package not installed
+    try:
+        import pkg_resources
+        __version__ = pkg_resources.get_distribution("lrdbenchmark").version
+    except Exception:
+        __version__ = "unknown"
