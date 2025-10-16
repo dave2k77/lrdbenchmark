@@ -76,7 +76,7 @@ from lrdbenchmark import AlphaStableModel, AdaptivePreprocessor
 
 # Generate heavy-tailed α-stable process
 alpha_stable = AlphaStableModel(alpha=1.5, beta=0.0, scale=1.0)
-x = alpha_stable.generate(n=1000, seed=42)
+x = alpha_stable.generate(length=1000, seed=42)
 
 # Apply adaptive preprocessing for robust estimation
 preprocessor = AdaptivePreprocessor()

@@ -89,7 +89,7 @@ pip install -e .
 
 ```python
 from lrdbenchmark import FBMModel
-from lrdbenchmark.analysis.temporal.rs.rs_estimator import RSEstimator
+from lrdbenchmark import RSEstimator
 
 # Generate synthetic data
 fbm = FBMModel(hurst=0.8, length=1000)
