@@ -6,7 +6,7 @@ This guide will help you install lrdbenchmark and its dependencies.
 Requirements
 ------------
 
-* Python 3.13 or higher
+* Python 3.8 or higher (3.8-3.12 supported)
 * pip (Python package installer)
 * Optional: CUDA-compatible GPU for accelerated computations
 
@@ -41,8 +41,13 @@ For GPU acceleration and additional features:
 
 .. code-block:: bash
 
-   # Install with dashboard support (Streamlit + Plotly)
-   pip install lrdbenchmark[dashboard]
+   # All acceleration libraries (JAX, PyTorch, Numba)
+   pip install lrdbenchmark[accel-all]
+   
+   # Specific acceleration libraries
+   pip install lrdbenchmark[accel-jax]      # JAX acceleration
+   pip install lrdbenchmark[accel-pytorch]  # PyTorch acceleration
+   pip install lrdbenchmark[accel-numba]    # Numba acceleration
    
    # Install with development dependencies
    pip install lrdbenchmark[dev]
@@ -77,8 +82,8 @@ Using conda:
 
 .. code-block:: bash
 
-   # Create a new conda environment with Python 3.13 (GPU-ready stack)
-   conda create -n lrdbenchmark python=3.13
+   # Create a new conda environment with Python 3.11 (GPU-ready stack)
+   conda create -n lrdbenchmark python=3.11
    conda activate lrdbenchmark
    
    # Install PyTorch with CUDA 12.1 support
@@ -122,16 +127,19 @@ After installation, verify that LRDBenchmark is working correctly:
    import lrdbenchmark
    print(f"lrdbenchmark version: {lrdbenchmark.__version__}")
    
-   # Test enhanced ML and neural network estimators
-   from lrdbenchmark.analysis.machine_learning.cnn_estimator_unified import CNNEstimator
-   from lrdbenchmark.analysis.machine_learning.lstm_estimator_unified import LSTMEstimator
-   print("Enhanced estimators imported successfully!")
+   # Test simplified API imports
+   from lrdbenchmark import FBMModel, RSEstimator, CNNEstimator, LSTMEstimator
+   print("Simplified API imports working!")
    
    # Test basic functionality
-   from lrdbenchmark import FBMModel
-   model = FBMModel(H=0.7)
-   data = model.generate(100)
+   model = FBMModel(H=0.7, sigma=1.0)
+   data = model.generate(length=100, seed=42)
    print(f"Generated {len(data)} samples")
+   
+   # Test estimator
+   estimator = RSEstimator()
+   result = estimator.estimate(data)
+   print(f"Hurst estimate: {result['hurst_parameter']:.3f}")
 
 Troubleshooting
 ---------------
