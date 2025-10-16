@@ -90,7 +90,7 @@ class ARFIMAModel(BaseModel):
             ar_poly = np.poly1d([1] + [-x for x in ar_params])
             roots = ar_poly.roots
             if np.any(
-                np.abs(roots) >= 1 - 1e-10
+                lengthp.abs(roots) >= 1 - 1e-10
             ):  # Roots must be inside unit circle for stationarity
                 raise ValueError("AR parameters must satisfy stationarity conditions")
 
@@ -99,7 +99,7 @@ class ARFIMAModel(BaseModel):
             ma_poly = np.poly1d([1] + ma_params)
             roots = ma_poly.roots
             if np.any(
-                np.abs(roots) >= 1 - 1e-10
+                lengthp.abs(roots) >= 1 - 1e-10
             ):  # Roots must be inside unit circle for invertibility
                 raise ValueError("MA parameters must satisfy invertibility conditions")
 
@@ -107,13 +107,13 @@ class ARFIMAModel(BaseModel):
         if method not in valid_methods:
             raise ValueError(f"Method must be one of {valid_methods}")
 
-    def generate(self, n: int, seed: Optional[int] = None) -> np.ndarray:
+    def generate(self, length: int, seed: Optional[int] = None) -> np.ndarray:
         """
         Generate ARFIMA time series.
 
         Parameters
         ----------
-        n : int
+        length : int
             Length of the time series to generate
         seed : int, optional
             Random seed for reproducibility
@@ -121,7 +121,7 @@ class ARFIMAModel(BaseModel):
         Returns
         -------
         np.ndarray
-            Generated ARFIMA time series of length n
+            Generated ARFIMA time series of length length
         """
         if seed is not None:
             np.random.seed(seed)
@@ -133,13 +133,13 @@ class ARFIMAModel(BaseModel):
         method = self.parameters["method"]
 
         if method == "spectral":
-            return self._spectral_method(n, d, ar_params, ma_params, sigma)
+            return self._spectral_method(length, d, ar_params, ma_params, sigma)
         else:
-            return self._simulation_method(n, d, ar_params, ma_params, sigma)
+            return self._simulation_method(length, d, ar_params, ma_params, sigma)
 
     def _spectral_method(
         self,
-        n: int,
+        length: int,
         d: float,
         ar_params: List[float],
         ma_params: List[float],
@@ -152,7 +152,7 @@ class ARFIMAModel(BaseModel):
         which is much more efficient than time-domain simulation.
         """
         # Generate frequencies
-        freqs = np.fft.fftfreq(n)
+        freqs = np.fft.fftfreq(length)
 
         # Spectral density of ARFIMA process
         spectral_density = self._compute_spectral_density(
@@ -160,7 +160,7 @@ class ARFIMAModel(BaseModel):
         )
 
         # Generate complex Gaussian noise
-        noise = np.random.normal(0, 1, n) + 1j * np.random.normal(0, 1, n)
+        noise = np.random.normal(0, 1, length) + 1j * np.random.normal(0, 1, length)
         noise = noise / np.sqrt(2)
 
         # Apply spectral filter
@@ -173,7 +173,7 @@ class ARFIMAModel(BaseModel):
 
     def _simulation_method(
         self,
-        n: int,
+        length: int,
         d: float,
         ar_params: List[float],
         ma_params: List[float],
@@ -186,7 +186,7 @@ class ARFIMAModel(BaseModel):
         AR/MA filtering with scipy.
         """
         # Generate white noise
-        noise = np.random.normal(0, sigma, n + 1000)  # Extra for warm-up
+        noise = np.random.normal(0, sigma, length + 1000)  # Extra for warm-up
 
         # Apply MA filter if needed
         if ma_params:
@@ -203,8 +203,8 @@ class ARFIMAModel(BaseModel):
         else:
             ar_filtered = frac_diff
 
-        # Return the final n observations (discard warm-up)
-        return ar_filtered[-n:]
+        # Return the final length observations (discard warm-up)
+        return ar_filtered[-length:]
 
     def _fractional_differencing_fft(self, data: np.ndarray, d: float) -> np.ndarray:
         """
@@ -221,13 +221,13 @@ class ARFIMAModel(BaseModel):
 
         Returns
         -------
-        np.ndarray
+        lengthp.ndarray
             Fractionally differenced series
         """
-        n = len(data)
+        length = len(data)
 
         # Compute the fractional differencing filter in frequency domain
-        freqs = np.fft.fftfreq(n)
+        freqs = np.fft.fftfreq(length)
 
         # Handle zero frequency to avoid division by zero
         freqs_safe = np.where(np.abs(freqs) < 1e-10, 1e-10, freqs)
@@ -257,7 +257,7 @@ class ARFIMAModel(BaseModel):
 
         Returns
         -------
-        np.ndarray
+        lengthp.ndarray
             AR filtered series
         """
         # Create AR filter coefficients
@@ -283,7 +283,7 @@ class ARFIMAModel(BaseModel):
 
         Returns
         -------
-        np.ndarray
+        lengthp.ndarray
             MA filtered series
         """
         # Create MA filter coefficients
@@ -320,7 +320,7 @@ class ARFIMAModel(BaseModel):
 
         Returns
         -------
-        np.ndarray
+        lengthp.ndarray
             Spectral density
         """
         # Handle zero frequency to avoid division by zero
@@ -382,7 +382,7 @@ class ARFIMAModel(BaseModel):
 
         Returns
         -------
-        np.ndarray
+        lengthp.ndarray
             Increments (differences)
         """
         return np.diff(arfima)

@@ -72,13 +72,13 @@ class MultifractalRandomWalk(BaseModel):
         if method not in valid_methods:
             raise ValueError(f"Method must be one of {valid_methods}")
 
-    def generate(self, n: int, seed: Optional[int] = None) -> np.ndarray:
+    def generate(self, length: int, seed: Optional[int] = None) -> np.ndarray:
         """
         Generate multifractal random walk.
 
         Parameters
         ----------
-        n : int
+        length : int
             Length of the time series to generate
         seed : int, optional
             Random seed for reproducibility
@@ -86,7 +86,7 @@ class MultifractalRandomWalk(BaseModel):
         Returns
         -------
         np.ndarray
-            Generated MRW time series of length n
+            Generated MRW time series of length length
         """
         if seed is not None:
             np.random.seed(seed)
@@ -97,12 +97,12 @@ class MultifractalRandomWalk(BaseModel):
         method = self.parameters["method"]
 
         if method == "cascade":
-            return self._cascade_method(n, H, lambda_param, sigma)
+            return self._cascade_method(length, H, lambda_param, sigma)
         else:
-            return self._direct_method(n, H, lambda_param, sigma)
+            return self._direct_method(length, H, lambda_param, sigma)
 
     def _cascade_method(
-        self, n: int, H: float, lambda_param: float, sigma: float
+        self, length: int, H: float, lambda_param: float, sigma: float
     ) -> np.ndarray:
         """
         Generate MRW using volatility cascade method.
@@ -111,44 +111,44 @@ class MultifractalRandomWalk(BaseModel):
         it to a fractional Brownian motion.
         """
         # Generate the volatility cascade
-        omega = self._generate_volatility_cascade(n, lambda_param)
+        omega = self._generate_volatility_cascade(length, lambda_param)
 
         # Generate fractional Brownian motion
-        fbm = self._generate_fbm(n, H, sigma)
+        fbm = self._generate_fbm(length, H, sigma)
 
         # Combine to get MRW
         mrw = fbm * np.exp(omega)
 
         return mrw
 
-    def _generate_volatility_cascade(self, n: int, lambda_param: float) -> np.ndarray:
+    def _generate_volatility_cascade(self, length: int, lambda_param: float) -> np.ndarray:
         """
         Generate log-normal volatility cascade.
 
         Parameters
         ----------
-        n : int
+        length : int
             Length of the time series
         lambda_param : float
             Intermittency parameter
 
         Returns
         -------
-        np.ndarray
+        lengthp.ndarray
             Log-volatility cascade
         """
         # Initialize omega with zeros
-        omega = np.zeros(n)
+        omega = np.zeros(length)
 
         # Generate the cascade at different scales
-        scale = n
+        scale = length
         while scale > 1:
             # Generate Gaussian noise at current scale
             noise = np.random.normal(0, lambda_param, scale)
 
             # Interpolate to full length
-            indices = np.linspace(0, n - 1, scale, dtype=int)
-            omega_interp = np.interp(np.arange(n), indices, noise)
+            indices = np.linspace(0, length - 1, scale, dtype=int)
+            omega_interp = np.interp(np.arange(length), indices, noise)
 
             # Add to the cascade
             omega += omega_interp
@@ -158,13 +158,13 @@ class MultifractalRandomWalk(BaseModel):
 
         return omega
 
-    def _generate_fbm(self, n: int, H: float, sigma: float) -> np.ndarray:
+    def _generate_fbm(self, length: int, H: float, sigma: float) -> np.ndarray:
         """
         Generate fractional Brownian motion using circulant embedding.
 
         Parameters
         ----------
-        n : int
+        length : int
             Length of the time series
         H : float
             Hurst parameter
@@ -173,11 +173,11 @@ class MultifractalRandomWalk(BaseModel):
 
         Returns
         -------
-        np.ndarray
+        lengthp.ndarray
             Fractional Brownian motion
         """
         # Calculate autocovariance function
-        lags = np.arange(n)
+        lags = np.arange(length)
         autocov = (
             sigma**2
             * 0.5
@@ -189,7 +189,7 @@ class MultifractalRandomWalk(BaseModel):
         )
 
         # Construct circulant matrix
-        circulant_row = np.concatenate([autocov, autocov[1 : n - 1][::-1]])
+        circulant_row = np.concatenate([autocov, autocov[1 : length - 1][::-1]])
 
         # Eigenvalue decomposition
         eigenvalues = np.fft.fft(circulant_row)
@@ -205,12 +205,12 @@ class MultifractalRandomWalk(BaseModel):
         filtered_noise = noise * np.sqrt(eigenvalues)
 
         # Inverse FFT
-        fbm = np.real(np.fft.ifft(filtered_noise))[:n]
+        fbm = np.real(np.fft.ifft(filtered_noise))[:length]
 
         return fbm
 
     def _direct_method(
-        self, n: int, H: float, lambda_param: float, sigma: float
+        self, length: int, H: float, lambda_param: float, sigma: float
     ) -> np.ndarray:
         """
         Generate MRW using direct method.
@@ -219,13 +219,13 @@ class MultifractalRandomWalk(BaseModel):
         multifractal formalism.
         """
         # Generate the increments directly
-        increments = np.zeros(n)
+        increments = np.zeros(length)
 
         # Generate volatility cascade
-        omega = self._generate_volatility_cascade(n, lambda_param)
+        omega = self._generate_volatility_cascade(length, lambda_param)
 
         # Generate Gaussian noise
-        noise = np.random.normal(0, 1, n)
+        noise = np.random.normal(0, 1, length)
 
         # Combine to get increments
         increments = noise * np.exp(omega) * sigma
@@ -269,7 +269,7 @@ class MultifractalRandomWalk(BaseModel):
 
         Returns
         -------
-        np.ndarray
+        lengthp.ndarray
             Increments
         """
         return np.diff(mrw)

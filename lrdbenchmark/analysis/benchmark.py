@@ -24,14 +24,14 @@ from .advanced_metrics import (
 )
 
 # Import estimators
-from .temporal.rs.rs_estimator import RSEstimator
-from .temporal.dfa.dfa_estimator import DFAEstimator
+from .temporal.rs.rs_estimator_unified import RSEstimator
+from .temporal.dfa.dfa_estimator_unified import DFAEstimator
 from .temporal.dma.dma_estimator import DMAEstimator
 from .temporal.higuchi.higuchi_estimator import HiguchiEstimator
-from .spectral.gph.gph_estimator import GPHEstimator
-from .spectral.whittle.whittle_estimator import WhittleEstimator
-from .spectral.periodogram.periodogram_estimator import PeriodogramEstimator
-from .wavelet.cwt.cwt_estimator import CWTEstimator
+from .spectral.gph.gph_estimator_unified import GPHEstimator
+from .spectral.whittle.whittle_estimator_unified import WhittleEstimator
+from .spectral.periodogram.periodogram_estimator_unified import PeriodogramEstimator
+from .wavelet.cwt.cwt_estimator_unified import CWTEstimator
 from .wavelet.variance.wavelet_variance_estimator import WaveletVarianceEstimator
 from .wavelet.log_variance.wavelet_log_variance_estimator import (
     WaveletLogVarianceEstimator,

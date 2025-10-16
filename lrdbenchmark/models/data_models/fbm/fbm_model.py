@@ -229,13 +229,13 @@ class FractionalBrownianMotion(BaseModel):
 
         return method
 
-    def generate(self, n: int, seed: Optional[int] = None) -> np.ndarray:
+    def generate(self, length: int, seed: Optional[int] = None) -> np.ndarray:
         """
         Generate fractional Brownian motion using the optimal method.
 
         Parameters
         ----------
-        n : int
+        length : int
             Length of the time series to generate
         seed : int, optional
             Random seed for reproducibility
@@ -254,17 +254,17 @@ class FractionalBrownianMotion(BaseModel):
         sigma = self.parameters["sigma"]
 
         # Select optimal method
-        optimal_method = self._select_optimal_method(n, H)
+        optimal_method = self._select_optimal_method(length, H)
 
         # Generate using selected method
         if optimal_method == "davies_harte":
-            return self._generate_davies_harte(n, H, sigma)
+            return self._generate_davies_harte(length, H, sigma)
         elif optimal_method == "cholesky":
-            return self._generate_cholesky(n, H, sigma)
+            return self._generate_cholesky(length, H, sigma)
         elif optimal_method == "circulant":
-            return self._generate_circulant(n, H, sigma)
+            return self._generate_circulant(length, H, sigma)
         elif optimal_method == "hpfracc":
-            return self._generate_hpfracc(n, H, sigma)
+            return self._generate_hpfracc(length, H, sigma)
         else:
             raise ValueError(f"Unknown method: {optimal_method}")
 

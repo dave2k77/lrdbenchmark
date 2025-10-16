@@ -28,7 +28,7 @@ class FractionalGaussianNoise(BaseModel):
         if method not in {"circulant", "cholesky"}:
             raise ValueError("method must be one of {'circulant', 'cholesky'}")
 
-    def generate(self, n: int, seed: Optional[int] = None) -> np.ndarray:
+    def generate(self, length: int, seed: Optional[int] = None) -> np.ndarray:
         if seed is not None:
             np.random.seed(seed)
 
@@ -37,13 +37,13 @@ class FractionalGaussianNoise(BaseModel):
         method = self.parameters["method"]
 
         if method == "circulant":
-            return self._circulant_method(n, H, sigma)
+            return self._circulant_method(length, H, sigma)
         else:
-            return self._cholesky_method(n, H, sigma)
+            return self._cholesky_method(length, H, sigma)
 
-    def _autocovariance_fgn(self, H: float, sigma: float, n: int) -> np.ndarray:
+    def _autocovariance_fgn(self, H: float, sigma: float, length: int) -> np.ndarray:
         # γ(k) = (σ^2 / 2)(|k+1|^{2H} - 2|k|^{2H} + |k-1|^{2H}) for k >= 0
-        k = np.arange(0, n)
+        k = np.arange(0, length)
         gamma = (
             (sigma**2)
             * 0.5
@@ -55,10 +55,10 @@ class FractionalGaussianNoise(BaseModel):
         )
         return gamma
 
-    def _circulant_method(self, n: int, H: float, sigma: float) -> np.ndarray:
-        # Build circulant embedding of covariance for length n
-        gamma = self._autocovariance_fgn(H, sigma, n)
-        first_row = np.concatenate([gamma, gamma[1 : n - 1][::-1]])
+    def _circulant_method(self, length: int, H: float, sigma: float) -> np.ndarray:
+        # Build circulant embedding of covariance for length length
+        gamma = self._autocovariance_fgn(H, sigma, length)
+        first_row = np.concatenate([gamma, gamma[1 : length - 1][::-1]])
 
         # Eigenvalues of the circulant matrix
         eigenvalues = np.fft.fft(first_row)
@@ -72,25 +72,25 @@ class FractionalGaussianNoise(BaseModel):
 
         # Filter
         y = np.fft.ifft(z * np.sqrt(eigenvalues))
-        x = np.real(y[:n])
+        x = np.real(y[:length])
         return x
 
-    def _cholesky_method(self, n: int, H: float, sigma: float) -> np.ndarray:
+    def _cholesky_method(self, length: int, H: float, sigma: float) -> np.ndarray:
         # Construct Toeplitz covariance matrix from autocovariance
-        gamma = self._autocovariance_fgn(H, sigma, n)
-        cov = np.empty((n, n))
-        for i in range(n):
-            for j in range(n):
+        gamma = self._autocovariance_fgn(H, sigma, length)
+        cov = np.empty((length, length))
+        for i in range(length):
+            for j in range(length):
                 cov[i, j] = gamma[abs(i - j)]
 
         # Regularize if needed and sample
         try:
             L = np.linalg.cholesky(cov)
         except np.linalg.LinAlgError:
-            cov = cov + 1e-10 * np.eye(n)
+            cov = cov + 1e-10 * np.eye(length)
             L = np.linalg.cholesky(cov)
 
-        z = np.random.normal(0.0, 1.0, n)
+        z = np.random.normal(0.0, 1.0, length)
         x = L @ z
         return x
 

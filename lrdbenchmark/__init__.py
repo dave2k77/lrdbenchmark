@@ -11,13 +11,14 @@ __email__ = "lrdbench@example.com"
 
 # Core data models
 try:
-    from .models.data_models import FBMModel, FGNModel, ARFIMAModel, MRWModel
+    from .models.data_models import FBMModel, FGNModel, ARFIMAModel, MRWModel, AlphaStableModel
 except ImportError as e:
     print(f"Warning: Could not import data models: {e}")
     FBMModel = None
     FGNModel = None
     ARFIMAModel = None
     MRWModel = None
+    AlphaStableModel = None
 
 # Classical estimators
 try:
@@ -60,6 +61,13 @@ except ImportError as e:
     print(f"Warning: Could not import neural network factory: {e}")
     NeuralNetworkFactory = None
 
+# Benchmark system
+try:
+    from .analysis.benchmark import ComprehensiveBenchmark
+except ImportError as e:
+    print(f"Warning: Could not import benchmark system: {e}")
+    ComprehensiveBenchmark = None
+
 # GPU utilities
 try:
     from .gpu import is_available as gpu_is_available, get_device_info, clear_cache, suggest_batch_size, get_safe_device
@@ -82,6 +90,7 @@ __all__ = [
     "FGNModel", 
     "ARFIMAModel",
     "MRWModel",
+    "AlphaStableModel",
     # Classical estimators
     "RSEstimator",
     "DFAEstimator",
@@ -97,6 +106,8 @@ __all__ = [
     "TransformerEstimator",
     # Neural Network Factory
     "NeuralNetworkFactory",
+    # Benchmark system
+    "ComprehensiveBenchmark",
     # GPU utilities
     "gpu_is_available",
     "get_device_info", 

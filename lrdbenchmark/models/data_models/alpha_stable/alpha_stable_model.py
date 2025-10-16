@@ -170,32 +170,32 @@ class AlphaStableModel(BaseModel):
         else:
             return 'cms'       # General case
 
-    def _select_backend(self, n: int) -> str:
+    def _select_backend(self, length: int) -> str:
         """Select the best backend based on data size and availability."""
         if self.use_optimization != 'auto':
             return self.use_optimization
         
         # Auto-select based on data size and availability
-        if JAX_AVAILABLE and n > 1000:
+        if JAX_AVAILABLE and length > 1000:
             return 'jax'
-        elif NUMBA_AVAILABLE and n > 100:
+        elif NUMBA_AVAILABLE and length > 100:
             return 'numba'
         else:
             return 'numpy'
 
-    def _generate_gaussian(self, n: int, seed: Optional[int] = None) -> np.ndarray:
+    def _generate_gaussian(self, length: int, seed: Optional[int] = None) -> np.ndarray:
         """Generate Gaussian distribution (alpha = 2)."""
         if seed is not None:
             np.random.seed(seed)
-        return self.sigma * np.random.normal(0, 1, n) + self.mu
+        return self.sigma * np.random.normal(0, 1, length) + self.mu
 
-    def _generate_cauchy(self, n: int, seed: Optional[int] = None) -> np.ndarray:
+    def _generate_cauchy(self, length: int, seed: Optional[int] = None) -> np.ndarray:
         """Generate Cauchy distribution (alpha = 1, beta = 0)."""
         if seed is not None:
             np.random.seed(seed)
-        return self.sigma * np.random.standard_cauchy(n) + self.mu
+        return self.sigma * np.random.standard_cauchy(length) + self.mu
 
-    def _generate_cms_numpy(self, n: int, seed: Optional[int] = None) -> np.ndarray:
+    def _generate_cms_numpy(self, length: int, seed: Optional[int] = None) -> np.ndarray:
         """Generate using Chambers-Mallows-Stuck method (NumPy)."""
         if seed is not None:
             np.random.seed(seed)
@@ -206,8 +206,8 @@ class AlphaStableModel(BaseModel):
         mu = self.mu
         
         # Generate uniform and exponential random variables
-        U = np.random.uniform(-np.pi/2, np.pi/2, n)
-        W = np.random.exponential(1, n)
+        U = np.random.uniform(-np.pi/2, np.pi/2, length)
+        W = np.random.exponential(1, length)
         
         if alpha == 1:
             # Special case: Cauchy distribution
@@ -227,18 +227,18 @@ class AlphaStableModel(BaseModel):
             
             return sigma * X + mu
 
-    def _generate_cms_numba(self, n: int, seed: Optional[int] = None) -> np.ndarray:
+    def _generate_cms_numba(self, length: int, seed: Optional[int] = None) -> np.ndarray:
         """Generate using CMS method (Numba)."""
         if not NUMBA_AVAILABLE:
-            return self._generate_cms_numpy(n, seed)
+            return self._generate_cms_numpy(length, seed)
         
         if seed is not None:
             np.random.seed(seed)
         
         @numba_jit(nopython=True)
-        def cms_core(alpha, beta, sigma, mu, n):
-            U = np.random.uniform(-np.pi/2, np.pi/2, n)
-            W = np.random.exponential(1, n)
+        def cms_core(alpha, beta, sigma, mu, length):
+            U = np.random.uniform(-np.pi/2, np.pi/2, length)
+            W = np.random.exponential(1, length)
             
             if alpha == 1:
                 return sigma * np.tan(U) + mu
@@ -255,18 +255,18 @@ class AlphaStableModel(BaseModel):
                 
                 return sigma * X + mu
         
-        return cms_core(self.alpha, self.beta, self.sigma, self.mu, n)
+        return cms_core(self.alpha, self.beta, self.sigma, self.mu, length)
 
-    def _generate_cms_jax(self, n: int, seed: Optional[int] = None) -> np.ndarray:
+    def _generate_cms_jax(self, length: int, seed: Optional[int] = None) -> np.ndarray:
         """Generate using CMS method (JAX)."""
         if not JAX_AVAILABLE:
-            return self._generate_cms_numpy(n, seed)
+            return self._generate_cms_numpy(length, seed)
         
         @jit
-        def cms_core_jax(alpha, beta, sigma, mu, key, n):
+        def cms_core_jax(alpha, beta, sigma, mu, key, length):
             key1, key2 = jax.random.split(key)
-            U = jax.random.uniform(key1, (n,), minval=-np.pi / 2, maxval=np.pi / 2)
-            W = jax.random.exponential(key2, (n,))
+            U = jax.random.uniform(key1, (length,), minval=-np.pi / 2, maxval=np.pi / 2)
+            W = jax.random.exponential(key2, (length,))
             
             if alpha == 1:
                 return sigma * jnp.tan(U) + mu
@@ -288,9 +288,9 @@ class AlphaStableModel(BaseModel):
         else:
             key = jax.random.PRNGKey(42)
         
-        return np.array(cms_core_jax(self.alpha, self.beta, self.sigma, self.mu, key, n))
+        return np.array(cms_core_jax(self.alpha, self.beta, self.sigma, self.mu, key, length))
 
-    def _generate_nolan_numpy(self, n: int, seed: Optional[int] = None) -> np.ndarray:
+    def _generate_nolan_numpy(self, length: int, seed: Optional[int] = None) -> np.ndarray:
         """Generate using Nolan's numerically stable method (NumPy)."""
         if seed is not None:
             np.random.seed(seed)
@@ -301,8 +301,8 @@ class AlphaStableModel(BaseModel):
         mu = self.mu
         
         # Generate uniform and exponential random variables
-        U = np.random.uniform(-np.pi/2, np.pi/2, n)
-        W = np.random.exponential(1, n)
+        U = np.random.uniform(-np.pi/2, np.pi/2, length)
+        W = np.random.exponential(1, length)
         
         if alpha == 1:
             # Cauchy case
@@ -322,11 +322,11 @@ class AlphaStableModel(BaseModel):
             X = A * B
             return sigma * X + mu
 
-    def _generate_fourier_numpy(self, n: int, seed: Optional[int] = None) -> np.ndarray:
+    def _generate_fourier_numpy(self, length: int, seed: Optional[int] = None) -> np.ndarray:
         """Generate symmetric alpha-stable using Fourier transform (NumPy)."""
         if self.beta != 0:
             warnings.warn("Fourier method only works for symmetric distributions (beta=0)")
-            return self._generate_cms_numpy(n, seed)
+            return self._generate_cms_numpy(length, seed)
         
         if seed is not None:
             np.random.seed(seed)
@@ -339,10 +339,10 @@ class AlphaStableModel(BaseModel):
         # For symmetric case: φ(t) = exp(-|σt|^α)
         
         # Generate uniform random variables
-        U = np.random.uniform(0, 2*np.pi, n)
+        U = np.random.uniform(0, 2*np.pi, length)
         
         # Generate exponential random variables
-        E = np.random.exponential(1, n)
+        E = np.random.exponential(1, length)
         
         # For symmetric alpha-stable
         if alpha == 1:
@@ -353,60 +353,60 @@ class AlphaStableModel(BaseModel):
             S = (E / np.cos(U))**(1/alpha) * np.sin(alpha * U) / np.sin(U)
             return sigma * S + mu
 
-    def generate(self, n: int, seed: Optional[int] = None) -> np.ndarray:
+    def generate(self, length: int, seed: Optional[int] = None) -> np.ndarray:
         """
         Generate alpha-stable distributed time series.
         
         Parameters
         ----------
-        n : int
+        length : int
             Number of samples to generate
         seed : int, optional
             Random seed for reproducibility
             
         Returns
         -------
-        np.ndarray
+        lengthp.ndarray
             Generated alpha-stable time series
         """
-        if n <= 0:
-            raise ValueError("n must be positive")
+        if length <= 0:
+            raise ValueError("length must be positive")
         
         # Select generation method
         method = self._select_method()
         
         # Handle special cases
         if method == 'gaussian':
-            return self._generate_gaussian(n, seed)
+            return self._generate_gaussian(length, seed)
         elif method == 'cauchy':
-            return self._generate_cauchy(n, seed)
+            return self._generate_cauchy(length, seed)
         
         # Select backend
-        backend = self._select_backend(n)
+        backend = self._select_backend(length)
         
         # Generate data using selected method and backend
         try:
             if method == 'cms':
                 if backend == 'jax':
-                    return self._generate_cms_jax(n, seed)
+                    return self._generate_cms_jax(length, seed)
                 elif backend == 'numba':
-                    return self._generate_cms_numba(n, seed)
+                    return self._generate_cms_numba(length, seed)
                 else:
-                    return self._generate_cms_numpy(n, seed)
+                    return self._generate_cms_numpy(length, seed)
             
             elif method == 'nolan':
-                return self._generate_nolan_numpy(n, seed)
+                return self._generate_nolan_numpy(length, seed)
             
             elif method == 'fourier':
-                return self._generate_fourier_numpy(n, seed)
+                return self._generate_fourier_numpy(length, seed)
             
             else:
                 # Fallback to CMS
-                return self._generate_cms_numpy(n, seed)
+                return self._generate_cms_numpy(length, seed)
                 
         except Exception as e:
             warnings.warn(f"Primary method failed ({e}), falling back to NumPy CMS")
-            return self._generate_cms_numpy(n, seed)
+            return self._generate_cms_numpy(length, seed)
 
     def get_parameters(self) -> Dict[str, Any]:
         """Get model parameters."""
@@ -455,9 +455,9 @@ class AlphaStableModel(BaseModel):
         
         return moments
 
-    def sample_properties(self, n: int = 10000, seed: Optional[int] = None) -> Dict[str, Any]:
+    def sample_properties(self, length: int = 10000, seed: Optional[int] = None) -> Dict[str, Any]:
         """Estimate properties from a large sample."""
-        sample = self.generate(n, seed)
+        sample = self.generate(length, seed)
         
         properties = {
             'sample_mean': np.mean(sample),

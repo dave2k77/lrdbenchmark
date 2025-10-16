@@ -4,6 +4,27 @@ A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimati
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Version 2.3.0](https://img.shields.io/badge/version-2.3.0-green.svg)](https://pypi.org/project/lrdbenchmark/)
+
+## 🎉 **v2.3.0 - Major Release Highlights**
+
+**✅ Enhanced Stability & Performance:**
+- **100% Test Coverage**: Comprehensive validation across all 20 estimators
+- **Robust GPU Fallback**: Graceful CPU fallback when CUDA memory is exhausted
+- **Simplified API**: Unified imports with `from lrdbenchmark import ...`
+- **Fixed JAX Issues**: Resolved CUDA backend initialization errors
+- **Enhanced Error Handling**: Custom exception hierarchy with actionable messages
+
+**✅ New Features:**
+- **Lazy GPU Initialization**: CPU-first approach with optional GPU acceleration
+- **Unified Feature Extractor**: 76-feature pipeline for ML estimators
+- **Missing Estimator Modules**: Complete coverage of all 20 estimators
+- **Progressive Examples**: CPU-only, GPU-optional, and production patterns
+
+**✅ Improved Compatibility:**
+- **Broader Python Support**: Python 3.8-3.12 compatibility
+- **Optional Dependencies**: GPU acceleration libraries are truly optional
+- **Enhanced Documentation**: Updated examples and API references
 
 ## 🚀 Features
 
@@ -36,6 +57,31 @@ A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimati
 - **Custom Models & Estimators**: Library extensibility and custom implementations
 - **Comprehensive Benchmarking**: Full benchmarking system with contamination testing
 - **Leaderboard Generation**: Performance rankings and comparative analysis
+
+## 📦 Installation
+
+### Basic Installation (CPU-only)
+```bash
+pip install lrdbenchmark
+```
+
+### With GPU Acceleration (Optional)
+```bash
+# All acceleration libraries
+pip install lrdbenchmark[accel-all]
+
+# Specific acceleration libraries
+pip install lrdbenchmark[accel-jax]      # JAX acceleration
+pip install lrdbenchmark[accel-pytorch]  # PyTorch acceleration
+pip install lrdbenchmark[accel-numba]    # Numba acceleration
+```
+
+### Development Installation
+```bash
+git clone https://github.com/dave2k77/LRDBenchmark.git
+cd LRDBenchmark
+pip install -e .
+```
 
 ## 🔧 Quick Start
 

@@ -28,43 +28,43 @@ except ImportError as e:
     class FBMModel:
         def __init__(self, H=0.6, **kwargs):
             self.H = H
-        def generate(self, n=1000):
+        def generate(self, length=1000, **kwargs):
             import numpy as np
-            t = np.linspace(0, 1, n)
+            t = np.linspace(0, 1, length)
             dt = t[1] - t[0]
-            increments = np.random.normal(0, 1, n) * (dt ** self.H)
+            increments = np.random.normal(0, 1, length) * (dt ** self.H)
             return np.cumsum(increments)
     
     class FGNModel:
         def __init__(self, H=0.6, **kwargs):
             self.H = H
-        def generate(self, n=1000):
+        def generate(self, length=1000, **kwargs):
             import numpy as np
-            t = np.linspace(0, 1, n)
+            t = np.linspace(0, 1, length)
             dt = t[1] - t[0]
-            return np.random.normal(0, 1, n) * (dt ** self.H)
+            return np.random.normal(0, 1, length) * (dt ** self.H)
     
     class ARFIMAModel:
         def __init__(self, d=0.2, **kwargs):
             self.d = d
-        def generate(self, n=1000):
+        def generate(self, length=1000, **kwargs):
             import numpy as np
-            return np.random.normal(0, 1, n)
+            return np.random.normal(0, 1, length)
     
     class MRWModel:
         def __init__(self, H=0.6, **kwargs):
             self.H = H
-        def generate(self, n=1000):
+        def generate(self, length=1000, **kwargs):
             import numpy as np
-            return np.random.normal(0, 1, n)
+            return np.random.normal(0, 1, length)
     
     class AlphaStableModel:
         def __init__(self, alpha=1.5, beta=0.0, **kwargs):
             self.alpha = alpha
             self.beta = beta
-        def generate(self, n=1000):
+        def generate(self, length=1000, **kwargs):
             import numpy as np
-            return np.random.normal(0, 1, n)
+            return np.random.normal(0, 1, length)
 
 # Convenience functions with default parameters
 def create_fbm_model(H=0.7, sigma=1.0):
