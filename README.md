@@ -3,7 +3,7 @@
 A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimation and benchmarking across Classical, Machine Learning, and Neural Network methods.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
 ## 🚀 Features
 
