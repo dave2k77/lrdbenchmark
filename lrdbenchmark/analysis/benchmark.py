@@ -140,10 +140,6 @@ try:
     from ..models.pretrained_models.cnn_pretrained import CNNPretrainedModel
     from ..models.pretrained_models.transformer_pretrained import TransformerPretrainedModel
     
-    # Import neural network estimators
-    from .machine_learning.lstm_estimator_unified import LSTMEstimator
-    from .machine_learning.gru_estimator_unified import GRUEstimator
-    
     PRETRAINED_MODELS_AVAILABLE = True
 except ImportError:
     # Pretrained models not available
@@ -152,8 +148,6 @@ except ImportError:
     GradientBoostingPretrainedModel = None
     CNNPretrainedModel = None
     TransformerPretrainedModel = None
-    LSTMEstimator = None
-    GRUEstimator = None
     PRETRAINED_MODELS_AVAILABLE = False
 
 
@@ -221,8 +215,6 @@ class ComprehensiveBenchmark:
             },
             "neural": {
                 "CNN": CNNPretrainedModel(input_length=500),  # Use pre-trained model
-                "LSTM": LSTMEstimator(),  # LSTM neural network estimator
-                "GRU": GRUEstimator(),  # GRU neural network estimator
                 "Transformer": TransformerPretrainedModel(
                     input_length=500
                 ),  # Use pre-trained model

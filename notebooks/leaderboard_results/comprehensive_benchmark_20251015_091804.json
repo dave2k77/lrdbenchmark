@@ -1,0 +1,348 @@
+{
+  "timestamp": "2025-10-15T09:18:04.542625",
+  "benchmark_type": "neural",
+  "contamination_type": null,
+  "contamination_level": 0.1,
+  "total_tests": 8,
+  "successful_tests": 8,
+  "success_rate": 1.0,
+  "data_models_tested": 4,
+  "estimators_tested": 2,
+  "results": {
+    "fBm": {
+      "data_params": {
+        "H": 0.7,
+        "sigma": 1.0
+      },
+      "estimator_results": [
+        {
+          "estimator": "CNN",
+          "success": true,
+          "execution_time": 0.0005829334259033203,
+          "estimated_hurst": 0.497745543718338,
+          "true_hurst": 0.7,
+          "error": 0.20225445628166194,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": 0.23840941434317897,
+            "convergence_achieved": true,
+            "stability_metric": 0.001153912572892144,
+            "mean_signed_error": -0.20224953413009636,
+            "bias_percentage": -28.892790590013757,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.497745543718338,
+            "confidence_interval": [
+              "0.30174553",
+              "0.69374555"
+            ],
+            "std_error": 0.1,
+            "method": "CNN (Pre-trained Neural Network)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true,
+              "model_type": "SimpleCNN1D",
+              "total_parameters": 29633
+            }
+          }
+        },
+        {
+          "estimator": "Transformer",
+          "success": true,
+          "execution_time": 0.0017445087432861328,
+          "estimated_hurst": 0.5432385206222534,
+          "true_hurst": 0.7,
+          "error": 0.15676147937774654,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": 0.4620576588685704,
+            "convergence_achieved": true,
+            "stability_metric": 0.0014948653482154582,
+            "mean_signed_error": -0.15675990581512447,
+            "bias_percentage": -22.39427225930349,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.5432385206222534,
+            "confidence_interval": [
+              "0.34723854",
+              "0.7392385"
+            ],
+            "std_error": 0.1,
+            "method": "Transformer (Pre-trained Neural Network)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true,
+              "model_type": "SimpleTransformer",
+              "total_parameters": 105345
+            }
+          }
+        }
+      ]
+    },
+    "fGn": {
+      "data_params": {
+        "H": 0.7,
+        "sigma": 1.0
+      },
+      "estimator_results": [
+        {
+          "estimator": "CNN",
+          "success": true,
+          "execution_time": 0.00029778480529785156,
+          "estimated_hurst": 0.498672217130661,
+          "true_hurst": 0.7,
+          "error": 0.20132778286933894,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": -1.7187612348894172,
+            "convergence_achieved": true,
+            "stability_metric": 0.0008110111953995555,
+            "mean_signed_error": -0.20132892131805413,
+            "bias_percentage": -28.761274474007724,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.498672217130661,
+            "confidence_interval": [
+              "0.3026722",
+              "0.6946722"
+            ],
+            "std_error": 0.1,
+            "method": "CNN (Pre-trained Neural Network)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true,
+              "model_type": "SimpleCNN1D",
+              "total_parameters": 29633
+            }
+          }
+        },
+        {
+          "estimator": "Transformer",
+          "success": true,
+          "execution_time": 0.0011191368103027344,
+          "estimated_hurst": 0.5418793559074402,
+          "true_hurst": 0.7,
+          "error": 0.15812064409255977,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": -0.4145350393553326,
+            "convergence_achieved": true,
+            "stability_metric": 0.0005216242082832926,
+            "mean_signed_error": -0.15812031269073482,
+            "bias_percentage": -22.588616098676397,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.5418793559074402,
+            "confidence_interval": [
+              "0.34587938",
+              "0.73787934"
+            ],
+            "std_error": 0.1,
+            "method": "Transformer (Pre-trained Neural Network)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true,
+              "model_type": "SimpleTransformer",
+              "total_parameters": 105345
+            }
+          }
+        }
+      ]
+    },
+    "ARFIMAModel": {
+      "data_params": {
+        "d": 0.3,
+        "ar_params": [
+          0.5
+        ],
+        "ma_params": [
+          0.2
+        ],
+        "H": 0.3
+      },
+      "estimator_results": [
+        {
+          "estimator": "CNN",
+          "success": true,
+          "execution_time": 0.0004937648773193359,
+          "estimated_hurst": 0.49942487478256226,
+          "true_hurst": 0.3,
+          "error": 0.19942487478256227,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": 0.9832245336493376,
+            "convergence_achieved": true,
+            "stability_metric": 0.00269642638201417,
+            "mean_signed_error": 0.19942421615123745,
+            "bias_percentage": 66.47473871707913,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.49942487478256226,
+            "confidence_interval": [
+              "0.3034249",
+              "0.69542485"
+            ],
+            "std_error": 0.1,
+            "method": "CNN (Pre-trained Neural Network)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true,
+              "model_type": "SimpleCNN1D",
+              "total_parameters": 29633
+            }
+          }
+        },
+        {
+          "estimator": "Transformer",
+          "success": true,
+          "execution_time": 0.0012278556823730469,
+          "estimated_hurst": 0.5416807532310486,
+          "true_hurst": 0.3,
+          "error": 0.2416807532310486,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": 0.7657072927487644,
+            "convergence_achieved": true,
+            "stability_metric": 0.0006009439619037519,
+            "mean_signed_error": 0.24168056488037107,
+            "bias_percentage": 80.56018829345702,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.5416807532310486,
+            "confidence_interval": [
+              "0.34568077",
+              "0.73768073"
+            ],
+            "std_error": 0.1,
+            "method": "Transformer (Pre-trained Neural Network)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true,
+              "model_type": "SimpleTransformer",
+              "total_parameters": 105345
+            }
+          }
+        }
+      ]
+    },
+    "MRW": {
+      "data_params": {
+        "H": 0.7,
+        "lambda_param": 0.5,
+        "sigma": 1.0
+      },
+      "estimator_results": [
+        {
+          "estimator": "CNN",
+          "success": true,
+          "execution_time": 0.0003452301025390625,
+          "estimated_hurst": 0.49794241786003113,
+          "true_hurst": 0.7,
+          "error": 0.20205758213996883,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": 0.1408233582882265,
+            "convergence_achieved": true,
+            "stability_metric": 0.0003838147500142952,
+            "mean_signed_error": -0.20205421149730676,
+            "bias_percentage": -28.8648873567581,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.49794241786003113,
+            "confidence_interval": [
+              "0.3019424",
+              "0.6939424"
+            ],
+            "std_error": 0.1,
+            "method": "CNN (Pre-trained Neural Network)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true,
+              "model_type": "SimpleCNN1D",
+              "total_parameters": 29633
+            }
+          }
+        },
+        {
+          "estimator": "Transformer",
+          "success": true,
+          "execution_time": 0.0011298656463623047,
+          "estimated_hurst": 0.5415534973144531,
+          "true_hurst": 0.7,
+          "error": 0.15844650268554683,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": 0.18673368048665573,
+            "convergence_achieved": true,
+            "stability_metric": 0.0008670639919775381,
+            "mean_signed_error": -0.15844723582267758,
+            "bias_percentage": -22.63531940323965,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.5415534973144531,
+            "confidence_interval": [
+              "0.34555352",
+              "0.7375535"
+            ],
+            "std_error": 0.1,
+            "method": "Transformer (Pre-trained Neural Network)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true,
+              "model_type": "SimpleTransformer",
+              "total_parameters": 105345
+            }
+          }
+        }
+      ]
+    }
+  }
+}
