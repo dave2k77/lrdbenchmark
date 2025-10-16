@@ -90,7 +90,7 @@ class ARFIMAModel(BaseModel):
             ar_poly = np.poly1d([1] + [-x for x in ar_params])
             roots = ar_poly.roots
             if np.any(
-                lengthp.abs(roots) >= 1 - 1e-10
+                np.abs(roots) >= 1 - 1e-10
             ):  # Roots must be inside unit circle for stationarity
                 raise ValueError("AR parameters must satisfy stationarity conditions")
 
@@ -99,7 +99,7 @@ class ARFIMAModel(BaseModel):
             ma_poly = np.poly1d([1] + ma_params)
             roots = ma_poly.roots
             if np.any(
-                lengthp.abs(roots) >= 1 - 1e-10
+                np.abs(roots) >= 1 - 1e-10
             ):  # Roots must be inside unit circle for invertibility
                 raise ValueError("MA parameters must satisfy invertibility conditions")
 
@@ -221,7 +221,7 @@ class ARFIMAModel(BaseModel):
 
         Returns
         -------
-        lengthp.ndarray
+        np.ndarray
             Fractionally differenced series
         """
         length = len(data)
@@ -257,7 +257,7 @@ class ARFIMAModel(BaseModel):
 
         Returns
         -------
-        lengthp.ndarray
+        np.ndarray
             AR filtered series
         """
         # Create AR filter coefficients
@@ -283,7 +283,7 @@ class ARFIMAModel(BaseModel):
 
         Returns
         -------
-        lengthp.ndarray
+        np.ndarray
             MA filtered series
         """
         # Create MA filter coefficients
@@ -320,7 +320,7 @@ class ARFIMAModel(BaseModel):
 
         Returns
         -------
-        lengthp.ndarray
+        np.ndarray
             Spectral density
         """
         # Handle zero frequency to avoid division by zero
@@ -382,7 +382,7 @@ class ARFIMAModel(BaseModel):
 
         Returns
         -------
-        lengthp.ndarray
+        np.ndarray
             Increments (differences)
         """
         return np.diff(arfima)
