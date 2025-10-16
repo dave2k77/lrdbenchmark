@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lrdbenchmark"
-version = "2.2.1"
+version = "2.3.0"
 description = "Comprehensive Long-Range Dependence Benchmarking Framework with Classical, ML, and Neural Network Estimators + 5 Demonstration Notebooks"
 readme = "README.md"
 license = {text = "MIT"}
@@ -136,7 +136,7 @@ line_length = 88
 known_first_party = ["lrdbenchmark"]
 
 [tool.mypy]
-python_version = "3.9"
+python_version = "2.3.0"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -166,7 +166,7 @@ module = [
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-minversion = "6.0"
+minversion = "2.3.0"
 addopts = "-ra -q --strict-markers --strict-config"
 testpaths = [
     "tests",

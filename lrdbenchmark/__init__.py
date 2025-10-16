@@ -5,7 +5,7 @@ A comprehensive toolkit for benchmarking long-range dependence estimators
 on synthetic and real-world time series data.
 """
 
-__version__ = "2.2.1"
+__version__ = "2.3.0"
 __author__ = "LRDBench Development Team"
 __email__ = "lrdbench@example.com"
 
