@@ -1,0 +1,9 @@
+data_model,estimator,success,execution_time,estimated_hurst,true_hurst,error,r_squared,p_value,intercept,slope,std_error,convergence_rate,convergence_achieved,stability_metric,mean_signed_error,bias_percentage,significant_bias
+fBm,CNN,False,0.0066258907318115234,,0.7,,,,,,,,,,,,
+fBm,Transformer,False,0.0009739398956298828,,0.7,,,,,,,,,,,,
+fGn,CNN,False,0.0003039836883544922,,0.7,,,,,,,,,,,,
+fGn,Transformer,False,0.0002887248992919922,,0.7,,,,,,,,,,,,
+ARFIMAModel,CNN,False,0.00026679039001464844,,,,,,,,,,,,,,
+ARFIMAModel,Transformer,False,0.000286102294921875,,,,,,,,,,,,,,
+MRW,CNN,False,0.00027751922607421875,,0.7,,,,,,,,,,,,
+MRW,Transformer,False,0.00027871131896972656,,0.7,,,,,,,,,,,,

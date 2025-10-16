@@ -1,0 +1,484 @@
+{
+  "timestamp": "2025-10-16T10:08:57.176162",
+  "benchmark_type": "neural",
+  "contamination_type": null,
+  "contamination_level": 0.1,
+  "total_tests": 16,
+  "successful_tests": 12,
+  "success_rate": 0.75,
+  "data_models_tested": 4,
+  "estimators_tested": 4,
+  "results": {
+    "fBm": {
+      "data_params": {
+        "H": 0.7,
+        "sigma": 1.0
+      },
+      "estimator_results": [
+        {
+          "estimator": "CNN",
+          "success": true,
+          "execution_time": 0.003465890884399414,
+          "estimated_hurst": 0.5047692656517029,
+          "true_hurst": 0.7,
+          "error": 0.19523073434829707,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": 0.17206760004002777,
+            "convergence_achieved": true,
+            "stability_metric": 0.002454104413401594,
+            "mean_signed_error": -0.19522879242897026,
+            "bias_percentage": -27.889827489852888,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.5047692656517029,
+            "confidence_interval": [
+              "0.3087693",
+              "0.70076925"
+            ],
+            "std_error": 0.1,
+            "method": "CNN (Pre-trained Neural Network)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true,
+              "model_type": "SimpleCNN1D",
+              "total_parameters": 29633
+            }
+          }
+        },
+        {
+          "estimator": "LSTM",
+          "success": true,
+          "execution_time": 0.12400364875793457,
+          "estimated_hurst": 0.492800235748291,
+          "true_hurst": 0.7,
+          "error": 0.20719976425170894,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "advanced_metrics": {
+            "convergence_rate": 7.26722390098178,
+            "convergence_achieved": true,
+            "stability_metric": 0.006012886177359838,
+            "mean_signed_error": -0.20721032440662376,
+            "bias_percentage": -29.601474915231957,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.492800235748291,
+            "method": "LSTM_Pretrained",
+            "model_type": "LSTM",
+            "input_length": 1000,
+            "success": true
+          }
+        },
+        {
+          "estimator": "GRU",
+          "success": true,
+          "execution_time": 0.005117177963256836,
+          "estimated_hurst": 0.4951828122138977,
+          "true_hurst": 0.7,
+          "error": 0.20481718778610225,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "advanced_metrics": {
+            "convergence_rate": 6.285068309084513,
+            "convergence_achieved": true,
+            "stability_metric": 0.00394925126557605,
+            "mean_signed_error": -0.20481562435626977,
+            "bias_percentage": -29.25937490803853,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.4951828122138977,
+            "method": "GRU_Pretrained",
+            "model_type": "GRU",
+            "input_length": 1000,
+            "success": true
+          }
+        },
+        {
+          "estimator": "Transformer",
+          "success": false,
+          "execution_time": 0.01102304458618164,
+          "error_message": "Expected all tensors to be on the same device, but got mat1 is on cpu, different from other tensors on cuda:0 (when checking argument in method wrapper_CUDA_addmm)",
+          "estimated_hurst": null,
+          "true_hurst": 0.7,
+          "error": null,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "full_result": null
+        }
+      ]
+    },
+    "fGn": {
+      "data_params": {
+        "H": 0.7,
+        "sigma": 1.0
+      },
+      "estimator_results": [
+        {
+          "estimator": "CNN",
+          "success": true,
+          "execution_time": 0.0005688667297363281,
+          "estimated_hurst": 0.5063489675521851,
+          "true_hurst": 0.7,
+          "error": 0.1936510324478149,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": -0.3138960487514748,
+            "convergence_achieved": true,
+            "stability_metric": 0.0015019222677378561,
+            "mean_signed_error": -0.1936553454399108,
+            "bias_percentage": -27.66504934855868,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.5063489675521851,
+            "confidence_interval": [
+              "0.310349",
+              "0.70234895"
+            ],
+            "std_error": 0.1,
+            "method": "CNN (Pre-trained Neural Network)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true,
+              "model_type": "SimpleCNN1D",
+              "total_parameters": 29633
+            }
+          }
+        },
+        {
+          "estimator": "LSTM",
+          "success": true,
+          "execution_time": 0.0007774829864501953,
+          "estimated_hurst": 0.4918558895587921,
+          "true_hurst": 0.7,
+          "error": 0.20814411044120784,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "advanced_metrics": {
+            "convergence_rate": 4.941769564332234,
+            "convergence_achieved": true,
+            "stability_metric": 0.007053666826514442,
+            "mean_signed_error": -0.20814704060554498,
+            "bias_percentage": -29.735291515077844,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.4918558895587921,
+            "method": "LSTM_Pretrained",
+            "model_type": "LSTM",
+            "input_length": 1000,
+            "success": true
+          }
+        },
+        {
+          "estimator": "GRU",
+          "success": true,
+          "execution_time": 0.0005145072937011719,
+          "estimated_hurst": 0.49296626448631287,
+          "true_hurst": 0.7,
+          "error": 0.2070337355136871,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "advanced_metrics": {
+            "convergence_rate": 6.196953832152346,
+            "convergence_achieved": true,
+            "stability_metric": 0.006066265056229306,
+            "mean_signed_error": -0.2070276761054992,
+            "bias_percentage": -29.57538230078559,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.49296626448631287,
+            "method": "GRU_Pretrained",
+            "model_type": "GRU",
+            "input_length": 1000,
+            "success": true
+          }
+        },
+        {
+          "estimator": "Transformer",
+          "success": false,
+          "execution_time": 0.0002722740173339844,
+          "error_message": "Expected all tensors to be on the same device, but got mat1 is on cpu, different from other tensors on cuda:0 (when checking argument in method wrapper_CUDA_addmm)",
+          "estimated_hurst": null,
+          "true_hurst": 0.7,
+          "error": null,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "full_result": null
+        }
+      ]
+    },
+    "ARFIMAModel": {
+      "data_params": {
+        "d": 0.3,
+        "ar_params": [
+          0.5
+        ],
+        "ma_params": [
+          0.2
+        ],
+        "H": 0.3
+      },
+      "estimator_results": [
+        {
+          "estimator": "CNN",
+          "success": true,
+          "execution_time": 0.0005528926849365234,
+          "estimated_hurst": 0.5049224495887756,
+          "true_hurst": 0.3,
+          "error": 0.20492244958877565,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": 0.40724833977250424,
+            "convergence_achieved": true,
+            "stability_metric": 0.0016559306650090685,
+            "mean_signed_error": 0.20491617560386655,
+            "bias_percentage": 68.3053918679555,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.5049224495887756,
+            "confidence_interval": [
+              "0.30892247",
+              "0.7009224"
+            ],
+            "std_error": 0.1,
+            "method": "CNN (Pre-trained Neural Network)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true,
+              "model_type": "SimpleCNN1D",
+              "total_parameters": 29633
+            }
+          }
+        },
+        {
+          "estimator": "LSTM",
+          "success": true,
+          "execution_time": 0.0007824897766113281,
+          "estimated_hurst": 0.512614369392395,
+          "true_hurst": 0.3,
+          "error": 0.21261436939239503,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "advanced_metrics": {
+            "convergence_rate": 6.279903823077041,
+            "convergence_achieved": true,
+            "stability_metric": 0.012658102513178294,
+            "mean_signed_error": 0.21260001420974728,
+            "bias_percentage": 70.86667140324909,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.512614369392395,
+            "method": "LSTM_Pretrained",
+            "model_type": "LSTM",
+            "input_length": 1000,
+            "success": true
+          }
+        },
+        {
+          "estimator": "GRU",
+          "success": true,
+          "execution_time": 0.0005314350128173828,
+          "estimated_hurst": 0.5044441819190979,
+          "true_hurst": 0.3,
+          "error": 0.2044441819190979,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "advanced_metrics": {
+            "convergence_rate": 0.5813609317234346,
+            "convergence_achieved": true,
+            "stability_metric": 0.004033959666221058,
+            "mean_signed_error": 0.20443752884864805,
+            "bias_percentage": 68.14584294954933,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.5044441819190979,
+            "method": "GRU_Pretrained",
+            "model_type": "GRU",
+            "input_length": 1000,
+            "success": true
+          }
+        },
+        {
+          "estimator": "Transformer",
+          "success": false,
+          "execution_time": 0.00031948089599609375,
+          "error_message": "Expected all tensors to be on the same device, but got mat1 is on cpu, different from other tensors on cuda:0 (when checking argument in method wrapper_CUDA_addmm)",
+          "estimated_hurst": null,
+          "true_hurst": 0.3,
+          "error": null,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "full_result": null
+        }
+      ]
+    },
+    "MRW": {
+      "data_params": {
+        "H": 0.7,
+        "lambda_param": 0.5,
+        "sigma": 1.0
+      },
+      "estimator_results": [
+        {
+          "estimator": "CNN",
+          "success": true,
+          "execution_time": 0.0005161762237548828,
+          "estimated_hurst": 0.5036628246307373,
+          "true_hurst": 0.7,
+          "error": 0.19633717536926265,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": -0.24731589984969532,
+            "convergence_achieved": true,
+            "stability_metric": 0.0012225597032263628,
+            "mean_signed_error": -0.19632923722267143,
+            "bias_percentage": -28.047033888953056,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.5036628246307373,
+            "confidence_interval": [
+              "0.30766284",
+              "0.6996628"
+            ],
+            "std_error": 0.1,
+            "method": "CNN (Pre-trained Neural Network)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true,
+              "model_type": "SimpleCNN1D",
+              "total_parameters": 29633
+            }
+          }
+        },
+        {
+          "estimator": "LSTM",
+          "success": true,
+          "execution_time": 0.0010590553283691406,
+          "estimated_hurst": 0.4958823621273041,
+          "true_hurst": 0.7,
+          "error": 0.20411763787269588,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "advanced_metrics": {
+            "convergence_rate": 3.8348886215807987,
+            "convergence_achieved": true,
+            "stability_metric": 0.003478481445505758,
+            "mean_signed_error": -0.204117824435234,
+            "bias_percentage": -29.159689205033416,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.4958823621273041,
+            "method": "LSTM_Pretrained",
+            "model_type": "LSTM",
+            "input_length": 1000,
+            "success": true
+          }
+        },
+        {
+          "estimator": "GRU",
+          "success": true,
+          "execution_time": 0.000507354736328125,
+          "estimated_hurst": 0.4968591332435608,
+          "true_hurst": 0.7,
+          "error": 0.20314086675643916,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "advanced_metrics": {
+            "convergence_rate": 4.994318506550612,
+            "convergence_achieved": true,
+            "stability_metric": 0.002642787448510902,
+            "mean_signed_error": -0.20313585460185998,
+            "bias_percentage": -29.019407800265707,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.4968591332435608,
+            "method": "GRU_Pretrained",
+            "model_type": "GRU",
+            "input_length": 1000,
+            "success": true
+          }
+        },
+        {
+          "estimator": "Transformer",
+          "success": false,
+          "execution_time": 0.00029540061950683594,
+          "error_message": "Expected all tensors to be on the same device, but got mat1 is on cpu, different from other tensors on cuda:0 (when checking argument in method wrapper_CUDA_addmm)",
+          "estimated_hurst": null,
+          "true_hurst": 0.7,
+          "error": null,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "full_result": null
+        }
+      ]
+    }
+  }
+}

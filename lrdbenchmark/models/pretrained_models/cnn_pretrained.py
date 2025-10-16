@@ -115,7 +115,7 @@ class CNNPretrainedModel(BasePretrainedModel):
                 _ = result.cpu()  # Move result back to CPU to test full pipeline
                 return device
             except RuntimeError as e:
-                if "CUDA" in str(e) or "kernel image" in str(e):
+                if "CUDA" in str(e) or "kernel image" in str(e) or "out of memory" in str(e):
                     print(f"⚠️ CUDA available but incompatible: {e}. Falling back to CPU.")
                     return torch.device('cpu')
                 else:
@@ -191,8 +191,10 @@ class CNNPretrainedModel(BasePretrainedModel):
             np.std(data, axis=1, keepdims=True) + 1e-8
         )
 
-        # Convert to torch tensor
+        # Convert to torch tensor and move to same device as model
         data_tensor = torch.from_numpy(data_normalized).float()
+        device = next(self.model.parameters()).device
+        data_tensor = data_tensor.to(device)
 
         # Make prediction
         with torch.no_grad():

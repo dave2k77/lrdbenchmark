@@ -1,0 +1,396 @@
+{
+  "timestamp": "2025-10-16T10:00:17.197172",
+  "benchmark_type": "neural",
+  "contamination_type": null,
+  "contamination_level": 0.1,
+  "total_tests": 16,
+  "successful_tests": 8,
+  "success_rate": 0.5,
+  "data_models_tested": 4,
+  "estimators_tested": 4,
+  "results": {
+    "fBm": {
+      "data_params": {
+        "H": 0.7,
+        "sigma": 1.0
+      },
+      "estimator_results": [
+        {
+          "estimator": "CNN",
+          "success": false,
+          "execution_time": 0.0005893707275390625,
+          "error_message": "Expected all tensors to be on the same device, but got weight is on cuda:0, different from other tensors on cpu (when checking argument in method wrapper_CUDA___slow_conv2d_forward)",
+          "estimated_hurst": null,
+          "true_hurst": 0.7,
+          "error": null,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "full_result": null
+        },
+        {
+          "estimator": "LSTM",
+          "success": true,
+          "execution_time": 0.17141294479370117,
+          "estimated_hurst": 0.5002304315567017,
+          "true_hurst": 0.7,
+          "error": 0.1997695684432983,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "advanced_metrics": {
+            "convergence_rate": 3.272574168239737,
+            "convergence_achieved": true,
+            "stability_metric": 0.00025745684613673276,
+            "mean_signed_error": -0.19976958394050592,
+            "bias_percentage": -28.538511991500837,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.5002304315567017,
+            "method": "LSTM_Pretrained",
+            "model_type": "LSTM",
+            "input_length": 1000,
+            "success": true
+          }
+        },
+        {
+          "estimator": "GRU",
+          "success": true,
+          "execution_time": 0.005194664001464844,
+          "estimated_hurst": 0.4887219965457916,
+          "true_hurst": 0.7,
+          "error": 0.21127800345420833,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "advanced_metrics": {
+            "convergence_rate": 8.089416458457078,
+            "convergence_achieved": true,
+            "stability_metric": 0.009522982065505834,
+            "mean_signed_error": -0.2112925106287002,
+            "bias_percentage": -30.184644375528592,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.4887219965457916,
+            "method": "GRU_Pretrained",
+            "model_type": "GRU",
+            "input_length": 1000,
+            "success": true
+          }
+        },
+        {
+          "estimator": "Transformer",
+          "success": false,
+          "execution_time": 0.00028395652770996094,
+          "error_message": "Expected all tensors to be on the same device, but got mat1 is on cpu, different from other tensors on cuda:0 (when checking argument in method wrapper_CUDA_addmm)",
+          "estimated_hurst": null,
+          "true_hurst": 0.7,
+          "error": null,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "full_result": null
+        }
+      ]
+    },
+    "fGn": {
+      "data_params": {
+        "H": 0.7,
+        "sigma": 1.0
+      },
+      "estimator_results": [
+        {
+          "estimator": "CNN",
+          "success": false,
+          "execution_time": 0.00015091896057128906,
+          "error_message": "Expected all tensors to be on the same device, but got weight is on cuda:0, different from other tensors on cpu (when checking argument in method wrapper_CUDA___slow_conv2d_forward)",
+          "estimated_hurst": null,
+          "true_hurst": 0.7,
+          "error": null,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "full_result": null
+        },
+        {
+          "estimator": "LSTM",
+          "success": true,
+          "execution_time": 0.0006268024444580078,
+          "estimated_hurst": 0.4998820126056671,
+          "true_hurst": 0.7,
+          "error": 0.20011798739433284,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "advanced_metrics": {
+            "convergence_rate": 0.03244329058647144,
+            "convergence_achieved": true,
+            "stability_metric": 9.905745092163e-05,
+            "mean_signed_error": -0.20011593878269188,
+            "bias_percentage": -28.587991254670257,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.4998820126056671,
+            "method": "LSTM_Pretrained",
+            "model_type": "LSTM",
+            "input_length": 1000,
+            "success": true
+          }
+        },
+        {
+          "estimator": "GRU",
+          "success": true,
+          "execution_time": 0.0005130767822265625,
+          "estimated_hurst": 0.48857709765434265,
+          "true_hurst": 0.7,
+          "error": 0.2114229023456573,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "advanced_metrics": {
+            "convergence_rate": 5.664974022883254,
+            "convergence_achieved": true,
+            "stability_metric": 0.009906728105111845,
+            "mean_signed_error": -0.2114221686124801,
+            "bias_percentage": -30.203166944640003,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.48857709765434265,
+            "method": "GRU_Pretrained",
+            "model_type": "GRU",
+            "input_length": 1000,
+            "success": true
+          }
+        },
+        {
+          "estimator": "Transformer",
+          "success": false,
+          "execution_time": 0.00026869773864746094,
+          "error_message": "Expected all tensors to be on the same device, but got mat1 is on cpu, different from other tensors on cuda:0 (when checking argument in method wrapper_CUDA_addmm)",
+          "estimated_hurst": null,
+          "true_hurst": 0.7,
+          "error": null,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "full_result": null
+        }
+      ]
+    },
+    "ARFIMAModel": {
+      "data_params": {
+        "d": 0.3,
+        "ar_params": [
+          0.5
+        ],
+        "ma_params": [
+          0.2
+        ],
+        "H": 0.3
+      },
+      "estimator_results": [
+        {
+          "estimator": "CNN",
+          "success": false,
+          "execution_time": 0.00014972686767578125,
+          "error_message": "Expected all tensors to be on the same device, but got weight is on cuda:0, different from other tensors on cpu (when checking argument in method wrapper_CUDA___slow_conv2d_forward)",
+          "estimated_hurst": null,
+          "true_hurst": null,
+          "error": null,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "full_result": null
+        },
+        {
+          "estimator": "LSTM",
+          "success": true,
+          "execution_time": 0.0006511211395263672,
+          "estimated_hurst": 0.5002421140670776,
+          "true_hurst": 0.3,
+          "error": 0.20024211406707765,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "advanced_metrics": {
+            "convergence_rate": -2.5635108816506493,
+            "convergence_achieved": true,
+            "stability_metric": 0.0002193111074151522,
+            "mean_signed_error": 0.20024169683456416,
+            "bias_percentage": 66.74723227818804,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.5002421140670776,
+            "method": "LSTM_Pretrained",
+            "model_type": "LSTM",
+            "input_length": 1000,
+            "success": true
+          }
+        },
+        {
+          "estimator": "GRU",
+          "success": true,
+          "execution_time": 0.0005199909210205078,
+          "estimated_hurst": 0.5187215805053711,
+          "true_hurst": 0.3,
+          "error": 0.2187215805053711,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "advanced_metrics": {
+            "convergence_rate": 7.215213231444478,
+            "convergence_achieved": true,
+            "stability_metric": 0.018935019139430413,
+            "mean_signed_error": 0.2186949586868286,
+            "bias_percentage": 72.89831956227619,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.5187215805053711,
+            "method": "GRU_Pretrained",
+            "model_type": "GRU",
+            "input_length": 1000,
+            "success": true
+          }
+        },
+        {
+          "estimator": "Transformer",
+          "success": false,
+          "execution_time": 0.000274658203125,
+          "error_message": "Expected all tensors to be on the same device, but got mat1 is on cpu, different from other tensors on cuda:0 (when checking argument in method wrapper_CUDA_addmm)",
+          "estimated_hurst": null,
+          "true_hurst": 0.3,
+          "error": null,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "full_result": null
+        }
+      ]
+    },
+    "MRW": {
+      "data_params": {
+        "H": 0.7,
+        "lambda_param": 0.5,
+        "sigma": 1.0
+      },
+      "estimator_results": [
+        {
+          "estimator": "CNN",
+          "success": false,
+          "execution_time": 0.00014925003051757812,
+          "error_message": "Expected all tensors to be on the same device, but got weight is on cuda:0, different from other tensors on cpu (when checking argument in method wrapper_CUDA___slow_conv2d_forward)",
+          "estimated_hurst": null,
+          "true_hurst": 0.7,
+          "error": null,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "full_result": null
+        },
+        {
+          "estimator": "LSTM",
+          "success": true,
+          "execution_time": 0.0006914138793945312,
+          "estimated_hurst": 0.5000525116920471,
+          "true_hurst": 0.7,
+          "error": 0.19994748830795284,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "advanced_metrics": {
+            "convergence_rate": -5.060848902009818,
+            "convergence_achieved": true,
+            "stability_metric": 4.694807534667443e-05,
+            "mean_signed_error": -0.19994613170623773,
+            "bias_percentage": -28.5637331008911,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.5000525116920471,
+            "method": "LSTM_Pretrained",
+            "model_type": "LSTM",
+            "input_length": 1000,
+            "success": true
+          }
+        },
+        {
+          "estimator": "GRU",
+          "success": true,
+          "execution_time": 0.0006682872772216797,
+          "estimated_hurst": 0.49399667978286743,
+          "true_hurst": 0.7,
+          "error": 0.20600332021713252,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "advanced_metrics": {
+            "convergence_rate": 5.922438260348085,
+            "convergence_achieved": true,
+            "stability_metric": 0.005078773705080266,
+            "mean_signed_error": -0.20600348293781273,
+            "bias_percentage": -29.429068991116097,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.49399667978286743,
+            "method": "GRU_Pretrained",
+            "model_type": "GRU",
+            "input_length": 1000,
+            "success": true
+          }
+        },
+        {
+          "estimator": "Transformer",
+          "success": false,
+          "execution_time": 0.0002675056457519531,
+          "error_message": "Expected all tensors to be on the same device, but got mat1 is on cpu, different from other tensors on cuda:0 (when checking argument in method wrapper_CUDA_addmm)",
+          "estimated_hurst": null,
+          "true_hurst": 0.7,
+          "error": null,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": null,
+          "full_result": null
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,472 @@
+{
+  "timestamp": "2025-10-16T10:08:56.720284",
+  "benchmark_type": "ML",
+  "contamination_type": null,
+  "contamination_level": 0.1,
+  "total_tests": 12,
+  "successful_tests": 12,
+  "success_rate": 1.0,
+  "data_models_tested": 4,
+  "estimators_tested": 3,
+  "results": {
+    "fBm": {
+      "data_params": {
+        "H": 0.7,
+        "sigma": 1.0
+      },
+      "estimator_results": [
+        {
+          "estimator": "RandomForest",
+          "success": true,
+          "execution_time": 0.0002918243408203125,
+          "estimated_hurst": 0.1,
+          "true_hurst": 0.7,
+          "error": 0.6,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": null,
+            "convergence_achieved": true,
+            "stability_metric": 0.0,
+            "mean_signed_error": -0.6000000000000001,
+            "bias_percentage": -85.71428571428571,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.1,
+            "confidence_interval": [
+              0.1,
+              0.29600000000000004
+            ],
+            "std_error": 0.1,
+            "method": "Random Forest (Pre-trained ML)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true
+            }
+          }
+        },
+        {
+          "estimator": "GradientBoosting",
+          "success": true,
+          "execution_time": 0.000331878662109375,
+          "estimated_hurst": 0.14178525623119886,
+          "true_hurst": 0.7,
+          "error": 0.5582147437688011,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": -0.967911286618027,
+            "convergence_achieved": false,
+            "stability_metric": 0.08501784750057302,
+            "mean_signed_error": -0.558234210452074,
+            "bias_percentage": -79.74774435029627,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.14178525623119886,
+            "confidence_interval": [
+              0.1,
+              0.33778525623119887
+            ],
+            "std_error": 0.1,
+            "method": "Gradient Boosting (Pre-trained ML)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true
+            }
+          }
+        },
+        {
+          "estimator": "SVR",
+          "success": true,
+          "execution_time": 5.364418029785156e-05,
+          "estimated_hurst": 0.7387407731026432,
+          "true_hurst": 0.7,
+          "error": 0.03874077310264323,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": 0.028764230644044667,
+            "convergence_achieved": false,
+            "stability_metric": 0.01622294761536236,
+            "mean_signed_error": 0.03872130967631266,
+            "bias_percentage": 5.531615668044664,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.7387407731026432,
+            "confidence_interval": [
+              0.5427407731026432,
+              0.9
+            ],
+            "std_error": 0.1,
+            "method": "SVR (Pre-trained ML)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true
+            }
+          }
+        }
+      ]
+    },
+    "fGn": {
+      "data_params": {
+        "H": 0.7,
+        "sigma": 1.0
+      },
+      "estimator_results": [
+        {
+          "estimator": "RandomForest",
+          "success": true,
+          "execution_time": 0.00014209747314453125,
+          "estimated_hurst": 0.1,
+          "true_hurst": 0.7,
+          "error": 0.6,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": null,
+            "convergence_achieved": true,
+            "stability_metric": 0.0,
+            "mean_signed_error": -0.6000000000000001,
+            "bias_percentage": -85.71428571428571,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.1,
+            "confidence_interval": [
+              0.1,
+              0.29600000000000004
+            ],
+            "std_error": 0.1,
+            "method": "Random Forest (Pre-trained ML)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true
+            }
+          }
+        },
+        {
+          "estimator": "GradientBoosting",
+          "success": true,
+          "execution_time": 0.00017261505126953125,
+          "estimated_hurst": 0.12174957062817487,
+          "true_hurst": 0.7,
+          "error": 0.5782504293718251,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": -0.851632024179516,
+            "convergence_achieved": false,
+            "stability_metric": 0.10441088770404691,
+            "mean_signed_error": -0.578234520116298,
+            "bias_percentage": -82.6049314451854,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.12174957062817487,
+            "confidence_interval": [
+              0.1,
+              0.3177495706281749
+            ],
+            "std_error": 0.1,
+            "method": "Gradient Boosting (Pre-trained ML)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true
+            }
+          }
+        },
+        {
+          "estimator": "SVR",
+          "success": true,
+          "execution_time": 4.1961669921875e-05,
+          "estimated_hurst": 0.7244105391612646,
+          "true_hurst": 0.7,
+          "error": 0.024410539161264677,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": -0.27224688452298734,
+            "convergence_achieved": false,
+            "stability_metric": 0.008995962481102468,
+            "mean_signed_error": 0.024412337193790802,
+            "bias_percentage": 3.487476741970114,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.7244105391612646,
+            "confidence_interval": [
+              0.5284105391612646,
+              0.9
+            ],
+            "std_error": 0.1,
+            "method": "SVR (Pre-trained ML)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true
+            }
+          }
+        }
+      ]
+    },
+    "ARFIMAModel": {
+      "data_params": {
+        "d": 0.3,
+        "ar_params": [
+          0.5
+        ],
+        "ma_params": [
+          0.2
+        ],
+        "H": 0.3
+      },
+      "estimator_results": [
+        {
+          "estimator": "RandomForest",
+          "success": true,
+          "execution_time": 0.0001323223114013672,
+          "estimated_hurst": 0.1,
+          "true_hurst": 0.3,
+          "error": 0.19999999999999998,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": null,
+            "convergence_achieved": true,
+            "stability_metric": 0.0,
+            "mean_signed_error": -0.19999999999999996,
+            "bias_percentage": -66.66666666666664,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.1,
+            "confidence_interval": [
+              0.1,
+              0.29600000000000004
+            ],
+            "std_error": 0.1,
+            "method": "Random Forest (Pre-trained ML)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true
+            }
+          }
+        },
+        {
+          "estimator": "GradientBoosting",
+          "success": true,
+          "execution_time": 0.0001678466796875,
+          "estimated_hurst": 0.1529254798326064,
+          "true_hurst": 0.3,
+          "error": 0.14707452016739359,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": -0.9931804173970996,
+            "convergence_achieved": false,
+            "stability_metric": 0.16439054752892973,
+            "mean_signed_error": -0.14706080754410428,
+            "bias_percentage": -49.020269181368086,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.1529254798326064,
+            "confidence_interval": [
+              0.1,
+              0.3489254798326064
+            ],
+            "std_error": 0.1,
+            "method": "Gradient Boosting (Pre-trained ML)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true
+            }
+          }
+        },
+        {
+          "estimator": "SVR",
+          "success": true,
+          "execution_time": 4.220008850097656e-05,
+          "estimated_hurst": 0.7679774501701517,
+          "true_hurst": 0.3,
+          "error": 0.46797745017015174,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": -0.4237271168135946,
+            "convergence_achieved": false,
+            "stability_metric": 0.004728313267211987,
+            "mean_signed_error": 0.46796280135234086,
+            "bias_percentage": 155.98760045078026,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.7679774501701517,
+            "confidence_interval": [
+              0.5719774501701518,
+              0.9
+            ],
+            "std_error": 0.1,
+            "method": "SVR (Pre-trained ML)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true
+            }
+          }
+        }
+      ]
+    },
+    "MRW": {
+      "data_params": {
+        "H": 0.7,
+        "lambda_param": 0.5,
+        "sigma": 1.0
+      },
+      "estimator_results": [
+        {
+          "estimator": "RandomForest",
+          "success": true,
+          "execution_time": 0.00014209747314453125,
+          "estimated_hurst": 0.1,
+          "true_hurst": 0.7,
+          "error": 0.6,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": -0.3468809367020114,
+            "convergence_achieved": true,
+            "stability_metric": 0.5744754272721356,
+            "mean_signed_error": -0.6000000000000001,
+            "bias_percentage": -85.71428571428571,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.1,
+            "confidence_interval": [
+              0.1,
+              0.29600000000000004
+            ],
+            "std_error": 0.1,
+            "method": "Random Forest (Pre-trained ML)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true
+            }
+          }
+        },
+        {
+          "estimator": "GradientBoosting",
+          "success": true,
+          "execution_time": 0.00018858909606933594,
+          "estimated_hurst": 0.26039611686014763,
+          "true_hurst": 0.7,
+          "error": 0.4396038831398523,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": -0.4222779976445685,
+            "convergence_achieved": false,
+            "stability_metric": 0.17548677919712635,
+            "mean_signed_error": -0.4396270253339151,
+            "bias_percentage": -62.80386076198786,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.26039611686014763,
+            "confidence_interval": [
+              0.1,
+              0.45639611686014764
+            ],
+            "std_error": 0.1,
+            "method": "Gradient Boosting (Pre-trained ML)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true
+            }
+          }
+        },
+        {
+          "estimator": "SVR",
+          "success": true,
+          "execution_time": 3.9577484130859375e-05,
+          "estimated_hurst": 0.6853313361258849,
+          "true_hurst": 0.7,
+          "error": 0.014668663874115029,
+          "r_squared": null,
+          "p_value": null,
+          "intercept": null,
+          "slope": null,
+          "std_error": 0.1,
+          "advanced_metrics": {
+            "convergence_rate": 0.6291749952097015,
+            "convergence_achieved": false,
+            "stability_metric": 0.015722696195099247,
+            "mean_signed_error": -0.014696449847628261,
+            "bias_percentage": -2.0994928353754654,
+            "significant_bias": "True"
+          },
+          "full_result": {
+            "hurst_parameter": 0.6853313361258849,
+            "confidence_interval": [
+              0.4893313361258849,
+              0.881331336125885
+            ],
+            "std_error": 0.1,
+            "method": "SVR (Pre-trained ML)",
+            "model_info": {
+              "is_loaded": true,
+              "model_path": null,
+              "torch_available": true
+            }
+          }
+        }
+      ]
+    }
+  }
+}

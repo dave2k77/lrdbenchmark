@@ -42,6 +42,8 @@ from .multifractal.wavelet_leaders.multifractal_wavelet_leaders_estimator import
     MultifractalWaveletLeadersEstimator,
 )
 
+# Note: Neural network estimators now use pretrained models instead of unified estimators
+
 # Import data models
 from ..models.data_models.fbm.fbm_model import FractionalBrownianMotion as FBMModel
 from ..models.data_models.fgn.fgn_model import FractionalGaussianNoise as FGNModel
@@ -139,6 +141,8 @@ try:
     # Import pre-trained neural models
     from ..models.pretrained_models.cnn_pretrained import CNNPretrainedModel
     from ..models.pretrained_models.transformer_pretrained import TransformerPretrainedModel
+    from ..models.pretrained_models.lstm_pretrained import LSTMPretrainedModel
+    from ..models.pretrained_models.gru_pretrained import GRUPretrainedModel
     
     PRETRAINED_MODELS_AVAILABLE = True
 except ImportError:
@@ -148,6 +152,8 @@ except ImportError:
     GradientBoostingPretrainedModel = None
     CNNPretrainedModel = None
     TransformerPretrainedModel = None
+    LSTMPretrainedModel = None
+    GRUPretrainedModel = None
     PRETRAINED_MODELS_AVAILABLE = False
 
 
@@ -209,15 +215,15 @@ class ComprehensiveBenchmark:
                 "WaveletLeaders": MultifractalWaveletLeadersEstimator(),
             },
             "ML": {
-                "RandomForest": RandomForestPretrainedModel(),  # Use pre-trained model for PyPI
-                "GradientBoosting": GradientBoostingPretrainedModel(),  # Use pre-trained model for PyPI
-                "SVR": SVREstimatorPretrainedModel(),  # Use pre-trained model for PyPI
+                "RandomForest": RandomForestPretrainedModel() if RandomForestPretrainedModel is not None else None,
+                "GradientBoosting": GradientBoostingPretrainedModel() if GradientBoostingPretrainedModel is not None else None,
+                "SVR": SVREstimatorPretrainedModel() if SVREstimatorPretrainedModel is not None else None,
             },
             "neural": {
-                "CNN": CNNPretrainedModel(input_length=500),  # Use pre-trained model
-                "Transformer": TransformerPretrainedModel(
-                    input_length=500
-                ),  # Use pre-trained model
+                "CNN": CNNPretrainedModel(input_length=500) if CNNPretrainedModel is not None else None,
+                "LSTM": LSTMPretrainedModel(input_length=500) if LSTMPretrainedModel is not None else None,
+                "GRU": GRUPretrainedModel(input_length=500) if GRUPretrainedModel is not None else None,
+                "Transformer": TransformerPretrainedModel(input_length=500) if TransformerPretrainedModel is not None else None,
             },
         }
         return estimators
@@ -299,6 +305,8 @@ class ComprehensiveBenchmark:
                 if name in all_est:
                     all_est[name] = estimator
 
+            # Filter out None estimators
+            all_est = {name: estimator for name, estimator in all_est.items() if estimator is not None}
             return all_est
         elif benchmark_type in self.all_estimators:
             estimators = self.all_estimators[benchmark_type].copy()
@@ -310,6 +318,8 @@ class ComprehensiveBenchmark:
                     if name in estimators:
                         estimators[name] = estimator
 
+            # Filter out None estimators
+            estimators = {name: estimator for name, estimator in estimators.items() if estimator is not None}
             return estimators
         else:
             raise ValueError(

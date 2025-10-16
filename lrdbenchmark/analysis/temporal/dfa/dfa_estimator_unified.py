@@ -168,6 +168,10 @@ class DFAEstimator(BaseEstimator):
         """NumPy implementation of DFA estimation."""
         n = len(data)
         
+        # CRITICAL FIX: DFA works on the CUMULATIVE SUM of the data, not the original data
+        # This was the main issue causing low Hurst parameter estimates
+        cumsum = np.cumsum(data - np.mean(data))
+        
         # Set max scale if not provided
         if self.parameters["max_scale"] is None:
             self.parameters["max_scale"] = n // 4
@@ -187,10 +191,10 @@ class DFAEstimator(BaseEstimator):
         if len(scales) < 3:
             raise ValueError("Insufficient valid scales for analysis")
         
-        # Calculate fluctuation values for each scale
+        # Calculate fluctuation values for each scale using cumulative sum
         fluctuation_values = []
         for scale in scales:
-            fluct_val = self._calculate_fluctuation_numpy(data, scale)
+            fluct_val = self._calculate_fluctuation_numpy(cumsum, scale)
             fluctuation_values.append(fluct_val)
         
         fluctuation_values = np.array(fluctuation_values)
@@ -252,7 +256,7 @@ class DFAEstimator(BaseEstimator):
         # So we'll use the NumPy implementation for now
         # This can be enhanced with JAX-specific optimizations
         
-        # For now, fall back to NumPy implementation
+        # For now, fall back to NumPy implementation (which now includes the cumulative sum fix)
         return self._estimate_numpy(data)
 
     def _calculate_fluctuation_numpy(self, data: np.ndarray, scale: int) -> float:
