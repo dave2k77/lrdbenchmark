@@ -131,7 +131,7 @@ Basic Analytics Setup
 .. code-block:: python
 
    from lrdbenchmark import enable_analytics, get_analytics_summary
-   from lrdbenchmark.analytics import AnalyticsDashboard
+   from lrdbenchmark import AnalyticsDashboard
 
    # Enable analytics system
    print("Enabling LRDBench analytics system...")
@@ -225,7 +225,7 @@ Performance Monitoring
    results = run_benchmark_analysis()
    
    # Get performance summary
-   from lrdbenchmark.analytics import PerformanceMonitor
+   from lrdbenchmark import PerformanceMonitor
    monitor = PerformanceMonitor()
    perf_summary = monitor.get_performance_summary()
    print(f"Average execution time: {perf_summary.avg_execution_time:.2f}s")
@@ -259,7 +259,7 @@ Error Tracking
        print(f"Analysis failed: {e}")
    
    # Get error summary
-   from lrdbenchmark.analytics import ErrorAnalyzer
+   from lrdbenchmark import ErrorAnalyzer
    error_analyzer = ErrorAnalyzer()
    error_summary = error_analyzer.get_error_summary()
    print(f"Total errors: {error_summary.total_errors}")
@@ -294,7 +294,7 @@ Workflow Tracking
    summary = complete_analysis_workflow()
    
    # Get workflow summary
-   from lrdbenchmark.analytics import WorkflowAnalyzer
+   from lrdbenchmark import WorkflowAnalyzer
    workflow_analyzer = WorkflowAnalyzer()
    workflow_summary = workflow_analyzer.get_workflow_summary()
    print(f"Workflows completed: {workflow_summary.total_workflows}")
@@ -304,7 +304,7 @@ Advanced Analytics Dashboard
 
 .. code-block:: python
 
-   from lrdbenchmark.analytics import AnalyticsDashboard
+   from lrdbenchmark import AnalyticsDashboard
    
    # Create analytics dashboard
    dashboard = AnalyticsDashboard()
@@ -390,7 +390,7 @@ Data Export and Visualization
 
 .. code-block:: python
 
-   from lrdbenchmark.analytics import AnalyticsDashboard
+   from lrdbenchmark import AnalyticsDashboard
    import pandas as pd
    import matplotlib.pyplot as plt
    
@@ -439,7 +439,7 @@ Real-time Analytics Monitoring
 
 .. code-block:: python
 
-   from lrdbenchmark.analytics import AnalyticsDashboard
+   from lrdbenchmark import AnalyticsDashboard
    import time
    import threading
    
@@ -480,7 +480,7 @@ Analytics Integration with Benchmarks
 .. code-block:: python
 
    from lrdbenchmark import ComprehensiveBenchmark, enable_analytics
-   from lrdbenchmark.analytics import AnalyticsDashboard
+   from lrdbenchmark import AnalyticsDashboard
    
    # Enable analytics
    enable_analytics()
@@ -571,7 +571,7 @@ Privacy and Security
 
 .. code-block:: python
 
-   from lrdbenchmark.analytics import UsageTracker
+   from lrdbenchmark import UsageTracker
    
    # Create privacy-aware usage tracker
    usage_tracker = UsageTracker(

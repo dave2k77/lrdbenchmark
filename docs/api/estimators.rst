@@ -251,8 +251,8 @@ Basic Estimator Usage
 
 .. code-block:: python
 
-   from lrdbenchmark.analysis.temporal.dfa.dfa_estimator import DFAEstimator
-   from lrdbenchmark.analysis.spectral.gph.gph_estimator import GPHEstimator
+   from lrdbenchmark import DFAEstimator
+   from lrdbenchmark import GPHEstimator
    from lrdbenchmark import FBMModel
    
    # Generate test data with known Hurst parameter
@@ -286,11 +286,11 @@ Multiple Estimators Comparison
 
 .. code-block:: python
 
-   from lrdbenchmark.analysis.temporal.dfa.dfa_estimator import DFAEstimator
-   from lrdbenchmark.analysis.temporal.rs.rs_estimator import RSEstimator
-   from lrdbenchmark.analysis.spectral.gph.gph_estimator import GPHEstimator
-   from lrdbenchmark.analysis.wavelet.variance.wavelet_variance_estimator import WaveletVarianceEstimator
-   from lrdbenchmark.analysis.temporal.higuchi.higuchi_estimator import HiguchiEstimator
+   from lrdbenchmark import DFAEstimator
+   from lrdbenchmark import RSEstimator
+   from lrdbenchmark import GPHEstimator
+   from lrdbenchmark import WaveletVarianceEstimator
+   from lrdbenchmark import HiguchiEstimator
    from lrdbenchmark import FBMModel, FGNModel
    import pandas as pd
    
@@ -352,9 +352,9 @@ Machine Learning Estimators
 
 .. code-block:: python
 
-   from lrdbenchmark.analysis.machine_learning.random_forest_estimator import RandomForestEstimator
-   from lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator import GradientBoostingEstimator
-   from lrdbenchmark.analysis.machine_learning.cnn_estimator import CNNEstimator
+   from lrdbenchmark import RandomForestEstimator
+   from lrdbenchmark import GradientBoostingEstimator
+   from lrdbenchmark import CNNEstimator
    from lrdbenchmark import FBMModel, FGNModel, ARFIMAModel
    import numpy as np
    from sklearn.model_selection import train_test_split
@@ -476,8 +476,8 @@ Parameter Tuning
 
 .. code-block:: python
 
-   from lrdbenchmark.analysis.temporal.dfa.dfa_estimator import DFAEstimator
-   from lrdbenchmark.analysis.spectral.gph.gph_estimator import GPHEstimator
+   from lrdbenchmark import DFAEstimator
+   from lrdbenchmark import GPHEstimator
    from lrdbenchmark import FBMModel
    
    # Generate test data
@@ -512,8 +512,8 @@ Error Handling
 
 .. code-block:: python
 
-   from lrdbenchmark.analysis.temporal.dfa.dfa_estimator import DFAEstimator
-   from lrdbenchmark.analysis.spectral.gph.gph_estimator import GPHEstimator
+   from lrdbenchmark import DFAEstimator
+   from lrdbenchmark import GPHEstimator
    
    # Test with insufficient data
    short_data = [1, 2, 3, 4, 5]  # Too short for most estimators
@@ -538,7 +538,7 @@ Performance Comparison
 .. code-block:: python
 
    import time
-   from lrdbenchmark.analysis.temporal.dfa.dfa_estimator import DFAEstimator
+   from lrdbenchmark import DFAEstimator
    from lrdbenchmark.analysis.high_performance.jax.dfa_jax import DFAJAXEstimator
    from lrdbenchmark import FBMModel
    

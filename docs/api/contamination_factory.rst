@@ -37,8 +37,8 @@ Basic Contamination Application
 
 .. code-block:: python
 
-   from lrdbenchmark.models.contamination.contamination_factory import ContaminationFactory, ConfoundingScenario
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import ContaminationFactory, ConfoundingScenario
+   from lrdbenchmark import FBMModel
    import numpy as np
    
    # Create contamination factory
@@ -67,8 +67,8 @@ EEG Contamination Scenarios
 
 .. code-block:: python
 
-   from lrdbenchmark.models.contamination.contamination_factory import ContaminationFactory, ConfoundingScenario
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import ContaminationFactory, ConfoundingScenario
+   from lrdbenchmark import FBMModel
    import numpy as np
    
    # Create contamination factory
@@ -102,8 +102,8 @@ Financial Contamination Scenarios
 
 .. code-block:: python
 
-   from lrdbenchmark.models.contamination.contamination_factory import ContaminationFactory, ConfoundingScenario
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import ContaminationFactory, ConfoundingScenario
+   from lrdbenchmark import FBMModel
    import numpy as np
    
    # Create contamination factory
@@ -132,8 +132,8 @@ Physiological Contamination Scenarios
 
 .. code-block:: python
 
-   from lrdbenchmark.models.contamination.contamination_factory import ContaminationFactory, ConfoundingScenario
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import ContaminationFactory, ConfoundingScenario
+   from lrdbenchmark import FBMModel
    import numpy as np
    
    # Create contamination factory
@@ -162,8 +162,8 @@ Environmental Contamination Scenarios
 
 .. code-block:: python
 
-   from lrdbenchmark.models.contamination.contamination_factory import ContaminationFactory, ConfoundingScenario
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import ContaminationFactory, ConfoundingScenario
+   from lrdbenchmark import FBMModel
    import numpy as np
    
    # Create contamination factory
@@ -192,8 +192,8 @@ Custom Contamination Profiles
 
 .. code-block:: python
 
-   from lrdbenchmark.models.contamination.contamination_factory import ContaminationFactory, ConfoundingScenario, ConfoundingProfile
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import ContaminationFactory, ConfoundingScenario, ConfoundingProfile
+   from lrdbenchmark import FBMModel
    import numpy as np
    
    # Create contamination factory
@@ -225,8 +225,8 @@ Intensity Variation Testing
 
 .. code-block:: python
 
-   from lrdbenchmark.models.contamination.contamination_factory import ContaminationFactory, ConfoundingScenario
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import ContaminationFactory, ConfoundingScenario
+   from lrdbenchmark import FBMModel
    import numpy as np
    
    # Create contamination factory
@@ -252,8 +252,8 @@ Contamination Analysis
 
 .. code-block:: python
 
-   from lrdbenchmark.models.contamination.contamination_factory import ContaminationFactory, ConfoundingScenario
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import ContaminationFactory, ConfoundingScenario
+   from lrdbenchmark import FBMModel
    import numpy as np
    
    # Create contamination factory

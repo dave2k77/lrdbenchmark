@@ -38,7 +38,7 @@ Support Vector Regression estimator with RBF kernel and comprehensive feature en
 
 .. code-block:: python
 
-   from lrdbenchmark.analysis.machine_learning.svr_estimator import SVREstimator
+   from lrdbenchmark import SVREstimator
    import numpy as np
 
    # Initialize estimator
@@ -78,7 +78,7 @@ Gradient Boosting Regressor with comprehensive feature engineering - **Best Over
 
 .. code-block:: python
 
-   from lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator import GradientBoostingEstimator
+   from lrdbenchmark import GradientBoostingEstimator
    import numpy as np
 
    # Initialize estimator
@@ -121,7 +121,7 @@ Random Forest Regressor with comprehensive feature engineering and feature impor
 
 .. code-block:: python
 
-   from lrdbenchmark.analysis.machine_learning.random_forest_estimator import RandomForestEstimator
+   from lrdbenchmark import RandomForestEstimator
    import numpy as np
 
    # Initialize estimator

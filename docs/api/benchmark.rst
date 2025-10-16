@@ -235,7 +235,7 @@ Custom Estimators
 .. code-block:: python
 
    from lrdbenchmark import ComprehensiveBenchmark
-   from lrdbenchmark.analysis.temporal.dfa.dfa_estimator import DFAEstimator
+   from lrdbenchmark import DFAEstimator
    
    # Create custom estimator
    custom_dfa = DFAEstimator(

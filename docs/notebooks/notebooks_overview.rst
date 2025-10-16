@@ -43,10 +43,10 @@ Available Notebooks
 - Theoretical properties vs empirical observations
 
 **Data Models Covered**:
-- `FractionalBrownianMotion` - self-similar Gaussian process
-- `FractionalGaussianNoise` - increments of FBM
+- `FBMModel` - self-similar Gaussian process (Fractional Brownian Motion)
+- `FGNModel` - increments of FBM (Fractional Gaussian Noise)
 - `ARFIMAModel` - autoregressive fractionally integrated moving average
-- `MultifractalRandomWalk` - multifractal processes
+- `MRWModel` - multifractal processes (Multifractal Random Walk)
 - `AlphaStableModel` - heavy-tailed distributions
 
 02. Estimation and Statistical Validation

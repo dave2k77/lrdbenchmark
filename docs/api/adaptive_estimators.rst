@@ -213,7 +213,7 @@ Basic Usage with Automatic Framework Selection
 .. code-block:: python
 
    from lrdbenchmark.analysis.comprehensive_adaptive_estimators import get_all_comprehensive_adaptive_classical_estimators
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import FBMModel
    import numpy as np
    
    # Get all comprehensive adaptive estimators
@@ -239,7 +239,7 @@ Performance Monitoring
 .. code-block:: python
 
    from lrdbenchmark.analysis.comprehensive_adaptive_estimators import ComprehensiveAdaptiveRS
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import FBMModel
    import numpy as np
    
    # Create estimator with performance profiling
@@ -267,8 +267,8 @@ EEG Contamination Testing
 .. code-block:: python
 
    from lrdbenchmark.analysis.comprehensive_adaptive_estimators import ComprehensiveAdaptiveDFA
-   from lrdbenchmark.models.contamination.contamination_factory import ContaminationFactory, ConfoundingScenario
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import ContaminationFactory, ConfoundingScenario
+   from lrdbenchmark import FBMModel
    import numpy as np
    
    # Create estimator and contamination factory
@@ -303,7 +303,7 @@ Framework Selection Examples
 .. code-block:: python
 
    from lrdbenchmark.analysis.comprehensive_adaptive_estimators import ComprehensiveAdaptiveGPH
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import FBMModel
    import numpy as np
    
    # Test with different data sizes to see framework selection
