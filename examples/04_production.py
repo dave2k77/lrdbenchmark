@@ -55,7 +55,7 @@ def main():
     # Generate test data
     print("Generating test data...")
     fbm = FBMModel(H=0.7, sigma=1.0)
-    data = fbm.generate(n=1000, seed=42)
+    data = fbm.generate(length=1000, seed=42)
     print(f"Generated {len(data)} data points")
     
     # Initialize estimators

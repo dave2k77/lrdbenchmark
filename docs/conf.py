@@ -21,8 +21,8 @@ copyright = '2024, Davian Chin'
 author = 'Davian Chin'
 
 # The full version, including alpha/beta/rc tags
-release = '1.7.0'
-version = '1.7.0'
+release = '2.3.0'
+version = '2.3.0'
 
 # -- General configuration ---------------------------------------------------
 

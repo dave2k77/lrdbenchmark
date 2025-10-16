@@ -96,7 +96,7 @@ Alpha-stable distributions are characterized by their characteristic function:
 
 ### Basic Usage
 ```python
-from lrdbenchmark.models.data_models.alpha_stable.alpha_stable_model import AlphaStableModel
+from lrdbenchmark import AlphaStableModel
 
 # Create model
 model = AlphaStableModel(alpha=1.5, beta=0.0, sigma=1.0, mu=0.0)

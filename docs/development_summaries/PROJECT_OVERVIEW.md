@@ -200,7 +200,7 @@ from lrdbenchmark.analysis.temporal.rs.rs_estimator_unified import RSEstimator
 
 # Generate data
 fbm = FBMModel(H=0.7)
-data = fbm.generate(n=1000)
+data = fbm.generate(length=1000)
 
 # Estimate Hurst parameter
 rs_est = RSEstimator()

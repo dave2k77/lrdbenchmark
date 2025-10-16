@@ -42,12 +42,11 @@ A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimati
 ### Basic Usage
 
 ```python
-from lrdbenchmark.analysis.temporal.rs.rs_estimator_unified import RSEstimator
-from lrdbenchmark.models.data_models.fbm.fbm_model import FractionalBrownianMotion
+from lrdbenchmark import FBMModel, RSEstimator
 
 # Generate synthetic fractional Brownian motion
-fbm = FractionalBrownianMotion(H=0.7, sigma=1.0)
-x = fbm.generate(n=1000, seed=42)
+fbm = FBMModel(H=0.7, sigma=1.0)
+x = fbm.generate(length=1000, seed=42)
 
 # Estimate Hurst parameter using R/S analysis
 estimator = RSEstimator()
@@ -58,7 +57,7 @@ print(f"Estimated H: {result['hurst_parameter']:.3f}")  # ~0.7
 ### Advanced Benchmarking
 
 ```python
-from lrdbenchmark.analysis.benchmark import ComprehensiveBenchmark
+from lrdbenchmark import ComprehensiveBenchmark
 
 # Run comprehensive benchmark across multiple estimators
 benchmark = ComprehensiveBenchmark()
@@ -73,8 +72,7 @@ benchmark.generate_leaderboard(results)
 ### Heavy-Tail Robustness Analysis
 
 ```python
-from lrdbenchmark.models.data_models.alpha_stable.alpha_stable_model import AlphaStableModel
-from lrdbenchmark.robustness.adaptive_preprocessor import AdaptivePreprocessor
+from lrdbenchmark import AlphaStableModel, AdaptivePreprocessor
 
 # Generate heavy-tailed α-stable process
 alpha_stable = AlphaStableModel(alpha=1.5, beta=0.0, scale=1.0)

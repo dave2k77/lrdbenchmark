@@ -60,7 +60,7 @@ from lrdbenchmark.analysis.machine_learning.lstm_estimator_unified import LSTMEs
 
 # Generate data
 fbm = FBMModel(H=0.7)
-data = fbm.generate(n=1000)
+data = fbm.generate(length=1000)
 
 # Use LSTM estimator (automatically uses GPU if available)
 lstm = LSTMEstimator()

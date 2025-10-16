@@ -18,12 +18,11 @@ Generate synthetic data and run a benchmark:
 .. code-block:: python
 
    import numpy as np
-   from lrdbenchmark import FBMModel
-   from lrdbenchmark import RSEstimator
+   from lrdbenchmark import FBMModel, RSEstimator
    
    # Generate Fractional Brownian Motion data
-   model = FractionalBrownianMotion(H=0.7, sigma=1.0)
-   data = model.generate(1000, seed=42)
+   model = FBMModel(H=0.7, sigma=1.0)
+   data = model.generate(length=1000, seed=42)
    
    # Estimate Hurst parameter using R/S analysis
    rs_estimator = RSEstimator()
@@ -39,9 +38,7 @@ LRDBenchmark provides a comprehensive neural network factory with 4 architecture
 
 .. code-block:: python
 
-   from lrdbenchmark.analysis.machine_learning.neural_network_factory import (
-       NeuralNetworkFactory, NNArchitecture, NNConfig, create_all_benchmark_networks
-   )
+   from lrdbenchmark import NeuralNetworkFactory, NNArchitecture, NNConfig, create_all_benchmark_networks
    import numpy as np
 
    # Create neural network factory
@@ -114,7 +111,7 @@ For production deployment, use the production ML system with train-once, apply-m
 
 .. code-block:: python
 
-   from lrdbenchmark.analysis.machine_learning.production_ml_system import ProductionMLSystem, ProductionConfig
+   from lrdbenchmark import ProductionMLSystem, ProductionConfig
    import numpy as np
 
    # Configure system

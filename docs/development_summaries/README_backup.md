@@ -88,11 +88,11 @@ pip install -e .
 ### Basic Usage
 
 ```python
-from lrdbenchmark.models.data_models.fbm.fbm_model import FractionalBrownianMotion
+from lrdbenchmark import FBMModel
 from lrdbenchmark.analysis.temporal.rs.rs_estimator import RSEstimator
 
 # Generate synthetic data
-fbm = FractionalBrownianMotion(hurst=0.8, length=1000)
+fbm = FBMModel(hurst=0.8, length=1000)
 data = fbm.generate()
 
 # Estimate Hurst parameter
@@ -316,7 +316,7 @@ We've integrated **Alpha-Stable Distributions** into LRDBenchmark to support hea
 
 ### Usage Example
 ```python
-from lrdbenchmark.models.data_models.alpha_stable.alpha_stable_model import AlphaStableModel
+from lrdbenchmark import AlphaStableModel
 
 # Initialize alpha-stable model
 model = AlphaStableModel(

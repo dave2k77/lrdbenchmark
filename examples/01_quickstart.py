@@ -10,7 +10,7 @@ from lrdbenchmark import FBMModel, RSEstimator
 
 # Generate synthetic fractional Brownian motion
 fbm = FBMModel(H=0.7, sigma=1.0)
-data = fbm.generate(n=1000, seed=42)
+data = fbm.generate(length=1000, seed=42)
 
 # Estimate Hurst parameter using R/S analysis
 estimator = RSEstimator()

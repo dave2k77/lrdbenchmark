@@ -31,7 +31,7 @@ print(f'Using device: {device}')
 
 # Generate LRD data
 fbm = FBMModel(H=0.7)
-data = fbm.generate(n=1000)
+data = fbm.generate(length=1000)
 
 # Use LRDBenchmark LSTM (automatically uses GPU if available)
 lstm = LSTMEstimator()
@@ -71,7 +71,7 @@ print(f'JAX devices: {jax.devices()}')
 
 # Generate LRD data
 fbm = FBMModel(H=0.7)
-data = fbm.generate(n=1000)
+data = fbm.generate(length=1000)
 
 # JAX transformations for research
 def hurst_estimation_loss(params, data):
@@ -110,7 +110,7 @@ from lrdbenchmark.models.data_models import FBMModel
 
 # Generate data
 fbm = FBMModel(H=0.7)
-data = fbm.generate(n=1000)
+data = fbm.generate(length=1000)
 
 # Convert to PyTorch for GPU processing
 torch_data = torch.tensor(data, dtype=torch.float32).cuda()
@@ -195,7 +195,7 @@ from jax import vmap
 
 # Generate multiple LRD processes
 models = [FBMModel(H=h) for h in [0.5, 0.6, 0.7, 0.8, 0.9]]
-data_sets = [model.generate(n=1000) for model in models]
+data_sets = [model.generate(length=1000) for model in models]
 
 # PyTorch GPU neural network for estimation
 class HurstEstimator(torch.nn.Module):
@@ -242,7 +242,7 @@ from jax import vmap, grad
 
 # Generate clean LRD data
 fbm = FBMModel(H=0.7)
-clean_data = fbm.generate(n=1000)
+clean_data = fbm.generate(length=1000)
 
 # Add contamination (JAX for mathematical operations)
 def add_contamination(data, noise_level):

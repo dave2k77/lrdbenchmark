@@ -128,8 +128,8 @@ After installation, verify that LRDBenchmark is working correctly:
    print("Enhanced estimators imported successfully!")
    
    # Test basic functionality
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FractionalBrownianMotion
-   model = FractionalBrownianMotion(H=0.7)
+   from lrdbenchmark import FBMModel
+   model = FBMModel(H=0.7)
    data = model.generate(100)
    print(f"Generated {len(data)} samples")
 

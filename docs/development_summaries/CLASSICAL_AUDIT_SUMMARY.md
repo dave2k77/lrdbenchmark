@@ -139,7 +139,7 @@ estimator = RSEstimator(
 
 # Recommended data model configuration
 model = FBMModel(H=0.7, sigma=1.0)
-data = model.generate(n=1000, seed=42)
+data = model.generate(length=1000, seed=42)
 ```
 
 ---

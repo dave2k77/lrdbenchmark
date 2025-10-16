@@ -38,7 +38,7 @@ from lrdbenchmark import FBMModel, RSEstimator
 
 # All estimators default to CPU
 model = FBMModel(H=0.7)
-data = model.generate(n=1000)
+data = model.generate(length=1000)
 estimator = RSEstimator()
 result = estimator.estimate(data)
 ```
