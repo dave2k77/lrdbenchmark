@@ -25,10 +25,10 @@ The LRDBenchmark library provides a comprehensive framework for:
 - Data quality assessment and statistical validation
 
 **Data Models Covered**:
-- `FractionalBrownianMotion` - self-similar Gaussian process
-- `FractionalGaussianNoise` - increments of FBM
+- `FBMModel` - self-similar Gaussian process
+- `FGNModel` - increments of FBM
 - `ARFIMAModel` - autoregressive fractionally integrated moving average
-- `MultifractalRandomWalk` - multifractal processes
+- `MRWModel` - multifractal processes
 - `AlphaStableModel` - heavy-tailed distributions
 
 **Prerequisites**: Basic understanding of time series analysis
