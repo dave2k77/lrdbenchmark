@@ -54,13 +54,13 @@ try:
     
     # Wavelet estimators
     from .analysis.wavelet.cwt.cwt_estimator_unified import CWTEstimator
-    from .analysis.wavelet.variance.wavelet_variance_estimator import WaveletVarianceEstimator
-    from .analysis.wavelet.log_variance.wavelet_log_variance_estimator import WaveletLogVarianceEstimator
-    from .analysis.wavelet.whittle.wavelet_whittle_estimator import WaveletWhittleEstimator
+    from .analysis.wavelet.variance.variance_estimator_unified import WaveletVarianceEstimator
+    from .analysis.wavelet.log_variance.log_variance_estimator_unified import WaveletLogVarianceEstimator
+    from .analysis.wavelet.whittle.whittle_estimator_unified import WaveletWhittleEstimator
     
     # Multifractal estimators
     from .analysis.multifractal.mfdfa.mfdfa_estimator import MFDFAEstimator
-    from .analysis.multifractal.wavelet_leaders.multifractal_wavelet_leaders_estimator import MultifractalWaveletLeadersEstimator
+    from .analysis.multifractal.wavelet_leaders.wavelet_leaders_estimator_unified import MultifractalWaveletLeadersEstimator
     
 except ImportError as e:
     print(f"Warning: Could not import classical estimators: {e}")
