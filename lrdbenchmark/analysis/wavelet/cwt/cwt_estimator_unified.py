@@ -69,7 +69,7 @@ class CWTEstimator(BaseEstimator):
 
     def __init__(
         self,
-        wavelet: str = "cmor1.5-1.0",
+        wavelet: str = "gaus1",
         scales: Optional[np.ndarray] = None,
         confidence: float = 0.95,
         use_optimization: str = "auto",
@@ -173,7 +173,11 @@ class CWTEstimator(BaseEstimator):
         
         # Set default scales if not provided
         if self.parameters["scales"] is None:
-            self.parameters["scales"] = np.logspace(1, 4, 20)  # Logarithmically spaced scales
+            # Use appropriate scales for time series analysis
+            # Scales should be in the range [2, n/4] for good wavelet analysis
+            max_scale = min(n // 4, 64)  # Cap at 64 for computational efficiency
+            min_scale = 2
+            self.parameters["scales"] = np.logspace(np.log2(min_scale), np.log2(max_scale), 15, base=2)
         
         # Adjust scales for shorter data
         if n < 100:
