@@ -1,0 +1,24 @@
+# Core scientific computing
+numpy
+scipy
+matplotlib
+
+# JAX ecosystem for automatic differentiation and GPU acceleration
+jax
+jaxlib
+optax
+
+# PyTorch for deep learning and neural networks
+torch
+
+# NUMBA for JIT compilation and parallel computing
+numba
+
+# Additional scientific libraries
+pandas
+seaborn
+statsmodels
+PyWavelets
+
+# For testing
+pytest

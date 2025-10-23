@@ -1,3 +1,4 @@
+# Test comment
 #!/usr/bin/env python3
 """
 Unified Geweke-Porter-Hudak (GPH) Hurst parameter estimator.
@@ -12,27 +13,22 @@ from scipy import stats, signal
 from typing import Dict, Any, Optional, Union, Tuple
 import warnings
 
+from lrdbenchmark.analysis.backend_utils import select_backend, JAX_AVAILABLE, NUMBA_AVAILABLE
+
 # Import optimization frameworks
-try:
+if JAX_AVAILABLE:
     import jax
     import jax.numpy as jnp
     from jax import jit, vmap
-    JAX_AVAILABLE = True
-except ImportError:
-    JAX_AVAILABLE = False
-
-try:
+if NUMBA_AVAILABLE:
     import numba
     from numba import jit as numba_jit, prange
-    NUMBA_AVAILABLE = True
-except ImportError:
-    NUMBA_AVAILABLE = False
 
 # Import base estimator
 try:
     from lrdbenchmark.analysis.base_estimator import BaseEstimator
 except ImportError:
-    from lrdbenchmark.models.estimators.base_estimator import BaseEstimator
+    from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 
 class GPHEstimator(BaseEstimator):
@@ -55,12 +51,6 @@ class GPHEstimator(BaseEstimator):
         Minimum frequency ratio (relative to Nyquist) for fitting.
     max_freq_ratio : float, optional (default=0.1)
         Maximum frequency ratio (relative to Nyquist) for fitting.
-    use_welch : bool, optional (default=True)
-        Whether to use Welch's method for PSD estimation.
-    window : str, optional (default='hann')
-        Window function for Welch's method.
-    nperseg : int, optional (default=None)
-        Length of each segment for Welch's method. If None, uses n/8.
     apply_bias_correction : bool, optional (default=True)
         Whether to apply bias correction for finite sample effects.
     use_optimization : str, optional (default='auto')
@@ -71,9 +61,6 @@ class GPHEstimator(BaseEstimator):
         self,
         min_freq_ratio: float = 0.01,
         max_freq_ratio: float = 0.1,
-        use_welch: bool = True,
-        window: str = "hann",
-        nperseg: Optional[int] = None,
         apply_bias_correction: bool = True,
         use_optimization: str = "auto",
     ):
@@ -83,14 +70,11 @@ class GPHEstimator(BaseEstimator):
         self.parameters = {
             "min_freq_ratio": min_freq_ratio,
             "max_freq_ratio": max_freq_ratio,
-            "use_welch": use_welch,
-            "window": window,
-            "nperseg": nperseg,
             "apply_bias_correction": apply_bias_correction,
         }
         
         # Optimization framework
-        self.optimization_framework = self._select_optimization_framework(use_optimization)
+        self.optimization_framework = select_backend(use_optimization)
         
         # Results storage
         self.results = {}
@@ -98,31 +82,9 @@ class GPHEstimator(BaseEstimator):
         # Validation
         self._validate_parameters()
 
-    def _select_optimization_framework(self, use_optimization: str) -> str:
-        """Select the optimal optimization framework."""
-        if use_optimization == "auto":
-            if JAX_AVAILABLE:
-                return "jax"  # Best for GPU acceleration
-            elif NUMBA_AVAILABLE:
-                return "numba"  # Good for CPU optimization
-            else:
-                return "numpy"  # Fallback
-        elif use_optimization == "jax" and JAX_AVAILABLE:
-            return "jax"
-        elif use_optimization == "numba" and NUMBA_AVAILABLE:
-            return "numba"
-        else:
-            return "numpy"
-
     def _validate_parameters(self) -> None:
         """Validate estimator parameters."""
-        if not (0 < self.parameters["min_freq_ratio"] < self.parameters["max_freq_ratio"] < 0.5):
-            raise ValueError(
-                "Frequency ratios must satisfy: 0 < min_freq_ratio < max_freq_ratio < 0.5"
-            )
-
-        if self.parameters["nperseg"] is not None and self.parameters["nperseg"] < 2:
-            raise ValueError("nperseg must be at least 2")
+        pass
 
     def estimate(self, data: Union[np.ndarray, list]) -> Dict[str, Any]:
         """
@@ -152,52 +114,48 @@ class GPHEstimator(BaseEstimator):
             warnings.warn("Data length is small, results may be unreliable")
 
         # Select optimal method based on data size and framework
-        if self.optimization_framework == "jax" and JAX_AVAILABLE:
+        backend = self.optimization_framework
+        if backend == "jax":
             try:
                 return self._estimate_jax(data)
             except Exception as e:
                 warnings.warn(f"JAX implementation failed: {e}, falling back to NumPy")
                 return self._estimate_numpy(data)
-        elif self.optimization_framework == "numba" and NUMBA_AVAILABLE:
+        elif backend == "numba":
             try:
                 return self._estimate_numba(data)
             except Exception as e:
                 warnings.warn(f"Numba implementation failed: {e}, falling back to NumPy")
                 return self._estimate_numpy(data)
-        else:
+        else: # numpy
             return self._estimate_numpy(data)
 
     def _estimate_numpy(self, data: np.ndarray) -> Dict[str, Any]:
         """NumPy implementation of GPH estimation."""
         n = len(data)
         
-        # Set nperseg if not provided
-        if self.parameters["nperseg"] is None:
-            self.parameters["nperseg"] = min(max(n // 8, 64), n)
-
-        # Compute periodogram
-        if self.parameters["use_welch"]:
-            freqs, psd = signal.welch(
-                data, 
-                window=self.parameters["window"], 
-                nperseg=self.parameters["nperseg"], 
-                scaling="density"
-            )
+        # Coarse preliminary estimate to guide bandwidth
+        coarse_m = int(n**0.8)
+        freqs, psd = signal.periodogram(data, scaling='density')
+        coarse_freqs = freqs[1:coarse_m+1]
+        coarse_psd = psd[1:coarse_m+1]
+        
+        if len(coarse_freqs) > 3:
+            omega_coarse = 2 * np.pi * coarse_freqs
+            regressor_coarse = np.log(4 * np.sin(omega_coarse / 2) ** 2)
+            log_psd_coarse = np.log(coarse_psd)
+            slope_coarse, _, _, _, _ = stats.linregress(regressor_coarse, log_psd_coarse)
+            h_coarse = -slope_coarse + 0.5
         else:
-            freqs, psd = signal.periodogram(
-                data, 
-                window=self.parameters["window"], 
-                scaling="density"
-            )
+            h_coarse = 0.5
 
+        # Refined bandwidth based on coarse estimate
+        alpha = 0.5 - 0.2 * abs(h_coarse - 0.5) # Heuristic adjustment
+        m = int(n**alpha)
+        
         # Select frequency range for fitting
-        nyquist = 0.5
-        min_freq = self.parameters["min_freq_ratio"] * nyquist
-        max_freq = self.parameters["max_freq_ratio"] * nyquist
-
-        mask = (freqs >= min_freq) & (freqs <= max_freq)
-        freqs_sel = freqs[mask]
-        psd_sel = psd[mask]
+        freqs_sel = freqs[1:m+1]
+        psd_sel = psd[1:m+1]
 
         if len(freqs_sel) < 3:
             raise ValueError("Insufficient frequency points for fitting")
@@ -254,51 +212,34 @@ class GPHEstimator(BaseEstimator):
         }
         return self.results
 
-    def _estimate_numba(self, data: np.ndarray) -> Dict[str, Any]:
-        """Numba-optimized implementation of GPH estimation."""
-        # For now, use NumPy implementation with Numba JIT compilation
-        # This can be enhanced with custom Numba kernels for specific operations
-        return self._estimate_numpy(data)
-
     def _estimate_jax(self, data: np.ndarray) -> Dict[str, Any]:
         """JAX-optimized implementation of GPH estimation."""
-        # Convert data to JAX array
-        data_jax = jnp.array(data)
+        # JAX implementation is hybrid: uses NumPy/SciPy for PSD and JAX for regression.
         
-        # JAX implementation of the core computation
-        # Note: JAX doesn't have direct equivalents for scipy.signal.welch
-        # So we'll use the NumPy implementation for PSD computation
-        # and JAX for the regression part
-        
-        # Compute PSD using NumPy (JAX doesn't have Welch method)
         n = len(data)
-        if self.parameters["nperseg"] is None:
-            nperseg = min(max(n // 8, 64), n)
-        else:
-            nperseg = self.parameters["nperseg"]
-            
-        if self.parameters["use_welch"]:
-            freqs, psd = signal.welch(
-                data, 
-                window=self.parameters["window"], 
-                nperseg=nperseg, 
-                scaling="density"
-            )
-        else:
-            freqs, psd = signal.periodogram(
-                data, 
-                window=self.parameters["window"], 
-                scaling="density"
-            )
+        freqs, psd = signal.periodogram(data, scaling='density')
 
+        # Coarse preliminary estimate to guide bandwidth (NumPy portion)
+        coarse_m = int(n**0.8)
+        coarse_freqs = freqs[1:coarse_m+1]
+        coarse_psd = psd[1:coarse_m+1]
+        
+        if len(coarse_freqs) > 3:
+            omega_coarse = 2 * np.pi * coarse_freqs
+            regressor_coarse = np.log(4 * np.sin(omega_coarse / 2) ** 2)
+            log_psd_coarse = np.log(coarse_psd)
+            slope_coarse, _, _, _, _ = stats.linregress(regressor_coarse, log_psd_coarse)
+            h_coarse = -slope_coarse + 0.5
+        else:
+            h_coarse = 0.5
+
+        # Refined bandwidth based on coarse estimate
+        alpha = 0.5 - 0.2 * abs(h_coarse - 0.5) # Heuristic adjustment
+        m = int(n**alpha)
+        
         # Select frequency range for fitting
-        nyquist = 0.5
-        min_freq = self.parameters["min_freq_ratio"] * nyquist
-        max_freq = self.parameters["max_freq_ratio"] * nyquist
-
-        mask = (freqs >= min_freq) & (freqs <= max_freq)
-        freqs_sel = freqs[mask]
-        psd_sel = psd[mask]
+        freqs_sel = freqs[1:m+1]
+        psd_sel = psd[1:m+1]
 
         if len(freqs_sel) < 3:
             raise ValueError("Insufficient frequency points for fitting")

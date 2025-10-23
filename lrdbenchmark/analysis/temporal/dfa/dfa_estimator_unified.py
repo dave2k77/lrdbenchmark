@@ -12,28 +12,96 @@ from scipy import stats
 from typing import Dict, Any, Optional, Union, Tuple, List
 import warnings
 
+from lrdbenchmark.analysis.backend_utils import select_backend, JAX_AVAILABLE, NUMBA_AVAILABLE
+
 # Import optimization frameworks
-try:
+if JAX_AVAILABLE:
     import jax
     import jax.numpy as jnp
     from jax import jit, vmap
-    JAX_AVAILABLE = True
-except ImportError:
-    JAX_AVAILABLE = False
-
-try:
+if NUMBA_AVAILABLE:
     import numba
     from numba import jit as numba_jit, prange
-    NUMBA_AVAILABLE = True
-except ImportError:
-    NUMBA_AVAILABLE = False
 
 # Import base estimator
 try:
     from lrdbenchmark.analysis.base_estimator import BaseEstimator
 except ImportError:
-    from lrdbenchmark.models.estimators.base_estimator import BaseEstimator
+    from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
+
+@numba_jit(nopython=True, parallel=True)
+def _calculate_fluctuation_numba(data: np.ndarray, scales: np.ndarray, order: int) -> np.ndarray:
+    """Numba-jitted fluctuation calculation."""
+    n = len(data)
+    fluctuation_values = np.zeros(len(scales))
+
+    for i in prange(len(scales)):
+        scale = scales[i]
+        n_segments = n // scale
+        if n_segments == 0:
+            fluctuation_values[i] = np.nan
+            continue
+
+        segment_fluctuations = np.zeros(n_segments)
+        for j in range(n_segments):
+            start_idx = j * scale
+            end_idx = start_idx + scale
+            segment_data = data[start_idx:end_idx]
+
+            x = np.arange(scale)
+            if order == 0:
+                detrended = segment_data - np.mean(segment_data)
+            else:
+                coeffs = np.polyfit(x, segment_data, order)
+                trend = np.polyval(coeffs, x)
+                detrended = segment_data - trend
+            
+            segment_fluctuations[j] = np.sqrt(np.mean(detrended**2))
+        
+        fluctuation_values[i] = np.mean(segment_fluctuations)
+        
+    return fluctuation_values
+
+
+if JAX_AVAILABLE:
+    @jit
+    def _polyfit_jax(x, y, deg):
+        """JAX-compatible polyfit."""
+        X = jnp.vander(x, N=deg + 1)
+        coeffs, _, _, _ = jnp.linalg.lstsq(X, y, rcond=None)
+        return coeffs
+
+    @jit
+    def _polyval_jax(p, x):
+        """JAX-compatible polyval."""
+        y = jnp.zeros_like(x)
+        for i, coeff in enumerate(p):
+            y += coeff * x ** (len(p) - 1 - i)
+        return y
+
+    @jit
+    def _calculate_fluctuation_jax_single_scale(data, scale, order):
+        """JAX fluctuation calculation for a single scale."""
+        n = len(data)
+        n_segments = n // scale
+        if n_segments == 0:
+            return jnp.nan
+
+        segments = data[:n_segments * scale].reshape(n_segments, scale)
+
+        def detrend_and_var(segment):
+            x = jnp.arange(scale)
+            if order == 0:
+                detrended = segment - jnp.mean(segment)
+            else:
+                coeffs = _polyfit_jax(x, segment, order)
+                trend = _polyval_jax(coeffs, x)
+                detrended = segment - trend
+            return jnp.mean(detrended**2)
+
+        variances = vmap(detrend_and_var)(segments)
+        return jnp.mean(jnp.sqrt(variances))
 
 class DFAEstimator(BaseEstimator):
     """
@@ -81,40 +149,13 @@ class DFAEstimator(BaseEstimator):
         }
         
         # Optimization framework
-        self.optimization_framework = self._select_optimization_framework(use_optimization)
+        self.optimization_framework = select_backend(use_optimization)
         
         # Results storage
         self.results = {}
         
         # Validation
         self._validate_parameters()
-
-    def _select_optimization_framework(self, use_optimization: str) -> str:
-        """Select the optimal optimization framework."""
-        if use_optimization == "auto":
-            if JAX_AVAILABLE:
-                return "jax"  # Best for GPU acceleration
-            elif NUMBA_AVAILABLE:
-                return "numba"  # Good for CPU optimization
-            else:
-                return "numpy"  # Fallback
-        elif use_optimization == "jax" and JAX_AVAILABLE:
-            return "jax"
-        elif use_optimization == "numba" and NUMBA_AVAILABLE:
-            return "numba"
-        else:
-            return "numpy"
-
-    def _validate_parameters(self) -> None:
-        """Validate estimator parameters."""
-        if self.parameters["min_scale"] < 4:
-            raise ValueError("min_scale must be at least 4")
-        
-        if self.parameters["order"] < 0:
-            raise ValueError("order must be non-negative")
-        
-        if self.parameters["num_scales"] < 3:
-            raise ValueError("num_scales must be at least 3")
 
     def estimate(self, data: Union[np.ndarray, list]) -> Dict[str, Any]:
         """
@@ -143,20 +184,134 @@ class DFAEstimator(BaseEstimator):
             warnings.warn("Data length is small, results may be unreliable")
 
         # Select optimal method based on data size and framework
-        if self.optimization_framework == "jax" and JAX_AVAILABLE:
+        backend = self.optimization_framework
+        if backend == "jax":
             try:
                 return self._estimate_jax(data)
             except Exception as e:
                 warnings.warn(f"JAX implementation failed: {e}, falling back to NumPy")
                 return self._estimate_numpy(data)
-        elif self.optimization_framework == "numba" and NUMBA_AVAILABLE:
+        elif backend == "numba":
             try:
                 return self._estimate_numba(data)
             except Exception as e:
                 warnings.warn(f"Numba implementation failed: {e}, falling back to NumPy")
                 return self._estimate_numpy(data)
-        else:
+        else: # numpy
             return self._estimate_numpy(data)
+
+    def _estimate_numba(self, data: np.ndarray) -> Dict[str, Any]:
+        """Numba-optimized implementation of DFA estimation."""
+        n = len(data)
+        cumsum = np.cumsum(data - np.mean(data))
+
+        if self.parameters["max_scale"] is None:
+            self.parameters["max_scale"] = n // 4
+
+        scales = np.logspace(
+            np.log10(self.parameters["min_scale"]),
+            np.log10(self.parameters["max_scale"]),
+            self.parameters["num_scales"],
+            dtype=int
+        )
+        scales = np.unique(scales)
+        scales = scales[scales <= n // 2]
+
+        if len(scales) < 3:
+            raise ValueError("Insufficient valid scales for analysis")
+
+        fluctuation_values = _calculate_fluctuation_numba(cumsum, scales, self.parameters["order"])
+        
+        valid_mask = (fluctuation_values > 0) & ~np.isnan(fluctuation_values)
+        if np.sum(valid_mask) < 3:
+            raise ValueError("Insufficient valid fluctuation values for analysis")
+
+        valid_scales = scales[valid_mask]
+        valid_fluctuations = fluctuation_values[valid_mask]
+
+        log_scales = np.log(valid_scales)
+        log_fluctuations = np.log(valid_fluctuations)
+
+        slope, intercept, r_value, p_value, std_err = stats.linregress(
+            log_scales, log_fluctuations
+        )
+        r_squared = r_value**2
+        hurst_parameter = slope
+
+        self.results = {
+            "hurst_parameter": float(hurst_parameter),
+            "r_squared": float(r_squared),
+            "slope": float(slope),
+            "intercept": float(intercept),
+            "p_value": float(p_value),
+            "std_error": float(std_err),
+            "scales": valid_scales.tolist(),
+            "fluctuation_values": valid_fluctuations.tolist(),
+            "log_scales": log_scales.tolist(),
+            "log_fluctuations": log_fluctuations.tolist(),
+            "method": "numba",
+            "optimization_framework": self.optimization_framework,
+        }
+        
+        return self.results
+
+    def _estimate_jax(self, data: np.ndarray) -> Dict[str, Any]:
+        """JAX-optimized implementation of DFA estimation."""
+        n = len(data)
+        data_jax = jnp.array(data)
+        cumsum = jnp.cumsum(data_jax - jnp.mean(data_jax))
+
+        if self.parameters["max_scale"] is None:
+            self.parameters["max_scale"] = n // 4
+
+        scales = np.logspace(
+            np.log10(self.parameters["min_scale"]),
+            np.log10(self.parameters["max_scale"]),
+            self.parameters["num_scales"],
+            dtype=int
+        )
+        scales = np.unique(scales)
+        scales = scales[scales <= n // 2]
+        scales_jax = jnp.array(scales)
+
+        if len(scales) < 3:
+            raise ValueError("Insufficient valid scales for analysis")
+
+        fluctuation_values = jax.vmap(lambda s: _calculate_fluctuation_jax_single_scale(cumsum, s, self.parameters["order"]))(scales_jax)
+        
+        valid_mask = (fluctuation_values > 0) & ~jnp.isnan(fluctuation_values)
+        if jnp.sum(valid_mask) < 3:
+            raise ValueError("Insufficient valid fluctuation values for analysis")
+
+        valid_scales = scales[valid_mask]
+        valid_fluctuations = fluctuation_values[valid_mask]
+
+        log_scales = jnp.log(valid_scales)
+        log_fluctuations = jnp.log(valid_fluctuations)
+
+        # JAX-based linear regression
+        A = jnp.vstack([log_scales, jnp.ones(len(log_scales))]).T
+        slope, intercept = jnp.linalg.lstsq(A, log_fluctuations, rcond=None)[0]
+
+        r_squared = 1 - jnp.sum((log_fluctuations - (slope * log_scales + intercept))**2) / jnp.sum((log_fluctuations - jnp.mean(log_fluctuations))**2)
+        hurst_parameter = slope
+
+        self.results = {
+            "hurst_parameter": float(hurst_parameter),
+            "r_squared": float(r_squared),
+            "slope": float(slope),
+            "intercept": float(intercept),
+            "p_value": None,
+            "std_error": None,
+            "scales": valid_scales.tolist(),
+            "fluctuation_values": valid_fluctuations.tolist(),
+            "log_scales": log_scales.tolist(),
+            "log_fluctuations": log_fluctuations.tolist(),
+            "method": "jax",
+            "optimization_framework": self.optimization_framework,
+        }
+        
+        return self.results
 
     def _estimate_numpy(self, data: np.ndarray) -> Dict[str, Any]:
         """NumPy implementation of DFA estimation."""
@@ -233,25 +388,6 @@ class DFAEstimator(BaseEstimator):
         }
         
         return self.results
-
-    def _estimate_numba(self, data: np.ndarray) -> Dict[str, Any]:
-        """Numba-optimized implementation of DFA estimation."""
-        # For now, use NumPy implementation with Numba JIT compilation
-        # This can be enhanced with custom Numba kernels for specific operations
-        return self._estimate_numpy(data)
-
-    def _estimate_jax(self, data: np.ndarray) -> Dict[str, Any]:
-        """JAX-optimized implementation of DFA estimation."""
-        # Convert data to JAX array
-        data_jax = jnp.array(data)
-        
-        # JAX implementation of the core computation
-        # Note: JAX doesn't have direct equivalents for some operations
-        # So we'll use the NumPy implementation for now
-        # This can be enhanced with JAX-specific optimizations
-        
-        # For now, fall back to NumPy implementation (which now includes the cumulative sum fix)
-        return self._estimate_numpy(data)
 
     def _calculate_fluctuation_numpy(self, data: np.ndarray, scale: int) -> float:
         """Calculate fluctuation value for a given scale using NumPy."""

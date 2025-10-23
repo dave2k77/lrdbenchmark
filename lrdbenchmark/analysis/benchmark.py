@@ -26,19 +26,19 @@ from .advanced_metrics import (
 # Import estimators
 from .temporal.rs.rs_estimator_unified import RSEstimator
 from .temporal.dfa.dfa_estimator_unified import DFAEstimator
-from .temporal.dma.dma_estimator import DMAEstimator
-from .temporal.higuchi.higuchi_estimator import HiguchiEstimator
+from .temporal.dma.dma_estimator_unified import DMAEstimator
+from .temporal.higuchi.higuchi_estimator_unified import HiguchiEstimator
 from .spectral.gph.gph_estimator_unified import GPHEstimator
 from .spectral.whittle.whittle_estimator_unified import WhittleEstimator
 from .spectral.periodogram.periodogram_estimator_unified import PeriodogramEstimator
 from .wavelet.cwt.cwt_estimator_unified import CWTEstimator
-from .wavelet.variance.wavelet_variance_estimator import WaveletVarianceEstimator
-from .wavelet.log_variance.wavelet_log_variance_estimator import (
+from .wavelet.variance.variance_estimator_unified import WaveletVarianceEstimator
+from .wavelet.log_variance.log_variance_estimator_unified import (
     WaveletLogVarianceEstimator,
 )
-from .wavelet.whittle.wavelet_whittle_estimator import WaveletWhittleEstimator
-from .multifractal.mfdfa.mfdfa_estimator import MFDFAEstimator
-from .multifractal.wavelet_leaders.multifractal_wavelet_leaders_estimator import (
+from .wavelet.whittle.whittle_estimator_unified import WaveletWhittleEstimator
+from .multifractal.mfdfa.mfdfa_estimator_unified import MFDFAEstimator
+from .multifractal.wavelet_leaders.wavelet_leaders_estimator_unified import (
     MultifractalWaveletLeadersEstimator,
 )
 
@@ -205,11 +205,11 @@ class ComprehensiveBenchmark:
                 "GPH": GPHEstimator(),
                 "Whittle": WhittleEstimator(),
                 "Periodogram": PeriodogramEstimator(),
-                # Wavelet estimators - will be initialized with adaptive scales
+                # Wavelet estimators
                 "CWT": CWTEstimator(),
-                "WaveletVar": None,  # Will be initialized dynamically
-                "WaveletLogVar": None,  # Will be initialized dynamically
-                "WaveletWhittle": None,  # Will be initialized dynamically
+                "WaveletVar": WaveletVarianceEstimator(),
+                "WaveletLogVar": WaveletLogVarianceEstimator(),
+                "WaveletWhittle": WaveletWhittleEstimator(),
                 # Multifractal estimators
                 "MFDFA": MFDFAEstimator(),
                 "WaveletLeaders": MultifractalWaveletLeadersEstimator(),
@@ -227,27 +227,6 @@ class ComprehensiveBenchmark:
             },
         }
         return estimators
-
-    def _get_adaptive_wavelet_estimators(self, data_length: int) -> Dict[str, Any]:
-        """Create wavelet estimators with scales adapted to data length."""
-        # Calculate maximum safe scale: log2(data_length) - 1 (for safety margin)
-        max_safe_scale = max(1, int(np.log2(data_length)) - 1)
-
-        # Create scales that work with the data length
-        # Use fewer, more meaningful scales for shorter data
-        if data_length < 100:
-            scales = [1, 2, 3]
-        elif data_length < 500:
-            scales = list(range(1, max_safe_scale + 1))
-        else:
-            # For longer data, use more scales but ensure they're safe
-            scales = list(range(1, min(max_safe_scale + 1, 8)))
-
-        return {
-            "WaveletVar": WaveletVarianceEstimator(scales=scales),
-            "WaveletLogVar": WaveletLogVarianceEstimator(scales=scales),
-            "WaveletWhittle": WaveletWhittleEstimator(scales=scales),
-        }
 
     def _initialize_data_models(self) -> Dict[str, Any]:
         """Initialize all available data models."""
@@ -299,24 +278,11 @@ class ComprehensiveBenchmark:
             for category in self.all_estimators.values():
                 all_est.update(category)
 
-            # Replace None wavelet estimators with adaptive ones
-            adaptive_wavelets = self._get_adaptive_wavelet_estimators(data_length)
-            for name, estimator in adaptive_wavelets.items():
-                if name in all_est:
-                    all_est[name] = estimator
-
             # Filter out None estimators
             all_est = {name: estimator for name, estimator in all_est.items() if estimator is not None}
             return all_est
         elif benchmark_type in self.all_estimators:
             estimators = self.all_estimators[benchmark_type].copy()
-
-            # Replace None wavelet estimators with adaptive ones
-            if benchmark_type == "classical":
-                adaptive_wavelets = self._get_adaptive_wavelet_estimators(data_length)
-                for name, estimator in adaptive_wavelets.items():
-                    if name in estimators:
-                        estimators[name] = estimator
 
             # Filter out None estimators
             estimators = {name: estimator for name, estimator in estimators.items() if estimator is not None}

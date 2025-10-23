@@ -13,27 +13,51 @@ from scipy.signal import detrend
 from typing import Dict, Any, Optional, Union, Tuple, List
 import warnings
 
+from lrdbenchmark.analysis.backend_utils import select_backend, JAX_AVAILABLE, NUMBA_AVAILABLE
+
 # Import optimization frameworks
-try:
+if JAX_AVAILABLE:
     import jax
     import jax.numpy as jnp
     from jax import jit, vmap
-    JAX_AVAILABLE = True
-except ImportError:
-    JAX_AVAILABLE = False
-
-try:
+if NUMBA_AVAILABLE:
     import numba
     from numba import jit as numba_jit, prange
-    NUMBA_AVAILABLE = True
-except ImportError:
-    NUMBA_AVAILABLE = False
 
 # Import base estimator
 try:
     from lrdbenchmark.analysis.base_estimator import BaseEstimator
 except ImportError:
-    from lrdbenchmark.models.estimators.base_estimator import BaseEstimator
+    from lrdbenchmark.analysis.base_estimator import BaseEstimator
+
+
+@numba_jit(nopython=True, parallel=True)
+def _compute_fluctuation_function_numba(data, q, scale, order):
+    """Numba-jitted fluctuation calculation for MFDFA."""
+    n_segments = len(data) // scale
+    if n_segments == 0:
+        return np.nan
+
+    variances = np.zeros(n_segments)
+    for i in prange(n_segments):
+        start_idx = i * scale
+        end_idx = start_idx + scale
+        segment = data[start_idx:end_idx]
+        
+        x = np.arange(scale)
+        if order == 0:
+            detrended = segment - np.mean(segment)
+        else:
+            coeffs = np.polyfit(x, segment, order)
+            trend = np.polyval(coeffs, x)
+            detrended = segment - trend
+        
+        variances[i] = np.mean(detrended**2)
+
+    if q == 0:
+        return np.exp(0.5 * np.mean(np.log(variances)))
+    else:
+        return np.mean(variances ** (q / 2)) ** (1 / q)
 
 
 class MFDFAEstimator(BaseEstimator):
@@ -100,46 +124,13 @@ class MFDFAEstimator(BaseEstimator):
         }
         
         # Optimization framework
-        self.optimization_framework = self._select_optimization_framework(use_optimization)
+        self.optimization_framework = select_backend(use_optimization)
         
         # Results storage
         self.results = {}
         
         # Validation
         self._validate_parameters()
-
-    def _select_optimization_framework(self, use_optimization: str) -> str:
-        """Select the optimal optimization framework."""
-        if use_optimization == "auto":
-            if JAX_AVAILABLE:
-                return "jax"  # Best for GPU acceleration
-            elif NUMBA_AVAILABLE:
-                return "numba"  # Good for CPU optimization
-            else:
-                return "numpy"  # Fallback
-        elif use_optimization == "jax" and JAX_AVAILABLE:
-            return "jax"
-        elif use_optimization == "numba" and NUMBA_AVAILABLE:
-            return "numba"
-        else:
-            return "numpy"
-
-    def _validate_parameters(self) -> None:
-        """Validate estimator parameters."""
-        if not isinstance(self.parameters["q_values"], (list, np.ndarray)):
-            raise ValueError("q_values must be a list or array")
-
-        if not isinstance(self.parameters["scales"], (list, np.ndarray)):
-            raise ValueError("scales must be a list or array")
-
-        if self.parameters["order"] < 0:
-            raise ValueError("order must be non-negative")
-
-        if self.parameters["min_scale"] <= 0:
-            raise ValueError("min_scale must be positive")
-
-        if self.parameters["max_scale"] <= self.parameters["min_scale"]:
-            raise ValueError("max_scale must be greater than min_scale")
 
     def estimate(self, data: Union[np.ndarray, list]) -> Dict[str, Any]:
         """
@@ -168,20 +159,78 @@ class MFDFAEstimator(BaseEstimator):
             warnings.warn("Data length is small, results may be unreliable")
 
         # Select optimal method based on data size and framework
-        if self.optimization_framework == "jax" and JAX_AVAILABLE:
+        backend = self.optimization_framework
+        if backend == "jax":
             try:
                 return self._estimate_jax(data)
             except Exception as e:
                 warnings.warn(f"JAX implementation failed: {e}, falling back to NumPy")
                 return self._estimate_numpy(data)
-        elif self.optimization_framework == "numba" and NUMBA_AVAILABLE:
+        elif backend == "numba":
             try:
                 return self._estimate_numba(data)
             except Exception as e:
                 warnings.warn(f"Numba implementation failed: {e}, falling back to NumPy")
                 return self._estimate_numpy(data)
-        else:
+        else: # numpy
             return self._estimate_numpy(data)
+
+    def _estimate_numba(self, data: np.ndarray) -> Dict[str, Any]:
+        """Numba-optimized implementation of MFDFA estimation."""
+        max_safe_scale = min(self.parameters["max_scale"], len(data) // 4)
+        if max_safe_scale < self.parameters["min_scale"]:
+            raise ValueError(f"Data length {len(data)} is too short for MFDFA analysis")
+        
+        if max_safe_scale < self.parameters["max_scale"]:
+            safe_scales = [s for s in self.parameters["scales"] if s <= max_safe_scale]
+            if len(safe_scales) >= 3:
+                self.parameters["scales"] = np.array(safe_scales)
+                self.parameters["max_scale"] = max_safe_scale
+
+        scales = np.array(self.parameters["scales"])
+        q_values = np.array(self.parameters["q_values"])
+        order = self.parameters["order"]
+
+        fluctuation_functions = {}
+        for q in q_values:
+            fq_values = np.zeros(len(scales))
+            for i in range(len(scales)):
+                fq_values[i] = _compute_fluctuation_function_numba(data, q, scales[i], order)
+            fluctuation_functions[q] = fq_values
+
+        generalized_hurst = {}
+        log_scales = np.log(scales)
+
+        for q in q_values:
+            fq_vals = fluctuation_functions[q]
+            valid_mask = ~np.isnan(fq_vals) & (fq_vals > 0)
+            if np.sum(valid_mask) < 3:
+                generalized_hurst[q] = np.nan
+                continue
+
+            log_fq = np.log(fq_vals[valid_mask])
+            log_s = log_scales[valid_mask]
+
+            try:
+                slope, intercept, r_value, _, _ = stats.linregress(log_s, log_fq)
+                generalized_hurst[q] = slope
+            except (ValueError, np.linalg.LinAlgError):
+                generalized_hurst[q] = np.nan
+        
+        hurst_parameter = generalized_hurst.get(2, np.nan)
+        multifractal_spectrum = self._compute_multifractal_spectrum(generalized_hurst, q_values.tolist())
+
+        self.results = {
+            "hurst_parameter": float(hurst_parameter) if not np.isnan(hurst_parameter) else np.nan,
+            "generalized_hurst": {q: float(h) if not np.isnan(h) else np.nan for q, h in generalized_hurst.items()},
+            "multifractal_spectrum": multifractal_spectrum,
+            "scales": scales.tolist(),
+            "q_values": q_values.tolist(),
+            "fluctuation_functions": {q: fq.tolist() for q, fq in fluctuation_functions.items()},
+            "method": "numba",
+            "optimization_framework": self.optimization_framework,
+        }
+        return self.results
 
     def _estimate_numpy(self, data: np.ndarray) -> Dict[str, Any]:
         """NumPy implementation of MFDFA estimation."""
@@ -251,7 +300,7 @@ class MFDFAEstimator(BaseEstimator):
             "generalized_hurst": {q: float(h) if not np.isnan(h) else np.nan for q, h in generalized_hurst.items()},
             "multifractal_spectrum": multifractal_spectrum,
             "scales": scales.tolist() if hasattr(scales, "tolist") else list(scales),
-            "q_values": q_values,
+            "q_values": q_values.tolist() if hasattr(q_values, "tolist") else list(q_values),
             "fluctuation_functions": {
                 q: fq.tolist() if hasattr(fq, "tolist") else list(fq)
                 for q, fq in fluctuation_functions.items()
@@ -261,12 +310,6 @@ class MFDFAEstimator(BaseEstimator):
         }
         
         return self.results
-
-    def _estimate_numba(self, data: np.ndarray) -> Dict[str, Any]:
-        """Numba-optimized implementation of MFDFA estimation."""
-        # For now, use NumPy implementation with Numba JIT compilation
-        # This can be enhanced with custom Numba kernels for specific operations
-        return self._estimate_numpy(data)
 
     def _estimate_jax(self, data: np.ndarray) -> Dict[str, Any]:
         """JAX-optimized implementation of MFDFA estimation."""
@@ -279,6 +322,7 @@ class MFDFAEstimator(BaseEstimator):
         # This can be enhanced with JAX-specific optimizations
         
         # For now, fall back to NumPy implementation
+        warnings.warn("JAX not available for MFDFAEstimator, falling back to NumPy.")
         return self._estimate_numpy(data)
 
     def _detrend_series(self, series: np.ndarray, scale: int, order: int) -> np.ndarray:

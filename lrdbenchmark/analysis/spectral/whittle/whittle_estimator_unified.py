@@ -12,27 +12,22 @@ from scipy import stats, signal, optimize
 from typing import Dict, Any, Optional, Union, Tuple
 import warnings
 
+from lrdbenchmark.analysis.backend_utils import select_backend, JAX_AVAILABLE, NUMBA_AVAILABLE
+
 # Import optimization frameworks
-try:
+if JAX_AVAILABLE:
     import jax
     import jax.numpy as jnp
     from jax import jit, vmap
-    JAX_AVAILABLE = True
-except ImportError:
-    JAX_AVAILABLE = False
-
-try:
+if NUMBA_AVAILABLE:
     import numba
     from numba import jit as numba_jit, prange
-    NUMBA_AVAILABLE = True
-except ImportError:
-    NUMBA_AVAILABLE = False
 
 # Import base estimator
 try:
     from lrdbenchmark.analysis.base_estimator import BaseEstimator
 except ImportError:
-    from lrdbenchmark.models.estimators.base_estimator import BaseEstimator
+    from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 
 class WhittleEstimator(BaseEstimator):
@@ -89,29 +84,13 @@ class WhittleEstimator(BaseEstimator):
         }
         
         # Optimization framework
-        self.optimization_framework = self._select_optimization_framework(use_optimization)
+        self.optimization_framework = select_backend(use_optimization)
         
         # Results storage
         self.results = {}
         
         # Validation
         self._validate_parameters()
-
-    def _select_optimization_framework(self, use_optimization: str) -> str:
-        """Select the optimal optimization framework."""
-        if use_optimization == "auto":
-            if JAX_AVAILABLE:
-                return "jax"  # Best for GPU acceleration
-            elif NUMBA_AVAILABLE:
-                return "numba"  # Good for CPU optimization
-            else:
-                return "numpy"  # Fallback
-        elif use_optimization == "jax" and JAX_AVAILABLE:
-            return "jax"
-        elif use_optimization == "numba" and NUMBA_AVAILABLE:
-            return "numba"
-        else:
-            return "numpy"
 
     def _validate_parameters(self) -> None:
         """Validate estimator parameters."""
@@ -144,19 +123,20 @@ class WhittleEstimator(BaseEstimator):
             warnings.warn("Data length is small, results may be unreliable")
 
         # Select optimal method based on data size and framework
-        if self.optimization_framework == "jax" and JAX_AVAILABLE:
+        backend = self.optimization_framework
+        if backend == "jax":
             try:
                 return self._estimate_jax(data)
             except Exception as e:
                 warnings.warn(f"JAX implementation failed: {e}, falling back to NumPy")
                 return self._estimate_numpy(data)
-        elif self.optimization_framework == "numba" and NUMBA_AVAILABLE:
+        elif backend == "numba":
             try:
                 return self._estimate_numba(data)
             except Exception as e:
                 warnings.warn(f"Numba implementation failed: {e}, falling back to NumPy")
                 return self._estimate_numpy(data)
-        else:
+        else: # numpy
             return self._estimate_numpy(data)
 
     def _estimate_numpy(self, data: np.ndarray) -> Dict[str, Any]:
@@ -227,24 +207,12 @@ class WhittleEstimator(BaseEstimator):
         }
         return self.results
 
-    def _estimate_numba(self, data: np.ndarray) -> Dict[str, Any]:
-        """Numba-optimized implementation of Whittle estimation."""
-        # For now, use NumPy implementation with Numba JIT compilation
-        # This can be enhanced with custom Numba kernels for specific operations
-        return self._estimate_numpy(data)
-
     def _estimate_jax(self, data: np.ndarray) -> Dict[str, Any]:
         """JAX-optimized implementation of Whittle estimation."""
-        # Convert data to JAX array
-        data_jax = jnp.array(data)
-        
-        # JAX implementation of the core computation
-        # Note: JAX doesn't have direct equivalents for scipy.signal.welch
-        # So we'll use the NumPy implementation for PSD computation
-        # and JAX for the regression part
-        
-        # For now, fall back to NumPy implementation
-        # This can be enhanced with JAX-specific optimizations
+        # This is a placeholder and falls back to the NumPy implementation.
+        # A full JAX implementation would require re-implementing scipy's spectral
+        # and optimization routines, which is a significant undertaking.
+        warnings.warn("JAX not available for WhittleEstimator, falling back to NumPy.")
         return self._estimate_numpy(data)
 
     def _adaptive_bandwidth_selection(self, data: np.ndarray) -> Dict[str, Any]:
