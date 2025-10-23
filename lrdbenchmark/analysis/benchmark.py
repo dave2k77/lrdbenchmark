@@ -797,6 +797,24 @@ class ComprehensiveBenchmark:
             save_results=save_results,
         )
 
+    def run_classical_estimators(
+        self,
+        data_models: Optional[list] = None,
+        n_samples: int = 1000,
+        n_trials: int = 10,
+        save_results: bool = True,
+    ) -> Dict[str, Any]:
+        """
+        Backward-compatible alias for run_classical_benchmark.
+        
+        This method maintains the old API for compatibility with existing code.
+        """
+        # Old API used n_samples for data_length
+        return self.run_classical_benchmark(
+            data_length=n_samples,
+            save_results=save_results,
+        )
+
     def run_advanced_metrics_benchmark(
         self,
         data_length: int = 1000,
@@ -1252,6 +1270,28 @@ class ComprehensiveBenchmark:
                     print("     No successful estimators")
 
         print("\n🎯 Benchmark completed successfully!")
+
+    def export_results(self, results: Dict[str, Any], output_path: str) -> None:
+        """
+        Export benchmark results to a file.
+        
+        Parameters
+        ----------
+        results : dict
+            Benchmark results dictionary
+        output_path : str
+            Path to save the results (JSON format)
+        """
+        import json
+        from pathlib import Path
+        
+        output_file = Path(output_path)
+        output_file.parent.mkdir(parents=True, exist_ok=True)
+        
+        with open(output_file, 'w') as f:
+            json.dump(results, f, indent=2, default=str)
+        
+        print(f"💾 Results exported to: {output_file}")
 
 
 def main():

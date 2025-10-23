@@ -229,42 +229,51 @@ class FractionalBrownianMotion(BaseModel):
 
         return method
 
-    def generate(self, length: int, seed: Optional[int] = None) -> np.ndarray:
+    def generate(self, length: Optional[int] = None, seed: Optional[int] = None, n: Optional[int] = None) -> np.ndarray:
         """
         Generate fractional Brownian motion using the optimal method.
 
         Parameters
         ----------
-        length : int
+        length : int, optional
             Length of the time series to generate
         seed : int, optional
             Random seed for reproducibility
+        n : int, optional
+            Alternate parameter name for length (for backward compatibility)
 
         Returns
         -------
         np.ndarray
-            Generated fBm time series of length n
+            Generated fBm time series
+
+        Notes
+        -----
+        Either 'length' or 'n' must be provided. If both are provided, 'length' takes precedence.
         """
+        # Handle backward compatibility: accept both 'length' and 'n'
+        if length is None and n is None:
+            raise ValueError("Either 'length' or 'n' must be provided")
+        data_length = length if length is not None else n
+        
         if seed is not None:
             np.random.seed(seed)
-            if JAX_AVAILABLE:
-                jax.random.PRNGKey(seed)
 
         H = self.parameters["H"]
         sigma = self.parameters["sigma"]
 
         # Select optimal method
-        optimal_method = self._select_optimal_method(length, H)
+        optimal_method = self._select_optimal_method(data_length, H)
 
         # Generate using selected method
         if optimal_method == "davies_harte":
-            return self._generate_davies_harte(length, H, sigma)
+            return self._generate_davies_harte(data_length, H, sigma)
         elif optimal_method == "cholesky":
-            return self._generate_cholesky(length, H, sigma)
+            return self._generate_cholesky(data_length, H, sigma)
         elif optimal_method == "circulant":
-            return self._generate_circulant(length, H, sigma)
+            return self._generate_circulant(data_length, H, sigma)
         elif optimal_method == "hpfracc":
-            return self._generate_hpfracc(length, H, sigma)
+            return self._generate_hpfracc(data_length, H, sigma)
         else:
             raise ValueError(f"Unknown method: {optimal_method}")
 

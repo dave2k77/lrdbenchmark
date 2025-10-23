@@ -32,13 +32,7 @@ except ImportError:
 try:
     from lrdbenchmark.analysis.base_estimator import BaseEstimator
 except ImportError:
-    try:
-        from models.estimators.base_estimator import BaseEstimator
-    except ImportError:
-        # Fallback if base estimator not available
-        class BaseEstimator:
-            def __init__(self, **kwargs):
-                self.parameters = kwargs
+    from lrdbenchmark.models.estimators.base_estimator import BaseEstimator
 
 
 class PeriodogramEstimator(BaseEstimator):

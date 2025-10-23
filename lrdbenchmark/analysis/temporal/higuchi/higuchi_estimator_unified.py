@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
 from scipy import stats
 
-from lrdbenchmark.models.estimators.base_estimator import BaseEstimator
+from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 
 class HiguchiEstimator(BaseEstimator):
@@ -57,7 +57,7 @@ class HiguchiEstimator(BaseEstimator):
             raise ValueError("max_k must be greater than min_k")
 
         if self.parameters["k_values"] is not None:
-            k_array = np.asarray(self.parameters["k_values"], dtype=int)
+            k_array = np.array(self.parameters["k_values"], dtype=int)
             if np.any(k_array < 2):
                 raise ValueError("All k values must be at least 2")
             if np.any(np.diff(k_array) <= 0):
@@ -67,8 +67,13 @@ class HiguchiEstimator(BaseEstimator):
     # Core estimation logic
     # ------------------------------------------------------------------
 
-    def estimate(self, data: Union[np.ndarray, List[float]]) -> Dict[str, Any]:
-        series = np.asarray(data, dtype=float)
+    def estimate(self, data: Union[np.ndarray, List[float]], copy: bool = True) -> Dict[str, Any]:
+        if np.version.version >= "2.0.0":
+            series = np.array(data, dtype=float, copy=copy)
+        else:
+            series = np.asarray(data, dtype=float)
+            if copy:
+                series = series.copy()
         n = len(series)
 
         if n < 10:
@@ -144,7 +149,7 @@ class HiguchiEstimator(BaseEstimator):
 
     def _determine_k_values(self, n: int) -> np.ndarray:
         if self.parameters["k_values"] is not None:
-            k_values = np.asarray(self.parameters["k_values"], dtype=int)
+            k_values = np.array(self.parameters["k_values"], dtype=int)
         elif self.parameters["max_k"] is not None:
             max_k = min(int(self.parameters["max_k"]), n // 2)
             k_values = np.arange(self.parameters["min_k"], max_k + 1, dtype=int)
@@ -201,8 +206,13 @@ class HiguchiEstimator(BaseEstimator):
     # Backward-compatible helpers
     # ------------------------------------------------------------------
 
-    def _calculate_curve_length(self, data: Union[np.ndarray, List[float]], k: int) -> float:
-        series = np.asarray(data, dtype=float)
+    def _calculate_curve_length(self, data: Union[np.ndarray, List[float]], k: int, copy: bool = True) -> float:
+        if np.version.version >= "2.0.0":
+            series = np.array(data, dtype=float, copy=copy)
+        else:
+            series = np.asarray(data, dtype=float)
+            if copy:
+                series = series.copy()
         cumulative = np.cumsum(series - np.mean(series))
         length = self._calculate_curve_length_higuchi(cumulative, int(k))
         if not np.isfinite(length) or length <= 0:

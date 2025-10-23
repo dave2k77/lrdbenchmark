@@ -70,6 +70,8 @@ class PerformanceMonitor:
         self._lock = threading.Lock()
         self._metrics: List[PerformanceMetrics] = []
         self._process = psutil.Process()
+        self._session_info: Dict[str, Dict] = {}
+        self._timings: Dict[str, List[float]] = {}
 
         # Load existing data
         self._load_existing_data()
@@ -155,6 +157,55 @@ class PerformanceMonitor:
 
         # Clean up session
         del self._session_info[session_id]
+
+    def timer(self, name: str):
+        """
+        Context manager for timing code blocks.
+        
+        Args:
+            name: Name of the timer
+            
+        Usage:
+            with monitor.timer('my_operation'):
+                # code to time
+                pass
+        """
+        from contextlib import contextmanager
+        
+        @contextmanager
+        def _timer():
+            start_time = time.time()
+            try:
+                yield
+            finally:
+                elapsed = time.time() - start_time
+                with self._lock:
+                    if name not in self._timings:
+                        self._timings[name] = []
+                    self._timings[name].append(elapsed)
+        
+        return _timer()
+
+    def get_stats(self) -> Dict[str, Dict[str, float]]:
+        """
+        Get statistics for all timers.
+        
+        Returns:
+            Dictionary mapping timer names to statistics (mean, std, min, max, count)
+        """
+        stats = {}
+        with self._lock:
+            for name, times in self._timings.items():
+                if times:
+                    stats[name] = {
+                        'mean': np.mean(times),
+                        'std': np.std(times),
+                        'min': np.min(times),
+                        'max': np.max(times),
+                        'count': len(times),
+                        'total': np.sum(times)
+                    }
+        return stats
 
     def get_performance_summary(self, days: int = 30) -> PerformanceSummary:
         """

@@ -35,13 +35,13 @@ classifiers = [
 
 dependencies = [
     # Core scientific computing
-    "numpy>=1.21.0",
+    "numpy>=1.21.0,<2.0",
     "scipy>=1.7.0",
     "matplotlib>=3.5.0",
     
     # JAX ecosystem for automatic differentiation and GPU acceleration
-    "jax>=0.4.0",
-    "jaxlib>=0.4.0",
+    "jax>=0.4.0,<=0.4.20",
+    "jaxlib>=0.4.0,<=0.4.20",
     "optax>=0.1.0",  # JAX optimization library
     
     # PyTorch for deep learning and neural networks

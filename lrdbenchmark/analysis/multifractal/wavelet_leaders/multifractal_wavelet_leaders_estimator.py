@@ -6,7 +6,7 @@ This module provides a multifractal wavelet leaders-based estimator for Hurst pa
 
 import numpy as np
 from typing import Dict, Any, Optional
-from lrdbenchmark.models.estimators.base_estimator import BaseEstimator
+from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 class MultifractalWaveletLeadersEstimator(BaseEstimator):
     """

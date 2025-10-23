@@ -72,22 +72,33 @@ class MultifractalRandomWalk(BaseModel):
         if method not in valid_methods:
             raise ValueError(f"Method must be one of {valid_methods}")
 
-    def generate(self, length: int, seed: Optional[int] = None) -> np.ndarray:
+    def generate(self, length: Optional[int] = None, seed: Optional[int] = None, n: Optional[int] = None) -> np.ndarray:
         """
         Generate multifractal random walk.
 
         Parameters
         ----------
-        length : int
+        length : int, optional
             Length of the time series to generate
         seed : int, optional
             Random seed for reproducibility
+        n : int, optional
+            Alternate parameter name for length (for backward compatibility)
 
         Returns
         -------
         np.ndarray
-            Generated MRW time series of length length
+            Generated MRW time series
+
+        Notes
+        -----
+        Either 'length' or 'n' must be provided. If both are provided, 'length' takes precedence.
         """
+        # Handle backward compatibility: accept both 'length' and 'n'
+        if length is None and n is None:
+            raise ValueError("Either 'length' or 'n' must be provided")
+        data_length = length if length is not None else n
+        
         if seed is not None:
             np.random.seed(seed)
 
@@ -97,9 +108,9 @@ class MultifractalRandomWalk(BaseModel):
         method = self.parameters["method"]
 
         if method == "cascade":
-            return self._cascade_method(length, H, lambda_param, sigma)
+            return self._cascade_method(data_length, H, lambda_param, sigma)
         else:
-            return self._direct_method(length, H, lambda_param, sigma)
+            return self._direct_method(data_length, H, lambda_param, sigma)
 
     def _cascade_method(
         self, length: int, H: float, lambda_param: float, sigma: float

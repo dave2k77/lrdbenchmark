@@ -28,8 +28,7 @@ try:
 except ImportError:
     NUMBA_AVAILABLE = False
 
-# Import base estimator
-from lrdbenchmark.models.estimators.base_estimator import BaseEstimator
+from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 
 class DMAEstimator(BaseEstimator):

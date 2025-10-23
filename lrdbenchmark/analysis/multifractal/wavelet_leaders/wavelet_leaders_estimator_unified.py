@@ -29,17 +29,7 @@ try:
 except ImportError:
     NUMBA_AVAILABLE = False
 
-# Import base estimator
-try:
-    from lrdbenchmark.analysis.base_estimator import BaseEstimator
-except ImportError:
-    try:
-        from models.estimators.base_estimator import BaseEstimator
-    except ImportError:
-        # Fallback if base estimator not available
-        class BaseEstimator:
-            def __init__(self, **kwargs):
-                self.parameters = kwargs
+from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 
 class MultifractalWaveletLeadersEstimator(BaseEstimator):
@@ -75,25 +65,23 @@ class MultifractalWaveletLeadersEstimator(BaseEstimator):
 
     def __init__(
         self,
-        wavelet: str = "db4",
+        wavelet: str = "db3",
         scales: Optional[List[int]] = None,
         min_scale: int = 2,
         max_scale: int = 32,
         num_scales: int = 10,
         q_values: Optional[List[float]] = None,
-        use_optimization: str = "auto",
+        use_optimization: str = "numpy",
     ):
         super().__init__()
         
         # Set default q_values if not provided
         if q_values is None:
-            q_values = [-5, -3, -1, 0, 1, 2, 3, 5]
+            q_values = [-2, -1, -0.5, 0, 0.5, 1, 2, 3, 4]
 
         # Set default scales if not provided
         if scales is None:
-            scales = np.logspace(
-                np.log10(min_scale), np.log10(max_scale), num_scales, dtype=int
-            )
+            scales = np.arange(min_scale, max_scale + 1, max(1, (max_scale - min_scale) // max(1, num_scales - 1)))
         
         # Estimator parameters
         self.parameters = {
@@ -207,65 +195,47 @@ class MultifractalWaveletLeadersEstimator(BaseEstimator):
                     f"Data length ({len(data)}) may be too short for reliable wavelet leaders analysis"
                 )
 
-        scales = self.parameters["scales"]
-        q_values = self.parameters["q_values"]
+        scales = np.asarray(self.parameters["scales"], dtype=int)
+        q_values = np.asarray(self.parameters["q_values"], dtype=float)
 
-        # Compute structure functions for all q and scales
-        structure_functions = {}
-        for q in q_values:
-            sq_values = []
-            for scale in scales:
-                sq = self._compute_structure_functions(data, q, scale)
-                sq_values.append(sq)
-            structure_functions[q] = np.array(sq_values)
+        # Compute leaders once via full DWT
+        w = pywt.Wavelet(self.parameters["wavelet"])
+        J = pywt.dwt_max_level(len(data), w.dec_len)
+        coeffs = pywt.wavedec(data, w, mode='periodization', level=J)
+        abs_details = [np.abs(c) for c in coeffs[-1:0:-1]]  # [|cD_1|, ..., |cD_J|]
+        leaders = self._leaders_from_dwt(abs_details)
 
-        # Fit power law for each q to get generalized Hurst exponents
-        generalized_hurst = {}
-        log_scales = np.log(scales)
+        # Structure functions S_L(q,j) with j = 1..J (scale index)
+        js = scales.astype(float)
+        SL = np.zeros((q_values.size, js.size), dtype=float)
+        for jj, j in enumerate(scales):
+            Lj = leaders[j-1] if 1 <= j <= len(leaders) else leaders[-1]
+            for qi, q in enumerate(q_values):
+                if np.isclose(q, 0.0):
+                    SL[qi, jj] = float(np.exp(np.mean(np.log(Lj + 1e-18))))
+                else:
+                    SL[qi, jj] = float(np.mean((Lj + 1e-18) ** q))
 
-        for q in q_values:
-            sq_vals = structure_functions[q]
-            valid_mask = ~np.isnan(sq_vals) & (sq_vals > 0)
+        # zeta(q): slope of log2 SL(q,j) vs j (NOT log j)
+        zeta = np.zeros(q_values.size, dtype=float)
+        for qi in range(q_values.size):
+            y = np.log2(SL[qi, :] + 1e-300)
+            slope, intercept = np.polyfit(js, y, 1)
+            zeta[qi] = float(slope)
 
-            if np.sum(valid_mask) < 3:
-                generalized_hurst[q] = np.nan
-                continue
+        # c1 via linear fit of zeta(q) vs q around q≈0
+        slope_c1, intercept_c0 = np.polyfit(q_values, zeta, 1)
+        H_hat = float(slope_c1)
 
-            log_sq = np.log(sq_vals[valid_mask])
-            log_j = log_scales[valid_mask]
-
-            try:
-                # Linear regression
-                slope, intercept, r_value, p_value, std_err = stats.linregress(
-                    log_j, log_sq
-                )
-                generalized_hurst[q] = slope
-            except (ValueError, np.linalg.LinAlgError):
-                generalized_hurst[q] = np.nan
-
-        # Extract standard Hurst exponent (q=2)
-        hurst_parameter = generalized_hurst.get(2, np.nan)
-
-        # Compute multifractal spectrum
-        multifractal_spectrum = self._compute_multifractal_spectrum(
-            generalized_hurst, q_values
-        )
-
-        # Store results
         self.results = {
-            "hurst_parameter": float(hurst_parameter) if not np.isnan(hurst_parameter) else np.nan,
-            "generalized_hurst": {q: float(h) if not np.isnan(h) else np.nan for q, h in generalized_hurst.items()},
-            "multifractal_spectrum": multifractal_spectrum,
-            "scales": scales.tolist() if hasattr(scales, "tolist") else list(scales),
-            "q_values": q_values,
-            "structure_functions": {
-                q: sq.tolist() if hasattr(sq, "tolist") else list(sq)
-                for q, sq in structure_functions.items()
-            },
-            "method": "numpy",
-            "optimization_framework": self.optimization_framework,
+            "hurst_parameter": H_hat,
+            "method": "wavelet_leaders",
+            "q": q_values.tolist(),
+            "zeta": zeta.tolist(),
+            "c1": float(slope_c1),
+            "c0": float(intercept_c0),
+            "j_used": js.tolist(),
         }
-        
         return self.results
 
     def _estimate_numba(self, data: np.ndarray) -> Dict[str, Any]:
@@ -344,6 +314,36 @@ class MultifractalWaveletLeadersEstimator(BaseEstimator):
             sq = np.mean(valid_leaders**q) ** (1 / q)
 
         return sq
+
+    def _leaders_from_dwt(self, detail_coeffs: List[np.ndarray]) -> List[np.ndarray]:
+        """
+        Build 1D wavelet leaders from |cD_j[k]| using a 3-neighborhood and inclusion
+        of finer scales j-1, j-2. detail_coeffs ordered as [|cD_1|, |cD_2|, ..., |cD_J|]
+        where j increases with scale (coarser).
+        """
+        J = len(detail_coeffs)
+        leaders: List[np.ndarray] = []
+        for j in range(J):  # j=0 is finest (|cD_1|), j=J-1 coarsest (|cD_J|)
+            Dj = detail_coeffs[j]
+            n = len(Dj)
+            Ljk = np.zeros(n, dtype=float)
+            for k in range(n):
+                neigh = [Dj[max(0, k - 1) : min(n, k + 2)]]
+                if j > 0:
+                    Df = detail_coeffs[j - 1]
+                    start = 2 * k - 2
+                    idx = np.arange(max(0, start), min(len(Df), start + 5))
+                    if idx.size > 0:
+                        neigh.append(Df[idx])
+                if j > 1:
+                    Df2 = detail_coeffs[j - 2]
+                    start2 = 4 * k - 4
+                    idx2 = np.arange(max(0, start2), min(len(Df2), start2 + 9))
+                    if idx2.size > 0:
+                        neigh.append(Df2[idx2])
+                Ljk[k] = float(np.max(np.concatenate(neigh))) if len(neigh) > 0 else float(np.abs(Dj[k]))
+            leaders.append(Ljk + 1e-18)
+        return leaders
 
     def _compute_multifractal_spectrum(
         self, generalized_hurst: Dict[float, float], q_values: List[float]

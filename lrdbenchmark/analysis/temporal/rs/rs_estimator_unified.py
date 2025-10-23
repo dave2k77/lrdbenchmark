@@ -38,8 +38,7 @@ try:
 except ImportError:
     SCIPY_AVAILABLE = False
 
-# Import base estimator
-from lrdbenchmark.models.estimators.base_estimator import BaseEstimator
+from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 
 class RSEstimator(BaseEstimator):

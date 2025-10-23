@@ -6,7 +6,7 @@ This module provides a wavelet log variance-based estimator for Hurst parameter 
 
 import numpy as np
 from typing import Dict, Any, Optional
-from lrdbenchmark.models.estimators.base_estimator import BaseEstimator
+from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 class WaveletLogVarianceEstimator(BaseEstimator):
     """

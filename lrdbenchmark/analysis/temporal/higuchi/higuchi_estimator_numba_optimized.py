@@ -25,7 +25,7 @@ except ImportError:
 sys.path.append(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 )
-from models.estimators.base_estimator import BaseEstimator
+from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 
 @jit(nopython=True, parallel=True, cache=True)

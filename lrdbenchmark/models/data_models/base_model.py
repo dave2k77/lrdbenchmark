@@ -42,21 +42,27 @@ class BaseModel(ABC):
         pass
 
     @abstractmethod
-    def generate(self, length: int, seed: Optional[int] = None) -> np.ndarray:
+    def generate(self, length: Optional[int] = None, seed: Optional[int] = None, n: Optional[int] = None) -> np.ndarray:
         """
         Generate synthetic data from the model.
 
         Parameters
         ----------
-        length : int
-            Length of the time series to generate
+        length : int, optional
+            Length of the time series to generate (preferred parameter name)
         seed : int, optional
             Random seed for reproducibility
+        n : int, optional
+            Alternate parameter name for length (for backward compatibility)
 
         Returns
         -------
         np.ndarray
-            Generated time series of length n
+            Generated time series
+
+        Notes
+        -----
+        Either 'length' or 'n' must be provided. If both are provided, 'length' takes precedence.
         """
         pass
     

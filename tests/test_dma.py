@@ -185,7 +185,8 @@ class TestDMAEstimator:
         assert 'DMAEstimator' in str_repr
         assert 'min_window_size' in str_repr
         assert 'DMAEstimator' in repr_repr
-        assert 'parameters' in repr_repr
+        # Check that parameter names/values are shown in repr
+        assert 'min_window_size' in repr_repr or 'min_scale' in repr_repr
     
     def test_fluctuation_calculation(self):
         """Test fluctuation calculation for known data."""

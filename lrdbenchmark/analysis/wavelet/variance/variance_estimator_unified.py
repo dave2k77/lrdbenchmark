@@ -29,17 +29,7 @@ try:
 except ImportError:
     NUMBA_AVAILABLE = False
 
-# Import base estimator
-try:
-    from lrdbenchmark.analysis.base_estimator import BaseEstimator
-except ImportError:
-    try:
-        from models.estimators.base_estimator import BaseEstimator
-    except ImportError:
-        # Fallback if base estimator not available
-        class BaseEstimator:
-            def __init__(self, **kwargs):
-                self.parameters = kwargs
+from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 
 class WaveletVarianceEstimator(BaseEstimator):
@@ -74,6 +64,9 @@ class WaveletVarianceEstimator(BaseEstimator):
         scales: Optional[List[int]] = None,
         confidence: float = 0.95,
         use_optimization: str = "auto",
+        robust: bool = False,
+        j_min: int = 2,
+        j_max: Optional[int] = None,
     ):
         super().__init__()
         
@@ -82,6 +75,9 @@ class WaveletVarianceEstimator(BaseEstimator):
             "wavelet": wavelet,
             "scales": scales,
             "confidence": confidence,
+            "robust": robust,
+            "j_min": int(max(1, j_min)),
+            "j_max": j_max,
         }
         
         # Optimization framework
@@ -169,9 +165,14 @@ class WaveletVarianceEstimator(BaseEstimator):
         """NumPy implementation of Wavelet Variance estimation."""
         n = len(data)
         
-        # Set default scales if not provided
+        # Determine levels/scales
         if self.parameters["scales"] is None:
-            self.parameters["scales"] = list(range(1, min(11, int(np.log2(n)))))
+            w = pywt.Wavelet(self.parameters["wavelet"])
+            J = max(1, pywt.dwt_max_level(n, w.dec_len))
+            j_min = min(self.parameters["j_min"], J)
+            j_max = self.parameters["j_max"] if self.parameters["j_max"] is not None else max(1, J - 1)
+            j_max = min(max(j_min, j_max), J)
+            self.parameters["scales"] = list(range(j_min, j_max + 1))
         
         # Adjust scales for data length
         max_safe_scale = min(max(self.parameters["scales"]), int(np.log2(n)) - 1)
@@ -190,16 +191,22 @@ class WaveletVarianceEstimator(BaseEstimator):
         scale_logs = []
         variance_logs = []
 
-        for scale in self.parameters["scales"]:
-            # Perform wavelet decomposition
-            coeffs = pywt.wavedec(data, self.parameters["wavelet"], level=scale)
+        for j in self.parameters["scales"]:
+            # Perform wavelet decomposition up to level j once, then extract cD_j
+            coeffs = pywt.wavedec(data, self.parameters["wavelet"], level=max(self.parameters["scales"]), mode="periodization")
+            # coeffs = [cA_J, cD_J, cD_{J-1}, ..., cD_1]
+            idx = -(j)  # cD_j position
+            detail_coeffs = coeffs[idx]
+            if self.parameters["robust"]:
+                med = np.median(detail_coeffs)
+                mad = np.median(np.abs(detail_coeffs - med))
+                sigma = mad / 0.6744897501960817
+                variance = float(sigma ** 2)
+            else:
+                variance = float(np.var(detail_coeffs, ddof=1))
 
-            # Calculate variance of detail coefficients at this scale
-            detail_coeffs = coeffs[1]  # Detail coefficients at scale level
-            variance = np.var(detail_coeffs)
-
-            wavelet_variances[scale] = variance
-            scale_logs.append(np.log2(scale))
+            wavelet_variances[j] = variance
+            scale_logs.append(float(j))
             variance_logs.append(np.log2(variance))
 
         # Fit linear regression to log-log plot
@@ -207,10 +214,8 @@ class WaveletVarianceEstimator(BaseEstimator):
             np.array(scale_logs), np.array(variance_logs)
         )
 
-        # Hurst parameter is related to the slope
-        # For fBm: H = (slope + 1) / 2
-        # For fGn: H = (slope + 1) / 2
-        estimated_hurst = (slope + 1) / 2
+        # Empirical mapping consistent with orthonormal DWT conventions: H ≈ (slope + 1)/2
+        estimated_hurst = 0.5 * (slope + 1.0)
         r_squared = r_value**2
 
         # Calculate confidence interval

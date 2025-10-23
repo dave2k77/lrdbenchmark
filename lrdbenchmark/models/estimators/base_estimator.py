@@ -1,4 +1,23 @@
 """
+Deprecated shim: re-export BaseEstimator from analysis package.
+
+This path remains for backward compatibility only and will be removed
+in a future release. Please import from
+`lrdbenchmark.analysis.base_estimator` instead.
+"""
+
+from warnings import warn
+
+warn(
+    "lrdbenchmark.models.estimators.base_estimator is deprecated; "
+    "import BaseEstimator from lrdbenchmark.analysis.base_estimator",
+    category=DeprecationWarning,
+    stacklevel=2,
+)
+
+from lrdbenchmark.analysis.base_estimator import BaseEstimator  # re-export
+
+"""
 Base estimator class for all parameter estimation methods.
 
 This module provides the abstract base class that all estimators should

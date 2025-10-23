@@ -29,17 +29,8 @@ try:
 except ImportError:
     NUMBA_AVAILABLE = False
 
-# Import base estimator
-try:
-    from lrdbenchmark.analysis.base_estimator import BaseEstimator
-except ImportError:
-    try:
-        from models.estimators.base_estimator import BaseEstimator
-    except ImportError:
-        # Fallback if base estimator not available
-        class BaseEstimator:
-            def __init__(self, **kwargs):
-                self.parameters = kwargs
+# Import base estimator (single source of truth)
+from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 
 class CWTEstimator(BaseEstimator):
@@ -69,10 +60,13 @@ class CWTEstimator(BaseEstimator):
 
     def __init__(
         self,
-        wavelet: str = "gaus1",
+        wavelet: str = "morl",
         scales: Optional[np.ndarray] = None,
         confidence: float = 0.95,
         use_optimization: str = "auto",
+        robust: bool = False,
+        scale_range: Optional[Tuple[float, float]] = None,
+        trim_ends: int = 0,
     ):
         super().__init__()
         
@@ -81,6 +75,9 @@ class CWTEstimator(BaseEstimator):
             "wavelet": wavelet,
             "scales": scales,
             "confidence": confidence,
+            "robust": robust,
+            "scale_range": scale_range,
+            "trim_ends": int(max(0, trim_ends)),
         }
         
         # Optimization framework
@@ -119,6 +116,10 @@ class CWTEstimator(BaseEstimator):
         
         if not (0 < self.parameters["confidence"] < 1):
             raise ValueError("confidence must be between 0 and 1")
+        if self.parameters["scale_range"] is not None:
+            lo, hi = self.parameters["scale_range"]
+            if not (lo > 0 and hi > lo):
+                raise ValueError("scale_range must satisfy 0 < lo < hi")
 
     def estimate(self, data: Union[np.ndarray, list]) -> Dict[str, Any]:
         """
@@ -173,11 +174,10 @@ class CWTEstimator(BaseEstimator):
         
         # Set default scales if not provided
         if self.parameters["scales"] is None:
-            # Use appropriate scales for time series analysis
-            # Scales should be in the range [2, n/4] for good wavelet analysis
-            max_scale = min(n // 4, 64)  # Cap at 64 for computational efficiency
-            min_scale = 2
-            self.parameters["scales"] = np.logspace(np.log2(min_scale), np.log2(max_scale), 15, base=2)
+            # Geometric scales roughly covering [2, n/8]
+            s_min = 2
+            s_max = max(8, int(n // 8))
+            self.parameters["scales"] = np.unique((np.geomspace(s_min, s_max, num=24)).astype(float))
         
         # Adjust scales for shorter data
         if n < 100:
@@ -187,8 +187,20 @@ class CWTEstimator(BaseEstimator):
             if len(self.parameters["scales"]) < 2:
                 raise ValueError("Insufficient scales available for data length")
 
+        # Optionally restrict scale range and trim ends
+        scales = self.parameters["scales"].astype(float)
+        if self.parameters["scale_range"] is not None:
+            lo, hi = self.parameters["scale_range"]
+            mask = (scales >= lo) & (scales <= hi)
+            scales = scales[mask]
+        if self.parameters["trim_ends"] > 0 and len(scales) > 2 * self.parameters["trim_ends"]:
+            t = self.parameters["trim_ends"]
+            scales = scales[t:-t]
+        if len(scales) < 2:
+            raise ValueError("Insufficient scales after trimming/range selection")
+
         # Perform continuous wavelet transform
-        wavelet_coeffs, frequencies = pywt.cwt(data, self.parameters["scales"], self.parameters["wavelet"])
+        wavelet_coeffs, frequencies = pywt.cwt(data, scales, self.parameters["wavelet"])
 
         # Calculate power spectrum (squared magnitude of coefficients)
         power_spectrum = np.abs(wavelet_coeffs) ** 2
@@ -198,7 +210,7 @@ class CWTEstimator(BaseEstimator):
         scale_logs = []
         power_logs = []
 
-        for i, scale in enumerate(self.parameters["scales"]):
+        for i, scale in enumerate(scales):
             # Average power across time at this scale
             avg_power = np.mean(power_spectrum[i, :])
             scale_powers[scale] = avg_power
@@ -207,14 +219,20 @@ class CWTEstimator(BaseEstimator):
             power_logs.append(np.log2(avg_power))
 
         # Fit linear regression to log-log plot
-        slope, intercept, r_value, p_value, std_err = stats.linregress(
-            scale_logs, power_logs
-        )
+        if self.parameters["robust"]:
+            slope, intercept = self._huber_regression(np.asarray(scale_logs), np.asarray(power_logs))
+            # compute r_value approx via correlation of fitted vs observed
+            y = np.asarray(power_logs)
+            y_hat = slope * np.asarray(scale_logs) + intercept
+            r_value = np.corrcoef(y, y_hat)[0, 1] if len(y) > 1 else 0.0
+        else:
+            slope, intercept, r_value, p_value, std_err = stats.linregress(
+                scale_logs, power_logs
+            )
 
-        # Hurst parameter is related to the slope
-        # For fBm: H = (slope + 1) / 2
-        # For fGn: H = (slope + 1) / 2
-        estimated_hurst = (slope + 1) / 2
+        # Empirical mapping consistent with PyWavelets normalization: H ≈ (slope + 1)/2
+        # This provides low-bias estimates across tested FBM signals
+        estimated_hurst = 0.5 * (slope + 1.0)
         r_squared = r_value**2
 
         # Calculate confidence interval
@@ -227,7 +245,7 @@ class CWTEstimator(BaseEstimator):
             "hurst_parameter": float(estimated_hurst),
             "confidence_interval": confidence_interval,
             "r_squared": float(r_squared),
-            "scales": self.parameters["scales"].tolist(),
+            "scales": scales.tolist(),
             "wavelet_type": self.parameters["wavelet"],
             "slope": float(slope),
             "intercept": float(intercept),
@@ -269,29 +287,39 @@ class CWTEstimator(BaseEstimator):
         """Calculate confidence interval for the Hurst parameter estimate."""
         confidence = self.parameters["confidence"]
         
-        # Calculate standard error of the slope
+        # Calculate standard error of the slope using linear-fit residuals
         n = len(scale_logs)
-        x_var = np.var(scale_logs, ddof=1)
-
-        # Residual standard error
-        residuals = np.array(power_logs) - (
-            np.array(scale_logs) * (2 * estimated_hurst - 1)
-            + np.mean(power_logs)
-            - np.mean(scale_logs) * (2 * estimated_hurst - 1)
-        )
-        mse = np.sum(residuals**2) / (n - 2)
-
-        # Standard error of slope
-        slope_se = np.sqrt(mse / (n * x_var))
-
-        # Convert to Hurst parameter standard error
-        hurst_se = slope_se / 2
-
-        # Calculate confidence interval
-        t_value = stats.t.ppf((1 + confidence) / 2, df=n - 2)
-        margin = t_value * hurst_se
-
+        x = np.asarray(scale_logs)
+        y = np.asarray(power_logs)
+        x_var = np.var(x, ddof=1)
+        y_hat = ( (y.mean() - (x.mean()*0.0)) )  # placeholder, replaced below
+        # compute intercept consistent with slope from regression above
+        intercept = y.mean() - slope * x.mean()
+        residuals = y - (slope * x + intercept)
+        mse = np.sum(residuals**2) / max(1, (n - 2))
+        slope_se = np.sqrt(mse / max(1e-12, (n * x_var)))
+        hurst_se = 0.5 * slope_se  # dH/db = 1/2
+        t_value = stats.t.ppf((1 + confidence) / 2, df=max(1, n - 2))
+        margin = float(t_value * hurst_se)
         return (float(estimated_hurst - margin), float(estimated_hurst + margin))
+
+    def _huber_regression(self, X: np.ndarray, y: np.ndarray, c: float = 1.345, iters: int = 50, tol: float = 1e-8) -> Tuple[float, float]:
+        X1 = np.vstack([X, np.ones_like(X)]).T
+        beta, *_ = np.linalg.lstsq(X1, y, rcond=None)
+        for _ in range(iters):
+            r = y - X1 @ beta
+            s = 1.4826 * np.median(np.abs(r - np.median(r)) + 1e-12)
+            u = r / (s + 1e-12)
+            w = np.clip(c / np.maximum(np.abs(u), 1e-12), 0.0, 1.0)
+            W = np.diag(w)
+            XtWX = X1.T @ W @ X1
+            XtWy = X1.T @ W @ y
+            beta_new, *_ = np.linalg.lstsq(XtWX, XtWy, rcond=None)
+            if np.linalg.norm(beta_new - beta) < tol:
+                beta = beta_new
+                break
+            beta = beta_new
+        return float(beta[0]), float(beta[1])
 
     def get_optimization_info(self) -> Dict[str, Any]:
         """Get information about available optimizations and current selection."""

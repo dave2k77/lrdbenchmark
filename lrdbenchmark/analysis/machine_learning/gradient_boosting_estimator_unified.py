@@ -11,7 +11,7 @@ import os
 from typing import Dict, Any, Optional, List
 import logging
 
-from lrdbenchmark.models.estimators.base_estimator import BaseEstimator
+from lrdbenchmark.analysis.base_estimator import BaseEstimator
 from .unified_feature_extractor import UnifiedFeatureExtractor
 
 logger = logging.getLogger(__name__)

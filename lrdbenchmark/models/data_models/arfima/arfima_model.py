@@ -107,22 +107,33 @@ class ARFIMAModel(BaseModel):
         if method not in valid_methods:
             raise ValueError(f"Method must be one of {valid_methods}")
 
-    def generate(self, length: int, seed: Optional[int] = None) -> np.ndarray:
+    def generate(self, length: Optional[int] = None, seed: Optional[int] = None, n: Optional[int] = None) -> np.ndarray:
         """
         Generate ARFIMA time series.
 
         Parameters
         ----------
-        length : int
+        length : int, optional
             Length of the time series to generate
         seed : int, optional
             Random seed for reproducibility
+        n : int, optional
+            Alternate parameter name for length (for backward compatibility)
 
         Returns
         -------
         np.ndarray
-            Generated ARFIMA time series of length length
+            Generated ARFIMA time series
+
+        Notes
+        -----
+        Either 'length' or 'n' must be provided. If both are provided, 'length' takes precedence.
         """
+        # Handle backward compatibility: accept both 'length' and 'n'
+        if length is None and n is None:
+            raise ValueError("Either 'length' or 'n' must be provided")
+        data_length = length if length is not None else n
+        
         if seed is not None:
             np.random.seed(seed)
 
@@ -133,9 +144,9 @@ class ARFIMAModel(BaseModel):
         method = self.parameters["method"]
 
         if method == "spectral":
-            return self._spectral_method(length, d, ar_params, ma_params, sigma)
+            return self._spectral_method(data_length, d, ar_params, ma_params, sigma)
         else:
-            return self._simulation_method(length, d, ar_params, ma_params, sigma)
+            return self._simulation_method(data_length, d, ar_params, ma_params, sigma)
 
     def _spectral_method(
         self,

@@ -35,14 +35,7 @@ except ImportError:
     NUMBA_AVAILABLE = False
 
 # Import base estimator
-try:
-    from lrdbenchmark.models.estimators.base_estimator import BaseEstimator
-except ImportError:
-    # Fallback if base estimator not available
-    class BaseEstimator:
-        def __init__(self, **kwargs):
-            self.parameters = kwargs
-            self.results = {}
+from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 
 class GHEEstimator(BaseEstimator):

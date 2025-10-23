@@ -176,7 +176,8 @@ class TestHiguchiEstimator:
         assert 'HiguchiEstimator' in str_repr
         assert 'min_k' in str_repr
         assert 'HiguchiEstimator' in repr_repr
-        assert 'parameters' in repr_repr
+        # Check that parameter names/values are shown in repr
+        assert 'min_k' in repr_repr or 'max_k' in repr_repr
     
     def test_curve_length_calculation(self):
         """Test curve length calculation for known data."""

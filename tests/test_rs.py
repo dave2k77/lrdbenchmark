@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from lrdbenchmark.analysis.temporal.rs.rs_estimator import RSEstimator
+from lrdbenchmark.analysis.temporal.rs.rs_estimator_unified import RSEstimator
 
 
 class TestRSEstimator:
@@ -166,7 +166,8 @@ class TestRSEstimator:
         assert 'RSEstimator' in str_repr
         assert 'min_window_size' in str_repr
         assert 'RSEstimator' in repr_repr
-        assert 'parameters' in repr_repr
+        # Check that parameter names/values are shown in repr
+        assert 'min_window_size' in repr_repr or 'min_scale' in repr_repr
     
     def test_rs_statistic_calculation(self):
         """Test R/S statistic calculation for known data."""

@@ -28,7 +28,12 @@ class FractionalGaussianNoise(BaseModel):
         if method not in {"circulant", "cholesky"}:
             raise ValueError("method must be one of {'circulant', 'cholesky'}")
 
-    def generate(self, length: int, seed: Optional[int] = None) -> np.ndarray:
+    def generate(self, length: Optional[int] = None, seed: Optional[int] = None, n: Optional[int] = None) -> np.ndarray:
+        # Handle backward compatibility: accept both 'length' and 'n'
+        if length is None and n is None:
+            raise ValueError("Either 'length' or 'n' must be provided")
+        data_length = length if length is not None else n
+        
         if seed is not None:
             np.random.seed(seed)
 
@@ -37,9 +42,9 @@ class FractionalGaussianNoise(BaseModel):
         method = self.parameters["method"]
 
         if method == "circulant":
-            return self._circulant_method(length, H, sigma)
+            return self._circulant_method(data_length, H, sigma)
         else:
-            return self._cholesky_method(length, H, sigma)
+            return self._cholesky_method(data_length, H, sigma)
 
     def _autocovariance_fgn(self, H: float, sigma: float, length: int) -> np.ndarray:
         # γ(k) = (σ^2 / 2)(|k+1|^{2H} - 2|k|^{2H} + |k-1|^{2H}) for k >= 0
