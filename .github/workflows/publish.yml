@@ -1,9 +1,8 @@
-name: Publish to PyPI
+name: Publish to PyPI (DEPRECATED - Use publish-to-pypi.yml instead)
 
 on:
-  release:
-    types: [published]
-  workflow_dispatch:  # Allow manual triggering
+  # Disabled - use publish-to-pypi.yml instead
+  workflow_dispatch:  # Manual trigger only (for testing)
 
 jobs:
   publish:
