@@ -100,7 +100,7 @@ True H: 0.700
 
 ### Production
 ```
-LRDBenchmark Production Example
+lrdbenchmark Production Example
 ==================================================
 Generating test data...
 Generated 1000 data points

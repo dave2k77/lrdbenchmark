@@ -1,10 +1,10 @@
-# LRDBenchmark Demonstration Notebooks
+# lrdbenchmark Demonstration Notebooks
 
-This directory contains comprehensive demonstration notebooks showing all major features of the LRDBenchmark library for long-range dependence (LRD) analysis.
+This directory contains comprehensive demonstration notebooks showing all major features of the lrdbenchmark library for long-range dependence (LRD) analysis.
 
 ## Overview
 
-The LRDBenchmark library provides a comprehensive framework for:
+The lrdbenchmark library provides a comprehensive framework for:
 - **Data Generation**: Multiple stochastic processes with long-range dependence
 - **Estimation**: Classical, Machine Learning, and Neural Network estimators
 - **Benchmarking**: Systematic performance evaluation and comparison
@@ -156,7 +156,7 @@ The LRDBenchmark library provides a comprehensive framework for:
 
 ### Installation
 ```bash
-# Install LRDBenchmark
+# Install lrdbenchmark
 pip install lrdbenchmark
 
 # Or for development
@@ -236,14 +236,14 @@ Each notebook generates:
 
 ### Common Issues
 
-1. **Import Errors**: Ensure LRDBenchmark is properly installed
+1. **Import Errors**: Ensure lrdbenchmark is properly installed
 2. **Memory Issues**: Reduce data length or number of runs
 3. **Performance**: Use JAX acceleration for large datasets
 4. **Visualization**: Check matplotlib backend settings
 
 ### Getting Help
 
-- **Documentation**: [LRDBenchmark Docs](https://lrdbenchmark.readthedocs.io/)
+- **Documentation**: [lrdbenchmark Docs](https://lrdbenchmark.readthedocs.io/)
 - **GitHub**: [lrdbenchmark Repository](https://github.com/dave2k77/lrdbenchmark)
 - **Issues**: [GitHub Issues](https://github.com/dave2k77/lrdbenchmark/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/dave2k77/lrdbenchmark/discussions)

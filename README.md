@@ -1,4 +1,4 @@
-# LRDBenchmark
+# lrdbenchmark
 
 A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimation and benchmarking across Classical, Machine Learning, and Neural Network methods.
 
@@ -193,7 +193,7 @@ lrdbenchmark/
 
 ## 📓 Demonstration Notebooks
 
-LRDBenchmark includes 5 comprehensive Jupyter notebooks that demonstrate all library features:
+lrdbenchmark includes 5 comprehensive Jupyter notebooks that demonstrate all library features:
 
 ### 1. Data Generation and Visualization
 **File**: `notebooks/01_data_generation_and_visualisation.ipynb`
@@ -284,12 +284,12 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 ## 📖 Citation
 
-If you use LRDBenchmark in your research, please cite it:
+If you use lrdbenchmark in your research, please cite it:
 
 ```bibtex
 @software{chin2024lrdbenchmark,
   author = {Chin, Davian R.},
-  title = {LRDBenchmark: A Comprehensive Framework for Long-Range Dependence Estimation},
+  title = {lrdbenchmark: A Comprehensive Framework for Long-Range Dependence Estimation},
   version = {2.3.1},
   doi = {10.5281/zenodo.17534599},
   url = {https://github.com/dave2k77/lrdbenchmark},
