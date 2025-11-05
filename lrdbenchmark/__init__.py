@@ -32,7 +32,7 @@ warnings.filterwarnings('ignore', message='.*operation cuInit.*failed.*')
 logging.getLogger('jax._src.xla_bridge').setLevel(logging.CRITICAL)
 logging.getLogger('jax_plugins').setLevel(logging.CRITICAL)
 
-__version__ = "2.3.0"
+__version__ = "2.3.1"
 __author__ = "LRDBench Development Team"
 __email__ = "lrdbench@example.com"
 

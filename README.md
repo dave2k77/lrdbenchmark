@@ -4,10 +4,10 @@ A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimati
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Version 2.3.0](https://img.shields.io/badge/version-2.3.0-green.svg)](https://pypi.org/project/lrdbenchmark/)
+[![Version 2.3.1](https://img.shields.io/badge/version-2.3.1-green.svg)](https://pypi.org/project/lrdbenchmark/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17534599.svg)](https://doi.org/10.5281/zenodo.17534599)
 
-## 🎉 **v2.3.0 - Major Release Highlights**
+## 🎉 **v2.3.1 - Release Highlights**
 
 **✅ Enhanced Stability & Performance:**
 - **100% Test Coverage**: Comprehensive validation across all 20 estimators
@@ -30,7 +30,7 @@ A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimati
 ## 🚀 Features
 
 **Comprehensive Estimator Suite:**
-- **13 Classical Methods**: R/S, DFA, DMA, Higuchi, GHE, Periodogram, GPH, Whittle, CWT, Wavelet Variance, Wavelet Log Variance, Wavelet Whittle, MFDFA, Multifractal Wavelet Leaders
+- **13 Classical Methods**: R/S, DFA, DMA, Higuchi, Periodogram, GPH, Whittle, CWT, Wavelet Variance, Wavelet Log Variance, Wavelet Whittle, MFDFA, Multifractal Wavelet Leaders
 - **Unified ML Feature Engineering**: 76-feature extraction pipeline with pre-trained model support
 - **3 Machine Learning Models**: Random Forest (76 features), SVR (29 features), Gradient Boosting (54 features)
 - **4 Neural Network Architectures**: LSTM, GRU, CNN, Transformer with automatic device selection
@@ -106,14 +106,13 @@ print(f"Estimated H: {result['hurst_parameter']:.3f}")  # ~0.7
 ```python
 from lrdbenchmark import ComprehensiveBenchmark
 
-# Run comprehensive benchmark across multiple estimators
+# Run comprehensive benchmark across all estimators
 benchmark = ComprehensiveBenchmark()
-results = benchmark.run_classical_estimators(
-    data_models=['fbm', 'fgn', 'arfima'],
-    n_samples=1000,
-    n_trials=100
+results = benchmark.run_comprehensive_benchmark(
+    data_length=1000,
+    benchmark_type='comprehensive'  # Options: 'comprehensive', 'classical', 'ML', 'neural'
 )
-benchmark.generate_leaderboard(results)
+benchmark.print_summary(results)
 ```
 
 ### Machine Learning Estimation
@@ -176,10 +175,10 @@ lrdbenchmark/
 ## 🛠️ Available Estimators
 
 ### Classical Methods (13 estimators)
-- **Temporal**: R/S Analysis, DFA, DMA, Higuchi, GHE (Generalized Hurst Exponent)
-- **Spectral**: Periodogram, GPH (Geweke-Porter-Hudak), Whittle
-- **Wavelet**: CWT (Continuous Wavelet Transform), Wavelet Variance, Wavelet Log Variance, Wavelet Whittle
-- **Multifractal**: MFDFA, Multifractal Wavelet Leaders
+- **Temporal** (4): R/S Analysis, DFA, DMA, Higuchi
+- **Spectral** (3): Periodogram, GPH (Geweke-Porter-Hudak), Whittle
+- **Wavelet** (4): CWT (Continuous Wavelet Transform), Wavelet Variance, Wavelet Log Variance, Wavelet Whittle
+- **Multifractal** (2): MFDFA, Multifractal Wavelet Leaders
 
 ### Machine Learning
 - **Random Forest** - Ensemble tree-based estimation
@@ -211,9 +210,9 @@ Demonstrates all available data models with comprehensive visualizations:
 **File**: `notebooks/02_estimation_and_validation.ipynb`
 
 Covers all estimator categories with statistical validation:
-- **Classical**: R/S, DFA, DMA, Higuchi, GPH, Whittle, Periodogram, CWT
-- **Machine Learning**: Random Forest, SVR, Gradient Boosting
-- **Neural Networks**: CNN, LSTM, GRU, Transformer
+- **Classical** (13): R/S, DFA, DMA, Higuchi, GPH, Whittle, Periodogram, CWT, Wavelet Variance, Wavelet Log Variance, Wavelet Whittle, MFDFA, Multifractal Wavelet Leaders
+- **Machine Learning** (3): Random Forest, SVR, Gradient Boosting
+- **Neural Networks** (4): CNN, LSTM, GRU, Transformer
 - **Statistical Validation**: Confidence intervals, bootstrap methods
 - **Performance Comparison**: Accuracy, speed, and reliability analysis
 
@@ -291,7 +290,7 @@ If you use LRDBenchmark in your research, please cite it:
 @software{chin2024lrdbenchmark,
   author = {Chin, Davian R.},
   title = {LRDBenchmark: A Comprehensive Framework for Long-Range Dependence Estimation},
-  version = {2.3.0},
+  version = {2.3.1},
   doi = {10.5281/zenodo.17534599},
   url = {https://github.com/dave2k77/lrdbenchmark},
   year = {2024}

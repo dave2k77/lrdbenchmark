@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lrdbenchmark"
-version = "2.3.0"
+version = "2.3.1"
 description = "A comprehensive benchmark for long-range dependence estimators"
 authors = [
     { name = "Davian Jimenez", email = "davian.jimenez@example.com" }

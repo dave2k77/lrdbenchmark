@@ -48,7 +48,7 @@ The LRDBenchmark library provides a comprehensive framework for:
 - Performance comparison and decision guidelines
 
 **Estimator Categories**:
-- **Temporal** (5): R/S Analysis, DFA, DMA, Higuchi, GHE (Generalized Hurst Exponent)
+- **Temporal** (4): R/S Analysis, DFA, DMA, Higuchi
 - **Spectral** (3): GPH, Whittle, Periodogram
 - **Wavelet** (4): CWT, Wavelet Variance, Wavelet Log Variance, Wavelet Whittle
 - **Multifractal** (2): MFDFA, Multifractal Wavelet Leaders
