@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lrdbenchmark"
-version = "2.3.0"
-description = "Comprehensive Long-Range Dependence Benchmarking Framework with Classical, ML, and Neural Network Estimators + 5 Demonstration Notebooks"
+version = "2.3.1"
+description = "Comprehensive Long-Range Dependence Benchmarking Framework with 20 Estimators (13 Classical, 3 ML, 4 Neural Networks) + 5 Demonstration Notebooks"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
@@ -43,7 +43,7 @@ keywords = [
     "wavelet analysis",
     "spectral analysis"
 ]
-requires-python = ">=3.8,<3.13"
+requires-python = ">=3.8,<3.13"  # Python 3.13 not yet supported
 dependencies = [
     "numpy>=1.21.0,<2.0",
     "scipy>=1.7.0,<2.0",
@@ -96,12 +96,13 @@ bayes = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/dave2k77/LRDBenchmark"
+Homepage = "https://github.com/dave2k77/lrdbenchmark"
 Documentation = "https://lrdbenchmark.readthedocs.io/"
-Repository = "https://github.com/dave2k77/LRDBenchmark.git"
-Issues = "https://github.com/dave2k77/LRDBenchmark/issues"
+Repository = "https://github.com/dave2k77/lrdbenchmark.git"
+Issues = "https://github.com/dave2k77/lrdbenchmark/issues"
 Download = "https://pypi.org/project/lrdbenchmark/"
-Source = "https://github.com/dave2k77/LRDBenchmark"
+Source = "https://github.com/dave2k77/lrdbenchmark"
+"DOI" = "https://doi.org/10.5281/zenodo.17534599"
 
 [tool.setuptools.packages.find]
 where = ["."]
@@ -136,7 +137,7 @@ line_length = 88
 known_first_party = ["lrdbenchmark"]
 
 [tool.mypy]
-python_version = "2.3.0"
+python_version = "3.9"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -166,7 +167,7 @@ module = [
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-minversion = "2.3.0"
+minversion = "7.0.0"
 addopts = "-ra -q --strict-markers --strict-config"
 testpaths = [
     "tests",

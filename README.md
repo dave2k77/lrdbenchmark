@@ -1,12 +1,13 @@
-# LRDBenchmark
+# lrdbenchmark
 
 A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimation and benchmarking across Classical, Machine Learning, and Neural Network methods.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Version 2.3.0](https://img.shields.io/badge/version-2.3.0-green.svg)](https://pypi.org/project/lrdbenchmark/)
+[![Version 2.3.1](https://img.shields.io/badge/version-2.3.1-green.svg)](https://pypi.org/project/lrdbenchmark/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17534599.svg)](https://doi.org/10.5281/zenodo.17534599)
 
-## 🎉 **v2.3.0 - Major Release Highlights**
+## 🎉 **v2.3.1 - Release Highlights**
 
 **✅ Enhanced Stability & Performance:**
 - **100% Test Coverage**: Comprehensive validation across all 20 estimators
@@ -22,18 +23,18 @@ A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimati
 - **Progressive Examples**: CPU-only, GPU-optional, and production patterns
 
 **✅ Improved Compatibility:**
-- **Broader Python Support**: Python 3.8-3.12 compatibility
+- **Broader Python Support**: Python 3.8-3.12 compatibility (Python 3.13 not yet supported)
 - **Optional Dependencies**: GPU acceleration libraries are truly optional
 - **Enhanced Documentation**: Updated examples and API references
 
 ## 🚀 Features
 
 **Comprehensive Estimator Suite:**
-- **8+ Classical Methods**: R/S, DFA, DMA, Higuchi, Periodogram, GPH, Whittle, CWT, and more
+- **13 Classical Methods**: R/S, DFA, DMA, Higuchi, Periodogram, GPH, Whittle, CWT, Wavelet Variance, Wavelet Log Variance, Wavelet Whittle, MFDFA, Multifractal Wavelet Leaders
 - **Unified ML Feature Engineering**: 76-feature extraction pipeline with pre-trained model support
 - **3 Machine Learning Models**: Random Forest (76 features), SVR (29 features), Gradient Boosting (54 features)
 - **4 Neural Network Architectures**: LSTM, GRU, CNN, Transformer with automatic device selection
-- **Generalized Hurst Exponent (GHE)**: Advanced multifractal analysis capabilities
+- **Total: 20 Estimators** across all categories
 
 **Robust Heavy-Tail Analysis:**
 - α-stable distribution modeling for heavy-tailed time series
@@ -78,8 +79,8 @@ pip install lrdbenchmark[accel-numba]    # Numba acceleration
 
 ### Development Installation
 ```bash
-git clone https://github.com/dave2k77/LRDBenchmark.git
-cd LRDBenchmark
+git clone https://github.com/dave2k77/lrdbenchmark.git
+cd lrdbenchmark
 pip install -e .
 ```
 
@@ -105,64 +106,45 @@ print(f"Estimated H: {result['hurst_parameter']:.3f}")  # ~0.7
 ```python
 from lrdbenchmark import ComprehensiveBenchmark
 
-# Run comprehensive benchmark across multiple estimators
+# Run comprehensive benchmark across all estimators
 benchmark = ComprehensiveBenchmark()
-results = benchmark.run_classical_estimators(
-    data_models=['fbm', 'fgn', 'arfima'],
-    n_samples=1000,
-    n_trials=100
+results = benchmark.run_comprehensive_benchmark(
+    data_length=1000,
+    benchmark_type='comprehensive'  # Options: 'comprehensive', 'classical', 'ML', 'neural'
 )
-benchmark.generate_leaderboard(results)
+benchmark.print_summary(results)
 ```
 
-### Heavy-Tail Robustness Analysis
+### Machine Learning Estimation
 
 ```python
-from lrdbenchmark import AlphaStableModel, AdaptivePreprocessor
+from lrdbenchmark import FBMModel, RandomForestEstimator
 
-# Generate heavy-tailed α-stable process
-alpha_stable = AlphaStableModel(alpha=1.5, beta=0.0, scale=1.0)
-x = alpha_stable.generate(length=1000, seed=42)
+# Generate synthetic data
+fbm = FBMModel(H=0.7, sigma=1.0)
+x = fbm.generate(length=1000, seed=42)
 
-# Apply adaptive preprocessing for robust estimation
-preprocessor = AdaptivePreprocessor()
-x_processed = preprocessor.preprocess(x, method='auto')
-
-# Estimate with robust preprocessing
-estimator = RSEstimator()
-result = estimator.estimate(x_processed)
+# Use pre-trained ML estimator
+ml_estimator = RandomForestEstimator()
+result = ml_estimator.estimate(x)
+print(f"Estimated H: {result['hurst_parameter']:.3f}")
 ```
 
-## 📦 Installation
+### Neural Network Estimation
 
-### From PyPI (Recommended)
+```python
+from lrdbenchmark import FBMModel, LSTMEstimator
 
-```bash
-pip install lrdbenchmark
+# Generate synthetic data
+fbm = FBMModel(H=0.7, sigma=1.0)
+x = fbm.generate(length=1000, seed=42)
+
+# Use neural network estimator (auto-detects GPU/CPU)
+nn_estimator = LSTMEstimator()
+result = nn_estimator.estimate(x)
+print(f"Estimated H: {result['hurst_parameter']:.3f}")
 ```
 
-### Development Installation
-
-```bash
-git clone https://github.com/dave2k77/LRDBenchmark.git
-cd LRDBenchmark
-pip install -e .
-```
-
-### Optional Dependencies
-
-For enhanced performance and additional features:
-
-```bash
-# GPU acceleration (JAX)
-pip install "lrdbenchmark[jax]"
-
-# Documentation building
-pip install "lrdbenchmark[docs]"
-
-# Development tools
-pip install "lrdbenchmark[dev]"
-```
 
 ## 📚 Documentation
 
@@ -175,7 +157,7 @@ pip install "lrdbenchmark[dev]"
 ## 🏗️ Project Structure
 
 ```
-LRDBenchmark/
+lrdbenchmark/
 ├── lrdbenchmark/           # Main package
 │   ├── analysis/           # Estimator implementations
 │   ├── models/            # Data generation models
@@ -192,16 +174,11 @@ LRDBenchmark/
 
 ## 🛠️ Available Estimators
 
-### Classical Methods
-- **R/S Analysis** - Rescaled Range analysis
-- **DFA** - Detrended Fluctuation Analysis  
-- **DMA** - Detrended Moving Average
-- **Higuchi** - Higuchi's fractal dimension method
-- **Periodogram** - Periodogram-based estimation
-- **GPH** - Geweke and Porter-Hudak estimator
-- **Whittle** - Whittle maximum likelihood
-- **CWT** - Continuous Wavelet Transform
-- **GHE** - Generalized Hurst Exponent
+### Classical Methods (13 estimators)
+- **Temporal** (4): R/S Analysis, DFA, DMA, Higuchi
+- **Spectral** (3): Periodogram, GPH (Geweke-Porter-Hudak), Whittle
+- **Wavelet** (4): CWT (Continuous Wavelet Transform), Wavelet Variance, Wavelet Log Variance, Wavelet Whittle
+- **Multifractal** (2): MFDFA, Multifractal Wavelet Leaders
 
 ### Machine Learning
 - **Random Forest** - Ensemble tree-based estimation
@@ -216,7 +193,7 @@ LRDBenchmark/
 
 ## 📓 Demonstration Notebooks
 
-LRDBenchmark includes 5 comprehensive Jupyter notebooks that demonstrate all library features:
+lrdbenchmark includes 5 comprehensive Jupyter notebooks that demonstrate all library features:
 
 ### 1. Data Generation and Visualization
 **File**: `notebooks/01_data_generation_and_visualisation.ipynb`
@@ -233,9 +210,9 @@ Demonstrates all available data models with comprehensive visualizations:
 **File**: `notebooks/02_estimation_and_validation.ipynb`
 
 Covers all estimator categories with statistical validation:
-- **Classical**: R/S, DFA, DMA, Higuchi, GPH, Whittle, Periodogram, CWT
-- **Machine Learning**: Random Forest, SVR, Gradient Boosting
-- **Neural Networks**: CNN, LSTM, GRU, Transformer
+- **Classical** (13): R/S, DFA, DMA, Higuchi, GPH, Whittle, Periodogram, CWT, Wavelet Variance, Wavelet Log Variance, Wavelet Whittle, MFDFA, Multifractal Wavelet Leaders
+- **Machine Learning** (3): Random Forest, SVR, Gradient Boosting
+- **Neural Networks** (4): CNN, LSTM, GRU, Transformer
 - **Statistical Validation**: Confidence intervals, bootstrap methods
 - **Performance Comparison**: Accuracy, speed, and reliability analysis
 
@@ -270,8 +247,8 @@ Shows performance ranking and comparative analysis:
 
 ```bash
 # Clone the repository
-git clone https://github.com/dave2k77/LRDBenchmark.git
-cd LRDBenchmark
+git clone https://github.com/dave2k77/lrdbenchmark.git
+cd lrdbenchmark
 
 # Install dependencies
 pip install -e .
@@ -305,6 +282,23 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+## 📖 Citation
+
+If you use lrdbenchmark in your research, please cite it:
+
+```bibtex
+@software{chin2024lrdbenchmark,
+  author = {Chin, Davian R.},
+  title = {lrdbenchmark: A Comprehensive Framework for Long-Range Dependence Estimation},
+  version = {2.3.1},
+  doi = {10.5281/zenodo.17534599},
+  url = {https://github.com/dave2k77/lrdbenchmark},
+  year = {2024}
+}
+```
+
+**DOI**: [10.5281/zenodo.17534599](https://doi.org/10.5281/zenodo.17534599)
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -318,8 +312,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/dave2k77/LRDBenchmark/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/dave2k77/LRDBenchmark/discussions)
+- **Issues**: [GitHub Issues](https://github.com/dave2k77/lrdbenchmark/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/dave2k77/lrdbenchmark/discussions)
 - **Documentation**: [ReadTheDocs](https://lrdbenchmark.readthedocs.io/)
 
 ---

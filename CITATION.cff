@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Chin"
+    given-names: "Davian R."
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+title: "lrdbenchmark: A Comprehensive Framework for Long-Range Dependence Estimation"
+version: "2.3.1"
+doi: "10.5281/zenodo.17534599"
+date-released: "2024-01-05"
+url: "https://github.com/dave2k77/lrdbenchmark"
+repository-code: "https://github.com/dave2k77/lrdbenchmark.git"
+license: MIT
+keywords:
+  - "long-range dependence"
+  - "hurst parameter"
+  - "time series analysis"
+  - "benchmarking"
+  - "machine learning"
+  - "neural networks"
+  - "fractional brownian motion"
+abstract: "A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimation and benchmarking across Classical, Machine Learning, and Neural Network methods."
+

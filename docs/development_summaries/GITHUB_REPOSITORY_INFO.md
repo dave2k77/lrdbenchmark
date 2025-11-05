@@ -1,9 +1,9 @@
 # LRDBenchmark GitHub Repository Information
 
 ## Repository Details
-- **URL**: https://github.com/dave2k77/LRDBenchmark.git
+- **URL**: https://github.com/dave2k77/lrdbenchmark.git
 - **Owner**: dave2k77
-- **Repository Name**: LRDBenchmark
+- **Repository Name**: lrdbenchmark
 - **Description**: Long-range dependence benchmark
 - **License**: MIT license
 - **Stars**: 1
@@ -45,7 +45,7 @@ The repository contains the following main directories and files:
 ## Usage
 The repository provides multiple ways to access the framework:
 1. **PyPI Package**: `pip install lrdbenchmark`
-2. **GitHub Repository**: Clone from https://github.com/dave2k77/LRDBenchmark.git
+2. **GitHub Repository**: Clone from https://github.com/dave2k77/lrdbenchmark.git
 3. **Documentation**: Available in the `docs/` directory
 4. **Examples**: See `examples/` directory for usage examples
 

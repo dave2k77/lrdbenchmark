@@ -1,0 +1,67 @@
+name: Test PyPI Publishing
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Trigger on version tags
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v2.3.0)'
+        required: false
+        type: string
+
+jobs:
+  test-publish:
+    name: Test publish to TestPyPI
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine
+    
+    - name: Extract version
+      id: version
+      run: |
+        if [ "${{ github.event_name }}" == "push" ]; then
+          VERSION=${GITHUB_REF#refs/tags/v}
+        elif [ -n "${{ github.event.inputs.version }}" ]; then
+          VERSION="${{ github.event.inputs.version }}"
+        else
+          VERSION=$(grep -E '^version = ' pyproject.toml | sed 's/version = "\(.*\)"/\1/')
+        fi
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Version: $VERSION"
+    
+    - name: Build package
+      run: |
+        python -m build
+        ls -lh dist/
+    
+    - name: Check package
+      run: twine check dist/*
+    
+    - name: Publish to TestPyPI
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+      run: |
+        twine upload --skip-existing --repository-url https://test.pypi.org/legacy/ dist/*
+    
+    - name: Verify TestPyPI publication
+      run: |
+        echo "✅ Package published to TestPyPI"
+        echo "Test install with: pip install --index-url https://test.pypi.org/simple/ lrdbenchmark==${{ steps.version.outputs.version }}"
+

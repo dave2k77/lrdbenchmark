@@ -97,22 +97,6 @@ class PeriodogramEstimator(BaseEstimator):
         # Validation
         self._validate_parameters()
 
-    def _select_optimization_framework(self, use_optimization: str) -> str:
-        """Select the optimal optimization framework."""
-        if use_optimization == "auto":
-            if JAX_AVAILABLE:
-                return "jax"  # Best for GPU acceleration
-            elif NUMBA_AVAILABLE:
-                return "numba"  # Good for CPU optimization
-            else:
-                return "numpy"  # Fallback
-        elif use_optimization == "jax" and JAX_AVAILABLE:
-            return "jax"
-        elif use_optimization == "numba" and NUMBA_AVAILABLE:
-            return "numba"
-        else:
-            return "numpy"
-
     def _validate_parameters(self) -> None:
         """Validate estimator parameters."""
         if not (0 < self.parameters["min_freq_ratio"] < self.parameters["max_freq_ratio"] < 0.5):

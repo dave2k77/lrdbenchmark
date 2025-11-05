@@ -16,13 +16,13 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'LRDBenchmark'
+project = 'lrdbenchmark'
 copyright = '2024, Davian Chin'
 author = 'Davian Chin'
 
 # The full version, including alpha/beta/rc tags
-release = '2.3.0'
-version = '2.3.0'
+release = '2.3.1'
+version = '2.3.1'
 
 # -- General configuration ---------------------------------------------------
 
@@ -118,7 +118,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'LRDBenchmarkdoc'
+htmlhelp_basename = 'lrdbenchmarkdoc'
 
 # -- Options for LaTeX output ------------------------------------------------
 
@@ -144,7 +144,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'LRDBenchmark.tex', 'LRDBenchmark Documentation',
+    (master_doc, 'lrdbenchmark.tex', 'lrdbenchmark Documentation',
      'Davian Chin', 'manual'),
 ]
 
@@ -153,7 +153,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'lrdbenchmark', 'LRDBenchmark Documentation',
+    (master_doc, 'lrdbenchmark', 'lrdbenchmark Documentation',
      [author], 1)
 ]
 
@@ -163,8 +163,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'LRDBenchmark', 'LRDBenchmark Documentation',
-     author, 'LRDBenchmark', 'Long-Range Dependence Benchmarking Toolkit',
+    (master_doc, 'lrdbenchmark', 'lrdbenchmark Documentation',
+     author, 'lrdbenchmark', 'Long-Range Dependence Benchmarking Toolkit',
      'Miscellaneous'),
 ]
 
@@ -228,7 +228,7 @@ autosummary_generate = True
 # -- Options for extlinks extension ------------------------------------------
 
 extlinks = {
-    'github': ('https://github.com/dave2k77/LRDBenchmark/%s', 'GitHub: %s'),
+    'github': ('https://github.com/dave2k77/lrdbenchmark/%s', 'GitHub: %s'),
     'pypi': ('https://pypi.org/project/lrdbenchmark/%s', 'PyPI: %s'),
     'rtd': ('https://lrdbenchmark.readthedocs.io/%s', 'ReadTheDocs: %s'),
 }

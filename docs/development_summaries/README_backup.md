@@ -21,11 +21,11 @@ LRDBenchmark provides a standardized platform for evaluating and comparing LRD e
 pip install lrdbenchmark
 
 # Or install from GitHub
-pip install git+https://github.com/dave2k77/LRDBenchmark.git
+pip install git+https://github.com/dave2k77/lrdbenchmark.git
 
 # Or clone and install in development mode
-git clone https://github.com/dave2k77/LRDBenchmark.git
-cd LRDBenchmark
+git clone https://github.com/dave2k77/lrdbenchmark.git
+cd lrdbenchmark
 pip install -e .
 ```
 
@@ -75,8 +75,8 @@ Our comprehensive benchmark of **16 estimators** across Classical, ML, and Neura
 
 ```bash
 # Clone the repository
-git clone https://github.com/dave2k77/LRDBenchmark.git
-cd LRDBenchmark
+git clone https://github.com/dave2k77/lrdbenchmark.git
+cd lrdbenchmark
 
 # Install dependencies
 pip install -r requirements.txt
@@ -205,7 +205,7 @@ python -m pytest tests/
 ## 📁 Repository Structure
 
 ```
-LRDBenchmark/
+lrdbenchmark/
 ├── lrdbenchmark/                 # Main package
 │   ├── models/                   # Data models and contamination
 │   │   ├── data_models/         # Stochastic processes (FBM, FGN, ARFIMA, MRW)
@@ -415,7 +415,7 @@ class MyDataModel(BaseDataModel):
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [GitHub Issues](https://github.com/dave2k77/LRDBenchmark/issues) for current development priorities and [GitHub Discussions](https://github.com/dave2k77/LRDBenchmark/discussions) for community discussions.
+We welcome contributions! Please see our [GitHub Issues](https://github.com/dave2k77/lrdbenchmark/issues) for current development priorities and [GitHub Discussions](https://github.com/dave2k77/lrdbenchmark/discussions) for community discussions.
 
 ### Development Setup
 
@@ -449,8 +449,8 @@ If you use LRDBenchmark in your research, please cite:
 ## 📞 Contact
 
 - **Email**: d.r.chin@reading.ac.uk
-- **Issues**: [GitHub Issues](https://github.com/dave2k77/LRDBenchmark/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/dave2k77/LRDBenchmark/discussions)
+- **Issues**: [GitHub Issues](https://github.com/dave2k77/lrdbenchmark/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/dave2k77/lrdbenchmark/discussions)
 
 ## 📜 License
 

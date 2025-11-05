@@ -274,8 +274,8 @@ model = TransformerPretrainedModel(use_gpu=True)  # Uses PyTorch
 
 ### Getting Help
 - **Documentation**: [https://lrdbenchmark.readthedocs.io/](https://lrdbenchmark.readthedocs.io/)
-- **Issues**: [GitHub Issues](https://github.com/dave2k77/LRDBenchmark/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/dave2k77/LRDBenchmark/discussions)
+- **Issues**: [GitHub Issues](https://github.com/dave2k77/lrdbenchmark/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/dave2k77/lrdbenchmark/discussions)
 
 ### Common Solutions
 1. **GPU not working**: Use CPU-only mode (default)

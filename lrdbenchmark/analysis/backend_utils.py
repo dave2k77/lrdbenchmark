@@ -6,8 +6,31 @@ import warnings
 
 # --- Backend Availability ---
 try:
+    import os
+    import logging
+    
+    # Set JAX to CPU-only mode before importing to prevent CUDA plugin initialization
+    # This prevents CUDA_ERROR_NO_DEVICE errors when CUDA_VISIBLE_DEVICES is empty
+    if 'JAX_PLATFORM_NAME' not in os.environ:
+        os.environ['JAX_PLATFORM_NAME'] = 'cpu'
+    if 'JAX_PLATFORMS' not in os.environ:
+        os.environ['JAX_PLATFORMS'] = 'cpu'
+    
+    # Suppress JAX plugin initialization warnings/errors
+    # These can occur when multiple CUDA plugins are installed
+    logging.getLogger('jax._src.xla_bridge').setLevel(logging.CRITICAL)
+    logging.getLogger('jax_plugins').setLevel(logging.CRITICAL)
+    
+    # Import JAX after setting environment variables
     import jax
-    JAX_AVAILABLE = True
+    
+    # Test that JAX is actually functional
+    try:
+        _ = jax.devices()
+        JAX_AVAILABLE = True
+    except Exception:
+        # JAX is installed but not functional (e.g., plugin conflicts)
+        JAX_AVAILABLE = False
 except ImportError:
     JAX_AVAILABLE = False
 
