@@ -90,16 +90,7 @@ jobs:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
       run: |
-        twine upload --skip-existing dist/* || {
-          echo "⚠️ Upload failed. Checking if version already exists..."
-          if twine upload --skip-existing dist/* 2>&1 | grep -q "already exists"; then
-            echo "✅ Package version already exists on PyPI - skipping upload"
-            exit 0
-          else
-            echo "❌ Upload failed for a different reason"
-            exit 1
-          fi
-        }
+        twine upload --skip-existing dist/*
     
     - name: Verify TestPyPI publication
       if: github.event.inputs.test_only == 'true'
