@@ -30,6 +30,11 @@ try:
     NUMBA_AVAILABLE = True
 except ImportError:
     NUMBA_AVAILABLE = False
+    # Create a dummy decorator when numba is not available
+    def numba_jit(*args, **kwargs):
+        def decorator(func):
+            return func
+        return decorator
 
 try:
     from scipy import stats

@@ -23,6 +23,13 @@ if JAX_AVAILABLE:
 if NUMBA_AVAILABLE:
     import numba
     from numba import jit as numba_jit, prange
+else:
+    # Create a dummy decorator when numba is not available
+    def numba_jit(*args, **kwargs):
+        def decorator(func):
+            return func
+        return decorator
+    prange = range  # Dummy prange
 
 # Import base estimator
 try:

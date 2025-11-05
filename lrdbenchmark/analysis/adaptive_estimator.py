@@ -36,6 +36,12 @@ try:
     NUMBA_AVAILABLE = True
 except ImportError:
     NUMBA_AVAILABLE = False
+    # Create a dummy decorator when numba is not available
+    def numba_jit(*args, **kwargs):
+        def decorator(func):
+            return func
+        return decorator
+    prange = range  # Dummy prange
 
 
 class AdaptiveEstimator(ABC):
