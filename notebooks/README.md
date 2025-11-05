@@ -41,19 +41,20 @@ The LRDBenchmark library provides a comprehensive framework for:
 
 **Key Features**:
 - Overview of estimator categories (Classical, ML, Neural)
-- Classical estimators: R/S, DFA, DMA, Higuchi, GPH, Whittle, Periodogram, CWT
-- Machine learning estimators: Random Forest, SVR, Gradient Boosting
-- Neural network estimators: CNN, LSTM, GRU, Transformer
+- **Classical estimators** (13): R/S, DFA, DMA, Higuchi, GHE, GPH, Whittle, Periodogram, CWT, Wavelet Variance, Wavelet Log Variance, Wavelet Whittle, MFDFA, Multifractal Wavelet Leaders
+- **Machine learning estimators** (3): Random Forest, SVR, Gradient Boosting
+- **Neural network estimators** (4): CNN, LSTM, GRU, Transformer
 - Statistical validation: confidence intervals, bootstrap methods
 - Performance comparison and decision guidelines
 
 **Estimator Categories**:
-- **Temporal**: R/S Analysis, DFA, DMA, Higuchi
-- **Spectral**: GPH, Whittle, Periodogram
-- **Wavelet**: CWT, Wavelet Variance, Log Variance, Wavelet Whittle
-- **Multifractal**: MFDFA, Wavelet Leaders
-- **ML**: Random Forest, SVR, Gradient Boosting
-- **Neural**: CNN, LSTM, GRU, Transformer
+- **Temporal** (5): R/S Analysis, DFA, DMA, Higuchi, GHE (Generalized Hurst Exponent)
+- **Spectral** (3): GPH, Whittle, Periodogram
+- **Wavelet** (4): CWT, Wavelet Variance, Wavelet Log Variance, Wavelet Whittle
+- **Multifractal** (2): MFDFA, Multifractal Wavelet Leaders
+- **ML** (3): Random Forest, SVR, Gradient Boosting
+- **Neural** (4): CNN, LSTM, GRU, Transformer
+- **Total: 20 estimators** (13 classical + 3 ML + 4 neural)
 
 **Prerequisites**: Notebook 1 (Data Generation)
 
@@ -208,8 +209,8 @@ Each notebook generates:
 - **Visualization**: Comprehensive plots and analysis
 
 ### 2. Estimation
-- **3 Categories**: Classical, ML, Neural estimators
-- **20+ Estimators**: Complete coverage of LRD estimation methods
+- **3 Categories**: Classical (13), ML (3), Neural (4) estimators
+- **20 Estimators**: Complete coverage of LRD estimation methods
 - **Statistical Validation**: Confidence intervals and significance tests
 - **Performance Comparison**: Accuracy, speed, and robustness analysis
 

@@ -29,7 +29,7 @@ setup(
     version=get_version(),
     author="Davian R. Chin",
     author_email="d.r.chin@reading.ac.uk",
-    description="Comprehensive Long-Range Dependence Benchmarking Framework with Classical, ML, and Neural Network Estimators + 5 Demonstration Notebooks",
+    description="Comprehensive Long-Range Dependence Benchmarking Framework with 20 Estimators (13 Classical, 3 ML, 4 Neural Networks) + 5 Demonstration Notebooks",
     long_description=read_readme(),
     long_description_content_type="text/markdown",
     url="https://github.com/dave2k77/lrdbenchmark",

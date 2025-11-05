@@ -1,6 +1,6 @@
-# LRDBenchmark Examples
+# lrdbenchmark Examples
 
-This directory contains progressive examples demonstrating LRDBenchmark usage from basic to production-ready patterns.
+This directory contains progressive examples demonstrating lrdbenchmark usage from basic to production-ready patterns. The library provides 20 estimators (13 classical, 3 ML, 4 neural networks) for comprehensive long-range dependence analysis.
 
 ## Example Progression
 

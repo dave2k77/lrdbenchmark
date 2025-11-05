@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "lrdbenchmark"
 version = "2.3.0"
-description = "Comprehensive Long-Range Dependence Benchmarking Framework with Classical, ML, and Neural Network Estimators + 5 Demonstration Notebooks"
+description = "Comprehensive Long-Range Dependence Benchmarking Framework with 20 Estimators (13 Classical, 3 ML, 4 Neural Networks) + 5 Demonstration Notebooks"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
@@ -43,7 +43,7 @@ keywords = [
     "wavelet analysis",
     "spectral analysis"
 ]
-requires-python = ">=3.8,<3.13"
+requires-python = ">=3.8,<3.13"  # Python 3.13 not yet supported
 dependencies = [
     "numpy>=1.21.0,<2.0",
     "scipy>=1.7.0,<2.0",
