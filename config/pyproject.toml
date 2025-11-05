@@ -71,8 +71,8 @@ gpu = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/dave2k77/LRDBenchmark"
-"Bug Tracker" = "https://github.com/dave2k77/LRDBenchmark/issues"
+"Homepage" = "https://github.com/dave2k77/lrdbenchmark"
+"Bug Tracker" = "https://github.com/dave2k77/lrdbenchmark/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]

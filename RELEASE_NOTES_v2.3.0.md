@@ -186,4 +186,4 @@ Special thanks to the community for feedback and contributions that made this re
 
 ---
 
-**Full Changelog**: https://github.com/dave2k77/LRDBenchmark/compare/v2.2.1...v2.3.0
+**Full Changelog**: https://github.com/dave2k77/lrdbenchmark/compare/v2.2.1...v2.3.0

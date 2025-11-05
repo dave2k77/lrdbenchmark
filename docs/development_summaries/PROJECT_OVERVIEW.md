@@ -239,7 +239,7 @@ LRDBenchmark represents a significant advancement in LRD estimation research and
 
 **Status**: ✅ Production Ready  
 **License**: MIT  
-**Repository**: https://github.com/dave2k77/LRDBenchmark.git  
+**Repository**: https://github.com/dave2k77/lrdbenchmark.git  
 **PyPI Package**: `pip install lrdbenchmark`
 
 ---

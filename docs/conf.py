@@ -228,7 +228,7 @@ autosummary_generate = True
 # -- Options for extlinks extension ------------------------------------------
 
 extlinks = {
-    'github': ('https://github.com/dave2k77/LRDBenchmark/%s', 'GitHub: %s'),
+    'github': ('https://github.com/dave2k77/lrdbenchmark/%s', 'GitHub: %s'),
     'pypi': ('https://pypi.org/project/lrdbenchmark/%s', 'PyPI: %s'),
     'rtd': ('https://lrdbenchmark.readthedocs.io/%s', 'ReadTheDocs: %s'),
 }

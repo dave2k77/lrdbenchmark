@@ -96,12 +96,12 @@ bayes = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/dave2k77/LRDBenchmark"
+Homepage = "https://github.com/dave2k77/lrdbenchmark"
 Documentation = "https://lrdbenchmark.readthedocs.io/"
-Repository = "https://github.com/dave2k77/LRDBenchmark.git"
-Issues = "https://github.com/dave2k77/LRDBenchmark/issues"
+Repository = "https://github.com/dave2k77/lrdbenchmark.git"
+Issues = "https://github.com/dave2k77/lrdbenchmark/issues"
 Download = "https://pypi.org/project/lrdbenchmark/"
-Source = "https://github.com/dave2k77/LRDBenchmark"
+Source = "https://github.com/dave2k77/lrdbenchmark"
 
 [tool.setuptools.packages.find]
 where = ["."]

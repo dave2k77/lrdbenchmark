@@ -78,7 +78,7 @@ pip install lrdbenchmark[accel-numba]    # Numba acceleration
 
 ### Development Installation
 ```bash
-git clone https://github.com/dave2k77/LRDBenchmark.git
+git clone https://github.com/dave2k77/lrdbenchmark.git
 cd LRDBenchmark
 pip install -e .
 ```
@@ -144,7 +144,7 @@ pip install lrdbenchmark
 ### Development Installation
 
 ```bash
-git clone https://github.com/dave2k77/LRDBenchmark.git
+git clone https://github.com/dave2k77/lrdbenchmark.git
 cd LRDBenchmark
 pip install -e .
 ```
@@ -270,7 +270,7 @@ Shows performance ranking and comparative analysis:
 
 ```bash
 # Clone the repository
-git clone https://github.com/dave2k77/LRDBenchmark.git
+git clone https://github.com/dave2k77/lrdbenchmark.git
 cd LRDBenchmark
 
 # Install dependencies
@@ -318,8 +318,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/dave2k77/LRDBenchmark/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/dave2k77/LRDBenchmark/discussions)
+- **Issues**: [GitHub Issues](https://github.com/dave2k77/lrdbenchmark/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/dave2k77/lrdbenchmark/discussions)
 - **Documentation**: [ReadTheDocs](https://lrdbenchmark.readthedocs.io/)
 
 ---

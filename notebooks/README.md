@@ -159,8 +159,8 @@ The LRDBenchmark library provides a comprehensive framework for:
 pip install lrdbenchmark
 
 # Or for development
-git clone https://github.com/dave2k77/LRDBenchmark.git
-cd LRDBenchmark
+git clone https://github.com/dave2k77/lrdbenchmark.git
+cd lrdbenchmark
 pip install -e .
 ```
 
@@ -243,9 +243,9 @@ Each notebook generates:
 ### Getting Help
 
 - **Documentation**: [LRDBenchmark Docs](https://lrdbenchmark.readthedocs.io/)
-- **GitHub**: [LRDBenchmark Repository](https://github.com/dave2k77/LRDBenchmark)
-- **Issues**: [GitHub Issues](https://github.com/dave2k77/LRDBenchmark/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/dave2k77/LRDBenchmark/discussions)
+- **GitHub**: [lrdbenchmark Repository](https://github.com/dave2k77/lrdbenchmark)
+- **Issues**: [GitHub Issues](https://github.com/dave2k77/lrdbenchmark/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/dave2k77/lrdbenchmark/discussions)
 
 ## Contributing
 

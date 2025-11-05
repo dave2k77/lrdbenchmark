@@ -166,8 +166,8 @@ Running the Notebooks
 1. **Clone the repository**:
    .. code-block:: bash
    
-      git clone https://github.com/dave2k77/LRDBenchmark.git
-      cd LRDBenchmark
+      git clone https://github.com/dave2k77/lrdbenchmark.git
+      cd lrdbenchmark
 
 2. **Install dependencies**:
    .. code-block:: bash
@@ -216,8 +216,8 @@ This creates a complete workflow from data generation to performance analysis.
 Support and Contributing
 =========================
 
-- **Issues**: Report problems with notebooks on `GitHub Issues <https://github.com/dave2k77/LRDBenchmark/issues>`_
-- **Discussions**: Ask questions on `GitHub Discussions <https://github.com/dave2k77/LRDBenchmark/discussions>`_
+- **Issues**: Report problems with notebooks on `GitHub Issues <https://github.com/dave2k77/lrdbenchmark/issues>`_
+- **Discussions**: Ask questions on `GitHub Discussions <https://github.com/dave2k77/lrdbenchmark/discussions>`_
 - **Contributing**: Submit improvements via pull requests
 
 The notebooks are actively maintained and updated with each library release.

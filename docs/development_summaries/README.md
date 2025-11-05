@@ -21,10 +21,10 @@ LRDBenchmark provides a standardized platform for evaluating and comparing LRD e
 pip install lrdbenchmark
 
 # Or install from GitHub
-pip install git+https://github.com/dave2k77/LRDBenchmark.git
+pip install git+https://github.com/dave2k77/lrdbenchmark.git
 
 # Or clone and install in development mode
-git clone https://github.com/dave2k77/LRDBenchmark.git
+git clone https://github.com/dave2k77/lrdbenchmark.git
 cd LRDBenchmark
 pip install -e .
 ```
@@ -103,7 +103,7 @@ Our comprehensive heavy-tail analysis tested **11 estimators** across **440 scen
 
 ```bash
 # Clone the repository
-git clone https://github.com/dave2k77/LRDBenchmark.git
+git clone https://github.com/dave2k77/lrdbenchmark.git
 cd LRDBenchmark
 
 # Install dependencies
@@ -443,7 +443,7 @@ class MyDataModel(BaseDataModel):
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [GitHub Issues](https://github.com/dave2k77/LRDBenchmark/issues) for current development priorities and [GitHub Discussions](https://github.com/dave2k77/LRDBenchmark/discussions) for community discussions.
+We welcome contributions! Please see our [GitHub Issues](https://github.com/dave2k77/lrdbenchmark/issues) for current development priorities and [GitHub Discussions](https://github.com/dave2k77/lrdbenchmark/discussions) for community discussions.
 
 ### Development Setup
 
@@ -477,8 +477,8 @@ If you use LRDBenchmark in your research, please cite:
 ## 📞 Contact
 
 - **Email**: d.r.chin@reading.ac.uk
-- **Issues**: [GitHub Issues](https://github.com/dave2k77/LRDBenchmark/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/dave2k77/LRDBenchmark/discussions)
+- **Issues**: [GitHub Issues](https://github.com/dave2k77/lrdbenchmark/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/dave2k77/lrdbenchmark/discussions)
 
 ## 📜 License
 

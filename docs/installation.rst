@@ -63,7 +63,7 @@ To install LRDBenchmark in development mode:
 .. code-block:: bash
 
    # Clone the repository
-   git clone https://github.com/dave2k77/LRDBenchmark.git
+   git clone https://github.com/dave2k77/lrdbenchmark.git
    cd LRDBenchmark
    
    # Install in development mode
@@ -112,7 +112,7 @@ Or build from Dockerfile:
 
 .. code-block:: bash
 
-   git clone https://github.com/dave2k77/LRDBenchmark.git
+   git clone https://github.com/dave2k77/lrdbenchmark.git
    cd LRDBenchmark
    docker build -t lrdbenchmark .
    docker run -it lrdbenchmark

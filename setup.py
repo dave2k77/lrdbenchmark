@@ -32,10 +32,10 @@ setup(
     description="Comprehensive Long-Range Dependence Benchmarking Framework with Classical, ML, and Neural Network Estimators + 5 Demonstration Notebooks",
     long_description=read_readme(),
     long_description_content_type="text/markdown",
-    url="https://github.com/dave2k77/LRDBenchmark",
+    url="https://github.com/dave2k77/lrdbenchmark",
     project_urls={
-        "Bug Reports": "https://github.com/dave2k77/LRDBenchmark/issues",
-        "Source": "https://github.com/dave2k77/LRDBenchmark",
+        "Bug Reports": "https://github.com/dave2k77/lrdbenchmark/issues",
+        "Source": "https://github.com/dave2k77/lrdbenchmark",
         "Documentation": "https://lrdbenchmark.readthedocs.io/",
     },
     packages=find_packages(),

@@ -26,7 +26,7 @@ The repository includes GitHub Actions workflows that automatically publish pack
 
 ### 2. Add Secrets to GitHub
 
-1. Go to your GitHub repository: https://github.com/dave2k77/LRDBenchmark
+1. Go to your GitHub repository: https://github.com/dave2k77/lrdbenchmark
 2. Navigate to **Settings** → **Secrets and variables** → **Actions**
 3. Click **New repository secret**
 4. Add the following secrets:
