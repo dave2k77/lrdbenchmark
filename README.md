@@ -79,7 +79,7 @@ pip install lrdbenchmark[accel-numba]    # Numba acceleration
 ### Development Installation
 ```bash
 git clone https://github.com/dave2k77/lrdbenchmark.git
-cd LRDBenchmark
+cd lrdbenchmark
 pip install -e .
 ```
 
@@ -145,7 +145,7 @@ pip install lrdbenchmark
 
 ```bash
 git clone https://github.com/dave2k77/lrdbenchmark.git
-cd LRDBenchmark
+cd lrdbenchmark
 pip install -e .
 ```
 
@@ -175,7 +175,7 @@ pip install "lrdbenchmark[dev]"
 ## 🏗️ Project Structure
 
 ```
-LRDBenchmark/
+lrdbenchmark/
 ├── lrdbenchmark/           # Main package
 │   ├── analysis/           # Estimator implementations
 │   ├── models/            # Data generation models
@@ -271,7 +271,7 @@ Shows performance ranking and comparative analysis:
 ```bash
 # Clone the repository
 git clone https://github.com/dave2k77/lrdbenchmark.git
-cd LRDBenchmark
+cd lrdbenchmark
 
 # Install dependencies
 pip install -e .

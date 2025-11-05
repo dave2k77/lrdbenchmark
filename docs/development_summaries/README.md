@@ -25,7 +25,7 @@ pip install git+https://github.com/dave2k77/lrdbenchmark.git
 
 # Or clone and install in development mode
 git clone https://github.com/dave2k77/lrdbenchmark.git
-cd LRDBenchmark
+cd lrdbenchmark
 pip install -e .
 ```
 
@@ -104,7 +104,7 @@ Our comprehensive heavy-tail analysis tested **11 estimators** across **440 scen
 ```bash
 # Clone the repository
 git clone https://github.com/dave2k77/lrdbenchmark.git
-cd LRDBenchmark
+cd lrdbenchmark
 
 # Install dependencies
 pip install -r requirements.txt
@@ -233,7 +233,7 @@ python -m pytest tests/
 ## 📁 Repository Structure
 
 ```
-LRDBenchmark/
+lrdbenchmark/
 ├── lrdbenchmark/                 # Main package
 │   ├── models/                   # Data models and contamination
 │   │   ├── data_models/         # Stochastic processes (FBM, FGN, ARFIMA, MRW)

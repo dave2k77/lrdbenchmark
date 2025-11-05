@@ -3,7 +3,7 @@
 ## Repository Details
 - **URL**: https://github.com/dave2k77/lrdbenchmark.git
 - **Owner**: dave2k77
-- **Repository Name**: LRDBenchmark
+- **Repository Name**: lrdbenchmark
 - **Description**: Long-range dependence benchmark
 - **License**: MIT license
 - **Stars**: 1
