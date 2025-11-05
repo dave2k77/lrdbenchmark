@@ -17,7 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
     
     steps:
     - name: Checkout code
@@ -55,12 +54,11 @@ jobs:
       run: twine check dist/*
     
     - name: Publish to TestPyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository-url: https://test.pypi.org/legacy/
-        username: __token__
-        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-        skip-existing: true
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+      run: |
+        twine upload --repository-url https://test.pypi.org/legacy/ dist/*
     
     - name: Verify TestPyPI publication
       run: |
