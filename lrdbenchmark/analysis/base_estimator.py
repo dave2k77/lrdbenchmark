@@ -56,6 +56,10 @@ class BaseEstimator:
         """Alias for set_params() for backward compatibility."""
         self.set_params(**kwargs)
 
+    def _validate_parameters(self) -> None:
+        """Validate estimator parameters. Override in subclasses if needed."""
+        pass
+
     # Subclasses must implement:
     # def estimate(self, data: np.ndarray) -> Dict[str, Any]: ...
 

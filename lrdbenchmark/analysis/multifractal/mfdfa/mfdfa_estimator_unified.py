@@ -23,6 +23,13 @@ if JAX_AVAILABLE:
 if NUMBA_AVAILABLE:
     import numba
     from numba import jit as numba_jit, prange
+else:
+    # Create a dummy decorator when numba is not available
+    def numba_jit(*args, **kwargs):
+        def decorator(func):
+            return func
+        return decorator
+    prange = range  # Dummy prange
 
 # Import base estimator
 try:
@@ -31,33 +38,114 @@ except ImportError:
     from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 
-@numba_jit(nopython=True, parallel=True)
-def _compute_fluctuation_function_numba(data, q, scale, order):
-    """Numba-jitted fluctuation calculation for MFDFA."""
-    n_segments = len(data) // scale
-    if n_segments == 0:
-        return np.nan
-
-    variances = np.zeros(n_segments)
-    for i in prange(n_segments):
-        start_idx = i * scale
-        end_idx = start_idx + scale
-        segment = data[start_idx:end_idx]
+# Numba-compatible polynomial fitting functions (only when Numba is available)
+if NUMBA_AVAILABLE:
+    @numba_jit(nopython=True)
+    def _polyfit_numba(x: np.ndarray, y: np.ndarray, deg: int) -> np.ndarray:
+        """Numba-compatible polyfit using Vandermonde matrix and least squares."""
+        n = len(x)
+        m = deg + 1
         
-        x = np.arange(scale)
-        if order == 0:
-            detrended = segment - np.mean(segment)
+        # Build Vandermonde matrix
+        V = np.zeros((n, m))
+        for i in range(n):
+            for j in range(m):
+                V[i, j] = x[i] ** (m - 1 - j)
+        
+        # Solve using normal equations: (V^T V) coeffs = V^T y
+        VtV = np.zeros((m, m))
+        Vty = np.zeros(m)
+        
+        for i in range(m):
+            for j in range(m):
+                VtV[i, j] = 0.0
+                for k in range(n):
+                    VtV[i, j] += V[k, i] * V[k, j]
+            Vty[i] = 0.0
+            for k in range(n):
+                Vty[i] += V[k, i] * y[k]
+        
+        # Solve linear system using Gaussian elimination (simple version)
+        coeffs = np.zeros(m)
+        A = VtV.copy()
+        b = Vty.copy()
+        
+        # Forward elimination
+        for i in range(m):
+            # Find pivot
+            max_row = i
+            for k in range(i + 1, m):
+                if abs(A[k, i]) > abs(A[max_row, i]):
+                    max_row = k
+            # Swap rows (element by element for Numba compatibility)
+            for j in range(m):
+                temp = A[i, j]
+                A[i, j] = A[max_row, j]
+                A[max_row, j] = temp
+            temp_b = b[i]
+            b[i] = b[max_row]
+            b[max_row] = temp_b
+            
+            # Eliminate
+            for k in range(i + 1, m):
+                if A[i, i] != 0:
+                    factor = A[k, i] / A[i, i]
+                    for j in range(i, m):
+                        A[k, j] -= factor * A[i, j]
+                    b[k] -= factor * b[i]
+        
+        # Back substitution
+        for i in range(m - 1, -1, -1):
+            coeffs[i] = b[i]
+            for j in range(i + 1, m):
+                coeffs[i] -= A[i, j] * coeffs[j]
+            if A[i, i] != 0:
+                coeffs[i] /= A[i, i]
+            else:
+                coeffs[i] = 0.0
+        
+        return coeffs
+
+    @numba_jit(nopython=True)
+    def _polyval_numba(p: np.ndarray, x: np.ndarray) -> np.ndarray:
+        """Numba-compatible polyval."""
+        n = len(x)
+        m = len(p)
+        y = np.zeros(n)
+        
+        for i in range(n):
+            for j in range(m):
+                y[i] += p[j] * (x[i] ** (m - 1 - j))
+        
+        return y
+
+    @numba_jit(nopython=True, parallel=True)
+    def _compute_fluctuation_function_numba(data, q, scale, order):
+        """Numba-jitted fluctuation calculation for MFDFA."""
+        n_segments = len(data) // scale
+        if n_segments == 0:
+            return np.nan
+
+        variances = np.zeros(n_segments)
+        for i in prange(n_segments):
+            start_idx = i * scale
+            end_idx = start_idx + scale
+            segment = data[start_idx:end_idx]
+            
+            x = np.arange(scale, dtype=np.float64)
+            if order == 0:
+                detrended = segment - np.mean(segment)
+            else:
+                coeffs = _polyfit_numba(x, segment, order)
+                trend = _polyval_numba(coeffs, x)
+                detrended = segment - trend
+            
+            variances[i] = np.mean(detrended**2)
+
+        if q == 0:
+            return np.exp(0.5 * np.mean(np.log(variances)))
         else:
-            coeffs = np.polyfit(x, segment, order)
-            trend = np.polyval(coeffs, x)
-            detrended = segment - trend
-        
-        variances[i] = np.mean(detrended**2)
-
-    if q == 0:
-        return np.exp(0.5 * np.mean(np.log(variances)))
-    else:
-        return np.mean(variances ** (q / 2)) ** (1 / q)
+            return np.mean(variances ** (q / 2)) ** (1 / q)
 
 
 class MFDFAEstimator(BaseEstimator):

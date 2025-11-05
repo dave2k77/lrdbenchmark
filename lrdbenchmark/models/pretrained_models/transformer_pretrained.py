@@ -110,11 +110,12 @@ class TransformerPretrainedModel(BasePretrainedModel):
         super().__init__()
         self.input_length = input_length
         self.use_gpu = use_gpu
-        self.device = None  # Will be set on first use
+        self.device = self._get_safe_device()
 
-        # Model will be created on first use
+        # Create model immediately (like LSTM/GRU) for consistency
         self.model = None
         self.is_loaded = False
+        self._create_model()
 
     def _get_safe_device(self):
         """Get a safe device with CUDA compatibility check."""
@@ -144,16 +145,22 @@ class TransformerPretrainedModel(BasePretrainedModel):
 
     def _create_model(self):
         """Create and initialize the Transformer model with reasonable weights."""
-        if self.device is None:
-            self.device = self._get_safe_device()
-        self.model = SimpleTransformer(self.input_length).to(self.device)
+        try:
+            self.model = SimpleTransformer(self.input_length).to(self.device)
 
-        # Initialize weights for better performance
-        self._initialize_weights()
+            # Initialize weights for better performance
+            self._initialize_weights()
 
-        # Set to evaluation mode
-        self.model.eval()
-        self.is_loaded = True
+            # Set to evaluation mode
+            self.model.eval()
+            self.is_loaded = True
+            print("✅ Transformer model initialized with reasonable weights")
+        except Exception as e:
+            print(f"⚠️ Failed to initialize Transformer model: {e}")
+            # Fallback to random initialization
+            self.model = SimpleTransformer(self.input_length).to(self.device)
+            self.model.eval()
+            self.is_loaded = True
 
     def _initialize_weights(self):
         """Initialize model weights for better performance."""
@@ -184,8 +191,8 @@ class TransformerPretrainedModel(BasePretrainedModel):
         dict
             Estimation results
         """
-        # Initialize model on first use
-        if not self.is_loaded:
+        # Model should already be created in __init__, but check just in case
+        if not self.is_loaded or self.model is None:
             self._create_model()
 
         # Preprocess data

@@ -38,7 +38,8 @@ LRDBenchmark provides a comprehensive neural network factory with 4 architecture
 
 .. code-block:: python
 
-   from lrdbenchmark import NeuralNetworkFactory, NNArchitecture, NNConfig, create_all_benchmark_networks
+   from lrdbenchmark import NeuralNetworkFactory
+   from lrdbenchmark.analysis.machine_learning.neural_network_factory import NNArchitecture, NNConfig, create_all_benchmark_networks
    import numpy as np
 
    # Create neural network factory
@@ -104,40 +105,40 @@ LRDBenchmark provides production-ready machine learning estimators:
 
    print(f"SVR: {svr_pred:.3f}, Gradient Boosting: {gb_pred:.3f}, Random Forest: {rf_pred:.3f}")
 
-Production ML System
-~~~~~~~~~~~~~~~~~~~~
+Advanced Neural Network Usage
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For production deployment, use the production ML system with train-once, apply-many workflow:
+For production deployment with neural networks, use the Neural Network Factory:
 
 .. code-block:: python
 
-   from lrdbenchmark import ProductionMLSystem, ProductionConfig
+   from lrdbenchmark import NeuralNetworkFactory, FBMModel
+   from lrdbenchmark.analysis.machine_learning.neural_network_factory import NNConfig, NNArchitecture
    import numpy as np
 
-   # Configure system
-   config = ProductionConfig(
-       model_type="cnn",
+   # Create factory
+   factory = NeuralNetworkFactory()
+
+   # Configure network
+   config = NNConfig(
+       architecture=NNArchitecture.CNN,
        input_length=500,
        hidden_dims=[64, 32],
        learning_rate=0.001,
        epochs=20
    )
 
-   # Initialize system
-   system = ProductionMLSystem(config)
-
-   # Generate training data
+   # Create and train network
+   network = factory.create_network(config)
    X_train = np.random.randn(100, 500)
    y_train = np.random.uniform(0.2, 0.8, 100)
-
-   # Train model
-   system.train(X_train, y_train)
+   history = network.train_model(X_train, y_train)
 
    # Make prediction
    new_data = np.random.randn(1, 500)
-   prediction = system.predict(new_data)
+   prediction = network.predict(new_data)
 
-   print(f"CNN Prediction: {prediction.hurst_parameter:.3f}")
+   print(f"CNN Prediction: {prediction[0]:.3f}")
 
 Data Models
 -----------
@@ -202,7 +203,8 @@ Track usage and performance:
    
    # Estimate Hurst parameter
    rs_estimator = RSEstimator()
-   hurst_estimate = rs_estimator.estimate(data)
+   result = rs_estimator.estimate(data)
+   hurst_estimate = result["hurst_parameter"]
    
    print(f"Hurst estimate: {hurst_estimate:.3f}")
 
@@ -220,29 +222,36 @@ Use the new enhanced estimators with pre-trained models:
    
    # Enhanced CNN with residual connections and attention
    cnn = CNNEstimator()
-   H_cnn = cnn.estimate(data)
+   cnn_result = cnn.estimate(data)
+   H_cnn = cnn_result["hurst_parameter"]
    
    # Enhanced LSTM with bidirectional architecture
    lstm = LSTMEstimator()
-   H_lstm = lstm.estimate(data)
+   lstm_result = lstm.estimate(data)
+   H_lstm = lstm_result["hurst_parameter"]
    
    # Enhanced GRU with attention mechanisms
    gru = GRUEstimator()
-   H_gru = gru.estimate(data)
+   gru_result = gru.estimate(data)
+   H_gru = gru_result["hurst_parameter"]
    
    # Enhanced Transformer with self-attention
    transformer = TransformerEstimator()
-   H_transformer = transformer.estimate(data)
+   transformer_result = transformer.estimate(data)
+   H_transformer = transformer_result["hurst_parameter"]
    
    # Traditional ML estimators
    rf = RandomForestEstimator()
-   H_rf = rf.estimate(data)
+   rf_result = rf.estimate(data)
+   H_rf = rf_result["hurst_parameter"]
    
    svr = SVREstimator()
-   H_svr = svr.estimate(data)
+   svr_result = svr.estimate(data)
+   H_svr = svr_result["hurst_parameter"]
    
    gb = GradientBoostingEstimator()
-   H_gb = gb.estimate(data)
+   gb_result = gb.estimate(data)
+   H_gb = gb_result["hurst_parameter"]
    
    print(f"CNN H estimate: {H_cnn:.3f}")
    print(f"LSTM H estimate: {H_lstm:.3f}")
@@ -266,11 +275,11 @@ Custom benchmark configuration:
    rs_estimator = RSEstimator()
    dfa_estimator = DFAEstimator()
    
-   rs_hurst = rs_estimator.estimate(data)
-   dfa_hurst = dfa_estimator.estimate(data)
+   rs_result = rs_estimator.estimate(data)
+   dfa_result = dfa_estimator.estimate(data)
    
-   print(f"R/S estimate: {rs_hurst:.3f}")
-   print(f"DFA estimate: {dfa_hurst:.3f}")
+   print(f"R/S estimate: {rs_result['hurst_parameter']:.3f}")
+   print(f"DFA estimate: {dfa_result['hurst_parameter']:.3f}")
 
 Integration note: HPFracc
 -------------------------

@@ -118,7 +118,7 @@ Creating All Benchmark Networks
 
 .. code-block:: python
 
-   from lrdbenchmark import create_all_benchmark_networks
+   from lrdbenchmark.analysis.machine_learning.neural_network_factory import create_all_benchmark_networks
    
    # Create all available networks
    networks = create_all_benchmark_networks(input_length=500)

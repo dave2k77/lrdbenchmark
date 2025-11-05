@@ -20,5 +20,8 @@ seaborn
 statsmodels
 PyWavelets
 
+# For ML estimators
+scikit-learn
+
 # For testing
 pytest

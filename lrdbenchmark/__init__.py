@@ -15,14 +15,22 @@ if 'CUDA_VISIBLE_DEVICES' not in os.environ:
     os.environ['CUDA_VISIBLE_DEVICES'] = ''
 if 'JAX_PLATFORMS' not in os.environ:
     os.environ['JAX_PLATFORMS'] = 'cpu'
+# Prevent JAX from discovering CUDA plugins when in CPU-only mode
+if 'XLA_PYTHON_CLIENT_PREALLOCATE' not in os.environ:
+    os.environ['XLA_PYTHON_CLIENT_PREALLOCATE'] = 'false'
+# Disable JAX CUDA plugin discovery to prevent CUDA_ERROR_NO_DEVICE errors
+if 'JAX_PLATFORM_NAME' not in os.environ:
+    os.environ['JAX_PLATFORM_NAME'] = 'cpu'
 
 # Suppress JAX CUDA warnings and errors when using CPU-only mode
 warnings.filterwarnings('ignore', category=UserWarning, module='jax')
 warnings.filterwarnings('ignore', message='.*Jax plugin configuration error.*')
 warnings.filterwarnings('ignore', message='.*CUDA_ERROR_NO_DEVICE.*')
+warnings.filterwarnings('ignore', message='.*operation cuInit.*failed.*')
 
-# Suppress JAX logging errors
+# Suppress JAX logging errors - set to CRITICAL to hide plugin initialization errors
 logging.getLogger('jax._src.xla_bridge').setLevel(logging.CRITICAL)
+logging.getLogger('jax_plugins').setLevel(logging.CRITICAL)
 
 __version__ = "2.3.0"
 __author__ = "LRDBench Development Team"
@@ -44,8 +52,8 @@ try:
     # Temporal estimators
     from .analysis.temporal.rs.rs_estimator_unified import RSEstimator
     from .analysis.temporal.dfa.dfa_estimator_unified import DFAEstimator
-    from .analysis.temporal.dma.dma_estimator import DMAEstimator
-    from .analysis.temporal.higuchi.higuchi_estimator import HiguchiEstimator
+    from .analysis.temporal.dma.dma_estimator_unified import DMAEstimator
+    from .analysis.temporal.higuchi.higuchi_estimator_unified import HiguchiEstimator
     
     # Spectral estimators
     from .analysis.spectral.whittle.whittle_estimator_unified import WhittleEstimator
@@ -59,7 +67,7 @@ try:
     from .analysis.wavelet.whittle.whittle_estimator_unified import WaveletWhittleEstimator
     
     # Multifractal estimators
-    from .analysis.multifractal.mfdfa.mfdfa_estimator import MFDFAEstimator
+    from .analysis.multifractal.mfdfa.mfdfa_estimator_unified import MFDFAEstimator
     from .analysis.multifractal.wavelet_leaders.wavelet_leaders_estimator_unified import MultifractalWaveletLeadersEstimator
     
 except ImportError as e:

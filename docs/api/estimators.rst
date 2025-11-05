@@ -6,7 +6,7 @@ lrdbenchmark provides a comprehensive suite of 18 estimators for detecting and q
 Base Estimator
 -------------
 
-.. autoclass:: lrdbenchmark.analysis.estimators.base_estimator.BaseEstimator
+.. autoclass:: lrdbenchmark.analysis.base_estimator.BaseEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -144,7 +144,7 @@ Wavelet Log-Variance
 Wavelet Whittle
 ~~~~~~~~~~~~~~~
 
-.. autoclass:: lrdbenchmark.analysis.wavelet.whittle.wavelet_whittle_estimator_numba_optimized.WaveletWhittleEstimator
+.. autoclass:: lrdbenchmark.analysis.wavelet.whittle.whittle_estimator_unified.WaveletWhittleEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -207,41 +207,13 @@ See the dedicated :doc:`neural_network_factory` page for complete API documentat
 High Performance Estimators
 ---------------------------
 
-JAX-based Estimators
-~~~~~~~~~~~~~~~~~~~~
-
-.. autoclass:: lrdbenchmark.analysis.temporal.dfa.dfa_estimator_jax_optimized.DFAJAXEstimator
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-.. autoclass:: lrdbenchmark.analysis.spectral.gph.gph_estimator_numba_optimized.GPHJAXEstimator
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-.. autoclass:: lrdbenchmark.analysis.temporal.rs.rs_estimator_unified.RSJAXEstimator
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Numba-based Estimators
-~~~~~~~~~~~~~~~~~~~~~~
-
-.. autoclass:: lrdbenchmark.analysis.high_performance.numba.dfa_numba.DFANumbaEstimator
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-.. autoclass:: lrdbenchmark.analysis.high_performance.numba.gph_numba.GPHNumbaEstimator
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-.. autoclass:: lrdbenchmark.analysis.high_performance.numba.rs_numba.RSNumbaEstimator
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. note::
+   The unified estimators automatically select optimal computation frameworks (JAX, Numba, or NumPy)
+   based on data characteristics and hardware availability. For advanced users, the high-performance
+   modules in ``lrdbenchmark.analysis.high_performance.jax`` and ``lrdbenchmark.analysis.high_performance.numba``
+   provide direct access to optimized implementations (e.g., ``DFAEstimatorJAX``, ``DFAEstimatorNumba``),
+   but the unified estimators are recommended for most use cases as they automatically select the best
+   framework based on data characteristics and hardware availability.
 
 Usage Examples
 --------------
@@ -452,24 +424,22 @@ High Performance Estimators
 
 .. code-block:: python
 
-   from lrdbenchmark.analysis.high_performance.jax.dfa_jax import DFAJAXEstimator
-   from lrdbenchmark.analysis.high_performance.numba.rs_numba import RSNumbaEstimator
-   from lrdbenchmark import FBMModel
+   from lrdbenchmark import DFAEstimator, RSEstimator, FBMModel
    import numpy as np
    
    # Generate large dataset
    model = FBMModel(H=0.7, sigma=1.0)
    data = model.generate(10000, seed=42)
    
-   # JAX-based DFA (GPU accelerated)
-   dfa_jax = DFAJAXEstimator()
-   H_dfa_jax = dfa_jax.estimate(data)
-   print(f"JAX DFA H estimate: {H_dfa_jax:.3f}")
+   # Unified estimators automatically use optimal backend (JAX/Numba/NumPy)
+   dfa = DFAEstimator(use_optimization='auto')  # Auto-selects best framework
+   result = dfa.estimate(data)
+   print(f"DFA H estimate: {result['hurst_parameter']:.3f}")
    
-   # Numba-based R/S (CPU optimized)
-   rs_numba = RSNumbaEstimator()
-   H_rs_numba = rs_numba.estimate(data)
-   print(f"Numba R/S H estimate: {H_rs_numba:.3f}")
+   # R/S estimator with automatic optimization
+   rs = RSEstimator(use_optimization='auto')
+   result = rs.estimate(data)
+   print(f"R/S H estimate: {result['hurst_parameter']:.3f}")
 
 Parameter Tuning
 ~~~~~~~~~~~~~~~~
@@ -538,29 +508,28 @@ Performance Comparison
 .. code-block:: python
 
    import time
-   from lrdbenchmark import DFAEstimator
-   from lrdbenchmark.analysis.high_performance.jax.dfa_jax import DFAJAXEstimator
-   from lrdbenchmark import FBMModel
+   from lrdbenchmark import DFAEstimator, FBMModel
    
    # Generate test data
    model = FBMModel(H=0.7, sigma=1.0)
    data = model.generate(5000, seed=42)
    
-   # Standard DFA
-   dfa = DFAEstimator()
+   # DFA with automatic optimization (will use JAX/Numba if available)
+   dfa = DFAEstimator(use_optimization='auto')
    start_time = time.time()
-   H_dfa = dfa.estimate(data)
+   result = dfa.estimate(data)
    dfa_time = time.time() - start_time
    
-   # JAX-accelerated DFA
-   dfa_jax = DFAJAXEstimator()
+   # DFA with explicit NumPy backend (no optimization)
+   dfa_numpy = DFAEstimator(use_optimization='numpy')
    start_time = time.time()
-   H_dfa_jax = dfa_jax.estimate(data)
-   dfa_jax_time = time.time() - start_time
+   result_numpy = dfa_numpy.estimate(data)
+   dfa_numpy_time = time.time() - start_time
    
-   print(f"Standard DFA: H = {H_dfa:.3f}, Time = {dfa_time:.4f}s")
-   print(f"JAX DFA: H = {H_dfa_jax:.3f}, Time = {dfa_jax_time:.4f}s")
-   print(f"Speedup: {dfa_time/dfa_jax_time:.2f}x")
+   print(f"Optimized DFA: H = {result['hurst_parameter']:.3f}, Time = {dfa_time:.4f}s")
+   print(f"NumPy DFA: H = {result_numpy['hurst_parameter']:.3f}, Time = {dfa_numpy_time:.4f}s")
+   if dfa_numpy_time > 0:
+       print(f"Speedup: {dfa_numpy_time/dfa_time:.2f}x")
 
 Best Practices
 --------------

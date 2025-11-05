@@ -21,7 +21,7 @@ SVR Estimator
 
 Support Vector Regression estimator with RBF kernel and comprehensive feature engineering.
 
-.. autoclass:: lrdbenchmark.analysis.machine_learning.svr_estimator.SVREstimator
+.. autoclass:: lrdbenchmark.analysis.machine_learning.svr_estimator_unified.SVREstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -60,7 +60,7 @@ Gradient Boosting Estimator
 
 Gradient Boosting Regressor with comprehensive feature engineering - **Best Overall Performance**.
 
-.. autoclass:: lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator.GradientBoostingEstimator
+.. autoclass:: lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified.GradientBoostingEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -103,7 +103,7 @@ Random Forest Estimator
 
 Random Forest Regressor with comprehensive feature engineering and feature importance analysis.
 
-.. autoclass:: lrdbenchmark.analysis.machine_learning.random_forest_estimator.RandomForestEstimator
+.. autoclass:: lrdbenchmark.analysis.machine_learning.random_forest_estimator_unified.RandomForestEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -141,52 +141,49 @@ Random Forest Regressor with comprehensive feature engineering and feature impor
    # Get feature importance
    importance = rf.get_feature_importance()
 
-Production ML System
---------------------
+Neural Network Factory
+-----------------------
 
-Production-ready ML system with train-once, apply-many workflow and intelligent framework selection.
+For advanced neural network configuration and training, use the Neural Network Factory which provides
+a comprehensive framework for creating and managing various neural network architectures.
 
-.. autoclass:: lrdbenchmark.analysis.machine_learning.production_ml_system.ProductionMLSystem
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-**Key Features**:
-* Intelligent framework selection (JAX, PyTorch, Numba)
-* Train-once, apply-many workflow
-* Model persistence and caching
-* Batch prediction capabilities
-* Production-ready deployment
+.. note::
+   See :doc:`neural_network_factory` for complete documentation of the Neural Network Factory API,
+   including NNConfig, NNArchitecture, and create_all_benchmark_networks functions.
 
 **Example Usage**:
 
 .. code-block:: python
 
-   from lrdbenchmark.analysis.machine_learning.production_ml_system import ProductionMLSystem, ProductionConfig
+   from lrdbenchmark import NeuralNetworkFactory, FBMModel
+   from lrdbenchmark.analysis.machine_learning.neural_network_factory import NNConfig, NNArchitecture
    import numpy as np
 
-   # Configure system
-   config = ProductionConfig(
-       model_type="cnn",
+   # Create factory
+   factory = NeuralNetworkFactory()
+
+   # Configure network
+   config = NNConfig(
+       architecture=NNArchitecture.CNN,
        input_length=500,
        hidden_dims=[64, 32],
        learning_rate=0.001,
        epochs=20
    )
 
-   # Initialize system
-   system = ProductionMLSystem(config)
+   # Create network
+   network = factory.create_network(config)
 
    # Generate training data
    X_train = np.random.randn(100, 500)
    y_train = np.random.uniform(0.2, 0.8, 100)
 
    # Train model
-   system.train(X_train, y_train)
+   history = network.train_model(X_train, y_train)
 
    # Make prediction
    new_data = np.random.randn(1, 500)
-   prediction = system.predict(new_data)
+   prediction = network.predict(new_data)
 
 Performance Comparison
 ----------------------

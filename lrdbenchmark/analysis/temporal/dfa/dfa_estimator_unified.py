@@ -22,6 +22,13 @@ if JAX_AVAILABLE:
 if NUMBA_AVAILABLE:
     import numba
     from numba import jit as numba_jit, prange
+else:
+    # Create a dummy decorator when numba is not available
+    def numba_jit(*args, **kwargs):
+        def decorator(func):
+            return func
+        return decorator
+    prange = range  # Dummy prange
 
 # Import base estimator
 try:
@@ -156,6 +163,18 @@ class DFAEstimator(BaseEstimator):
         
         # Validation
         self._validate_parameters()
+
+    def _validate_parameters(self) -> None:
+        """Validate estimator parameters."""
+        if self.parameters["min_scale"] < 4:
+            raise ValueError("min_scale must be at least 4")
+        if self.parameters["max_scale"] is not None:
+            if self.parameters["max_scale"] <= self.parameters["min_scale"]:
+                raise ValueError("max_scale must be greater than min_scale")
+        if self.parameters["num_scales"] < 3:
+            raise ValueError("num_scales must be at least 3")
+        if self.parameters["order"] < 0:
+            raise ValueError("order must be non-negative")
 
     def estimate(self, data: Union[np.ndarray, list]) -> Dict[str, Any]:
         """
