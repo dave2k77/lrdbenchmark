@@ -21,7 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write  # Required for trusted publishing
     
     steps:
     - name: Checkout code
@@ -79,20 +78,19 @@ jobs:
     
     - name: Publish to TestPyPI (if test_only mode)
       if: github.event.inputs.test_only == 'true'
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository-url: https://test.pypi.org/legacy/
-        username: __token__
-        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-        skip-existing: true
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+      run: |
+        twine upload --repository-url https://test.pypi.org/legacy/ dist/*
     
     - name: Publish to PyPI
       if: github.event.inputs.test_only != 'true'
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        username: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
-        skip-existing: true
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      run: |
+        twine upload dist/*
     
     - name: Verify TestPyPI publication
       if: github.event.inputs.test_only == 'true'
