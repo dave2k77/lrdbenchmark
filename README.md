@@ -5,6 +5,7 @@ A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimati
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Version 2.3.0](https://img.shields.io/badge/version-2.3.0-green.svg)](https://pypi.org/project/lrdbenchmark/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17534599.svg)](https://doi.org/10.5281/zenodo.17534599)
 
 ## 🎉 **v2.3.0 - Major Release Highlights**
 
@@ -304,6 +305,23 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+## 📖 Citation
+
+If you use LRDBenchmark in your research, please cite it:
+
+```bibtex
+@software{chin2024lrdbenchmark,
+  author = {Chin, Davian R.},
+  title = {LRDBenchmark: A Comprehensive Framework for Long-Range Dependence Estimation},
+  version = {2.3.0},
+  doi = {10.5281/zenodo.17534599},
+  url = {https://github.com/dave2k77/lrdbenchmark},
+  year = {2024}
+}
+```
+
+**DOI**: [10.5281/zenodo.17534599](https://doi.org/10.5281/zenodo.17534599)
 
 ## 📄 License
 

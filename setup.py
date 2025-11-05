@@ -37,6 +37,7 @@ setup(
         "Bug Reports": "https://github.com/dave2k77/lrdbenchmark/issues",
         "Source": "https://github.com/dave2k77/lrdbenchmark",
         "Documentation": "https://lrdbenchmark.readthedocs.io/",
+        "DOI": "https://doi.org/10.5281/zenodo.17534599",
     },
     packages=find_packages(),
     classifiers=[
