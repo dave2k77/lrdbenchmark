@@ -11,12 +11,13 @@ Analyzes error patterns and failure modes to improve reliability:
 
 import re
 import json
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 from dataclasses import dataclass, asdict
 from datetime import datetime, timedelta
 from collections import defaultdict, Counter
 import threading
 from pathlib import Path
+import numpy as np
 
 
 @dataclass
@@ -48,6 +49,26 @@ class ErrorSummary:
     reliability_score: float
 
 
+@dataclass
+class UncertaintyEvent:
+    """Stores uncertainty calibration data for an estimator run."""
+
+    timestamp: str
+    estimator_name: str
+    data_model: Optional[str]
+    method: Optional[str]
+    ci_lower: Optional[float]
+    ci_upper: Optional[float]
+    estimate: Optional[float]
+    true_value: Optional[float]
+    coverage_flag: Optional[bool]
+    confidence_level: Optional[float]
+    n_samples: Optional[int]
+    status: Optional[str]
+    data_length: int
+    metadata: Dict[str, Any]
+
+
 class ErrorAnalyzer:
     """
     Comprehensive error analysis system
@@ -67,6 +88,7 @@ class ErrorAnalyzer:
 
         self._lock = threading.Lock()
         self._errors: List[ErrorEvent] = []
+        self._uncertainty_events: List[UncertaintyEvent] = []
 
         # Error categorization patterns
         self._error_patterns = {
@@ -134,6 +156,17 @@ class ErrorAnalyzer:
         except Exception as e:
             print(f"Warning: Could not load existing error data: {e}")
 
+        try:
+            uncertainty_file = self.storage_path / "uncertainty_events.json"
+            if uncertainty_file.exists():
+                with open(uncertainty_file, "r") as f:
+                    data = json.load(f)
+                    for entry in data:
+                        event = UncertaintyEvent(**entry)
+                        self._uncertainty_events.append(event)
+        except Exception as e:
+            print(f"Warning: Could not load uncertainty calibration data: {e}")
+
     def record_error(
         self,
         estimator_name: str,
@@ -175,6 +208,13 @@ class ErrorAnalyzer:
         # Store error
         with self._lock:
             self._errors.append(error)
+            # Persist asynchronously? For now, persist synchronously for reliability.
+            try:
+                errors_file = self.storage_path / "error_events.json"
+                with open(errors_file, "w") as f:
+                    json.dump([asdict(e) for e in self._errors], f, indent=2)
+            except Exception:
+                pass
 
     def _categorize_error(self, error_message: str) -> str:
         """Categorize error based on message patterns"""
@@ -249,6 +289,51 @@ class ErrorAnalyzer:
             error_trends=error_trends,
             reliability_score=reliability_score,
         )
+
+    def record_uncertainty_calibration(
+        self,
+        estimator_name: str,
+        data_model: Optional[str],
+        ci_lower: Optional[float],
+        ci_upper: Optional[float],
+        estimate: Optional[float],
+        true_value: Optional[float],
+        method: Optional[str],
+        coverage_flag: Optional[bool],
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """
+        Record a new uncertainty calibration event.
+        """
+        event = UncertaintyEvent(
+            timestamp=datetime.now().isoformat(),
+            estimator_name=estimator_name,
+            data_model=data_model,
+            method=method,
+            ci_lower=ci_lower,
+            ci_upper=ci_upper,
+            estimate=estimate,
+            true_value=true_value,
+            coverage_flag=coverage_flag,
+            confidence_level=metadata.get("confidence_level") if metadata else None,
+            n_samples=metadata.get("n_samples") if metadata else None,
+            status=metadata.get("status") if metadata else None,
+            data_length=metadata.get("data_length", 0) if metadata else 0,
+            metadata=metadata or {},
+        )
+
+        with self._lock:
+            self._uncertainty_events.append(event)
+            self._persist_uncertainty_events()
+
+    def _persist_uncertainty_events(self) -> None:
+        """Persist uncertainty events to disk."""
+        try:
+            uncertainty_file = self.storage_path / "uncertainty_events.json"
+            with open(uncertainty_file, "w") as f:
+                json.dump([asdict(e) for e in self._uncertainty_events], f, indent=2)
+        except Exception:
+            pass
 
     def _analyze_error_trends(self, errors: List[ErrorEvent]) -> Dict[str, str]:
         """Analyze error trends over time"""
@@ -439,6 +524,74 @@ class ErrorAnalyzer:
                     correlation_matrix[error_type1][error_type2] = correlation
 
         return correlation_matrix
+
+    def get_uncertainty_summary(self, days: int = 30) -> Dict[str, Any]:
+        """Summarise uncertainty coverage over the requested horizon."""
+        cutoff_time = datetime.now() - timedelta(days=days)
+
+        with self._lock:
+            recent_events = [
+                e
+                for e in self._uncertainty_events
+                if datetime.fromisoformat(e.timestamp) > cutoff_time
+            ]
+
+        if not recent_events:
+            return {
+                "total_events": 0,
+                "coverage_rate_overall": None,
+                "average_ci_width": None,
+                "coverage_by_estimator": {},
+            }
+
+        coverage_count = []
+        widths = []
+        coverage_by_estimator: Dict[str, List[bool]] = defaultdict(list)
+
+        for event in recent_events:
+            if event.coverage_flag is not None:
+                coverage_count.append(bool(event.coverage_flag))
+                coverage_by_estimator[event.estimator_name].append(
+                    bool(event.coverage_flag)
+                )
+            if (
+                event.ci_lower is not None
+                and event.ci_upper is not None
+                and np.isfinite(event.ci_lower)
+                and np.isfinite(event.ci_upper)
+            ):
+                widths.append(event.ci_upper - event.ci_lower)
+
+        overall_rate = (
+            float(np.mean(coverage_count)) if coverage_count else None
+        )
+        average_width = float(np.mean(widths)) if widths else None
+
+        coverage_by_estimator_summary = {
+            estimator: float(np.mean(flags)) if flags else None
+            for estimator, flags in coverage_by_estimator.items()
+        }
+
+        return {
+            "total_events": len(recent_events),
+            "coverage_rate_overall": overall_rate,
+            "average_ci_width": average_width,
+            "coverage_by_estimator": coverage_by_estimator_summary,
+        }
+
+    def export_uncertainty_calibration(self, output_path: str, days: int = 30) -> None:
+        """Export uncertainty calibration events to a JSON file."""
+        cutoff_time = datetime.now() - timedelta(days=days)
+
+        with self._lock:
+            recent_events = [
+                e
+                for e in self._uncertainty_events
+                if datetime.fromisoformat(e.timestamp) > cutoff_time
+            ]
+
+        with open(output_path, "w") as f:
+            json.dump([asdict(e) for e in recent_events], f, indent=2)
 
     def _calculate_correlation(
         self, session_errors: Dict, error_type1: str, error_type2: str

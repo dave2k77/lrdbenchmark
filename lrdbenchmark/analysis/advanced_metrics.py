@@ -8,7 +8,7 @@ metrics including convergence rates and mean signed error calculations.
 
 import numpy as np
 import time
-from typing import Dict, List, Any, Optional, Tuple, Union
+from typing import Dict, List, Any, Optional, Tuple, Union, Callable
 from scipy import stats
 from scipy.optimize import curve_fit
 import warnings
@@ -361,6 +361,266 @@ class MeanSignedErrorAnalyzer:
         }
 
 
+class ScalingInfluenceAnalyzer:
+    """
+    Analyse log–log scaling diagnostics and window influence for LRD estimators.
+    """
+
+    def analyse(
+        self,
+        scales: np.ndarray,
+        statistics: np.ndarray,
+        min_points: int = 4,
+    ) -> Dict[str, Any]:
+        """
+        Fit log–log relationships and compute influence diagnostics.
+        """
+        scales = np.asarray(scales, dtype=np.float64)
+        statistics = np.asarray(statistics, dtype=np.float64)
+
+        valid_mask = np.isfinite(scales) & np.isfinite(statistics) & (scales > 0) & (statistics > 0)
+        scales = scales[valid_mask]
+        statistics = statistics[valid_mask]
+
+        if len(scales) < min_points:
+            return {
+                "status": "insufficient_data",
+                "reason": f"Need at least {min_points} valid scale points.",
+            }
+
+        log_scales = np.log2(scales)
+        log_stats = np.log2(statistics)
+
+        slope, intercept, r_value, p_value, std_err = stats.linregress(log_scales, log_stats)
+
+        influence = self._leave_one_out_influence(log_scales, log_stats)
+        breakpoint = self._detect_breakpoint(log_scales, log_stats)
+
+        return {
+            "status": "ok",
+            "slope": float(slope),
+            "intercept": float(intercept),
+            "r_value": float(r_value),
+            "r_squared": float(r_value ** 2),
+            "p_value": float(p_value),
+            "std_err": float(std_err),
+            "n_points": int(len(log_scales)),
+            "leave_one_out": influence,
+            "breakpoint": breakpoint,
+        }
+
+    def _leave_one_out_influence(
+        self, log_scales: np.ndarray, log_stats: np.ndarray
+    ) -> List[Dict[str, Any]]:
+        """Assess influence of individual scale windows."""
+        influence_results: List[Dict[str, Any]] = []
+        n_points = len(log_scales)
+        if n_points <= 3:
+            return influence_results
+
+        full_slope, _, _, _, _ = stats.linregress(log_scales, log_stats)
+
+        for idx in range(n_points):
+            mask = np.ones(n_points, dtype=bool)
+            mask[idx] = False
+            try:
+                slope, _, _, _, _ = stats.linregress(log_scales[mask], log_stats[mask])
+                delta = slope - full_slope
+                influence_results.append(
+                    {
+                        "index": int(idx),
+                        "scale": float(2 ** log_scales[idx]),
+                        "slope_without": float(slope),
+                        "delta_slope": float(delta),
+                    }
+                )
+            except Exception:
+                continue
+
+        influence_results.sort(key=lambda item: abs(item["delta_slope"]), reverse=True)
+        return influence_results
+
+    def _detect_breakpoint(
+        self, log_scales: np.ndarray, log_stats: np.ndarray
+    ) -> Optional[Dict[str, Any]]:
+        """Detect simple slope breakpoints via two-segment regression."""
+        n_points = len(log_scales)
+        if n_points < 6:
+            return None
+
+        best_score = np.inf
+        best_break: Optional[Dict[str, Any]] = None
+
+        for split in range(2, n_points - 2):
+            left_x, left_y = log_scales[:split], log_stats[:split]
+            right_x, right_y = log_scales[split:], log_stats[split:]
+            try:
+                left_fit = stats.linregress(left_x, left_y)
+                right_fit = stats.linregress(right_x, right_y)
+            except Exception:
+                continue
+
+            left_resid = left_y - (left_fit.intercept + left_fit.slope * left_x)
+            right_resid = right_y - (right_fit.intercept + right_fit.slope * right_x)
+            rss = np.sum(left_resid ** 2) + np.sum(right_resid ** 2)
+
+            if rss < best_score:
+                best_score = rss
+                best_break = {
+                    "break_scale": float(2 ** log_scales[split]),
+                    "left_slope": float(left_fit.slope),
+                    "right_slope": float(right_fit.slope),
+                    "rss": float(rss),
+                }
+
+        return best_break
+
+
+class RobustnessStressTester:
+    """
+    Generate standard stress panels (missingness, regime shifts, bursts) for estimators.
+    """
+
+    def __init__(self, random_state: Optional[int] = None):
+        self._rng = np.random.default_rng(random_state)
+
+    def run_panels(
+        self,
+        estimator,
+        data: np.ndarray,
+        baseline_result: Optional[Dict[str, Any]] = None,
+        true_value: Optional[float] = None,
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Execute robustness scenarios and report estimator sensitivity.
+        """
+        if baseline_result is None:
+            return None
+
+        baseline_estimate = baseline_result.get("hurst_parameter")
+        if baseline_estimate is None or not np.isfinite(baseline_estimate):
+            return None
+
+        scenarios = {
+            "missing_at_random": lambda x: self._apply_missing_at_random(x, rate=0.1),
+            "missing_block": lambda x: self._apply_block_missing(x, block_fraction=0.2),
+            "regime_shift": lambda x: self._apply_regime_shift(x, shift=0.5),
+            "burst_noise": lambda x: self._apply_burst_noise(x, rate=0.05, magnitude=3.0),
+            "seasonal_drift": lambda x: self._apply_seasonal_drift(x, amplitude=0.3),
+        }
+
+        scenario_results: Dict[str, Dict[str, Any]] = {}
+        deltas: List[float] = []
+        successes = 0
+
+        for name, transformer in scenarios.items():
+            transformed = transformer(np.asarray(data, dtype=np.float64).copy())
+            transformed = transformed[np.isfinite(transformed)]
+            if len(transformed) < 32:
+                scenario_results[name] = {
+                    "status": "insufficient_data",
+                    "reason": "Transformed series too short after cleaning.",
+                }
+                continue
+
+            cloned = self._clone_estimator(estimator)
+            start_time = time.time()
+            try:
+                result = cloned.estimate(transformed)
+            except Exception as exc:
+                scenario_results[name] = {
+                    "status": "failed",
+                    "reason": str(exc),
+                }
+                continue
+
+            success = True
+            estimate = result.get("hurst_parameter")
+            execution_time = time.time() - start_time
+
+            if estimate is None or not np.isfinite(estimate):
+                scenario_results[name] = {
+                    "status": "failed",
+                    "reason": "Estimator returned non-finite H.",
+                    "execution_time": execution_time,
+                }
+                continue
+
+            delta = float(estimate - baseline_estimate)
+            deltas.append(abs(delta))
+            successes += 1
+
+            scenario_results[name] = {
+                "status": "ok",
+                "estimate": float(estimate),
+                "delta_from_baseline": delta,
+                "execution_time": execution_time,
+                "true_value": float(true_value) if true_value is not None else None,
+            }
+
+        if not scenario_results:
+            return None
+
+        summary = {
+            "n_scenarios": len(scenario_results),
+            "successful_scenarios": successes,
+            "mean_abs_delta": float(np.mean(deltas)) if deltas else None,
+            "max_abs_delta": float(np.max(deltas)) if deltas else None,
+            "baseline_estimate": float(baseline_estimate),
+        }
+
+        return {
+            "baseline_estimate": float(baseline_estimate),
+            "scenarios": scenario_results,
+            "summary": summary,
+        }
+
+    def _clone_estimator(self, estimator):
+        estimator_cls = estimator.__class__
+        params: Dict[str, Any] = {}
+        if hasattr(estimator, "get_params"):
+            try:
+                params = dict(estimator.get_params())
+            except Exception:
+                params = getattr(estimator, "parameters", {}).copy()
+        else:
+            params = getattr(estimator, "parameters", {}).copy()
+        try:
+            return estimator_cls(**params)
+        except Exception:
+            return estimator_cls()
+
+    def _apply_missing_at_random(self, data: np.ndarray, rate: float) -> np.ndarray:
+        mask = self._rng.random(len(data)) < rate
+        data[mask] = np.nan
+        return data
+
+    def _apply_block_missing(self, data: np.ndarray, block_fraction: float) -> np.ndarray:
+        n = len(data)
+        block_size = max(1, int(n * block_fraction * 0.3))
+        start_idx = self._rng.integers(0, max(1, n - block_size))
+        data[start_idx:start_idx + block_size] = np.nan
+        return data
+
+    def _apply_regime_shift(self, data: np.ndarray, shift: float) -> np.ndarray:
+        n = len(data)
+        halfway = n // 2
+        data[halfway:] = data[halfway:] + shift
+        return data
+
+    def _apply_burst_noise(self, data: np.ndarray, rate: float, magnitude: float) -> np.ndarray:
+        mask = self._rng.random(len(data)) < rate
+        noise = self._rng.normal(0, magnitude, size=len(data))
+        data[mask] = data[mask] + noise[mask]
+        return data
+
+    def _apply_seasonal_drift(self, data: np.ndarray, amplitude: float) -> np.ndarray:
+        n = len(data)
+        t = np.arange(n)
+        seasonal = amplitude * np.sin(2 * np.pi * t / max(8, n // 4))
+        return data + seasonal
+
+
 class AdvancedPerformanceProfiler:
     """
     Comprehensive performance profiler with convergence and bias analysis.
@@ -382,6 +642,8 @@ class AdvancedPerformanceProfiler:
         """
         self.convergence_analyzer = ConvergenceAnalyzer(convergence_threshold, max_iterations)
         self.mse_analyzer = MeanSignedErrorAnalyzer()
+        self.scaling_analyzer = ScalingInfluenceAnalyzer()
+        self.stress_tester = RobustnessStressTester()
     
     def profile_estimator_performance(
         self,
@@ -438,6 +700,24 @@ class AdvancedPerformanceProfiler:
             bias_results = self._monte_carlo_bias_analysis(
                 estimator, data, true_value, n_monte_carlo
             )
+
+        scaling_diagnostics = None
+        if success and isinstance(result, dict):
+            scaling_payload = self._extract_scaling_payload(result, estimator)
+            if scaling_payload:
+                scaling_diagnostics = self.scaling_analyzer.analyse(
+                    scaling_payload["scales"],
+                    scaling_payload["statistics"],
+                )
+
+        robustness_panel = None
+        if success and isinstance(result, dict):
+            robustness_panel = self.stress_tester.run_panels(
+                estimator=estimator,
+                data=data,
+                baseline_result=result,
+                true_value=true_value,
+            )
         
         return {
             'basic_performance': {
@@ -448,6 +728,8 @@ class AdvancedPerformanceProfiler:
             },
             'convergence_analysis': convergence_results,
             'bias_analysis': bias_results,
+            'scaling_diagnostics': scaling_diagnostics,
+            'robustness_panel': robustness_panel,
             'comprehensive_score': self._calculate_comprehensive_score(
                 success, execution_time, convergence_results, bias_results
             )
@@ -557,6 +839,56 @@ class AdvancedPerformanceProfiler:
                 score *= max(0.5, 1.0 - abs(mse))
         
         return min(1.0, max(0.0, score))
+
+    def _extract_scaling_payload(
+        self,
+        result: Dict[str, Any],
+        estimator,
+    ) -> Optional[Dict[str, np.ndarray]]:
+        """
+        Attempt to extract scale/statistic arrays from estimator results.
+        """
+        if not isinstance(result, dict):
+            return None
+
+        candidates: List[Tuple[Any, Any]] = []
+
+        scale_stats = result.get("scale_statistics")
+        if isinstance(scale_stats, dict):
+            candidates.append(
+                (scale_stats.get("scales"), scale_stats.get("statistics") or scale_stats.get("values"))
+            )
+
+        candidates.append((result.get("scales"), result.get("values")))
+        candidates.append((result.get("log_scales"), result.get("log_values")))
+
+        for scales, stats in candidates:
+            if scales is None or stats is None:
+                continue
+            try:
+                return {
+                    "scales": np.asarray(scales, dtype=np.float64),
+                    "statistics": np.asarray(stats, dtype=np.float64),
+                }
+            except Exception:
+                continue
+
+        getter = getattr(estimator, "get_scaling_diagnostics", None)
+        if callable(getter):
+            try:
+                payload = getter()
+                if isinstance(payload, dict):
+                    scales = payload.get("scales")
+                    stats = payload.get("statistics") or payload.get("values")
+                    if scales is not None and stats is not None:
+                        return {
+                            "scales": np.asarray(scales, dtype=np.float64),
+                            "statistics": np.asarray(stats, dtype=np.float64),
+                        }
+            except Exception:
+                return None
+
+        return None
 
 
 def calculate_convergence_rate(estimates: List[float], subset_sizes: List[int]) -> float:

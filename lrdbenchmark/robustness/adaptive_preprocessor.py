@@ -22,7 +22,9 @@ class AdaptiveDataPreprocessor:
     
     def __init__(self, 
                  outlier_threshold: float = 3.0,
-                 winsorize_limits: Tuple[float, float] = (0.01, 0.99)):
+                 winsorize_limits: Tuple[float, float] = (0.01, 0.99),
+                 enable_winsorize: bool = True,
+                 enable_detrend: bool = True):
         """
         Initialize the adaptive data preprocessor.
         
@@ -35,6 +37,8 @@ class AdaptiveDataPreprocessor:
         """
         self.outlier_threshold = outlier_threshold
         self.winsorize_limits = winsorize_limits
+        self.enable_winsorize = enable_winsorize
+        self.enable_detrend = enable_detrend
     
     def preprocess(self, data: np.ndarray) -> Tuple[np.ndarray, Dict[str, Any]]:
         """
@@ -159,6 +163,14 @@ class AdaptiveDataPreprocessor:
     
     def _preprocess_heavy_tailed(self, data: np.ndarray) -> Tuple[np.ndarray, Dict[str, Any]]:
         """Preprocess heavy-tailed data."""
+        if not self.enable_winsorize:
+            return data, {
+                "method": "none",
+                "reason": "winsorization disabled",
+                "q1": None,
+                "q99": None,
+                "winsorized_count": 0
+            }
         # Winsorize extreme values
         q1, q99 = np.percentile(data, [self.winsorize_limits[0] * 100, self.winsorize_limits[1] * 100])
         data_winsorized = np.clip(data, q1, q99)
@@ -182,6 +194,11 @@ class AdaptiveDataPreprocessor:
     
     def _preprocess_trended(self, data: np.ndarray) -> Tuple[np.ndarray, Dict[str, Any]]:
         """Preprocess data with trends."""
+        if not self.enable_detrend:
+            return data, {
+                "method": "none",
+                "reason": "detrending disabled"
+            }
         # Detrend using linear regression
         x = np.arange(len(data))
         slope, intercept = np.polyfit(x, data, 1)
@@ -196,6 +213,14 @@ class AdaptiveDataPreprocessor:
     
     def _preprocess_outliers(self, data: np.ndarray) -> Tuple[np.ndarray, Dict[str, Any]]:
         """Preprocess data with outliers."""
+        if not self.enable_winsorize:
+            return data, {
+                "method": "none",
+                "reason": "winsorization disabled",
+                "q1": None,
+                "q3": None,
+                "winsorized_count": 0
+            }
         # Winsorize outliers
         q1, q3 = np.percentile(data, [25, 75])
         iqr = q3 - q1

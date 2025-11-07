@@ -105,6 +105,7 @@ Examples & Demos
 
    examples/comprehensive_adaptive_demo
    examples/comprehensive_demo
+   examples/leaderboard
 
 Demonstration Notebooks
 -----------------------

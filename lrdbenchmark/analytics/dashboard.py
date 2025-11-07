@@ -10,7 +10,7 @@ Provides a unified interface for accessing all analytics data:
 """
 
 import json
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Tuple
 from datetime import datetime, timedelta
 from pathlib import Path
 import matplotlib.pyplot as plt
@@ -29,7 +29,7 @@ class AnalyticsDashboard:
     Comprehensive analytics dashboard for LRDBench
 
     Provides easy access to all analytics data and generates
-    comprehensive reports and visualizations.
+    comprehensive reports and visualizations, including stratified summaries.
     """
 
     def __init__(self, storage_path: str = "~/.lrdbench/analytics"):
@@ -391,6 +391,218 @@ This report provides comprehensive insights into LRDBench usage, performance, re
             f.write(comprehensive_report)
 
         return comprehensive_report
+
+    def generate_stratified_report(
+        self,
+        results_path: str,
+        output_path: Optional[str] = None,
+    ) -> str:
+        """
+        Generate a stratified benchmark report from a saved comprehensive benchmark JSON.
+        """
+        results_file = Path(results_path).expanduser()
+        if not results_file.exists():
+            raise FileNotFoundError(f"Benchmark results file not found: {results_file}")
+
+        with open(results_file, "r") as f:
+            summary = json.load(f)
+
+        stratified = summary.get("stratified_metrics")
+
+        report_lines: List[str] = [
+            "# Stratified Benchmark Report",
+            f"Source file: {results_file}",
+            f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+            "",
+        ]
+
+        if not stratified:
+            report_lines.append("No stratified metrics were found in this benchmark artefact.")
+            report = "\n".join(report_lines)
+            if output_path:
+                with open(output_path, "w") as f:
+                    f.write(report)
+            return report
+
+        status = stratified.get("status", "unavailable")
+        report_lines.append(f"Status: **{status}**")
+        report_lines.append("")
+
+        if status != "ok":
+            report_lines.append(stratified.get("reason", "Stratified analysis unavailable."))
+            report = "\n".join(report_lines)
+            if output_path:
+                with open(output_path, "w") as f:
+                    f.write(report)
+            return report
+
+        report_lines.append(
+            f"Total observations analysed: {stratified.get('total_observations', 0)}"
+        )
+        report_lines.append("")
+
+        def fmt_val(value: Optional[float], precision: int = 4) -> str:
+            if value is None:
+                return "–"
+            return f"{value:.{precision}f}"
+
+        def fmt_rate(value: Optional[float]) -> str:
+            if value is None:
+                return "–"
+            return f"{100.0 * value:.1f}%"
+
+        def append_section(title: str, data: Dict[str, Any]) -> None:
+            report_lines.append(f"## {title}")
+            if not data:
+                report_lines.append("_No data available._")
+                report_lines.append("")
+                return
+
+            headers = [
+                "Band",
+                "n",
+                "Mean Error",
+                "Median Error",
+                "Success Rate",
+                "Coverage",
+                "Mean CI Width",
+                "Mean Ĥ",
+                "Data Models",
+            ]
+            report_lines.append("| " + " | ".join(headers) + " |")
+            report_lines.append("|" + " --- |" * len(headers))
+
+            sorted_rows = sorted(
+                data.items(),
+                key=lambda kv: (kv[1].get("mean_error") is None, kv[1].get("mean_error", 0.0)),
+            )
+
+            for band, metrics in sorted_rows:
+                row = [
+                    band,
+                    str(metrics.get("n", 0)),
+                    fmt_val(metrics.get("mean_error")),
+                    fmt_val(metrics.get("median_error")),
+                    fmt_rate(metrics.get("success_rate")),
+                    fmt_rate(metrics.get("coverage_rate")),
+                    fmt_val(metrics.get("mean_ci_width")),
+                    fmt_val(metrics.get("mean_estimated_h")),
+                    ", ".join(metrics.get("data_models", [])) or "–",
+                ]
+                report_lines.append("| " + " | ".join(row) + " |")
+
+            report_lines.append("")
+
+        append_section("Hurst Regimes", stratified.get("hurst_bands", {}))
+        append_section("Tail Classes", stratified.get("tail_classes", {}))
+        append_section("Length Regimes", stratified.get("data_length_bands", {}))
+        append_section("Contamination Regimes", stratified.get("contamination", {}))
+
+        report = "\n".join(report_lines)
+        if output_path:
+            with open(output_path, "w") as f:
+                f.write(report)
+
+        return report
+
+    def create_advanced_diagnostics_visuals(
+        self,
+        advanced_results_path: str,
+        output_dir: Optional[str] = None,
+    ) -> Dict[str, str]:
+        """
+        Create scaling and robustness visualisations from advanced benchmark artefacts.
+        """
+        results_file = Path(advanced_results_path).expanduser()
+        if not results_file.exists():
+            raise FileNotFoundError(f"Advanced benchmark file not found: {results_file}")
+
+        with open(results_file, "r") as f:
+            advanced_summary = json.load(f)
+
+        scaling_points: List[Tuple[str, float, float]] = []
+        robustness_points: List[Tuple[str, float]] = []
+
+        for model_data in advanced_summary.get("results", {}).values():
+            if "estimator_results" not in model_data:
+                continue
+            for est_result in model_data["estimator_results"]:
+                name = est_result.get("estimator", "unknown")
+                scaling_diag = est_result.get("scaling_diagnostics")
+                if (
+                    isinstance(scaling_diag, dict)
+                    and scaling_diag.get("status") == "ok"
+                    and scaling_diag.get("slope") is not None
+                ):
+                    scaling_points.append(
+                        (
+                            name,
+                            float(scaling_diag["slope"]),
+                            float(scaling_diag.get("r_squared") or 0.0),
+                        )
+                    )
+                robustness_panel = est_result.get("robustness_panel")
+                if (
+                    isinstance(robustness_panel, dict)
+                    and robustness_panel.get("summary", {}).get("mean_abs_delta") is not None
+                ):
+                    robustness_points.append(
+                        (
+                            name,
+                            float(robustness_panel["summary"]["mean_abs_delta"]),
+                        )
+                    )
+
+        if output_dir is None:
+            output_dir = self.storage_path / "visualizations"
+        output_dir = Path(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        artefacts: Dict[str, str] = {}
+
+        if scaling_points:
+            scaling_points.sort(key=lambda item: abs(item[1]), reverse=True)
+            labels = [item[0] for item in scaling_points]
+            slopes = [item[1] for item in scaling_points]
+            r2 = [item[2] for item in scaling_points]
+
+            plt.figure(figsize=(10, 6))
+            bars = plt.bar(labels, slopes, color=plt.cm.cividis(np.linspace(0, 1, len(labels))))
+            plt.xticks(rotation=45, ha="right")
+            plt.ylabel("Log–log slope")
+            plt.title("Scaling Slopes by Estimator")
+            for bar, r_squared in zip(bars, r2):
+                plt.text(
+                    bar.get_x() + bar.get_width() / 2,
+                    bar.get_height(),
+                    f"R²={r_squared:.2f}",
+                    ha="center",
+                    va="bottom",
+                    fontsize=8,
+                )
+            scaling_path = output_dir / "scaling_slopes.png"
+            plt.tight_layout()
+            plt.savefig(scaling_path, dpi=300, bbox_inches="tight")
+            plt.close()
+            artefacts["scaling_slopes"] = str(scaling_path)
+
+        if robustness_points:
+            robustness_points.sort(key=lambda item: item[1], reverse=True)
+            labels = [item[0] for item in robustness_points]
+            deltas = [item[1] for item in robustness_points]
+
+            plt.figure(figsize=(10, 6))
+            plt.bar(labels, deltas, color=plt.cm.magma(np.linspace(0, 1, len(labels))))
+            plt.xticks(rotation=45, ha="right")
+            plt.ylabel("Mean |ΔH|")
+            plt.title("Robustness Stress Panel Sensitivity")
+            robustness_path = output_dir / "robustness_panels.png"
+            plt.tight_layout()
+            plt.savefig(robustness_path, dpi=300, bbox_inches="tight")
+            plt.close()
+            artefacts["robustness_panels"] = str(robustness_path)
+
+        return artefacts
 
     def create_visualizations(
         self, days: int = 30, output_dir: Optional[str] = None

@@ -1,0 +1,48 @@
+{
+  "version": "1.0",
+  "preprocessing": {
+    "outlier_threshold": 3.0,
+    "winsorize_limits": [0.01, 0.99],
+    "detrend": true,
+    "apply_winsorize": true
+  },
+  "scale_selection": {
+    "spectral": {
+      "min_freq_ratio": 0.01,
+      "max_freq_ratio": 0.1,
+      "low_freq_trim": 0.0
+    },
+    "temporal": {
+      "min_window": 16,
+      "max_window": 256,
+      "window_density": "log"
+    },
+    "wavelet": {
+      "min_level": 1,
+      "max_level": 8,
+      "wavelet": "db4"
+    }
+  },
+  "data_models": {
+    "fBm": {"H": 0.7, "sigma": 1.0},
+    "fGn": {"H": 0.7, "sigma": 1.0},
+    "ARFIMAModel": {"d": 0.3, "ar_params": [0.5], "ma_params": [0.2]},
+    "MRW": {"H": 0.7, "lambda_param": 0.5, "sigma": 1.0}
+  },
+  "estimator_overrides": {
+    "GPH": {"min_freq_ratio": 0.01, "max_freq_ratio": 0.08},
+    "Whittle": {"max_iter": 500},
+    "DFA": {"min_window": 16, "max_window": 256},
+    "DMA": {"min_window": 16, "max_window": 256},
+    "R/S": {"min_window": 16, "max_window": 256}
+  },
+  "benchmark": {
+    "confidence_level": 0.95,
+    "uncertainty": {
+      "n_block_bootstrap": 64,
+      "n_wavelet_bootstrap": 64,
+      "n_parametric": 48
+    }
+  }
+}
+

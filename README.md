@@ -21,6 +21,8 @@ A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimati
 - **Unified Feature Extractor**: 76-feature pipeline for ML estimators
 - **Missing Estimator Modules**: Complete coverage of all 20 estimators
 - **Progressive Examples**: CPU-only, GPU-optional, and production patterns
+- **Stratified Leaderboards**: Built-in reporting across H regimes, tail classes, lengths, and contamination settings
+- **Robustness Diagnostics**: Automated scaling influence analysis with standardised stress panels
 
 **✅ Improved Compatibility:**
 - **Broader Python Support**: Python 3.8-3.12 compatibility (Python 3.13 not yet supported)
@@ -40,6 +42,9 @@ A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimati
 - α-stable distribution modeling for heavy-tailed time series
 - Adaptive preprocessing: standardization, winsorization, log-winsorization, detrending
 - Contamination-aware estimation with intelligent fallback mechanisms
+- Stratified summaries across memory regimes, tail classes, data lengths, and contamination types
+- Stress-test panels quantifying estimator drift under missing data, regime shifts, and burst perturbations
+- Scaling diagnostics with leave-one-out influence and breakpoint detection for log–log fits
 
 **High-Performance Computing:**
 - Intelligent optimization backend with graceful fallbacks: JAX → Numba → NumPy
@@ -49,7 +54,7 @@ A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimati
 **Comprehensive Benchmarking:**
 - End-to-end benchmarking scripts with statistical analysis
 - Confidence intervals, significance tests, and effect size calculations
-- Performance leaderboards and comparative analysis tools
+- Performance leaderboards, stratified analysis, and comparative dashboards with significance overlays
 
 **📚 Demonstration Notebooks:**
 - **5 Comprehensive Jupyter Notebooks** showcasing all library features
@@ -57,7 +62,7 @@ A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimati
 - **Estimation & Validation**: All estimator categories with statistical validation
 - **Custom Models & Estimators**: Library extensibility and custom implementations
 - **Comprehensive Benchmarking**: Full benchmarking system with contamination testing
-- **Leaderboard Generation**: Performance rankings and comparative analysis
+- **Leaderboard Generation**: Performance rankings with stratified reports, significance overlays, and robustness diagnostics
 
 ## 📦 Installation
 

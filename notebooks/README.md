@@ -224,12 +224,13 @@ Each notebook generates:
 - **Comprehensive Testing**: All estimator categories
 - **Contamination Testing**: Robustness under various scenarios
 - **Performance Metrics**: Accuracy, speed, reliability
-- **Statistical Analysis**: Confidence intervals and significance tests
+- **Statistical Analysis**: Confidence intervals, significance tests, and stratified reports
+- **Stress Panels**: Missingness, regime shifts, bursts, and seasonal drift diagnostics
 
 ### 5. Leaderboards
 - **Performance Rankings**: Multi-category comparisons
 - **Composite Scoring**: Weighted performance metrics
-- **Visualization**: Publication-ready plots and tables
+- **Visualization**: Publication-ready plots, stratified tables, and significance overlays
 - **Export Formats**: CSV, JSON, LaTeX
 
 ## Troubleshooting

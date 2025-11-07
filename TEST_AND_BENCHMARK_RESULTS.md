@@ -116,3 +116,51 @@ All pretrained models were successfully loaded and verified during benchmark exe
 - **Average Error (All)**: 0.2696
 - **Average Error (Pretrained)**: 0.2732
 - **Average Error (Classical)**: 0.1795
+
+## Stratified Insights
+
+Every comprehensive run now emits ``stratified_metrics_<timestamp>.json`` alongside the
+summary CSV. The stratified report surfaces:
+
+- **Hurst Regimes** – mean error, coverage, and confidence widths for
+  short-range (H≤0.40) through ultra-persistent (H>0.85) bands.
+- **Tail Classes** – separate aggregates for Gaussian, ARFIMA-style linear LRD,
+  and multifractal/heavy-tail generators.
+- **Length Bands** – short (≤512), medium (512–2048), long (2049–8192), and
+  ultra-long (>8192) regimes when mixed-length sweeps are executed.
+- **Contamination Regimes** – clean vs. each injected contamination type
+  (additive noise, missingness, seasonal drift, trends, bursts).
+
+To review the stratified summary directly:
+
+```python
+from pathlib import Path
+import json
+
+with open(Path("benchmark_results") / "stratified_metrics_latest.json") as f:
+    stratified = json.load(f)
+```
+
+Pair this JSON with
+``AnalyticsDashboard().generate_stratified_report(...)`` for markdown-ready tables.
+
+## Robustness Stress Panels
+
+Advanced benchmark runs export scaling and robustness diagnostics that quantify
+how each estimator reacts to missing-at-random gaps, block dropouts, regime
+shifts, burst noise, and seasonal drift. The new dashboard helper can turn an
+advanced benchmark JSON into publication-quality figures:
+
+```python
+from lrdbenchmark.analytics.dashboard import AnalyticsDashboard
+
+dashboard = AnalyticsDashboard()
+dashboard.create_advanced_diagnostics_visuals(
+    "benchmark_results/advanced_benchmark_latest.json",
+    output_dir="benchmark_results/figures",
+)
+```
+
+This produces ``scaling_slopes.png`` (leave-one-out scaling influence) and
+``robustness_panels.png`` (mean |ΔH| per stress scenario) so robustness claims are
+visually auditable.
