@@ -9,6 +9,7 @@ selection (JAX, Numba, NumPy) for the best performance on the available hardware
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
+from scipy.special import polygamma
 import pywt
 from typing import Dict, Any, Optional, Union, Tuple, List
 import warnings
@@ -17,7 +18,7 @@ import warnings
 try:
     import jax
     import jax.numpy as jnp
-    from jax import jit, vmap
+    import jax.scipy.special
     JAX_AVAILABLE = True
 except ImportError:
     JAX_AVAILABLE = False
@@ -30,6 +31,11 @@ except ImportError:
     NUMBA_AVAILABLE = False
 
 from lrdbenchmark.analysis.base_estimator import BaseEstimator
+from lrdbenchmark.analysis.calibration_utils import apply_srd_bias_correction
+from lrdbenchmark.analysis.wavelet.jax_wavelet import (
+    dwt_periodized,
+    wavelet_detail_variances,
+)
 
 
 class WaveletLogVarianceEstimator(BaseEstimator):
@@ -181,16 +187,29 @@ class WaveletLogVarianceEstimator(BaseEstimator):
                 f"Data length {n} is too short for scale {max(self.parameters['scales'])}"
             )
 
+        # Cap to conservative set of scales to mitigate SRD bias
+        scale_cap = min(max(self.parameters["scales"]), 6)
+        capped_scales = [s for s in self.parameters["scales"] if s <= scale_cap]
+        if len(capped_scales) >= 3:
+            self.parameters["scales"] = capped_scales
+
+        # Pre-compute discrete wavelet transform up to max scale once
+        coeffs = pywt.wavedec(
+            data,
+            self.parameters["wavelet"],
+          level=max(self.parameters["scales"]),
+            mode="periodization",
+        )
+
         # Calculate wavelet log variances for each scale
         wavelet_variances = {}
         log_variances = {}
         scale_logs = []
         log_variance_values = []
+        log_variance_variances = []
 
         for j in self.parameters["scales"]:
-            coeffs = pywt.wavedec(data, self.parameters["wavelet"], level=max(self.parameters["scales"]), mode="periodization")
-            idx = -(j)
-            detail_coeffs = coeffs[idx]
+            detail_coeffs = coeffs[-j]
             if self.parameters["robust"]:
                 med = np.median(detail_coeffs)
                 mad = np.median(np.abs(detail_coeffs - med))
@@ -207,19 +226,45 @@ class WaveletLogVarianceEstimator(BaseEstimator):
             scale_logs.append(float(j))
             log_variance_values.append(log_variance)
 
-        # Fit linear regression to log-scale vs log-variance plot
-        slope, intercept, r_value, p_value, std_err = stats.linregress(
-            np.array(scale_logs), np.array(log_variance_values)
+            # Approximate variance of log variance via trigamma of chi-square
+            n_coeffs = max(len(detail_coeffs), 2)
+            dof = max(n_coeffs - 1, 1)
+            var_log = float(polygamma(1, 0.5 * dof))
+            if not np.isfinite(var_log) or var_log <= 0:
+                var_log = 1.0 / max(dof, 1.0)
+            log_variance_variances.append(var_log)
+
+        # Fit weighted linear regression to log-scale vs log-variance plot
+        (
+            slope,
+            intercept,
+            r_squared,
+            slope_se,
+            weights,
+        ) = self._weighted_regression(
+            np.array(scale_logs, dtype=float),
+            np.array(log_variance_values, dtype=float),
+            np.array(log_variance_variances, dtype=float),
         )
 
         # Empirical mapping consistent with orthonormal DWT conventions: H ≈ (slope + 1)/2
         estimated_hurst = 0.5 * (slope + 1.0)
-        r_squared = r_value**2
 
         # Calculate confidence interval
         confidence_interval = self._get_confidence_interval(
-            scale_logs, log_variance_values, estimated_hurst, slope
+            estimated_hurst,
+            slope_se,
+            len(scale_logs),
         )
+
+        corrected_hurst, applied_bias = apply_srd_bias_correction(
+            "WaveletLogVar", float(estimated_hurst)
+        )
+        if applied_bias != 0.0 and confidence_interval is not None:
+            lower = max(0.01, min(0.99, confidence_interval[0] - applied_bias))
+            upper = max(0.01, min(0.99, confidence_interval[1] - applied_bias))
+            confidence_interval = (lower, upper)
+        estimated_hurst = corrected_hurst
 
         # Store results
         self.results = {
@@ -232,8 +277,10 @@ class WaveletLogVarianceEstimator(BaseEstimator):
             "intercept": float(intercept),
             "wavelet_variances": wavelet_variances,
             "log_variances": log_variances,
+            "regression_weights": weights.tolist(),
             "scale_logs": scale_logs,
             "log_variance_values": log_variance_values,
+            "bias_correction": applied_bias,
             "method": "numpy",
             "optimization_framework": self.optimization_framework,
         }
@@ -248,47 +295,142 @@ class WaveletLogVarianceEstimator(BaseEstimator):
 
     def _estimate_jax(self, data: np.ndarray) -> Dict[str, Any]:
         """JAX-optimized implementation of Wavelet Log Variance estimation."""
-        # Convert data to JAX array
-        data_jax = jnp.array(data)
-        
-        # JAX implementation of the core computation
-        # Note: JAX doesn't have direct equivalents for pywt.wavedec
-        # So we'll use the NumPy implementation for wavelet decomposition
-        # and JAX for the regression part
-        
-        # For now, fall back to NumPy implementation
-        # This can be enhanced with JAX-specific optimizations for the regression
-        return self._estimate_numpy(data)
+        if not JAX_AVAILABLE:
+            return self._estimate_numpy(data)
+
+        data_np = np.asarray(data, dtype=float)
+        n = len(data_np)
+
+        if self.parameters["scales"] is None:
+            w = pywt.Wavelet(self.parameters["wavelet"])
+            J = max(1, pywt.dwt_max_level(n, w.dec_len))
+            j_min = min(self.parameters["j_min"], J)
+            j_max = self.parameters["j_max"] if self.parameters["j_max"] is not None else max(1, J - 1)
+            j_max = min(max(j_min, j_max), J)
+            self.parameters["scales"] = list(range(j_min, j_max + 1))
+
+        if n < 2 ** max(self.parameters["scales"]):
+            raise ValueError(
+                f"Data length {n} is too short for scale {max(self.parameters['scales'])}"
+            )
+
+        max_level = max(self.parameters["scales"])
+        data_jax = jnp.asarray(data_np, dtype=jnp.float64)
+        _, details = dwt_periodized(data_jax, self.parameters["wavelet"], max_level)
+
+        robust = bool(self.parameters.get("robust", False))
+        variances_all, counts_all = wavelet_detail_variances(details, robust=robust)
+
+        selected_indices = jnp.array([s - 1 for s in self.parameters["scales"]], dtype=jnp.int32)
+        selected_variances = variances_all[selected_indices]
+        selected_counts = counts_all[selected_indices]
+
+        scale_logs = jnp.asarray(self.parameters["scales"], dtype=jnp.float64)
+        log_variance_values = jnp.log(selected_variances)
+
+        dof = jnp.maximum(selected_counts - 1, 1)
+        trigamma = jax.scipy.special.polygamma(1, 0.5 * dof)
+        log_variance_variances = jnp.maximum(trigamma, 1e-12)
+        weights = 1.0 / jnp.clip(log_variance_variances, 1e-12, None)
+
+        X = jnp.stack([jnp.ones_like(scale_logs), scale_logs], axis=1)
+        XtWX = X.T @ (weights[:, None] * X)
+        XtWy = X.T @ (weights * log_variance_values)
+        beta = jnp.linalg.solve(XtWX, XtWy)
+        intercept, slope = beta
+
+        y_fit = slope * scale_logs + intercept
+        y_mean = jnp.average(log_variance_values, weights=weights)
+        ss_res = jnp.sum(weights * (log_variance_values - y_fit) ** 2)
+        ss_tot = jnp.sum(weights * (log_variance_values - y_mean) ** 2)
+        r_squared = jnp.where(ss_tot > 0, 1.0 - ss_res / ss_tot, 0.0)
+
+        estimated_hurst = 0.5 * (slope + 1.0)
+        slope_se = jnp.sqrt(jnp.clip(jnp.linalg.inv(XtWX)[1, 1], 1e-12, None))
+        confidence_interval = self._get_confidence_interval(
+            float(estimated_hurst),
+            float(slope_se),
+            len(self.parameters["scales"]),
+        )
+
+        corrected_hurst, applied_bias = apply_srd_bias_correction(
+            "WaveletLogVar", float(estimated_hurst)
+        )
+        if applied_bias != 0.0 and confidence_interval is not None:
+            lower = max(0.01, min(0.99, confidence_interval[0] - applied_bias))
+            upper = max(0.01, min(0.99, confidence_interval[1] - applied_bias))
+            confidence_interval = (lower, upper)
+        estimated_hurst = corrected_hurst
+
+        wavelet_variances = {
+            int(scale): float(selected_variances[i])
+            for i, scale in enumerate(self.parameters["scales"])
+        }
+        log_variances = {
+            int(scale): float(log_variance_values[i])
+            for i, scale in enumerate(self.parameters["scales"])
+        }
+
+        self.results = {
+            "hurst_parameter": float(estimated_hurst),
+            "confidence_interval": confidence_interval,
+            "r_squared": float(r_squared),
+            "scales": list(self.parameters["scales"]),
+            "wavelet_type": self.parameters["wavelet"],
+            "slope": float(slope),
+            "intercept": float(intercept),
+            "wavelet_variances": wavelet_variances,
+            "log_variances": log_variances,
+            "regression_weights": [float(w) for w in weights],
+            "scale_logs": [float(s) for s in self.parameters["scales"]],
+            "log_variance_values": [float(v) for v in log_variance_values],
+            "bias_correction": applied_bias,
+            "method": "jax",
+            "optimization_framework": self.optimization_framework,
+        }
+
+        return self.results
+
+    def _weighted_regression(
+        self,
+        x: np.ndarray,
+        y: np.ndarray,
+        y_variances: np.ndarray,
+    ) -> Tuple[float, float, float, float, np.ndarray]:
+        """Perform weighted linear regression with variance-informed weights."""
+        weights = 1.0 / np.clip(y_variances, 1e-12, None)
+        X = np.column_stack((np.ones_like(x), x))
+        W = weights[:, None]
+        XtWX = X.T @ (W * X)
+        XtWy = X.T @ (weights * y)
+        beta = np.linalg.solve(XtWX, XtWy)
+        intercept, slope = beta
+        y_hat = X @ beta
+        residuals = y - y_hat
+        dof = max(len(x) - 2, 1)
+        ss_res = float(np.sum(weights * residuals**2))
+        y_mean = np.average(y, weights=weights)
+        ss_tot = float(np.sum(weights * (y - y_mean) ** 2))
+        r_squared = 1.0 - ss_res / ss_tot if ss_tot > 0 else 0.0
+        sigma2 = ss_res / dof if dof > 0 else 0.0
+        if sigma2 < 1e-10:
+            sigma2 = np.mean(1.0 / weights)
+        cov_beta = sigma2 * np.linalg.inv(XtWX)
+        slope_se = float(np.sqrt(max(cov_beta[1, 1], 1e-12)))
+        return float(slope), float(intercept), float(r_squared), slope_se, weights
 
     def _get_confidence_interval(
-        self, scale_logs: List[float], log_variance_values: List[float], 
-        estimated_hurst: float, slope: float
+        self,
+        estimated_hurst: float,
+        slope_se: float,
+        n_points: int,
     ) -> Tuple[float, float]:
         """Calculate confidence interval for the Hurst parameter estimate."""
         confidence = self.parameters["confidence"]
-        
-        # Calculate standard error of the slope
-        n = len(scale_logs)
-        x_var = np.var(scale_logs, ddof=1)
-
-        # Residual standard error
-        residuals = np.array(log_variance_values) - (
-            np.array(scale_logs) * (2 * estimated_hurst - 1)
-            + np.mean(log_variance_values)
-            - np.mean(scale_logs) * (2 * estimated_hurst - 1)
-        )
-        mse = np.sum(residuals**2) / (n - 2)
-
-        # Standard error of slope
-        slope_se = np.sqrt(mse / (n * x_var))
-
-        # Convert to Hurst parameter standard error
-        hurst_se = slope_se / 2
-
-        # Calculate confidence interval
-        t_value = stats.t.ppf((1 + confidence) / 2, df=n - 2)
-        margin = t_value * hurst_se
-
+        hurst_se = slope_se / 2.0
+        dof = max(n_points - 2, 1)
+        t_value = stats.t.ppf((1 + confidence) / 2, df=dof)
+        margin = float(t_value * hurst_se)
         return (float(estimated_hurst - margin), float(estimated_hurst + margin))
 
     def get_optimization_info(self) -> Dict[str, Any]:

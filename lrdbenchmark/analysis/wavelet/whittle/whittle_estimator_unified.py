@@ -17,7 +17,6 @@ import warnings
 try:
     import jax
     import jax.numpy as jnp
-    from jax import jit, vmap
     JAX_AVAILABLE = True
 except ImportError:
     JAX_AVAILABLE = False
@@ -30,6 +29,12 @@ except ImportError:
     NUMBA_AVAILABLE = False
 
 from lrdbenchmark.analysis.base_estimator import BaseEstimator
+from lrdbenchmark.analysis.calibration_utils import apply_srd_bias_correction
+from lrdbenchmark.analysis.wavelet.jax_wavelet import (
+    dwt_periodized,
+    wavelet_detail_variances,
+)
+from jax import vmap
 
 
 class WaveletWhittleEstimator(BaseEstimator):
@@ -63,6 +68,8 @@ class WaveletWhittleEstimator(BaseEstimator):
         scales: Optional[List[int]] = None,
         confidence: float = 0.95,
         use_optimization: str = "auto",
+        bootstrap_samples: int = 64,
+        bootstrap_block_size: Optional[int] = None,
     ):
         super().__init__()
         
@@ -71,6 +78,8 @@ class WaveletWhittleEstimator(BaseEstimator):
             "wavelet": wavelet,
             "scales": scales,
             "confidence": confidence,
+            "bootstrap_samples": int(max(0, bootstrap_samples)),
+            "bootstrap_block_size": bootstrap_block_size,
         }
         
         # Optimization framework
@@ -152,7 +161,7 @@ class WaveletWhittleEstimator(BaseEstimator):
         else:
             return self._estimate_numpy(data)
 
-    def _estimate_numpy(self, data: np.ndarray) -> Dict[str, Any]:
+    def _estimate_numpy(self, data: np.ndarray, compute_ci: bool = True) -> Dict[str, Any]:
         """NumPy implementation of Wavelet Whittle estimation."""
         n = len(data)
         
@@ -178,6 +187,9 @@ class WaveletWhittleEstimator(BaseEstimator):
 
         # Extract detail energies per requested j-level
         js = list(self.parameters["scales"]) if self.parameters["scales"] else list(range(2, min(J, max_j)))
+        # Cap scales to reduce SRD bias
+        scale_cap = min(max(js), 7)
+        js = [j for j in js if j <= scale_cap]
         js = [j for j in js if 1 <= j <= J]
         if len(js) < 3:
             warnings.warn("Few scales available for Wavelet Whittle; estimates may be unstable")
@@ -205,10 +217,24 @@ class WaveletWhittleEstimator(BaseEstimator):
         estimated_hurst = float(d_hat + 0.5)
         whittle_likelihood = float(result.fun)
 
-        # Calculate confidence interval using Hessian approximation
-        confidence_interval = self._get_confidence_interval(
-            estimated_hurst, whittle_likelihood, js
+        if compute_ci and self.parameters["bootstrap_samples"] > 0:
+            confidence_interval = self._bootstrap_confidence_interval(
+                data,
+                estimated_hurst,
+            )
+        else:
+            confidence_interval = self._get_confidence_interval(
+                estimated_hurst, whittle_likelihood, js
+            )
+
+        corrected_hurst, applied_bias = apply_srd_bias_correction(
+            "WaveletWhittle", float(estimated_hurst)
         )
+        if applied_bias != 0.0 and confidence_interval is not None:
+            lower = max(0.01, min(0.99, confidence_interval[0] - applied_bias))
+            upper = max(0.01, min(0.99, confidence_interval[1] - applied_bias))
+            confidence_interval = (lower, upper)
+        estimated_hurst = corrected_hurst
 
         # Store results
         self.results = {
@@ -219,6 +245,7 @@ class WaveletWhittleEstimator(BaseEstimator):
             "wavelet_type": self.parameters["wavelet"],
             "optimization_success": result.success,
             "wavelet_energies": {int(j): float(s) for j, s in zip(js, Sj.tolist())},
+            "bias_correction": applied_bias,
             "method": "numpy",
             "optimization_framework": self.optimization_framework,
         }
@@ -231,19 +258,153 @@ class WaveletWhittleEstimator(BaseEstimator):
         # This can be enhanced with custom Numba kernels for specific operations
         return self._estimate_numpy(data)
 
+    def _bootstrap_confidence_interval(
+        self,
+        data: np.ndarray,
+        point_estimate: float,
+    ) -> Tuple[float, float]:
+        """Approximate confidence interval using circular block bootstrap."""
+        n_boot = self.parameters.get("bootstrap_samples", 0)
+        if n_boot <= 0:
+            return (float(point_estimate), float(point_estimate))
+
+        estimates: List[float] = []
+        n = len(data)
+        block_size = self.parameters.get("bootstrap_block_size")
+        if block_size is None:
+            block_size = max(32, n // 4)
+        block_size = min(max(8, block_size), n)
+
+        for _ in range(n_boot):
+            resampled = self._circular_block_resample(data, block_size)
+            try:
+                replicate = self._estimate_numpy(
+                    resampled,
+                    compute_ci=False,
+                )
+                est = replicate.get("hurst_parameter")
+                if est is not None and np.isfinite(est):
+                    estimates.append(float(est))
+            except Exception:
+                continue
+
+        if len(estimates) < max(8, n_boot // 4):
+            margin = max(0.1, 0.5 * abs(point_estimate - 0.5))
+            lower = float(max(0.01, point_estimate - margin))
+            upper = float(min(0.99, point_estimate + margin))
+            return (lower, upper)
+
+        alpha = 1.0 - self.parameters["confidence"]
+        lower = float(np.percentile(estimates, 100 * (alpha / 2)))
+        upper = float(np.percentile(estimates, 100 * (1 - alpha / 2)))
+        if lower == upper:
+            lower = min(lower, point_estimate)
+            upper = max(upper, point_estimate)
+        return (lower, upper)
+
+    def _circular_block_resample(self, data: np.ndarray, block_size: int) -> np.ndarray:
+        """Generate circular block bootstrap resample."""
+        n = len(data)
+        n_blocks = max(1, int(np.ceil(n / block_size)))
+        resampled = np.empty(n, dtype=float)
+        pos = 0
+        for _ in range(n_blocks):
+            start = np.random.randint(0, n)
+            block = np.take(
+                data,
+                np.arange(start, start + block_size) % n,
+                mode="wrap",
+            )
+            length = min(block_size, n - pos)
+            resampled[pos : pos + length] = block[:length]
+            pos += length
+            if pos >= n:
+                break
+        return resampled
+
     def _estimate_jax(self, data: np.ndarray) -> Dict[str, Any]:
         """JAX-optimized implementation of Wavelet Whittle estimation."""
-        # Convert data to JAX array
-        data_jax = jnp.array(data)
-        
-        # JAX implementation of the core computation
-        # Note: JAX doesn't have direct equivalents for pywt.wavedec
-        # So we'll use the NumPy implementation for wavelet decomposition
-        # and JAX for the optimization part
-        
-        # For now, fall back to NumPy implementation
-        # This can be enhanced with JAX-specific optimizations for the likelihood computation
-        return self._estimate_numpy(data)
+        if not JAX_AVAILABLE:
+            return self._estimate_numpy(data)
+
+        data_np = np.asarray(data, dtype=float)
+        n = len(data_np)
+
+        if self.parameters["scales"] is None:
+            self.parameters["scales"] = list(range(1, min(11, int(np.log2(n)))))
+
+        if n < 2 ** max(self.parameters["scales"]):
+            raise ValueError(
+                f"Data length {n} is too short for scale {max(self.parameters['scales'])}"
+            )
+
+        wavelet = self.parameters["wavelet"]
+        w = pywt.Wavelet(wavelet)
+        J = pywt.dwt_max_level(n, w.dec_len)
+        if J < 2:
+            raise ValueError("Insufficient data length for wavelet decomposition")
+
+        js = [j for j in self.parameters["scales"] if 1 <= j <= J]
+        if len(js) < 3:
+            warnings.warn("Few scales available for Wavelet Whittle; estimates may be unstable")
+
+        max_level = max(js)
+        data_jax = jnp.asarray(data_np, dtype=jnp.float64)
+        _, details = dwt_periodized(data_jax, wavelet, max_level)
+        selected_details = [details[j - 1] for j in js]
+        Sj_jax, nj_jax = wavelet_detail_variances(selected_details, robust=False)
+
+        js_arr = jnp.asarray(js, dtype=jnp.float64)
+        Sj = jnp.asarray(Sj_jax, dtype=jnp.float64)
+        nj = jnp.asarray(nj_jax, dtype=jnp.float64)
+
+        def objective(d: float) -> jnp.ndarray:
+            d_val = jnp.asarray(d, dtype=jnp.float64)
+            a = 2.0 ** (2.0 * d_val * js_arr)
+            return jnp.sum(nj * (jnp.log(a) + Sj / a))
+
+        d_grid = jnp.linspace(-0.49, 1.49, 2048)
+        objective_values = vmap(objective)(d_grid)
+        idx = jnp.argmin(objective_values)
+        d_hat = float(d_grid[idx])
+        whittle_likelihood = float(objective(d_hat))
+
+        estimated_hurst = float(d_hat + 0.5)
+
+        confidence_interval = self._get_confidence_interval(
+            estimated_hurst,
+            whittle_likelihood,
+            js,
+        )
+
+        corrected_hurst, applied_bias = apply_srd_bias_correction(
+            "WaveletWhittle", float(estimated_hurst)
+        )
+        if applied_bias != 0.0 and confidence_interval is not None:
+            lower = max(0.01, min(0.99, confidence_interval[0] - applied_bias))
+            upper = max(0.01, min(0.99, confidence_interval[1] - applied_bias))
+            confidence_interval = (lower, upper)
+        estimated_hurst = corrected_hurst
+
+        wavelet_energies = {
+            int(j): float(Sj[i])
+            for i, j in enumerate(js)
+        }
+
+        self.results = {
+            "hurst_parameter": estimated_hurst,
+            "confidence_interval": confidence_interval,
+            "whittle_likelihood": whittle_likelihood,
+            "scales": js,
+            "wavelet_type": wavelet,
+            "optimization_success": True,
+            "wavelet_energies": wavelet_energies,
+            "bias_correction": applied_bias,
+            "method": "jax",
+            "optimization_framework": self.optimization_framework,
+        }
+
+        return self.results
 
     def _theoretical_spectrum_fgn(
         self, frequencies: np.ndarray, H: float, sigma: float = 1.0

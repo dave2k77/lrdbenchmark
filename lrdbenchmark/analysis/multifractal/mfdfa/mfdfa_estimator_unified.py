@@ -10,10 +10,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 from scipy.signal import detrend
-from typing import Dict, Any, Optional, Union, Tuple, List
+from typing import Dict, Any, Optional, Union, Tuple, List, Callable
 import warnings
 
 from lrdbenchmark.analysis.backend_utils import select_backend, JAX_AVAILABLE, NUMBA_AVAILABLE
+from lrdbenchmark.analysis.calibration_utils import apply_srd_bias_correction
 
 # Import optimization frameworks
 if JAX_AVAILABLE:
@@ -188,12 +189,18 @@ class MFDFAEstimator(BaseEstimator):
         num_scales: int = 15,
         order: int = 1,
         use_optimization: str = "auto",
+        confidence: float = 0.95,
+        bootstrap_samples: int = 64,
+        bootstrap_block_size: Optional[int] = None,
     ):
         super().__init__()
         
         # Set default q_values if not provided
         if q_values is None:
             q_values = [-5, -3, -1, 0, 1, 2, 3, 5]
+
+        if not (0 < confidence < 1):
+            raise ValueError("confidence must be between 0 and 1")
 
         # Set default scales if not provided
         if scales is None:
@@ -209,6 +216,9 @@ class MFDFAEstimator(BaseEstimator):
             "max_scale": max_scale,
             "num_scales": num_scales,
             "order": order,
+            "confidence": float(confidence),
+            "bootstrap_samples": int(max(0, bootstrap_samples)),
+            "bootstrap_block_size": bootstrap_block_size,
         }
         
         # Optimization framework
@@ -279,7 +289,7 @@ class MFDFAEstimator(BaseEstimator):
         q_values = np.array(self.parameters["q_values"])
         order = self.parameters["order"]
 
-        fluctuation_functions = {}
+        fluctuation_functions: Dict[float, np.ndarray] = {}
         for q in q_values:
             fq_values = np.zeros(len(scales))
             for i in range(len(scales)):
@@ -320,7 +330,137 @@ class MFDFAEstimator(BaseEstimator):
         }
         return self.results
 
-    def _estimate_numpy(self, data: np.ndarray) -> Dict[str, Any]:
+    def _finalize_results_from_fq(
+        self,
+        data: np.ndarray,
+        scales: Union[np.ndarray, List[int]],
+        q_values: Union[np.ndarray, List[float]],
+        fluctuation_functions: Dict[float, np.ndarray],
+        segment_stats_q2: Optional[Dict[int, Dict[str, float]]] = None,
+        compute_ci: bool = True,
+        method_label: str = "numpy",
+    ) -> Dict[str, Any]:
+        """Shared post-processing for converting fluctuation functions into estimator results."""
+        scales_array = np.asarray(scales)
+        q_array = np.asarray(q_values, dtype=float)
+
+        generalized_hurst: Dict[float, float] = {}
+        log_scales = np.log(scales_array)
+        hurst_confidence_interval: Optional[Tuple[float, float]] = None
+        hurst_weights: Optional[List[float]] = None
+        hurst_intercept: Optional[float] = None
+        hurst_r_squared: Optional[float] = None
+
+        stats_q2 = segment_stats_q2 or {}
+
+        for q in q_array:
+            q_key = float(q)
+            fq_vals = np.asarray(fluctuation_functions.get(q_key, np.nan), dtype=float)
+            valid_mask = ~np.isnan(fq_vals) & (fq_vals > 0)
+
+            if np.sum(valid_mask) < 3:
+                generalized_hurst[q_key] = np.nan
+                continue
+
+            log_fq = np.log(fq_vals[valid_mask])
+            log_s = log_scales[valid_mask]
+
+            try:
+                if np.isclose(q_key, 2.0):
+                    variance_logs = []
+                    for scale_val in np.asarray(scales_array)[valid_mask]:
+                        stats_entry = stats_q2.get(int(scale_val))
+                        if (
+                            stats_entry is None
+                            or stats_entry["mean"] <= 0
+                            or stats_entry["n"] < 1
+                        ):
+                            variance_logs.append(0.01)
+                            continue
+
+                        mean_var = stats_entry["mean"]
+                        seg_var = stats_entry["var"]
+                        if seg_var <= 0:
+                            seg_var = 0.25 * mean_var**2
+                        var_mean = seg_var / max(stats_entry["n"], 1)
+                        var_log = (0.5 / mean_var) ** 2 * var_mean
+                        variance_logs.append(max(var_log, 1e-12))
+
+                    (
+                        slope,
+                        intercept,
+                        r_sq,
+                        slope_se,
+                        weights,
+                    ) = self._weighted_regression(
+                        log_s, log_fq, np.array(variance_logs, dtype=float)
+                    )
+                    generalized_hurst[q_key] = slope
+                    hurst_confidence_interval = self._get_hurst_confidence_interval(
+                        slope, slope_se, len(log_s)
+                    )
+                    hurst_weights = weights.tolist()
+                    hurst_intercept = float(intercept)
+                    hurst_r_squared = float(r_sq)
+                else:
+                    slope, intercept, r_value, _, _ = stats.linregress(
+                        log_s, log_fq
+                    )
+                    generalized_hurst[q_key] = slope
+            except (ValueError, np.linalg.LinAlgError):
+                generalized_hurst[q_key] = np.nan
+
+        hurst_parameter = generalized_hurst.get(2.0, np.nan)
+        multifractal_spectrum = self._compute_multifractal_spectrum(
+            generalized_hurst, q_array
+        )
+
+        if (
+            compute_ci
+            and self.parameters["bootstrap_samples"] > 0
+            and not np.isnan(hurst_parameter)
+        ):
+            bootstrap_ci = self._bootstrap_confidence_interval(data)
+            if bootstrap_ci is not None:
+                hurst_confidence_interval = bootstrap_ci
+
+        corrected_hurst, applied_bias = apply_srd_bias_correction(
+            "MFDFA", float(hurst_parameter) if not np.isnan(hurst_parameter) else float("nan")
+        )
+        if applied_bias != 0.0 and hurst_confidence_interval is not None:
+            lower = max(0.01, min(0.99, hurst_confidence_interval[0] - applied_bias))
+            upper = max(0.01, min(0.99, hurst_confidence_interval[1] - applied_bias))
+            hurst_confidence_interval = (lower, upper)
+        hurst_parameter = corrected_hurst
+
+        result = {
+            "hurst_parameter": float(hurst_parameter) if not np.isnan(hurst_parameter) else np.nan,
+            "generalized_hurst": {
+                float(q): float(h) if not np.isnan(h) else np.nan
+                for q, h in generalized_hurst.items()
+            },
+            "multifractal_spectrum": multifractal_spectrum,
+            "scales": scales_array.tolist(),
+            "q_values": q_array.tolist(),
+            "fluctuation_functions": {
+                float(q): np.asarray(fq, dtype=float).tolist()
+                for q, fq in fluctuation_functions.items()
+            },
+            "confidence_interval": hurst_confidence_interval,
+            "hurst_regression_details": {
+                "weights": hurst_weights,
+                "intercept": hurst_intercept,
+                "r_squared": hurst_r_squared,
+            },
+            "bias_correction": applied_bias,
+            "method": method_label,
+            "optimization_framework": self.optimization_framework,
+        }
+
+        self.results = result
+        return result
+
+    def _estimate_numpy(self, data: np.ndarray, compute_ci: bool = True) -> Dict[str, Any]:
         """NumPy implementation of MFDFA estimation."""
         # Adjust scales for data length
         max_safe_scale = min(self.parameters["max_scale"], len(data) // 4)
@@ -341,77 +481,272 @@ class MFDFAEstimator(BaseEstimator):
         scales = self.parameters["scales"]
         q_values = self.parameters["q_values"]
 
+        # Pre-compute segment statistics for q=2 intervals
+        segment_stats_q2 = (
+            self._compute_segment_stats(data, scales)
+            if 2 in np.asarray(q_values)
+            else {}
+        )
+
         # Compute fluctuation functions for all q and scales
-        fluctuation_functions = {}
+        fluctuation_functions: Dict[float, np.ndarray] = {}
         for q in q_values:
             fq_values = []
             for scale in scales:
                 fq = self._compute_fluctuation_function(data, q, scale)
                 fq_values.append(fq)
-            fluctuation_functions[q] = np.array(fq_values)
+            fluctuation_functions[float(q)] = np.array(fq_values, dtype=float)
 
-        # Fit power law for each q to get generalized Hurst exponents
-        generalized_hurst = {}
-        log_scales = np.log(scales)
-
-        for q in q_values:
-            fq_vals = fluctuation_functions[q]
-            valid_mask = ~np.isnan(fq_vals) & (fq_vals > 0)
-
-            if np.sum(valid_mask) < 3:
-                generalized_hurst[q] = np.nan
-                continue
-
-            log_fq = np.log(fq_vals[valid_mask])
-            log_s = log_scales[valid_mask]
-
-            try:
-                # Linear regression
-                slope, intercept, r_value, p_value, std_err = stats.linregress(
-                    log_s, log_fq
-                )
-                generalized_hurst[q] = slope
-            except (ValueError, np.linalg.LinAlgError):
-                generalized_hurst[q] = np.nan
-
-        # Extract standard Hurst exponent (q=2)
-        hurst_parameter = generalized_hurst.get(2, np.nan)
-
-        # Compute multifractal spectrum if we have enough q values
-        multifractal_spectrum = self._compute_multifractal_spectrum(
-            generalized_hurst, q_values
+        return self._finalize_results_from_fq(
+            data,
+            scales,
+            q_values,
+            fluctuation_functions,
+            segment_stats_q2=segment_stats_q2,
+            compute_ci=compute_ci,
+            method_label="numpy",
         )
 
-        # Store results
-        self.results = {
-            "hurst_parameter": float(hurst_parameter) if not np.isnan(hurst_parameter) else np.nan,
-            "generalized_hurst": {q: float(h) if not np.isnan(h) else np.nan for q, h in generalized_hurst.items()},
-            "multifractal_spectrum": multifractal_spectrum,
-            "scales": scales.tolist() if hasattr(scales, "tolist") else list(scales),
-            "q_values": q_values.tolist() if hasattr(q_values, "tolist") else list(q_values),
-            "fluctuation_functions": {
-                q: fq.tolist() if hasattr(fq, "tolist") else list(fq)
-                for q, fq in fluctuation_functions.items()
-            },
-            "method": "numpy",
-            "optimization_framework": self.optimization_framework,
-        }
-        
-        return self.results
+    def _compute_segment_stats(
+        self, data: np.ndarray, scales: Union[np.ndarray, List[int]]
+    ) -> Dict[int, Dict[str, float]]:
+        """Collect per-scale segment variance statistics for q=2 uncertainty estimates."""
+        stats: Dict[int, Dict[str, float]] = {}
+        scales_array = np.asarray(scales, dtype=int)
+        for scale in scales_array:
+            n_segments = len(data) // scale
+            if n_segments < 2:
+                continue
+            segments = data[: n_segments * scale].reshape(n_segments, scale)
+            seg_vars = []
+            for segment in segments:
+                detrended = self._detrend_series(segment, scale, self.parameters["order"])
+                seg_vars.append(float(np.mean(detrended**2)))
+            if not seg_vars:
+                continue
+            seg_vars_arr = np.asarray(seg_vars, dtype=float)
+            stats[int(scale)] = {
+                "mean": float(np.mean(seg_vars_arr)),
+                "var": float(np.var(seg_vars_arr, ddof=1)) if len(seg_vars_arr) > 1 else 0.0,
+                "n": int(len(seg_vars_arr)),
+            }
+        return stats
+
+    def _bootstrap_confidence_interval(
+        self,
+        data: np.ndarray,
+    ) -> Optional[Tuple[float, float]]:
+        """Approximate Hurst confidence interval using circular block bootstrap."""
+        n_boot = self.parameters.get("bootstrap_samples", 0)
+        if n_boot <= 0:
+            return None
+
+        estimates: List[float] = []
+        n = len(data)
+        block_size = self.parameters.get("bootstrap_block_size")
+        if block_size is None:
+            block_size = max(32, n // 4)
+        block_size = min(max(8, block_size), n)
+
+        scales_snapshot = (
+            list(self.parameters["scales"])
+            if isinstance(self.parameters.get("scales"), (list, np.ndarray))
+            else None
+        )
+
+        for _ in range(n_boot):
+            resampled = self._circular_block_resample(data, block_size)
+            try:
+                replicate = self._estimate_numpy(
+                    resampled,
+                    compute_ci=False,
+                )
+                est = replicate.get("hurst_parameter")
+                if est is not None and np.isfinite(est):
+                    estimates.append(float(est))
+            except Exception:
+                continue
+            finally:
+                if scales_snapshot is not None:
+                    self.parameters["scales"] = list(scales_snapshot)
+
+        if len(estimates) < max(8, n_boot // 4):
+            return None
+
+        alpha = 1.0 - self.parameters.get("confidence", 0.95)
+        lower = float(np.percentile(estimates, 100 * (alpha / 2)))
+        upper = float(np.percentile(estimates, 100 * (1 - alpha / 2)))
+        return (lower, upper)
+
+    def _circular_block_resample(self, data: np.ndarray, block_size: int) -> np.ndarray:
+        """Generate circular block bootstrap resample."""
+        n = len(data)
+        n_blocks = max(1, int(np.ceil(n / block_size)))
+        resampled = np.empty(n, dtype=float)
+        pos = 0
+        for _ in range(n_blocks):
+            start = np.random.randint(0, n)
+            block = np.take(
+                data,
+                np.arange(start, start + block_size) % n,
+                mode="wrap",
+            )
+            length = min(block_size, n - pos)
+            resampled[pos : pos + length] = block[:length]
+            pos += length
+            if pos >= n:
+                break
+        return resampled
+
+    def _weighted_regression(
+        self,
+        x: np.ndarray,
+        y: np.ndarray,
+        y_variances: np.ndarray,
+    ) -> Tuple[float, float, float, float, np.ndarray]:
+        """Perform weighted linear regression with variance-informed weights."""
+        weights = 1.0 / np.clip(y_variances, 1e-12, None)
+        X = np.column_stack((np.ones_like(x), x))
+        XtWX = X.T @ (weights[:, None] * X)
+        XtWy = X.T @ (weights * y)
+        beta = np.linalg.solve(XtWX, XtWy)
+        intercept, slope = beta
+        y_hat = X @ beta
+        residuals = y - y_hat
+        dof = max(len(x) - 2, 1)
+        ss_res = float(np.sum(weights * residuals**2))
+        y_mean = np.average(y, weights=weights)
+        ss_tot = float(np.sum(weights * (y - y_mean) ** 2))
+        r_squared = 1.0 - ss_res / ss_tot if ss_tot > 0 else 0.0
+        sigma2 = ss_res / dof if dof > 0 else 0.0
+        if sigma2 < 1e-10:
+            sigma2 = np.mean(1.0 / weights)
+        cov_beta = sigma2 * np.linalg.inv(XtWX)
+        slope_se = float(np.sqrt(max(cov_beta[1, 1], 1e-12)))
+        return float(slope), float(intercept), float(r_squared), slope_se, weights
+
+    def _get_hurst_confidence_interval(
+        self, hurst_estimate: float, slope_se: float, n_points: int
+    ) -> Tuple[float, float]:
+        """Construct confidence interval for the Hurst exponent."""
+        confidence = self.parameters.get("confidence", 0.95)
+        dof = max(n_points - 2, 1)
+        t_value = stats.t.ppf((1 + confidence) / 2, df=dof)
+        margin = float(t_value * slope_se)
+        lower = float(hurst_estimate - margin)
+        upper = float(hurst_estimate + margin)
+        return (lower, upper)
 
     def _estimate_jax(self, data: np.ndarray) -> Dict[str, Any]:
         """JAX-optimized implementation of MFDFA estimation."""
-        # Convert data to JAX array
-        data_jax = jnp.array(data)
-        
-        # JAX implementation of the core computation
-        # Note: JAX doesn't have direct equivalents for some operations
-        # So we'll use the NumPy implementation for now
-        # This can be enhanced with JAX-specific optimizations
-        
-        # For now, fall back to NumPy implementation
-        warnings.warn("JAX not available for MFDFAEstimator, falling back to NumPy.")
-        return self._estimate_numpy(data)
+        if not JAX_AVAILABLE:
+            warnings.warn("JAX backend requested but not available; falling back to NumPy.")
+            return self._estimate_numpy(data)
+
+        data_np = np.asarray(data, dtype=float)
+
+        max_safe_scale = min(self.parameters["max_scale"], len(data_np) // 4)
+        if max_safe_scale < self.parameters["min_scale"]:
+            raise ValueError(f"Data length {len(data_np)} is too short for MFDFA analysis")
+
+        if max_safe_scale < self.parameters["max_scale"]:
+            safe_scales = [s for s in self.parameters["scales"] if s <= max_safe_scale]
+            if len(safe_scales) >= 3:
+                self.parameters["scales"] = np.array(safe_scales)
+                self.parameters["max_scale"] = max_safe_scale
+            else:
+                warnings.warn(
+                    f"Data length ({len(data_np)}) may be too short for reliable MFDFA analysis"
+                )
+
+        scales = np.asarray(self.parameters["scales"], dtype=int)
+        q_values = np.asarray(self.parameters["q_values"], dtype=float)
+        order = int(self.parameters["order"])
+
+        if scales.ndim == 0:
+            scales = np.array([int(scales)], dtype=int)
+        if q_values.ndim == 0:
+            q_values = np.array([float(q_values)], dtype=float)
+
+        data_jax = jnp.asarray(data_np, dtype=jnp.float64)
+
+        variance_functions: Dict[int, Callable[[Any], Any]] = {}
+        variance_cache: Dict[int, Optional[Any]] = {}
+
+        def build_variance_fn(scale: int):
+            x = jnp.arange(scale, dtype=data_jax.dtype)
+
+            if order == 0:
+                def compute(segments: Any) -> Any:
+                    mean = jnp.mean(segments, axis=1, keepdims=True)
+                    detrended = segments - mean
+                    return jnp.mean(detrended**2, axis=1)
+            else:
+                V = jnp.vander(x, order + 1, increasing=False)
+                gram = V.T @ V
+                gram += 1e-10 * jnp.eye(gram.shape[0], dtype=V.dtype)
+                pinv = jnp.linalg.solve(gram, V.T)
+
+                def compute(segments: Any) -> Any:
+                    coeffs = segments @ pinv.T
+                    trend = coeffs @ V.T
+                    detrended = segments - trend
+                    return jnp.mean(detrended**2, axis=1)
+
+            return jit(compute)
+
+        for scale_val in scales:
+            scale_int = int(scale_val)
+            n_segments = len(data_np) // scale_int
+            if n_segments == 0:
+                variance_cache[scale_int] = None
+                continue
+
+            trimmed = data_jax[: n_segments * scale_int]
+            segments = trimmed.reshape((n_segments, scale_int))
+
+            variance_fn = variance_functions.get(scale_int)
+            if variance_fn is None:
+                variance_fn = build_variance_fn(scale_int)
+                variance_functions[scale_int] = variance_fn
+
+            variances = variance_fn(segments)
+            variance_cache[scale_int] = variances
+
+        fluctuation_functions: Dict[float, np.ndarray] = {}
+        for q in q_values:
+            q_float = float(q)
+            fq_values: List[float] = []
+            for scale_val in scales:
+                scale_int = int(scale_val)
+                variances = variance_cache.get(scale_int)
+                if variances is None or variances.size == 0:
+                    fq_values.append(np.nan)
+                    continue
+
+                safe_var = jnp.clip(variances, 1e-18, None)
+                if np.isclose(q_float, 0.0):
+                    fq = jnp.exp(0.5 * jnp.mean(jnp.log(safe_var)))
+                else:
+                    fq = jnp.mean(jnp.power(safe_var, q_float / 2.0)) ** (1.0 / q_float)
+                fq_values.append(float(fq))
+            fluctuation_functions[q_float] = np.array(fq_values, dtype=float)
+
+        segment_stats_q2 = (
+            self._compute_segment_stats(data_np, scales)
+            if np.any(np.isclose(q_values, 2.0))
+            else {}
+        )
+
+        return self._finalize_results_from_fq(
+            data_np,
+            scales,
+            q_values,
+            fluctuation_functions,
+            segment_stats_q2=segment_stats_q2,
+            compute_ci=True,
+            method_label="jax",
+        )
 
     def _detrend_series(self, series: np.ndarray, scale: int, order: int) -> np.ndarray:
         """Detrend a series segment using polynomial fitting."""

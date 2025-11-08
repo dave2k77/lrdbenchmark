@@ -17,7 +17,7 @@ import warnings
 try:
     import jax
     import jax.numpy as jnp
-    from jax import jit, vmap
+    from jax import vmap
     JAX_AVAILABLE = True
 except ImportError:
     JAX_AVAILABLE = False
@@ -31,6 +31,7 @@ except ImportError:
 
 # Import base estimator (single source of truth)
 from lrdbenchmark.analysis.base_estimator import BaseEstimator
+from lrdbenchmark.analysis.calibration_utils import apply_srd_bias_correction
 
 
 class CWTEstimator(BaseEstimator):
@@ -196,6 +197,9 @@ class CWTEstimator(BaseEstimator):
         if self.parameters["trim_ends"] > 0 and len(scales) > 2 * self.parameters["trim_ends"]:
             t = self.parameters["trim_ends"]
             scales = scales[t:-t]
+        # Cap maximum scale to reduce SRD bias
+        scale_cap = min(np.max(scales), 64.0)
+        scales = scales[scales <= scale_cap]
         if len(scales) < 2:
             raise ValueError("Insufficient scales after trimming/range selection")
 
@@ -209,36 +213,58 @@ class CWTEstimator(BaseEstimator):
         scale_powers = {}
         scale_logs = []
         power_logs = []
+        power_log_variances = []
+        n_time = power_spectrum.shape[1]
 
         for i, scale in enumerate(scales):
-            # Average power across time at this scale
-            avg_power = np.mean(power_spectrum[i, :])
+            coeff_row = power_spectrum[i, :]
+            avg_power = np.mean(coeff_row)
             scale_powers[scale] = avg_power
 
             scale_logs.append(np.log2(scale))
             power_logs.append(np.log2(avg_power))
 
-        # Fit linear regression to log-log plot
+            var_power = np.var(coeff_row, ddof=1)
+            if not np.isfinite(var_power) or var_power <= 0:
+                var_power = (avg_power**2) / max(n_time, 1)
+            var_mean = var_power / max(n_time, 1)
+            var_log = var_mean / (avg_power**2 * (np.log(2.0) ** 2))
+            power_log_variances.append(max(var_log, 1e-12))
+
+        x = np.asarray(scale_logs, dtype=float)
+        y = np.asarray(power_logs, dtype=float)
+        weights = 1.0 / np.clip(np.asarray(power_log_variances, dtype=float), 1e-12, None)
+        X = np.column_stack((np.ones_like(x), x))
+        XtWX = X.T @ (weights[:, None] * X)
+        XtWy = X.T @ (weights * y)
+
         if self.parameters["robust"]:
-            slope, intercept = self._huber_regression(np.asarray(scale_logs), np.asarray(power_logs))
-            # compute r_value approx via correlation of fitted vs observed
-            y = np.asarray(power_logs)
-            y_hat = slope * np.asarray(scale_logs) + intercept
-            r_value = np.corrcoef(y, y_hat)[0, 1] if len(y) > 1 else 0.0
+            slope, intercept = self._huber_regression(x, y)
         else:
-            slope, intercept, r_value, p_value, std_err = stats.linregress(
-                scale_logs, power_logs
-            )
+            beta = np.linalg.solve(XtWX, XtWy)
+            intercept, slope = beta
+
+        r_squared, slope_se = self._regression_statistics(x, y, weights, slope, intercept, XtWX)
 
         # Empirical mapping consistent with PyWavelets normalization: H ≈ (slope + 1)/2
         # This provides low-bias estimates across tested FBM signals
         estimated_hurst = 0.5 * (slope + 1.0)
-        r_squared = r_value**2
 
         # Calculate confidence interval
         confidence_interval = self._get_confidence_interval(
-            scale_logs, power_logs, estimated_hurst, slope
+            estimated_hurst,
+            slope_se,
+            len(scale_logs),
         )
+
+        corrected_hurst, applied_bias = apply_srd_bias_correction(
+            "CWT", float(estimated_hurst)
+        )
+        if applied_bias != 0.0 and confidence_interval is not None:
+            lower = max(0.01, min(0.99, confidence_interval[0] - applied_bias))
+            upper = max(0.01, min(0.99, confidence_interval[1] - applied_bias))
+            confidence_interval = (lower, upper)
+        estimated_hurst = corrected_hurst
 
         # Store results
         self.results = {
@@ -252,6 +278,8 @@ class CWTEstimator(BaseEstimator):
             "scale_powers": scale_powers,
             "scale_logs": scale_logs,
             "power_logs": power_logs,
+            "regression_weights": weights.tolist(),
+            "bias_correction": applied_bias,
             "wavelet_coeffs": wavelet_coeffs,
             "power_spectrum": power_spectrum,
             "method": "numpy",
@@ -267,39 +295,149 @@ class CWTEstimator(BaseEstimator):
         return self._estimate_numpy(data)
 
     def _estimate_jax(self, data: np.ndarray) -> Dict[str, Any]:
-        """JAX-optimized implementation of CWT estimation."""
-        # Convert data to JAX array
-        data_jax = jnp.array(data)
-        
-        # JAX implementation of the core computation
-        # Note: JAX doesn't have direct equivalents for pywt.cwt
-        # So we'll use the NumPy implementation for wavelet transform
-        # and JAX for the regression part
-        
-        # For now, fall back to NumPy implementation
-        # This can be enhanced with JAX-specific optimizations for the regression
-        return self._estimate_numpy(data)
+        """JAX-optimized implementation of Wavelet Log Variance estimation."""
+        if not JAX_AVAILABLE:
+            return self._estimate_numpy(data)
+
+        if self.parameters["wavelet"] != "morl":
+            raise NotImplementedError("JAX CWT currently supports the 'morl' wavelet only")
+
+        data_np = np.asarray(data, dtype=float)
+        n = len(data_np)
+        demeaned = data_np - np.mean(data_np)
+        x = jnp.asarray(demeaned, dtype=jnp.float64)
+
+        if self.parameters["scales"] is None:
+            s_min = 2
+            s_max = max(8, int(n // 8))
+            self.parameters["scales"] = np.unique((np.geomspace(s_min, s_max, num=24)).astype(float))
+
+        scales = self.parameters["scales"].astype(float)
+        if n < 100:
+            max_scale = min(max(scales), n // 4)
+            scales = np.array([s for s in scales if s <= max_scale])
+            if len(scales) < 2:
+                raise ValueError("Insufficient scales available for data length")
+
+        trim = self.parameters["trim_ends"]
+        if trim > 0 and len(scales) > 2 * trim:
+            scales = scales[trim:-trim]
+        if len(scales) < 2:
+            raise ValueError("Insufficient scales after trimming")
+
+        padded_len = int(2 ** np.ceil(np.log2(n)))
+        padded = jnp.pad(x, (0, padded_len - n))
+        fft_data = jnp.fft.fft(padded)
+        omega = 2 * jnp.pi * jnp.fft.fftfreq(padded_len, d=1.0)
+
+        def morlet_fft(scale: float) -> jnp.ndarray:
+            w0 = 6.0
+            factor = jnp.sqrt(scale)
+            return factor * jnp.exp(-0.5 * (scale * omega - w0) ** 2)
+
+        def compute_coeff(scale: float) -> jnp.ndarray:
+            wavelet_fft = morlet_fft(scale)
+            coeff = jnp.fft.ifft(fft_data * wavelet_fft)
+            return coeff[:n]
+
+        coeffs = vmap(compute_coeff)(jnp.asarray(scales, dtype=jnp.float64))
+        power_spectrum = jnp.abs(coeffs) ** 2
+
+        scale_powers = jnp.mean(power_spectrum, axis=1)
+        n_time = power_spectrum.shape[1]
+
+        scale_logs = jnp.log2(jnp.asarray(scales, dtype=jnp.float64))
+        power_logs = jnp.log2(scale_powers + 1e-300)
+
+        variances = jnp.var(power_spectrum, axis=1, ddof=1)
+        variances = jnp.where(variances <= 0, (scale_powers**2) / max(n_time, 1), variances)
+        var_mean = variances / max(n_time, 1)
+        var_log = var_mean / (scale_powers**2 * (jnp.log(2.0) ** 2))
+        weights = 1.0 / jnp.clip(var_log, 1e-12, None)
+
+        X = jnp.stack([jnp.ones_like(scale_logs), scale_logs], axis=1)
+        XtWX = X.T @ (weights[:, None] * X)
+        XtWy = X.T @ (weights * power_logs)
+        beta = jnp.linalg.solve(XtWX, XtWy)
+        intercept, slope = beta
+
+        y_fit = slope * scale_logs + intercept
+        y_mean = jnp.average(power_logs, weights=weights)
+        ss_res = jnp.sum(weights * (power_logs - y_fit) ** 2)
+        ss_tot = jnp.sum(weights * (power_logs - y_mean) ** 2)
+        r_squared = jnp.where(ss_tot > 0, 1.0 - ss_res / ss_tot, 0.0)
+
+        estimated_hurst = 0.5 * (slope + 1.0)
+        slope_se = jnp.sqrt(jnp.clip(jnp.linalg.inv(XtWX)[1, 1], 1e-12, None))
+        confidence_interval = self._get_confidence_interval(
+            float(estimated_hurst),
+            float(slope_se),
+            len(scale_logs),
+        )
+
+        corrected_hurst, applied_bias = apply_srd_bias_correction(
+            "CWT", float(estimated_hurst)
+        )
+        if applied_bias != 0.0 and confidence_interval is not None:
+            lower = max(0.01, min(0.99, confidence_interval[0] - applied_bias))
+            upper = max(0.01, min(0.99, confidence_interval[1] - applied_bias))
+            confidence_interval = (lower, upper)
+        estimated_hurst = corrected_hurst
+
+        power_log_variances = (1.0 / weights).tolist()
+        scale_powers_dict = {float(scales[i]): float(scale_powers[i]) for i in range(len(scales))}
+
+        self.results = {
+            "hurst_parameter": float(estimated_hurst),
+            "confidence_interval": confidence_interval,
+            "r_squared": float(r_squared),
+            "scales": scales.tolist(),
+            "wavelet_type": self.parameters["wavelet"],
+            "slope": float(slope),
+            "intercept": float(intercept),
+            "scale_powers": scale_powers_dict,
+            "power_log_variances": power_log_variances,
+            "method": "jax",
+            "optimization_framework": self.optimization_framework,
+            "bias_correction": applied_bias,
+        }
+
+        return self.results
+
+    def _regression_statistics(
+        self,
+        x: np.ndarray,
+        y: np.ndarray,
+        weights: np.ndarray,
+        slope: float,
+        intercept: float,
+        XtWX: np.ndarray,
+    ) -> Tuple[float, float]:
+        """Compute weighted regression diagnostics for slope."""
+        residuals = y - (slope * x + intercept)
+        dof = max(len(x) - 2, 1)
+        ss_res = float(np.sum(weights * residuals**2))
+        y_mean = np.average(y, weights=weights)
+        ss_tot = float(np.sum(weights * (y - y_mean) ** 2))
+        r_squared = 1.0 - ss_res / ss_tot if ss_tot > 0 else 0.0
+        sigma2 = ss_res / dof if dof > 0 else 0.0
+        if sigma2 < 1e-10:
+            sigma2 = np.mean(1.0 / weights)
+        cov_beta = sigma2 * np.linalg.inv(XtWX)
+        slope_se = float(np.sqrt(max(cov_beta[1, 1], 1e-12)))
+        return r_squared, slope_se
 
     def _get_confidence_interval(
-        self, scale_logs: List[float], power_logs: List[float], 
-        estimated_hurst: float, slope: float
+        self,
+        estimated_hurst: float,
+        slope_se: float,
+        n_points: int,
     ) -> Tuple[float, float]:
         """Calculate confidence interval for the Hurst parameter estimate."""
         confidence = self.parameters["confidence"]
-        
-        # Calculate standard error of the slope using linear-fit residuals
-        n = len(scale_logs)
-        x = np.asarray(scale_logs)
-        y = np.asarray(power_logs)
-        x_var = np.var(x, ddof=1)
-        y_hat = ( (y.mean() - (x.mean()*0.0)) )  # placeholder, replaced below
-        # compute intercept consistent with slope from regression above
-        intercept = y.mean() - slope * x.mean()
-        residuals = y - (slope * x + intercept)
-        mse = np.sum(residuals**2) / max(1, (n - 2))
-        slope_se = np.sqrt(mse / max(1e-12, (n * x_var)))
-        hurst_se = 0.5 * slope_se  # dH/db = 1/2
-        t_value = stats.t.ppf((1 + confidence) / 2, df=max(1, n - 2))
+        hurst_se = 0.5 * slope_se
+        dof = max(n_points - 2, 1)
+        t_value = stats.t.ppf((1 + confidence) / 2, df=dof)
         margin = float(t_value * hurst_se)
         return (float(estimated_hurst - margin), float(estimated_hurst + margin))
 
