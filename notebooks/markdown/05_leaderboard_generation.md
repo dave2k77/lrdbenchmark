@@ -32,7 +32,7 @@ First, let's import all necessary libraries and set up the leaderboard generatio
 ```python
 # Standard scientific computing imports
 import numpy as np
-# LRDBenchmark imports - using simplified API
+# lrdbenchmark imports - using simplified API
 from lrdbenchmark import (
     # Data models
     FBMModel, FGNModel, ARFIMAModel, MRWModel, AlphaStableModel,
@@ -1359,7 +1359,7 @@ else:
 
 ### Key Takeaways
 
-1. **Leaderboard Generation**: LRDBenchmark provides comprehensive tools for creating performance leaderboards:
+1. **Leaderboard Generation**: lrdbenchmark provides comprehensive tools for creating performance leaderboards:
    - **Multi-category Comparison**: Classical, ML, and Neural estimators
    - **Composite Scoring**: Combined accuracy, speed, and reliability metrics
    - **Statistical Analysis**: Confidence intervals and significance tests
@@ -1407,7 +1407,7 @@ else:
 
 ---
 
-**Congratulations!** You've completed the comprehensive LRDBenchmark demonstration series. You now have a complete understanding of:
+**Congratulations!** You've completed the comprehensive lrdbenchmark demonstration series. You now have a complete understanding of:
 - Data generation and visualization
 - Estimation and statistical validation
 - Custom model and estimator development

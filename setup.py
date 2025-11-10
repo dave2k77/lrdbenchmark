@@ -123,7 +123,11 @@ setup(
     },
     include_package_data=True,
     package_data={
-        "": ["notebooks/*.ipynb", "notebooks/README.md"],
+        "": [
+            "notebooks/README.md",
+            "notebooks/markdown/*.md",
+            "notebooks/markdown/*/*",
+        ],
     },
     zip_safe=False,
 )

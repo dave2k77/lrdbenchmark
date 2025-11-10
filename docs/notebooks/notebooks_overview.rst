@@ -1,7 +1,7 @@
 Demonstration Notebooks Overview
 =================================
 
-LRDBenchmark includes comprehensive Jupyter notebooks that demonstrate all library features through practical examples. These notebooks are designed to be self-contained, well-documented, and provide a complete learning path from basic concepts to advanced applications.
+lrdbenchmark ships a Markdown-based notebook set (converted from the original Jupyter notebooks) that mirrors the tutorial series published in this documentation. Each notebook is self-contained, well annotated, and follows the same progression as the narrative material.
 
 Notebook Structure
 ------------------
@@ -21,14 +21,14 @@ The instructional material previously hosted exclusively as notebooks is now pub
 
 - :doc:`/tutorials/tutorial_01_synthetic_data` — Generating synthetic and realistic LRD data, including contamination scenarios
 - :doc:`/tutorials/tutorial_02_estimators` — Estimating the Hurst parameter with statistical validation and uncertainty quantification
-- :doc:`/tutorials/tutorial_03_customization` — Extending LRDBenchmark with custom data generators and estimators
+- :doc:`/tutorials/tutorial_03_customization` — Extending lrdbenchmark with custom data generators and estimators
 - :doc:`/tutorials/tutorial_04_benchmarking` — Running comprehensive and contamination-aware benchmarks
 - :doc:`/tutorials/tutorial_05_leaderboards` — Building stratified leaderboards and publishing results
 
-Legacy Notebooks
-----------------
+Notebook storage format
+-----------------------
 
-The original Jupyter notebooks remain available in the repository under ``notebooks/`` for interactive experimentation. They mirror the content of the tutorial series and can be launched locally when a live environment is preferred.
+To keep the repository lightweight and diff-friendly, notebooks are distributed as Markdown files in ``notebooks/markdown/`` together with exported figures and data artefacts. They can be opened directly in editors that understand MyST/Markdown notebooks, or converted back to ``.ipynb`` format with tools such as `Jupytext <https://jupytext.readthedocs.io/>`_.
 
 Getting Started with Notebooks
 ==============================
@@ -38,29 +38,33 @@ Prerequisites
 
 - Python 3.8+
 - Jupyter Notebook or JupyterLab
-- LRDBenchmark installed (``pip install lrdbenchmark``)
+- lrdbenchmark installed (``pip install lrdbenchmark``)
 
-Running the Notebooks
---------------------
+Converting back to ``.ipynb``
+-----------------------------
 
 1. **Clone the repository**:
+
    .. code-block:: bash
-   
+
       git clone https://github.com/dave2k77/lrdbenchmark.git
       cd lrdbenchmark
 
-2. **Install dependencies**:
+2. **Install the optional tooling**:
+
    .. code-block:: bash
-   
+
       pip install -e .
-      pip install jupyter matplotlib seaborn
+      pip install jupytext jupyter matplotlib seaborn
 
-3. **Start Jupyter**:
+3. **Convert and launch**:
+
    .. code-block:: bash
-   
-      jupyter notebook notebooks/
 
-4. **Run notebooks in order** for the complete learning experience
+      jupytext --to notebook notebooks/markdown/01_data_generation_and_visualisation.md
+      jupyter notebook notebooks/markdown/
+
+4. **Open the converted notebooks** in order for the complete learning experience.
 
 Notebook Features
 -----------------
@@ -76,11 +80,12 @@ Notebook Features
 Output Files
 ------------
 
-Each notebook generates:
-- **Visualizations**: High-quality plots saved to `outputs/` directory
-- **Data files**: CSV/JSON exports of results
-- **Performance metrics**: Detailed analysis tables
-- **Publication-ready figures**: LaTeX/PNG formats
+Each notebook generates the same artefacts as the original ``.ipynb`` versions:
+
+- **Visualisations**: High-quality plots saved to ``outputs/``.
+- **Data files**: CSV/JSON exports of results.
+- **Performance metrics**: Detailed analysis tables.
+- **Publication-ready figures**: LaTeX/PNG formats.
 
 Cross-References
 ----------------

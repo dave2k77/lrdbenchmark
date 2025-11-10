@@ -1,6 +1,6 @@
 # Estimation and Statistical Validation
 
-This notebook demonstrates the comprehensive estimation capabilities of the LRDBenchmark library, covering all available estimator categories with statistical validation.
+This notebook demonstrates the comprehensive estimation capabilities of the lrdbenchmark library, covering all available estimator categories with statistical validation.
 
 ## Overview
 
@@ -33,7 +33,7 @@ First, let's import all necessary libraries and set up the environment for repro
 ```python
 # Standard scientific computing imports
 import numpy as np
-# LRDBenchmark imports - using simplified API
+# lrdbenchmark imports - using simplified API
 from lrdbenchmark import (
     # Data models
     FBMModel, FGNModel, ARFIMAModel, MRWModel, AlphaStableModel,
@@ -69,7 +69,7 @@ os.environ['JAX_PLATFORMS'] = 'cpu'
 
 ## 2. Estimator Categories Overview {#overview}
 
-LRDBenchmark provides three main categories of Hurst parameter estimators:
+lrdbenchmark provides three main categories of Hurst parameter estimators:
 
 ### 1. Classical Estimators
 - **Temporal**: R/S Analysis, DFA, DMA, Higuchi
@@ -774,7 +774,7 @@ else:
 
 ### Key Takeaways
 
-1. **Estimator Diversity**: LRDBenchmark provides comprehensive coverage across three categories:
+1. **Estimator Diversity**: lrdbenchmark provides comprehensive coverage across three categories:
    - **Classical**: Fast, interpretable, theoretically grounded
    - **Machine Learning**: Robust, flexible, pre-trained models
    - **Neural Networks**: High accuracy, complex patterns, state-of-the-art
@@ -811,5 +811,5 @@ else:
 
 ---
 
-**Next Notebook**: [03_custom_models_and_estimators.ipynb](03_custom_models_and_estimators.ipynb) - Learn how to extend the library with custom data models and estimators.
+**Next Notebook**: [03_custom_models_and_estimators.md](03_custom_models_and_estimators.md) - Learn how to extend the library with custom data models and estimators.
 

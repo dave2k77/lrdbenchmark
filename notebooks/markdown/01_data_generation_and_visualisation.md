@@ -1,13 +1,13 @@
 # Data Generation and Visualisation
 
-This notebook demonstrates the comprehensive data generation capabilities of the LRDBenchmark library, covering all available stochastic models for long-range dependence (LRD) analysis.
+This notebook demonstrates the comprehensive data generation capabilities of the lrdbenchmark library, covering all available stochastic models for long-range dependence (LRD) analysis.
 
 ## Overview
 
 Long-range dependence (LRD) is a statistical property where observations that are far apart in time are still correlated. This notebook covers:
 
 1. **Theoretical Background**: Understanding LRD and the Hurst parameter
-2. **Data Models**: All available stochastic processes in LRDBenchmark
+2. **Data Models**: All available stochastic processes in lrdbenchmark
 3. **Visualisation**: Comprehensive plots and analysis
 4. **Quality Assessment**: Statistical validation of generated data
 
@@ -43,7 +43,7 @@ from statsmodels.tsa.stattools import adfuller, acf
 import warnings
 warnings.filterwarnings('ignore')
 
-# LRDBenchmark imports with new GPU utilities
+# lrdbenchmark imports with new GPU utilities
 from lrdbenchmark import (
     FBMModel, FGNModel, ARFIMAModel, MRWModel, AlphaStableModel,
     gpu_is_available, get_device_info, clear_gpu_cache, monitor_gpu_memory
@@ -70,7 +70,7 @@ plt.rcParams['font.size'] = 12
 # Set random seed for reproducibility
 np.random.seed(42)
 
-# Import LRDBenchmark data models
+# Import lrdbenchmark data models
 from lrdbenchmark import FBMModel, FGNModel, ARFIMAModel, MRWModel, AlphaStableModel
 
 print("✅ All imports successful!")
@@ -601,7 +601,7 @@ print("\n💾 Comparison statistics saved to outputs/model_comparison_stats.csv"
 
 ### Key Takeaways
 
-1. **Data Model Diversity**: LRDBenchmark provides comprehensive coverage of LRD models:
+1. **Data Model Diversity**: lrdbenchmark provides comprehensive coverage of LRD models:
    - **FBM/FGN**: Gaussian processes with exact Hurst parameter control
    - **ARFIMA**: Discrete-time models with fractional differencing
    - **MRW**: Multifractal models for complex scaling behavior
@@ -638,5 +638,5 @@ print("\n💾 Comparison statistics saved to outputs/model_comparison_stats.csv"
 
 ---
 
-**Next Notebook**: [02_estimation_and_validation.ipynb](02_estimation_and_validation.ipynb) - Learn how to estimate Hurst parameters using various estimators.
+**Next Notebook**: [02_estimation_and_validation.md](02_estimation_and_validation.md) - Learn how to estimate Hurst parameters using various estimators.
 

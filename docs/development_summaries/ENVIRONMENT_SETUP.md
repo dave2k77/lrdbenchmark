@@ -1,15 +1,15 @@
-# LRDBenchmark Environment Setup
+# lrdbenchmark Environment Setup
 
 ## 🎯 Overview
 
-This document describes the dedicated conda environment setup for the LRDBenchmark project, including all required dependencies and tools for comprehensive long-range dependence analysis.
+This document describes the dedicated conda environment setup for the lrdbenchmark project, including all required dependencies and tools for comprehensive long-range dependence analysis.
 
 ## 🚀 Quick Start
 
 ### Activate Environment
 ```bash
 # Navigate to project directory
-cd /home/davianc/Documents/LRDBenchmark
+cd /home/davianc/Documents/lrdbenchmark
 
 # Activate environment using the provided script
 ./activate_lrdbenchmark_env.sh
@@ -35,7 +35,7 @@ conda activate lrdbenchmark
 - **GPU**: NVIDIA GeForce RTX 5070 Laptop GPU (7.5 GB VRAM)
 - **CUDA**: 13.0 available, PyTorch 2.5.1+cu121 with CUDA 12.1
 - **JAX**: 0.7.2 with CUDA 13 support (CPU fallback available)
-- **Status**: ✅ GPU acceleration ready for LRDBenchmark with automatic device selection
+- **Status**: ✅ GPU acceleration ready for lrdbenchmark with automatic device selection
 
 ### Core Dependencies
 
@@ -73,7 +73,7 @@ conda activate lrdbenchmark
 ### Basic Import Test
 ```python
 import lrdbenchmark
-print("LRDBenchmark version:", lrdbenchmark.__version__)
+print("lrdbenchmark version:", lrdbenchmark.__version__)
 ```
 
 ### Comprehensive Test
@@ -135,29 +135,29 @@ print("✅ GPU test completed!")
 
 ## 📚 Available Notebooks
 
-The environment includes 5 comprehensive demonstration notebooks:
+The environment includes five comprehensive demonstration notebooks (stored as Markdown):
 
-1. **`01_data_generation_and_visualisation.ipynb`**
+1. **`01_data_generation_and_visualisation.md`**
    - Data generation from all models (FBM, FGN, ARFIMA, MRW, Alpha-Stable)
    - Comprehensive visualisations
    - Quality assessment
 
-2. **`02_estimation_and_validation.ipynb`**
+2. **`02_estimation_and_validation.md`**
    - All estimator categories (Classical, ML, Neural)
    - Statistical validation
    - Performance comparison
 
-3. **`03_custom_models_and_estimators.ipynb`**
+3. **`03_custom_models_and_estimators.md`**
    - Extending the library
    - Custom data models and estimators
    - Best practices
 
-4. **`04_comprehensive_benchmarking.ipynb`**
+4. **`04_comprehensive_benchmarking.md`**
    - Full benchmarking system
    - Contamination testing
    - Performance metrics
 
-5. **`05_leaderboard_generation.ipynb`**
+5. **`05_leaderboard_generation.md`**
    - Leaderboard creation
    - Performance ranking
    - Results visualisation
@@ -169,8 +169,11 @@ The environment includes 5 comprehensive demonstration notebooks:
 # Activate environment
 ./activate_lrdbenchmark_env.sh
 
+# Convert Markdown notebook (optional)
+jupytext --to notebook notebooks/markdown/01_data_generation_and_visualisation.md
+
 # Start Jupyter
-jupyter notebook
+jupyter notebook notebooks/markdown/
 ```
 
 ### Running Python Scripts
@@ -243,7 +246,7 @@ The environment includes a `requirements.txt` file with all installed packages f
 
 ### Getting Help
 
-- Check the LRDBenchmark documentation
+- Check the lrdbenchmark documentation
 - Review notebook examples
 - Check package-specific documentation
 - Use the provided test scripts
@@ -251,11 +254,11 @@ The environment includes a `requirements.txt` file with all installed packages f
 ## 🎉 Success Indicators
 
 When the environment is properly set up, you should see:
-- ✅ LRDBenchmark version displayed
+- ✅ lrdbenchmark version displayed
 - ✅ All imports working without errors
 - ✅ Jupyter notebooks running smoothly
 - ✅ All demonstration notebooks executable
 
 ---
 
-**Environment Status**: ✅ Ready for LRDBenchmark development and analysis
+**Environment Status**: ✅ Ready for lrdbenchmark development and analysis

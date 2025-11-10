@@ -12,7 +12,8 @@ Workflow Summary
 
 * Run the benchmark sweeps with :class:`lrdbenchmark.analysis.benchmark.ComprehensiveBenchmark`.
 * Collect leaderboard tables from the generated CSV or directly inside the
-  ``05_leaderboard_generation.ipynb`` notebook.
+  ``notebooks/markdown/05_leaderboard_generation.md`` notebook (or the
+  companion tutorial :doc:`/tutorials/tutorial_05_leaderboards`).
 * Inspect the ``significance_analysis`` field returned with each benchmarking
   summary to obtain omnibus and post-hoc test statistics.
 * Adjust the protocol in ``config/benchmark_protocol.yaml`` to standardise

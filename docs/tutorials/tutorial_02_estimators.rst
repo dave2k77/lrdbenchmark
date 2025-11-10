@@ -2,7 +2,7 @@ Estimation and Statistical Validation
 =====================================
 
 This notebook demonstrates the comprehensive estimation capabilities of
-the LRDBenchmark library, covering all available estimator categories
+the lrdbenchmark library, covering all available estimator categories
 with statistical validation.
 
 Overview
@@ -82,7 +82,7 @@ for reproducible results.
 2. Estimator Categories Overview
 --------------------------------
 
-LRDBenchmark provides three main categories of Hurst parameter
+lrdbenchmark provides three main categories of Hurst parameter
 estimators:
 
 1. Classical Estimators
@@ -847,7 +847,7 @@ Performance Trade-offs
 Key Takeaways
 ~~~~~~~~~~~~~
 
-1. **Estimator Diversity**: LRDBenchmark provides comprehensive coverage
+1. **Estimator Diversity**: lrdbenchmark provides comprehensive coverage
    across three categories:
 
    -  **Classical**: Fast, interpretable, theoretically grounded
@@ -905,7 +905,5 @@ References
 
 --------------
 
-**Next Notebook**:
-`03_custom_models_and_estimators.ipynb <03_custom_models_and_estimators.ipynb>`__
-- Learn how to extend the library with custom data models and
-estimators.
+**Next Tutorial**: :doc:`tutorial_03_customization` — learn how to extend the
+library with custom data models and estimators.

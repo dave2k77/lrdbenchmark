@@ -2,7 +2,7 @@ Data Generation and Visualisation
 =================================
 
 This notebook demonstrates the comprehensive data generation
-capabilities of the LRDBenchmark library, covering all available
+capabilities of the lrdbenchmark library, covering all available
 stochastic models for long-range dependence (LRD) analysis.
 
 Overview
@@ -12,7 +12,7 @@ Long-range dependence (LRD) is a statistical property where observations
 that are far apart in time are still correlated. This notebook covers:
 
 1. **Theoretical Background**: Understanding LRD and the Hurst parameter
-2. **Data Models**: All available stochastic processes in LRDBenchmark
+2. **Data Models**: All available stochastic processes in lrdbenchmark
 3. **Visualisation**: Comprehensive plots and analysis
 4. **Quality Assessment**: Statistical validation of generated data
 
@@ -51,7 +51,7 @@ for reproducible results.
     import warnings
     warnings.filterwarnings('ignore')
     
-    # LRDBenchmark imports with new GPU utilities
+    # lrdbenchmark imports with new GPU utilities
     from lrdbenchmark import (
         FBMModel, FGNModel, ARFIMAModel, MRWModel, AlphaStableModel,
         gpu_is_available, get_device_info, clear_gpu_cache, monitor_gpu_memory
@@ -78,7 +78,7 @@ for reproducible results.
     # Set random seed for reproducibility
     np.random.seed(42)
     
-    # Import LRDBenchmark data models
+    # Import lrdbenchmark data models
     from lrdbenchmark import FBMModel, FGNModel, ARFIMAModel, MRWModel, AlphaStableModel
     
     print("✅ All imports successful!")
@@ -640,7 +640,7 @@ different characteristics and use cases.
 Key Takeaways
 ~~~~~~~~~~~~~
 
-1. **Data Model Diversity**: LRDBenchmark provides comprehensive
+1. **Data Model Diversity**: lrdbenchmark provides comprehensive
    coverage of LRD models:
 
    -  **FBM/FGN**: Gaussian processes with exact Hurst parameter control
@@ -694,6 +694,5 @@ References
 
 --------------
 
-**Next Notebook**:
-`02_estimation_and_validation.ipynb <02_estimation_and_validation.ipynb>`__
-- Learn how to estimate Hurst parameters using various estimators.
+**Next Tutorial**: :doc:`tutorial_02_estimators` — learn how to estimate the
+Hurst parameter with multiple estimator families and validation techniques.

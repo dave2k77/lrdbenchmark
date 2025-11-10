@@ -1,10 +1,10 @@
 # Custom Models and Estimators
 
-This notebook demonstrates how to extend the LRDBenchmark library with custom data models and estimators, showing the extensibility and flexibility of the framework.
+This notebook demonstrates how to extend the lrdbenchmark library with custom data models and estimators, showing the extensibility and flexibility of the framework.
 
 ## Overview
 
-LRDBenchmark is designed to be highly extensible, allowing users to add their own data models and estimators. This notebook covers:
+lrdbenchmark is designed to be highly extensible, allowing users to add their own data models and estimators. This notebook covers:
 
 1. **Understanding the Base Classes**: How the framework is structured
 2. **Custom Data Models**: Creating new stochastic processes
@@ -34,7 +34,7 @@ First, let's import all necessary libraries and examine the base classes that we
 ```python
 # Standard scientific computing imports
 import numpy as np
-# LRDBenchmark imports - using simplified API
+# lrdbenchmark imports - using simplified API
 from lrdbenchmark import (
     # Data models
     FBMModel, FGNModel, ARFIMAModel, MRWModel, AlphaStableModel,
@@ -444,7 +444,7 @@ print("\n✅ Custom classical estimator created and tested successfully!")
 
 ### Key Takeaways
 
-1. **Extensibility**: LRDBenchmark is designed to be highly extensible with clear interfaces for custom components.
+1. **Extensibility**: lrdbenchmark is designed to be highly extensible with clear interfaces for custom components.
 
 2. **Custom Data Models**: Inherit from BaseModel and implement required methods.
 
@@ -470,7 +470,7 @@ print("\n✅ Custom classical estimator created and tested successfully!")
 
 ---
 
-**Next Notebook**: [04_comprehensive_benchmarking.ipynb](04_comprehensive_benchmarking.ipynb) - Learn how to use the comprehensive benchmarking system.
+**Next Notebook**: [04_comprehensive_benchmarking.md](04_comprehensive_benchmarking.md) - Learn how to use the comprehensive benchmarking system.
 
 
 

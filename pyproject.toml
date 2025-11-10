@@ -110,7 +110,11 @@ include = ["lrdbenchmark*"]
 
 [tool.setuptools.package-data]
 lrdbenchmark = ["py.typed"]
-"*" = ["notebooks/*.ipynb", "notebooks/README.md"]
+ "*" = [
+    "notebooks/README.md",
+    "notebooks/markdown/*.md",
+    "notebooks/markdown/*/*",
+ ]
 
 [tool.black]
 line-length = 88

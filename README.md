@@ -1,329 +1,161 @@
 # lrdbenchmark
 
-A comprehensive, reproducible framework for Long-Range Dependence (LRD) estimation and benchmarking across Classical, Machine Learning, and Neural Network methods.
+Modern, reproducible benchmarking for long-range dependence (LRD) estimation across classical statistics, machine learning, and neural approaches.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.8–3.12](https://img.shields.io/badge/python-3.8%E2%80%933.12-blue.svg)](https://www.python.org/downloads/)
 [![Version 2.3.1](https://img.shields.io/badge/version-2.3.1-green.svg)](https://pypi.org/project/lrdbenchmark/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17534599.svg)](https://doi.org/10.5281/zenodo.17534599)
 
-## 🎉 **v2.3.1 - Release Highlights**
+---
 
-**✅ Enhanced Stability & Performance:**
-- **100% Test Coverage**: Comprehensive validation across all 20 estimators
-- **Robust GPU Fallback**: Graceful CPU fallback when CUDA memory is exhausted
-- **Simplified API**: Unified imports with `from lrdbenchmark import ...`
-- **Fixed JAX Issues**: Resolved CUDA backend initialization errors
-- **Enhanced Error Handling**: Custom exception hierarchy with actionable messages
+## Why lrdbenchmark?
 
-**✅ New Features:**
-- **Lazy GPU Initialization**: CPU-first approach with optional GPU acceleration
-- **Unified Feature Extractor**: 76-feature pipeline for ML estimators
-- **Missing Estimator Modules**: Complete coverage of all 20 estimators
-- **Progressive Examples**: CPU-only, GPU-optional, and production patterns
-- **Stratified Leaderboards**: Built-in reporting across H regimes, tail classes, lengths, and contamination settings
-- **Robustness Diagnostics**: Automated scaling influence analysis with standardised stress panels
+- **One interface, twenty estimators** – 13 classical, 3 machine learning, and 4 neural estimators share a unified API with consistent metadata.
+- **Deterministic by construction** – global RNG coordination, stratified summaries, significance testing, and provenance capture are built in.
+- **Runtime profiles** – choose `quick` for smoke tests or CI, or `full` for exhaustive diagnostics, bootstraps, and robustness panels.
+- **Production-aware workflows** – supports CPU-only deployments by default with optional JAX/Numba/Torch acceleration.
+- **Documentation-first tutorials** – the tutorial series now ships directly in `docs/tutorials/`, mirrored by lightweight Markdown notebooks for interactive sessions.
 
-**✅ Improved Compatibility:**
-- **Broader Python Support**: Python 3.8-3.12 compatibility (Python 3.13 not yet supported)
-- **Optional Dependencies**: GPU acceleration libraries are truly optional
-- **Enhanced Documentation**: Updated examples and API references
+---
 
-## 🚀 Features
+## Getting Started
 
-**Comprehensive Estimator Suite:**
-- **13 Classical Methods**: R/S, DFA, DMA, Higuchi, Periodogram, GPH, Whittle, CWT, Wavelet Variance, Wavelet Log Variance, Wavelet Whittle, MFDFA, Multifractal Wavelet Leaders
-- **Unified ML Feature Engineering**: 76-feature extraction pipeline with pre-trained model support
-- **3 Machine Learning Models**: Random Forest (76 features), SVR (29 features), Gradient Boosting (54 features)
-- **4 Neural Network Architectures**: LSTM, GRU, CNN, Transformer with automatic device selection
-- **Total: 20 Estimators** across all categories
+### Installation
 
-**Robust Heavy-Tail Analysis:**
-- α-stable distribution modeling for heavy-tailed time series
-- Adaptive preprocessing: standardization, winsorization, log-winsorization, detrending
-- Contamination-aware estimation with intelligent fallback mechanisms
-- Stratified summaries across memory regimes, tail classes, data lengths, and contamination types
-- Stress-test panels quantifying estimator drift under missing data, regime shifts, and burst perturbations
-- Scaling diagnostics with leave-one-out influence and breakpoint detection for log–log fits
-
-**High-Performance Computing:**
-- Intelligent optimization backend with graceful fallbacks: JAX → Numba → NumPy
-- GPU acceleration support where available
-- Optimized implementations for large-scale analysis
-
-**Comprehensive Benchmarking:**
-- End-to-end benchmarking scripts with statistical analysis
-- Confidence intervals, significance tests, and effect size calculations
-- Performance leaderboards, stratified analysis, and comparative dashboards with significance overlays
-
-**📚 Demonstration Notebooks:**
-- **5 Comprehensive Jupyter Notebooks** showcasing all library features
-- **Data Generation & Visualization**: All stochastic models with comprehensive plots
-- **Estimation & Validation**: All estimator categories with statistical validation
-- **Custom Models & Estimators**: Library extensibility and custom implementations
-- **Comprehensive Benchmarking**: Full benchmarking system with contamination testing
-- **Leaderboard Generation**: Performance rankings with stratified reports, significance overlays, and robustness diagnostics
-
-## 📦 Installation
-
-### Basic Installation (CPU-only)
 ```bash
-pip install lrdbenchmark
+pip install lrdbenchmark                          # CPU-only
+pip install lrdbenchmark[accel-jax]              # + JAX acceleration
+pip install lrdbenchmark[accel-numba]            # + Numba acceleration
+pip install lrdbenchmark[accel-pytorch]          # + PyTorch acceleration
+# or everything: pip install lrdbenchmark[accel-all]
 ```
 
-### With GPU Acceleration (Optional)
-```bash
-# All acceleration libraries
-pip install lrdbenchmark[accel-all]
-
-# Specific acceleration libraries
-pip install lrdbenchmark[accel-jax]      # JAX acceleration
-pip install lrdbenchmark[accel-pytorch]  # PyTorch acceleration
-pip install lrdbenchmark[accel-numba]    # Numba acceleration
-```
-
-### Development Installation
-```bash
-git clone https://github.com/dave2k77/lrdbenchmark.git
-cd lrdbenchmark
-pip install -e .
-```
-
-## 🔧 Quick Start
-
-### Basic Usage
-
-```python
-from lrdbenchmark import FBMModel, RSEstimator
-
-# Generate synthetic fractional Brownian motion
-fbm = FBMModel(H=0.7, sigma=1.0)
-x = fbm.generate(length=1000, seed=42)
-
-# Estimate Hurst parameter using R/S analysis
-estimator = RSEstimator()
-result = estimator.estimate(x)
-print(f"Estimated H: {result['hurst_parameter']:.3f}")  # ~0.7
-```
-
-### Advanced Benchmarking
+### First Benchmark
 
 ```python
 from lrdbenchmark import ComprehensiveBenchmark
 
-# Run comprehensive benchmark across all estimators
-benchmark = ComprehensiveBenchmark()
-results = benchmark.run_comprehensive_benchmark(
-    data_length=1000,
-    benchmark_type='comprehensive'  # Options: 'comprehensive', 'classical', 'ML', 'neural'
+# Quick profile skips heavy diagnostics – perfect for tests and CI
+benchmark = ComprehensiveBenchmark(runtime_profile="quick")
+summary = benchmark.run_comprehensive_benchmark(
+    data_length=256,
+    benchmark_type="classical",
+    save_results=False,
 )
-benchmark.print_summary(results)
+
+print(summary["random_state"])
+print(summary["stratified_metrics"]["hurst_bands"])
 ```
 
-### Machine Learning Estimation
+Want the full analysis (bootstrap confidence intervals, robustness panels, influence diagnostics)? Simply drop the profile override:
 
 ```python
-from lrdbenchmark import FBMModel, RandomForestEstimator
-
-# Generate synthetic data
-fbm = FBMModel(H=0.7, sigma=1.0)
-x = fbm.generate(length=1000, seed=42)
-
-# Use pre-trained ML estimator
-ml_estimator = RandomForestEstimator()
-result = ml_estimator.estimate(x)
-print(f"Estimated H: {result['hurst_parameter']:.3f}")
+benchmark = ComprehensiveBenchmark()   # runtime_profile defaults to "auto"/"full"
 ```
 
-### Neural Network Estimation
+### Runtime Profiles at a Glance
 
-```python
-from lrdbenchmark import FBMModel, LSTMEstimator
-
-# Generate synthetic data
-fbm = FBMModel(H=0.7, sigma=1.0)
-x = fbm.generate(length=1000, seed=42)
-
-# Use neural network estimator (auto-detects GPU/CPU)
-nn_estimator = LSTMEstimator()
-result = nn_estimator.estimate(x)
-print(f"Estimated H: {result['hurst_parameter']:.3f}")
-```
-
-
-## 📚 Documentation
-
-- **📖 Full Documentation**: [https://lrdbenchmark.readthedocs.io/](https://lrdbenchmark.readthedocs.io/)
-- **🚀 Quick Start Guide**: [`docs/quickstart.rst`](docs/quickstart.rst)
-- **💡 Examples**: [`docs/examples/`](docs/examples/) and [`examples/`](examples/)
-- **🔧 API Reference**: [API Documentation](https://lrdbenchmark.readthedocs.io/en/latest/api/)
-- **📓 Demonstration Notebooks**: [`notebooks/`](notebooks/) - 5 comprehensive Jupyter notebooks showcasing all features
-
-## 🏗️ Project Structure
-
-```
-lrdbenchmark/
-├── lrdbenchmark/           # Main package
-│   ├── analysis/           # Estimator implementations
-│   ├── models/            # Data generation models
-│   ├── analytics/         # Performance monitoring
-│   └── robustness/        # Heavy-tail robustness tools
-├── notebooks/             # Demonstration notebooks (5 comprehensive Jupyter notebooks)
-├── scripts/               # Benchmarking and analysis scripts
-├── examples/              # Usage examples
-├── docs/                  # Documentation
-├── tests/                 # Test suite
-├── tools/                 # Development utilities
-└── config/                # Configuration files
-```
-
-## 🛠️ Available Estimators
-
-### Classical Methods (13 estimators)
-- **Temporal** (4): R/S Analysis, DFA, DMA, Higuchi
-- **Spectral** (3): Periodogram, GPH (Geweke-Porter-Hudak), Whittle
-- **Wavelet** (4): CWT (Continuous Wavelet Transform), Wavelet Variance, Wavelet Log Variance, Wavelet Whittle
-- **Multifractal** (2): MFDFA, Multifractal Wavelet Leaders
-
-### Machine Learning
-- **Random Forest** - Ensemble tree-based estimation
-- **Support Vector Regression** - SVM-based estimation
-- **Gradient Boosting** - Boosted tree estimation
-
-### Neural Networks
-- **LSTM** - Long Short-Term Memory networks
-- **GRU** - Gated Recurrent Units
-- **CNN** - Convolutional Neural Networks
-- **Transformer** - Attention-based architectures
-
-## 📓 Demonstration Notebooks
-
-lrdbenchmark includes 5 comprehensive Jupyter notebooks that demonstrate all library features:
-
-### 1. Data Generation and Visualization
-**File**: `notebooks/01_data_generation_and_visualisation.ipynb`
-
-Demonstrates all available data models with comprehensive visualizations:
-- **FBM/FGN**: Fractional Brownian Motion and Gaussian Noise
-- **ARFIMA**: Autoregressive Fractionally Integrated Moving Average
-- **MRW**: Multifractal Random Walk
-- **Alpha-Stable**: Heavy-tailed distributions
-- **Visualizations**: Time series, ACF, PSD, distributions
-- **Quality Assessment**: Statistical validation and theoretical properties
-
-### 2. Estimation and Statistical Validation
-**File**: `notebooks/02_estimation_and_validation.ipynb`
-
-Covers all estimator categories with statistical validation:
-- **Classical** (13): R/S, DFA, DMA, Higuchi, GPH, Whittle, Periodogram, CWT, Wavelet Variance, Wavelet Log Variance, Wavelet Whittle, MFDFA, Multifractal Wavelet Leaders
-- **Machine Learning** (3): Random Forest, SVR, Gradient Boosting
-- **Neural Networks** (4): CNN, LSTM, GRU, Transformer
-- **Statistical Validation**: Confidence intervals, bootstrap methods
-- **Performance Comparison**: Accuracy, speed, and reliability analysis
-
-### 3. Custom Models and Estimators
-**File**: `notebooks/03_custom_models_and_estimators.ipynb`
-
-Shows how to extend the library with custom components:
-- **Custom Data Models**: Fractional Ornstein-Uhlenbeck process
-- **Custom Estimators**: Variance-Based Hurst Estimator
-- **Library Extensibility**: Base classes and integration patterns
-- **Best Practices**: Guidelines for custom implementations
-
-### 4. Comprehensive Benchmarking
-**File**: `notebooks/04_comprehensive_benchmarking.ipynb`
-
-Demonstrates the full benchmarking system:
-- **Benchmark Types**: Classical, ML, Neural, Comprehensive
-- **Contamination Testing**: Noise, outliers, trends, seasonal patterns
-- **Performance Metrics**: MAE, execution time, success rate
-- **Statistical Analysis**: Confidence intervals and significance tests
-
-### 5. Leaderboard Generation
-**File**: `notebooks/05_leaderboard_generation.ipynb`
-
-Shows performance ranking and comparative analysis:
-- **Performance Rankings**: Overall and category-wise leaderboards
-- **Composite Scoring**: Accuracy, speed, and robustness metrics
-- **Visualization**: Performance plots and comparison tables
-- **Export Options**: CSV, JSON, LaTeX formats
-
-### Getting Started with Notebooks
-
-```bash
-# Clone the repository
-git clone https://github.com/dave2k77/lrdbenchmark.git
-cd lrdbenchmark
-
-# Install dependencies
-pip install -e .
-pip install jupyter matplotlib seaborn
-
-# Start Jupyter
-jupyter notebook notebooks/
-```
-
-Each notebook is self-contained, well-documented, and provides a complete learning path from basic concepts to advanced applications.
-
-## 🧪 Testing
-
-Run the test suite:
-
-```bash
-# Basic tests
-python -m pytest tests/
-
-# With coverage
-python -m pytest tests/ --cov=lrdbenchmark --cov-report=html
-```
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📖 Citation
-
-If you use lrdbenchmark in your research, please cite it:
-
-```bibtex
-@software{chin2024lrdbenchmark,
-  author = {Chin, Davian R.},
-  title = {lrdbenchmark: A Comprehensive Framework for Long-Range Dependence Estimation},
-  version = {2.3.1},
-  doi = {10.5281/zenodo.17534599},
-  url = {https://github.com/dave2k77/lrdbenchmark},
-  year = {2024}
-}
-```
-
-**DOI**: [10.5281/zenodo.17534599](https://doi.org/10.5281/zenodo.17534599)
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Built with modern Python scientific computing stack
-- Leverages JAX for high-performance computing
-- Inspired by the need for reproducible LRD analysis
-- Community-driven development and validation
-
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/dave2k77/lrdbenchmark/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/dave2k77/lrdbenchmark/discussions)
-- **Documentation**: [ReadTheDocs](https://lrdbenchmark.readthedocs.io/)
+| Profile | How to enable | Designed for | What is disabled |
+|---------|---------------|--------------|------------------|
+| `quick` | `ComprehensiveBenchmark(runtime_profile="quick")` or `export LRDBENCHMARK_RUNTIME_PROFILE=quick` | Unit tests, CI, exploratory work | Advanced metrics, bootstraps, robustness panels, heavy diagnostics |
+| `full`  | Default when running outside pytest/quick mode | End-to-end studies, publications | Nothing – full diagnostics and provenance |
 
 ---
 
-**Made with ❤️ for the time series analysis community**
+## Core Capabilities
+
+- **Estimator families** – temporal (R/S, DFA, DMA, Higuchi), spectral (Periodogram, GPH, Whittle), wavelet (CWT, variance, log-variance, wavelet Whittle), multifractal (MFDFA, wavelet leaders), machine-learning (Random Forest, SVR, Gradient Boosting), and neural (CNN, LSTM, GRU, Transformer).
+- **Robust benchmarking** – contamination models, adaptive preprocessing, stratified reporting, non-parametric significance tests, and provenance bundles per result.
+- **Analytics tooling** – convergence analysis, bias estimation, stress panels, uncertainty calibration, scale influence diagnostics.
+- **GPU-aware execution** – intelligent fallbacks (JAX ▶ Numba ▶ NumPy) with automatic CPU mode unless the user explicitly opts into GPU acceleration.
+
+For the full catalogue see the [API reference](https://lrdbenchmark.readthedocs.io/en/latest/api/).
+
+---
+
+## Documentation & Learning Path
+
+- **Full documentation**: <https://lrdbenchmark.readthedocs.io/>
+- **Tutorial sequence**: `docs/tutorials/` (rendered on Read the Docs, aligned with the original notebook curriculum)
+- **Interactive notebooks**: Markdown sources in `notebooks/markdown/`, easily opened via [Jupytext](https://jupytext.readthedocs.io/) or any Markdown-friendly notebook environment
+- **Examples & scripts**: runnable patterns in `examples/` and `scripts/`
+
+### Working with the Markdown notebooks
+
+```bash
+pip install jupytext
+jupytext --to notebook notebooks/markdown/02_estimation_and_validation.md
+jupyter notebook notebooks/markdown/
+```
+
+This keeps the repository light while preserving the original interactive walkthroughs.
+
+---
+
+## Project Layout
+
+```
+lrdbenchmark/
+├── lrdbenchmark/            # Package modules
+│   ├── analysis/            # Estimators, benchmarking, diagnostics
+│   ├── analytics/           # Provenance, reporting, dashboards
+│   ├── models/              # Data generators
+│   └── robustness/          # Adaptive preprocessing & stress tests
+├── docs/                    # Sphinx documentation & tutorials
+├── notebooks/               # Markdown notebooks + supporting artefacts
+├── examples/                # Minimal usage examples
+├── scripts/                 # Reproducible benchmarking pipelines
+└── tests/                   # Pytest suite (quick profile by default)
+```
+
+---
+
+## Testing
+
+```bash
+python -m pytest                       # quick profile exercises
+python -m pytest --cov=lrdbenchmark    # add coverage
+```
+
+---
+
+## Contributing
+
+We welcome improvements to estimators, diagnostics, documentation, and tutorials.
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/improvement`
+3. Run the test suite (see above)
+4. Submit a pull request describing the change and relevant use-cases
+
+Please consult `CONTRIBUTING.md` for coding standards and review expectations.
+
+---
+
+## Citation
+
+```bibtex
+@software{chin2024lrdbenchmark,
+  author  = {Chin, Davian R.},
+  title   = {lrdbenchmark: A Comprehensive Framework for Long-Range Dependence Estimation},
+  version = {2.3.1},
+  year    = {2024},
+  doi     = {10.5281/zenodo.17534599},
+  url     = {https://github.com/dave2k77/lrdbenchmark}
+}
+```
+
+---
+
+## Licence & Support
+
+- **Licence**: MIT (see [`LICENSE`](LICENSE))
+- **Issues & feature requests**: <https://github.com/dave2k77/lrdbenchmark/issues>
+- **Discussions**: <https://github.com/dave2k77/lrdbenchmark/discussions>
+- **Documentation**: <https://lrdbenchmark.readthedocs.io/>
+
+Made with care for the time-series community. If you publish results using lrdbenchmark, please share them – the benchmarking suite evolves with real-world feedback.
 
 
 

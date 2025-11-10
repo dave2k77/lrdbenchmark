@@ -1,6 +1,6 @@
 # Comprehensive Estimator Benchmarking
 
-This notebook demonstrates the full benchmarking system of LRDBenchmark, showing how to systematically compare estimators across different data types, contamination scenarios, statistical diagnostics, and robustness stress tests.
+This notebook demonstrates the full benchmarking system of lrdbenchmark, showing how to systematically compare estimators across different data types, contamination scenarios, statistical diagnostics, and robustness stress tests.
 
 ## Overview
 
@@ -34,7 +34,7 @@ First, let's import all necessary libraries and set up the comprehensive benchma
 ```python
 # Standard scientific computing imports
 import numpy as np
-# LRDBenchmark imports - using simplified API
+# lrdbenchmark imports - using simplified API
 from lrdbenchmark import (
     # Data models
     FBMModel, FGNModel, ARFIMAModel, MRWModel, AlphaStableModel,
@@ -301,7 +301,7 @@ print("\n" + "=" * 60)
 
 ### Key Takeaways
 
-1. **Comprehensive Benchmarking**: LRDBenchmark provides a unified system for testing all estimator categories:
+1. **Comprehensive Benchmarking**: lrdbenchmark provides a unified system for testing all estimator categories:
    - **Classical**: Fast, interpretable, theoretically grounded
    - **ML**: Robust, flexible, pre-trained models
    - **Neural**: High accuracy, complex patterns
@@ -346,7 +346,7 @@ print("\n" + "=" * 60)
 
 ---
 
-**Next Notebook**: [05_leaderboard_generation.ipynb](05_leaderboard_generation.ipynb) - Learn how to create performance leaderboards and rankings.
+**Next Notebook**: [05_leaderboard_generation.md](05_leaderboard_generation.md) - Learn how to create performance leaderboards and rankings.
 
 
 ## Stratified and Robustness Diagnostics

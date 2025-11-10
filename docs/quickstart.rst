@@ -34,7 +34,7 @@ Generate synthetic data and run a benchmark:
 Neural Network Usage
 --------------------
 
-LRDBenchmark provides a comprehensive neural network factory with 4 architectures that achieve excellent speed-accuracy trade-offs:
+lrdbenchmark provides a comprehensive neural network factory with 4 architectures that achieve excellent speed-accuracy trade-offs:
 
 .. code-block:: python
 
@@ -76,7 +76,7 @@ LRDBenchmark provides a comprehensive neural network factory with 4 architecture
 Machine Learning Usage
 ----------------------
 
-LRDBenchmark provides production-ready machine learning estimators:
+lrdbenchmark provides production-ready machine learning estimators:
 
 .. code-block:: python
 
@@ -143,7 +143,7 @@ For production deployment with neural networks, use the Neural Network Factory:
 Data Models
 -----------
 
-LRDBenchmark provides several synthetic data models:
+lrdbenchmark provides several synthetic data models:
 
 .. code-block:: python
 
@@ -284,7 +284,7 @@ Custom benchmark configuration:
 Integration note: HPFracc
 -------------------------
 
-An updated HPFracc API is available; see `documentation_summaries/PROJECT_CLEANUP_SUMMARY.md` for the current reference and adapt example code accordingly. The integration is optional and not required for core LRDBenchmark usage.
+An updated HPFracc API is available; see `documentation_summaries/PROJECT_CLEANUP_SUMMARY.md` for the current reference and adapt example code accordingly. The integration is optional and not required for core lrdbenchmark usage.
 
 Visualization
 -------------
@@ -335,7 +335,7 @@ Next Steps
 
 **Recommended Learning Path**:
 
-1. **Run the Notebooks**: Start with `notebooks/01_data_generation_and_visualisation.ipynb`
+1. **Follow the tutorials**: Begin with :doc:`tutorials/tutorial_01_synthetic_data` (or open `notebooks/markdown/01_data_generation_and_visualisation.md`)
 2. **Explore API**: Use the quickstart examples above
 3. **Advanced Usage**: Try the comprehensive benchmarking examples
 4. **Custom Development**: Learn extensibility from the custom models notebook

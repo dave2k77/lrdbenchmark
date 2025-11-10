@@ -2,7 +2,7 @@
 Tutorial Series
 ===============
 
-This five-part tutorial series walks you through the full LRDBenchmark workflow—from generating synthetic and realistic long-range dependent data to evaluating estimators with statistical diagnostics and publishing leaderboard-quality reports. Follow the modules in order for a guided learning path, or jump to the topic most relevant to your needs.
+This five-part tutorial series walks you through the full lrdbenchmark workflow—from generating synthetic and realistic long-range dependent data to evaluating estimators with statistical diagnostics and publishing leaderboard-quality reports. Follow the modules in order for a guided learning path, or jump to the topic most relevant to your needs.
 
 .. toctree::
    :maxdepth: 2
