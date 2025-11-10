@@ -13,6 +13,8 @@ import json
 from datetime import datetime
 import warnings
 from itertools import combinations
+import os
+import sys
 
 from scipy import stats
 
@@ -21,12 +23,24 @@ from .advanced_metrics import (
     ConvergenceAnalyzer,
     MeanSignedErrorAnalyzer,
     AdvancedPerformanceProfiler,
+    RobustnessStressTester,
+    ScalingInfluenceAnalyzer,
     calculate_convergence_rate,
     calculate_mean_signed_error,
     profile_estimator_performance
 )
 from .uncertainty import UncertaintyQuantifier
 from ..robustness.adaptive_preprocessor import AdaptiveDataPreprocessor
+
+# Import new diagnostic and reporting systems
+from .diagnostics import (
+    PowerLawDiagnostics,
+    ScaleWindowSensitivityAnalyser,
+    run_comprehensive_diagnostics
+)
+from ..analytics.provenance import ProvenanceTracker, create_provenance_bundle
+from ..analytics.stratified_report_generator import StratifiedReportGenerator
+from ..random_manager import get_random_manager
 
 # Import estimators
 from .temporal.rs.rs_estimator_unified import RSEstimator
@@ -60,44 +74,58 @@ from ..analytics.error_analyzer import ErrorAnalyzer
 # Import contamination models
 # Simple contamination classes for benchmarking
 class AdditiveGaussianNoise:
-    def __init__(self, noise_level=0.1, std=0.1):
+    def __init__(self, rng: np.random.Generator, noise_level=0.1, std=0.1):
         self.noise_level = noise_level
         self.std = std
+        self.rng = rng
 
     def apply(self, data):
-        noise = np.random.normal(0, self.std * self.noise_level, len(data))
+        noise = self.rng.normal(0, self.std * self.noise_level, len(data))
         return data + noise
 
 
 class MultiplicativeNoise:
-    def __init__(self, noise_level=0.05, std=0.05):
+    def __init__(self, rng: np.random.Generator, noise_level=0.05, std=0.05):
         self.noise_level = noise_level
         self.std = std
+        self.rng = rng
 
     def apply(self, data):
-        noise = np.random.normal(1, self.std * self.noise_level, len(data))
+        noise = self.rng.normal(1, self.std * self.noise_level, len(data))
         return data * noise
 
 
 class OutlierContamination:
-    def __init__(self, outlier_fraction=0.1, outlier_magnitude=3.0):
+    def __init__(
+        self,
+        rng: np.random.Generator,
+        outlier_fraction=0.1,
+        outlier_magnitude=3.0,
+    ):
         self.outlier_fraction = outlier_fraction
         self.outlier_magnitude = outlier_magnitude
+        self.rng = rng
 
     def apply(self, data):
         contaminated = data.copy()
         n_outliers = int(len(data) * self.outlier_fraction)
-        outlier_indices = np.random.choice(len(data), n_outliers, replace=False)
-        contaminated[outlier_indices] += np.random.normal(
+        outlier_indices = self.rng.choice(len(data), n_outliers, replace=False)
+        contaminated[outlier_indices] += self.rng.normal(
             0, self.outlier_magnitude, n_outliers
         )
         return contaminated
 
 
 class TrendContamination:
-    def __init__(self, trend_strength=0.1, trend_type="linear"):
+    def __init__(
+        self,
+        rng: Optional[np.random.Generator] = None,
+        trend_strength=0.1,
+        trend_type="linear",
+    ):
         self.trend_strength = trend_strength
         self.trend_type = trend_type
+        self.rng = rng
 
     def apply(self, data):
         n = len(data)
@@ -109,9 +137,15 @@ class TrendContamination:
 
 
 class SeasonalContamination:
-    def __init__(self, seasonal_strength=0.1, period=None):
+    def __init__(
+        self,
+        rng: Optional[np.random.Generator] = None,
+        seasonal_strength=0.1,
+        period=None,
+    ):
         self.seasonal_strength = seasonal_strength
         self.period = period
+        self.rng = rng
 
     def apply(self, data):
         n = len(data)
@@ -123,15 +157,21 @@ class SeasonalContamination:
 
 
 class MissingDataContamination:
-    def __init__(self, missing_fraction=0.1, missing_pattern="random"):
+    def __init__(
+        self,
+        rng: np.random.Generator,
+        missing_fraction=0.1,
+        missing_pattern="random",
+    ):
         self.missing_fraction = missing_fraction
         self.missing_pattern = missing_pattern
+        self.rng = rng
 
     def apply(self, data):
         contaminated = data.copy()
         n_missing = int(len(data) * self.missing_fraction)
         if self.missing_pattern == "random":
-            missing_indices = np.random.choice(len(data), n_missing, replace=False)
+            missing_indices = self.rng.choice(len(data), n_missing, replace=False)
             contaminated[missing_indices] = np.nan
         return contaminated
 
@@ -168,7 +208,7 @@ class ComprehensiveBenchmark:
     Comprehensive benchmark class for testing all estimators and data models.
     """
 
-    def __init__(self, output_dir: Optional[str] = None):
+    def __init__(self, output_dir: Optional[str] = None, runtime_profile: str = "auto"):
         """
         Initialize the benchmark system.
 
@@ -176,12 +216,22 @@ class ComprehensiveBenchmark:
         ----------
         output_dir : str, optional
             Directory to save benchmark results
+        runtime_profile : str, optional
+            Runtime profile to control computational intensity. Options:
+            - "auto": determine automatically (default)
+            - "quick": minimise expensive diagnostics (useful for tests)
+            - "full": enable all diagnostics and resampling routines
         """
         self.output_dir = Path(output_dir) if output_dir else Path("benchmark_results")
         self.output_dir.mkdir(exist_ok=True)
 
         self.protocol_config_path = Path("config/benchmark_protocol.yaml")
         self.protocol_config = self._load_protocol_config(self.protocol_config_path)
+        self.runtime_profile = self._resolve_runtime_profile(runtime_profile)
+
+        data_generation_cfg = self.protocol_config.get("data_generation", {})
+        self.random_manager = get_random_manager()
+        self.random_manager.initialise(data_generation_cfg.get("random_seed"))
 
         preprocessing_cfg = self.protocol_config.get("preprocessing", {})
         winsor_limits = preprocessing_cfg.get("winsorize_limits", (0.01, 0.99))
@@ -196,24 +246,92 @@ class ComprehensiveBenchmark:
 
         # Initialize all estimator categories
         self.all_estimators = self._initialize_all_estimators()
-        
-        # Initialize advanced metrics analyzers
-        self.convergence_analyzer = ConvergenceAnalyzer()
-        self.mse_analyzer = MeanSignedErrorAnalyzer()
-        self.advanced_profiler = AdvancedPerformanceProfiler()
         benchmark_cfg = self.protocol_config.get("benchmark", {})
+        diagnostics_cfg = self.protocol_config.get("diagnostics", {})
+
+        advanced_metrics_cfg = benchmark_cfg.get("advanced_metrics", {})
         uncertainty_cfg = benchmark_cfg.get("uncertainty", {})
-        self.uncertainty_quantifier = UncertaintyQuantifier(
-            n_block_bootstrap=uncertainty_cfg.get("n_block_bootstrap", 64),
-            block_size=uncertainty_cfg.get("block_size"),
-            n_wavelet_bootstrap=uncertainty_cfg.get("n_wavelet_bootstrap", 64),
-            wavelet=uncertainty_cfg.get("wavelet", "db4"),
-            max_wavelet_level=uncertainty_cfg.get("max_wavelet_level"),
-            n_parametric=uncertainty_cfg.get("n_parametric", 48),
-            confidence_level=benchmark_cfg.get("confidence_level", 0.95),
-            random_state=uncertainty_cfg.get("random_state"),
-        )
+        robustness_cfg = benchmark_cfg.get("robustness", {})
+
+        self.enable_advanced_metrics = bool(advanced_metrics_cfg.get("enabled", True))
+        self.enable_uncertainty = bool(uncertainty_cfg.get("enabled", True))
+        self.enable_robustness = bool(robustness_cfg.get("enabled", True))
+        log_log_cfg = diagnostics_cfg.get("log_log_checks", {})
+        self.enable_diagnostics = bool(log_log_cfg.get("enabled", True))
+
+        if self.runtime_profile == "quick":
+            self.enable_advanced_metrics = False
+            self.enable_uncertainty = False
+            self.enable_robustness = False
+            self.enable_diagnostics = False
+
+        # Initialize advanced metrics analyzers
+        if self.enable_advanced_metrics:
+            self.convergence_analyzer = ConvergenceAnalyzer()
+            self.mse_analyzer = MeanSignedErrorAnalyzer()
+        else:
+            self.convergence_analyzer = None
+            self.mse_analyzer = None
+
+        profiler_seed = self.random_manager.spawn_seed("benchmark:advanced_profiler")
+        self.advanced_profiler = AdvancedPerformanceProfiler(random_state=profiler_seed)
+
+        if self.enable_uncertainty:
+            uncertainty_seed = self.random_manager.spawn_seed(
+                "benchmark:uncertainty", seed=uncertainty_cfg.get("random_state")
+            )
+            self.uncertainty_quantifier = UncertaintyQuantifier(
+                n_block_bootstrap=uncertainty_cfg.get("n_block_bootstrap", 64),
+                block_size=uncertainty_cfg.get("block_size"),
+                n_wavelet_bootstrap=uncertainty_cfg.get("n_wavelet_bootstrap", 64),
+                wavelet=uncertainty_cfg.get("wavelet", "db4"),
+                max_wavelet_level=uncertainty_cfg.get("max_wavelet_level"),
+                n_parametric=uncertainty_cfg.get("n_parametric", 48),
+                confidence_level=benchmark_cfg.get("confidence_level", 0.95),
+                random_state=uncertainty_seed,
+            )
+        else:
+            self.uncertainty_quantifier = None
+
         self.error_analyzer = ErrorAnalyzer()
+
+        # Initialize robustness stress tester
+        if self.enable_robustness:
+            robustness_config = robustness_cfg.get("config", {})
+            robustness_seed = self.random_manager.spawn_seed(
+                "benchmark:robustness", seed=robustness_cfg.get("random_state")
+            )
+            self.robustness_tester = RobustnessStressTester(
+                random_state=robustness_seed,
+                config=robustness_config
+            )
+        else:
+            self.robustness_tester = None
+
+        # Initialize new diagnostic and reporting systems
+        if self.enable_diagnostics:
+            self.power_law_diagnostics = PowerLawDiagnostics(
+                min_r_squared=log_log_cfg.get("min_r_squared", 0.5),
+                min_points=log_log_cfg.get("min_points", 6)
+            )
+
+            sensitivity_cfg = diagnostics_cfg.get("scale_window_sensitivity", {})
+            self.scale_sensitivity_analyser = ScaleWindowSensitivityAnalyser(
+                perturbation_levels=sensitivity_cfg.get("perturbation_levels", [0.9, 0.95, 1.05, 1.1]),
+                leave_one_out=sensitivity_cfg.get("leave_one_out", True)
+            )
+
+            self.scaling_influence_analyser = ScalingInfluenceAnalyzer()
+        else:
+            self.power_law_diagnostics = None
+            self.scale_sensitivity_analyser = None
+            self.scaling_influence_analyser = None
+        
+        # Initialize provenance tracker
+        self.provenance_tracker = ProvenanceTracker(self.protocol_config)
+        
+        # Initialize stratified report generator
+        self.stratified_report_generator = StratifiedReportGenerator(self.protocol_config)
 
         # Initialize data models
         self.data_models = self._initialize_data_models()
@@ -225,10 +343,41 @@ class ComprehensiveBenchmark:
         self.results = {}
         self.performance_metrics = {}
 
+    def _resolve_runtime_profile(self, runtime_profile: Optional[str]) -> str:
+        """
+        Determine the runtime profile controlling benchmark intensity.
+        """
+        env_override = os.getenv("LRDBENCHMARK_RUNTIME_PROFILE")
+        if env_override:
+            runtime_profile = env_override
+
+        if not runtime_profile:
+            runtime_profile = "auto"
+
+        runtime_profile = runtime_profile.lower()
+
+        if runtime_profile == "auto":
+            quick_flag = os.getenv("LRDBENCHMARK_QUICK_MODE")
+            if quick_flag and quick_flag.strip().lower() in {"1", "true", "yes", "on"}:
+                return "quick"
+            if os.getenv("PYTEST_CURRENT_TEST"):
+                return "quick"
+            if "pytest" in sys.modules:
+                return "quick"
+            return "full"
+
+        if runtime_profile in {"quick", "full"}:
+            return runtime_profile
+
+        warnings.warn(
+            f"Unknown runtime_profile '{runtime_profile}'. Falling back to 'full'."
+        )
+        return "full"
+
     def _load_protocol_config(self, path: Path) -> Dict[str, Any]:
         """Load benchmark protocol configuration from YAML/JSON file."""
         default_config: Dict[str, Any] = {
-            "version": "1.0",
+            "version": "2.0",
             "preprocessing": {
                 "outlier_threshold": 3.0,
                 "winsorize_limits": [0.01, 0.99],
@@ -257,18 +406,53 @@ class ComprehensiveBenchmark:
                     "n_wavelet_bootstrap": 64,
                     "n_parametric": 48,
                 },
+                "robustness": {
+                    "enabled": True,
+                    "config": {},
+                },
             },
         }
 
         try:
             with open(path, "r") as f:
-                config_data = json.load(f)
-            return self._deep_merge_dicts(default_config, config_data)
+                # Try YAML first, then JSON
+                if path.suffix.lower() in ['.yaml', '.yml']:
+                    try:
+                        import yaml
+                        config_data = yaml.safe_load(f)
+                    except ImportError:
+                        warnings.warn(
+                            "PyYAML not installed. Install with 'pip install pyyaml' to use YAML configs. "
+                            "Falling back to JSON parsing."
+                        )
+                        f.seek(0)
+                        config_data = json.load(f)
+                else:
+                    config_data = json.load(f)
+            
+            # Merge with defaults, handling both new unified schema and legacy format
+            merged = self._deep_merge_dicts(default_config, config_data)
+            
+            # Map new unified schema to legacy format for backward compatibility
+            if "data_generation" in merged:
+                # Extract data models from new schema
+                if "models" in merged["data_generation"]:
+                    merged["data_models"] = merged["data_generation"]["models"]
+            
+            if "estimators" in merged and "overrides" in merged["estimators"]:
+                merged["estimator_overrides"] = merged["estimators"]["overrides"]
+            
+            # Ensure robustness config exists
+            if "benchmark" in merged:
+                if "robustness" not in merged["benchmark"]:
+                    merged["benchmark"]["robustness"] = {"enabled": True, "config": {}}
+            
+            return merged
         except FileNotFoundError:
             warnings.warn(
                 f"Protocol configuration '{path}' not found. Using defaults."
             )
-        except json.JSONDecodeError as exc:
+        except (json.JSONDecodeError, ValueError) as exc:
             warnings.warn(
                 f"Failed to parse protocol configuration '{path}': {exc}. Using defaults."
             )
@@ -376,6 +560,13 @@ class ComprehensiveBenchmark:
         }
         return contamination_models
 
+    def _infer_estimator_family(self, estimator_name: str) -> Optional[str]:
+        """Return the estimator family/category for a given estimator name."""
+        for family, estimator_map in self.all_estimators.items():
+            if estimator_name in estimator_map:
+                return family
+        return None
+
     def get_estimators_by_type(
         self, benchmark_type: str = "comprehensive", data_length: int = 1000
     ) -> Dict[str, Any]:
@@ -444,7 +635,11 @@ class ComprehensiveBenchmark:
 
         model_class = self.data_models[model_name]
 
-        protocol_defaults = self.protocol_config.get("data_models", {}).get(model_name, {})
+        protocol_defaults = {
+            key: value
+            for key, value in self.protocol_config.get("data_models", {}).get(model_name, {}).items()
+            if key != "enabled"
+        }
 
         # Set default parameters if not provided
         if model_name == "fBm":
@@ -462,10 +657,17 @@ class ComprehensiveBenchmark:
         else:
             params = {**protocol_defaults, **kwargs}
 
+        seed_override = params.pop("random_state", None)
         model = model_class(**params)
-        data = model.generate(data_length, seed=42)
+        stream_name = f"data_model:{model_name}"
+        data_seed = self.random_manager.spawn_seed(stream_name, seed=seed_override)
+        data_rng = self.random_manager.spawn_generator(stream_name, seed=data_seed)
+        data = model.generate(length=data_length, rng=data_rng)
 
         params["model_name"] = model_name
+        if seed_override is not None:
+            params["requested_random_seed"] = seed_override
+        params["random_seed"] = data_seed
 
         return data, params
 
@@ -535,7 +737,18 @@ class ComprehensiveBenchmark:
         contamination_params = {**default_params, **kwargs}
 
         # Apply contamination
-        contamination_model = contamination_class(**contamination_params)
+        stream_name = f"contamination:{contamination_type}"
+        seed_override = contamination_params.get("random_state")
+        contamination_seed = self.random_manager.spawn_seed(
+            stream_name, seed=seed_override
+        )
+        contamination_rng = self.random_manager.spawn_generator(
+            stream_name, seed=contamination_seed
+        )
+        model_kwargs = dict(contamination_params)
+        model_kwargs.pop("random_state", None)
+        model_kwargs.setdefault("rng", contamination_rng)
+        contamination_model = contamination_class(**model_kwargs)
         contaminated_data = contamination_model.apply(data)
 
         contamination_info = {
@@ -544,6 +757,7 @@ class ComprehensiveBenchmark:
             "parameters": contamination_params,
             "original_data_shape": data.shape,
             "contaminated_data_shape": contaminated_data.shape,
+            "random_seed": contamination_seed,
         }
 
         return contaminated_data, contamination_info
@@ -571,6 +785,7 @@ class ComprehensiveBenchmark:
         # Get the estimator from the comprehensive list
         all_estimators = self.get_estimators_by_type("comprehensive")
         estimator = all_estimators[estimator_name]
+        estimator_family = self._infer_estimator_family(estimator_name)
 
         # Measure execution time
         start_time = time.time()
@@ -620,57 +835,86 @@ class ComprehensiveBenchmark:
                 error = None
 
             # Advanced metrics analysis
-            advanced_metrics = {}
-            if true_params.get("H") is not None:
+            advanced_metrics: Dict[str, Any] = {}
+            if (
+                self.enable_advanced_metrics
+                and self.convergence_analyzer is not None
+                and true_params.get("H") is not None
+            ):
                 try:
                     # Convergence analysis
                     convergence_results = self.convergence_analyzer.analyze_convergence_rate(
                         estimator, processed_data, true_params.get("H")
                     )
-                    advanced_metrics['convergence_rate'] = convergence_results.get('convergence_rate')
-                    advanced_metrics['convergence_achieved'] = convergence_results.get('convergence_achieved')
-                    advanced_metrics['stability_metric'] = convergence_results.get('stability_metric')
-                    
+                    advanced_metrics["convergence_rate"] = convergence_results.get("convergence_rate")
+                    advanced_metrics["convergence_achieved"] = convergence_results.get("convergence_achieved")
+                    advanced_metrics["stability_metric"] = convergence_results.get("stability_metric")
+
                     # Mean signed error analysis (Monte Carlo)
-                    mse_results = self._calculate_monte_carlo_mse(estimator, processed_data, true_params.get("H"))
-                    advanced_metrics['mean_signed_error'] = mse_results.get('mean_signed_error')
-                    advanced_metrics['bias_percentage'] = mse_results.get('bias_percentage')
-                    advanced_metrics['significant_bias'] = mse_results.get('significant_bias')
-                    
+                    mse_results = self._calculate_monte_carlo_mse(
+                        estimator, processed_data, true_params.get("H")
+                    )
+                    advanced_metrics["mean_signed_error"] = mse_results.get("mean_signed_error")
+                    advanced_metrics["bias_percentage"] = mse_results.get("bias_percentage")
+                    advanced_metrics["significant_bias"] = mse_results.get("significant_bias")
+
                 except Exception as e:
                     warnings.warn(f"Advanced metrics calculation failed: {e}")
                     advanced_metrics = {
-                        'convergence_rate': None,
-                        'convergence_achieved': None,
-                        'stability_metric': None,
-                        'mean_signed_error': None,
-                        'bias_percentage': None,
-                        'significant_bias': None
+                        "convergence_rate": None,
+                        "convergence_achieved": None,
+                        "stability_metric": None,
+                        "mean_signed_error": None,
+                        "bias_percentage": None,
+                        "significant_bias": None,
                     }
+            elif not self.enable_advanced_metrics:
+                advanced_metrics = {
+                    "status": "skipped",
+                    "reason": (
+                        "Advanced metrics disabled by runtime profile."
+                        if self.runtime_profile == "quick"
+                        else "Advanced metrics disabled by benchmark configuration."
+                    ),
+                }
 
             # Uncertainty quantification
             if hurst_est is not None:
-                try:
-                    uncertainty_details = self.uncertainty_quantifier.compute_intervals(
-                        estimator=estimator,
-                        data=processed_data,
-                        base_result=result,
-                        true_value=true_params.get("H"),
-                        data_model_name=true_params.get("model_name"),
-                        data_model_params=true_params,
-                        data_model_registry=self.data_models,
+                if self.enable_uncertainty and self.uncertainty_quantifier is not None:
+                    try:
+                        uncertainty_details = self.uncertainty_quantifier.compute_intervals(
+                            estimator=estimator,
+                            data=processed_data,
+                            base_result=result,
+                            true_value=true_params.get("H"),
+                            data_model_name=true_params.get("model_name"),
+                            data_model_params=true_params,
+                            data_model_registry=self.data_models,
+                        )
+                    except Exception as exc:
+                        warnings.warn(f"Uncertainty quantification failed: {exc}")
+                        uncertainty_details = {
+                            "status": "failed",
+                            "error": str(exc),
+                        }
+                else:
+                    reason = (
+                        "Uncertainty quantification disabled by runtime profile."
+                        if self.runtime_profile == "quick"
+                        else "Uncertainty quantification disabled in benchmark configuration."
                     )
-                except Exception as exc:
-                    warnings.warn(f"Uncertainty quantification failed: {exc}")
                     uncertainty_details = {
-                        "status": "failed",
-                        "error": str(exc),
+                        "status": "disabled",
+                        "reason": reason,
                     }
             else:
                 uncertainty_details = {
                     "status": "unavailable",
                     "reason": "No hurst estimate available for uncertainty quantification.",
                 }
+
+            if not self.enable_uncertainty:
+                result["confidence_interval"] = None
 
             if isinstance(uncertainty_details, dict):
                 result["uncertainty"] = uncertainty_details
@@ -681,6 +925,123 @@ class ComprehensiveBenchmark:
                     and primary_interval.get("confidence_interval") is not None
                 ):
                     result.setdefault("confidence_interval", tuple(primary_interval["confidence_interval"]))
+            
+            # Robustness stress panels: before/after H comparisons
+            robustness_panel = None
+            if (
+                self.enable_robustness
+                and self.robustness_tester is not None
+                and hurst_est is not None
+            ):
+                try:
+                    # Use original data (before preprocessing) for robustness tests
+                    # The stress tester will apply its own transformations
+                    robustness_panel = self.robustness_tester.run_panels(
+                        estimator=estimator,
+                        data=data,  # Original data before preprocessing
+                        baseline_result=result,  # Baseline result with H estimate
+                        true_value=true_params.get("H"),
+                    )
+                except Exception as exc:
+                    warnings.warn(f"Robustness stress panel failed for {estimator_name}: {exc}")
+                    robustness_panel = {
+                        "status": "failed",
+                        "error": str(exc),
+                    }
+            elif not self.enable_robustness:
+                robustness_panel = {
+                    "status": "skipped",
+                    "reason": (
+                        "Robustness analysis disabled by runtime profile."
+                        if self.runtime_profile == "quick"
+                        else "Robustness analysis disabled by benchmark configuration."
+                    ),
+                }
+            
+            # Run comprehensive diagnostics on power-law fit
+            diagnostics_results: Dict[str, Any] = {}
+            diagnostics_cfg = self.protocol_config.get("diagnostics", {})
+
+            if (
+                self.enable_diagnostics
+                and self.power_law_diagnostics is not None
+                and hurst_est is not None
+            ):
+                try:
+                    # Try to extract scale data from result
+                    scales, statistics = self._extract_scale_data(result, estimator)
+                    
+                    if scales is not None and statistics is not None:
+                        # Run power-law diagnostics
+                        diag_results = self.power_law_diagnostics.diagnose(
+                            scales, 
+                            statistics,
+                            slope=result.get("slope"),
+                            intercept=result.get("intercept")
+                        )
+                        diagnostics_results["power_law"] = diag_results
+                        
+                        # Run scaling influence analysis if enabled
+                        if (
+                            diagnostics_cfg.get("log_log_checks", {}).get("influence_analysis", True)
+                            and self.scaling_influence_analyser is not None
+                        ):
+                            try:
+                                influence_results = self.scaling_influence_analyser.analyse(
+                                    scales, statistics, min_points=6
+                                )
+                                diagnostics_results["scaling_influence"] = influence_results
+                            except Exception as exc_inf:
+                                diagnostics_results["scaling_influence"] = {
+                                    "status": "failed",
+                                    "error": str(exc_inf)
+                                }
+                        
+                        # Run scale window sensitivity if enabled
+                        if (
+                            diagnostics_cfg.get("scale_window_sensitivity", {}).get("enabled", True)
+                            and self.scale_sensitivity_analyser is not None
+                        ):
+                            try:
+                                sensitivity_results = self.scale_sensitivity_analyser.analyse(
+                                    estimator, processed_data, result, scales
+                                )
+                                diagnostics_results["scale_sensitivity"] = sensitivity_results
+                            except Exception as exc_sens:
+                                diagnostics_results["scale_sensitivity"] = {
+                                    "status": "failed",
+                                    "error": str(exc_sens)
+                                }
+                except Exception as exc:
+                    warnings.warn(f"Diagnostic analysis failed for {estimator_name}: {exc}")
+                    diagnostics_results = {
+                        "status": "failed",
+                        "error": str(exc)
+                    }
+            elif not self.enable_diagnostics:
+                diagnostics_results = {
+                    "status": "skipped",
+                    "reason": (
+                        "Diagnostics disabled by runtime profile."
+                        if self.runtime_profile == "quick"
+                        else "Diagnostics disabled by benchmark configuration."
+                    ),
+                }
+            
+            # Build provenance for this result row
+            result_provenance = self._build_result_row_provenance(
+                {
+                    "estimator": estimator_name,
+                    "timestamp": datetime.now().isoformat(),
+                    "estimated_hurst": hurst_est,
+                    "true_hurst": true_params.get("H", None),
+                    "error": error,
+                    "preprocessing": preprocessing_metadata,
+                    "robustness_panel": robustness_panel,
+                    "uncertainty": uncertainty_details,
+                },
+                true_params
+            )
             
             test_result = {
                 "estimator": estimator_name,
@@ -697,18 +1058,23 @@ class ComprehensiveBenchmark:
                 "confidence_interval": result.get("confidence_interval"),
                 "advanced_metrics": advanced_metrics,
                 "uncertainty": uncertainty_details,
+                "robustness_panel": robustness_panel,
+                "diagnostics": diagnostics_results,
                 "preprocessing": preprocessing_metadata,
+                "provenance": result_provenance,  # Per-row provenance artifact
                 "full_result": result,
             }
 
-            self._record_uncertainty_event(
-                estimator_name=estimator_name,
-                data_model=true_params.get("model_name"),
-                uncertainty=uncertainty_details,
-                estimate=hurst_est,
-                true_value=true_params.get("H"),
-                data_length=len(processed_data),
-            )
+            if self.enable_uncertainty:
+                self._record_uncertainty_event(
+                    estimator_name=estimator_name,
+                    data_model=true_params.get("model_name"),
+                    uncertainty=uncertainty_details,
+                    estimate=hurst_est,
+                    true_value=true_params.get("H"),
+                    data_length=len(processed_data),
+                    estimator_family=estimator_family,
+                )
 
         except Exception as e:
             execution_time = time.time() - start_time
@@ -756,12 +1122,25 @@ class ComprehensiveBenchmark:
         dict
             Mean signed error analysis results
         """
+        if not self.enable_advanced_metrics or self.mse_analyzer is None:
+            return {
+                "mean_signed_error": None,
+                "bias_percentage": None,
+                "significant_bias": None,
+            }
+
+        if self.runtime_profile == "quick":
+            n_simulations = min(n_simulations, 5)
+
         estimates = []
-        
+        rng = self.random_manager.spawn_generator(
+            f"benchmark:mse:{estimator.__class__.__name__}"
+        )
+
         for i in range(n_simulations):
             # Add small random noise to create variations
             noise_level = 0.01 * np.std(data)
-            noisy_data = data + np.random.normal(0, noise_level, len(data))
+            noisy_data = data + rng.normal(0, noise_level, len(data))
             
             try:
                 result = estimator.estimate(noisy_data)
@@ -791,9 +1170,9 @@ class ComprehensiveBenchmark:
         }
 
     def _compute_significance_tests(
-        self, 
-        results: Dict[str, Any], 
-        alpha: float = 0.05
+        self,
+        results: Dict[str, Any],
+        alpha: float = 0.05,
     ) -> Dict[str, Any]:
         """
         Compute omnibus and post-hoc significance tests across estimators.
@@ -811,6 +1190,7 @@ class ComprehensiveBenchmark:
             Significance testing outcomes including Friedman statistics and
             Holm-adjusted pairwise Wilcoxon tests.
         """
+        alpha = float(alpha)
         if not results:
             return {
                 "status": "insufficient_data",
@@ -828,7 +1208,6 @@ class ComprehensiveBenchmark:
                 if est_result.get("success") and est_result.get("error") is not None:
                     row[est_result["estimator"]] = est_result["error"]
 
-            # Keep rows that contain at least two estimator measurements
             if len(row) > 2:
                 records.append(row)
 
@@ -839,7 +1218,6 @@ class ComprehensiveBenchmark:
             }
 
         performance_df = pd.DataFrame(records).set_index("data_model")
-        # Require common estimators across all retained data models
         performance_df = performance_df.dropna(axis=1, how="any")
         performance_df = performance_df.dropna(axis=0, how="any")
 
@@ -855,13 +1233,13 @@ class ComprehensiveBenchmark:
                 "reason": "At least two estimators with complete coverage are required.",
             }
 
-        # Prepare rank matrix (lower error = better rank)
         rank_df = performance_df.rank(axis=1, method="average")
+        estimator_names = list(rank_df.columns)
 
         significance_payload: Dict[str, Any] = {
             "status": "ok",
             "considered_data_models": list(performance_df.index),
-            "considered_estimators": list(performance_df.columns),
+            "considered_estimators": estimator_names,
             "error_table": {
                 str(idx): {col: float(val) for col, val in row.items()}
                 for idx, row in performance_df.iterrows()
@@ -870,6 +1248,7 @@ class ComprehensiveBenchmark:
                 str(idx): {col: float(val) for col, val in row.items()}
                 for idx, row in rank_df.iterrows()
             },
+            "alpha": alpha,
         }
 
         if performance_df.shape[1] >= 3:
@@ -882,6 +1261,7 @@ class ComprehensiveBenchmark:
                     "p_value": float(friedman_p),
                     "n_data_models": int(performance_df.shape[0]),
                     "n_estimators": int(performance_df.shape[1]),
+                    "alpha": alpha,
                 }
             except Exception as exc:
                 significance_payload["friedman"] = {
@@ -890,6 +1270,7 @@ class ComprehensiveBenchmark:
                     "n_data_models": int(performance_df.shape[0]),
                     "n_estimators": int(performance_df.shape[1]),
                     "error": str(exc),
+                    "alpha": alpha,
                 }
         else:
             significance_payload["friedman"] = {
@@ -898,23 +1279,116 @@ class ComprehensiveBenchmark:
                 "n_data_models": int(performance_df.shape[0]),
                 "n_estimators": int(performance_df.shape[1]),
                 "error": "Friedman test requires at least three estimators.",
+                "alpha": alpha,
             }
+
+        friedman_p_value = significance_payload["friedman"].get("p_value")
+        significance_payload["global_null_rejected"] = (
+            friedman_p_value is not None and friedman_p_value < alpha
+        )
 
         mean_ranks = {
             estimator: float(rank_df[estimator].mean())
-            for estimator in rank_df.columns
+            for estimator in estimator_names
         }
         significance_payload["mean_ranks"] = mean_ranks
 
-        # Pairwise Wilcoxon signed-rank tests on rank distributions with Holm correction
-        pairwise_results: List[Dict[str, Any]] = []
-        estimator_names = list(rank_df.columns)
+        def _determine_better(est_a: str, est_b: str) -> Optional[str]:
+            rank_a = mean_ranks.get(est_a)
+            rank_b = mean_ranks.get(est_b)
+            if rank_a is None or rank_b is None:
+                return None
+            if np.isclose(rank_a, rank_b, atol=1e-9):
+                return None
+            return est_a if rank_a < rank_b else est_b
+
+        if len(estimator_names) >= 3 and performance_df.shape[0] >= 1:
+            try:
+                q_alpha = stats.studentized_range.ppf(
+                    1 - alpha / 2.0, len(estimator_names), np.inf
+                )
+                critical_difference = float(
+                    q_alpha
+                    / np.sqrt(2.0)
+                    * np.sqrt(
+                        len(estimator_names)
+                        * (len(estimator_names) + 1)
+                        / (6.0 * performance_df.shape[0])
+                    )
+                )
+                nemenyi_results: List[Dict[str, Any]] = []
+                for est_a, est_b in combinations(estimator_names, 2):
+                    diff = abs(mean_ranks[est_a] - mean_ranks[est_b])
+                    better = _determine_better(est_a, est_b)
+                    nemenyi_results.append(
+                        {
+                            "pair": [est_a, est_b],
+                            "mean_rank_difference": float(diff),
+                            "critical_difference": critical_difference,
+                            "significant": bool(diff > critical_difference),
+                            "better_estimator": better,
+                        }
+                    )
+                significance_payload["nemenyi"] = {
+                    "status": "ok",
+                    "alpha": alpha,
+                    "q_critical": float(q_alpha),
+                    "critical_difference": critical_difference,
+                    "results": nemenyi_results,
+                }
+            except Exception as exc:
+                significance_payload["nemenyi"] = {
+                    "status": "failed",
+                    "alpha": alpha,
+                    "reason": str(exc),
+                    "results": [],
+                }
+        else:
+            significance_payload["nemenyi"] = {
+                "status": "insufficient_data",
+                "alpha": alpha,
+                "reason": "Nemenyi test requires at least three estimators and one data model.",
+                "results": [],
+            }
+
+        def _apply_holm(
+            records: List[Dict[str, Any]],
+            alpha_level: float,
+            p_key: str = "p_value",
+        ) -> None:
+            indices = [
+                idx for idx, record in enumerate(records) if record.get(p_key) is not None
+            ]
+            if not indices:
+                for record in records:
+                    record.setdefault("holm_p_value", record.get(p_key))
+                    record.setdefault("significant", False)
+                return
+
+            sorted_indices = sorted(
+                indices, key=lambda idx: float(records[idx][p_key])
+            )
+            m = len(sorted_indices)
+            previous = 0.0
+            for order, idx in enumerate(sorted_indices):
+                raw_p = float(records[idx][p_key])
+                adjusted = min(1.0, raw_p * (m - order))
+                adjusted = max(adjusted, previous)
+                records[idx]["holm_p_value"] = adjusted
+                records[idx]["significant"] = adjusted < alpha_level
+                previous = adjusted
+
+            for record in records:
+                record.setdefault("holm_p_value", record.get(p_key))
+                record.setdefault("significant", False)
+
+        wilcoxon_results: List[Dict[str, Any]] = []
         for est_a, est_b in combinations(estimator_names, 2):
             ranks_a = rank_df[est_a].values
             ranks_b = rank_df[est_b].values
 
             if np.allclose(ranks_a, ranks_b):
-                pairwise_results.append(
+                wilcoxon_results.append(
                     {
                         "pair": [est_a, est_b],
                         "statistic": 0.0,
@@ -923,6 +1397,7 @@ class ComprehensiveBenchmark:
                         "significant": False,
                         "note": "Identical rank distributions",
                         "n": int(len(ranks_a)),
+                        "better_estimator": None,
                     }
                 )
                 continue
@@ -934,16 +1409,17 @@ class ComprehensiveBenchmark:
                     zero_method="pratt",
                     alternative="two-sided",
                 )
-                pairwise_results.append(
+                wilcoxon_results.append(
                     {
                         "pair": [est_a, est_b],
                         "statistic": float(stat),
                         "p_value": float(p_value),
                         "n": int(len(ranks_a)),
+                        "better_estimator": _determine_better(est_a, est_b),
                     }
                 )
             except ValueError as exc:
-                pairwise_results.append(
+                wilcoxon_results.append(
                     {
                         "pair": [est_a, est_b],
                         "error": str(exc),
@@ -952,36 +1428,133 @@ class ComprehensiveBenchmark:
                         "holm_p_value": None,
                         "significant": False,
                         "n": int(len(ranks_a)),
+                        "better_estimator": None,
                     }
                 )
 
-        # Apply Holm correction where applicable
-        holm_indices = [
-            idx for idx, res in enumerate(pairwise_results) if res.get("p_value") is not None
-        ]
-        if holm_indices:
-            sorted_indices = sorted(
-                holm_indices, key=lambda idx: pairwise_results[idx]["p_value"]
+        _apply_holm(wilcoxon_results, alpha)
+        significance_payload["wilcoxon_signed_rank"] = wilcoxon_results
+        significance_payload["post_hoc"] = wilcoxon_results
+
+        sign_results: List[Dict[str, Any]] = []
+        for est_a, est_b in combinations(estimator_names, 2):
+            diffs = performance_df[est_a].values - performance_df[est_b].values
+            diffs = diffs[np.isfinite(diffs)]
+            diffs = diffs[np.abs(diffs) > 1e-12]
+            n = len(diffs)
+
+            if n == 0:
+                sign_results.append(
+                    {
+                        "pair": [est_a, est_b],
+                        "p_value": None,
+                        "holm_p_value": None,
+                        "significant": False,
+                        "n": 0,
+                        "note": "No non-zero paired differences.",
+                        "better_estimator": None,
+                        "n_positive": 0,
+                        "n_negative": 0,
+                    }
+                )
+                continue
+
+            n_positive = int(np.sum(diffs > 0))
+            n_negative = int(np.sum(diffs < 0))
+
+            try:
+                binom_res = stats.binomtest(
+                    n_positive, n_positive + n_negative, 0.5, alternative="two-sided"
+                )
+                p_value = float(binom_res.pvalue)
+            except Exception as exc:
+                sign_results.append(
+                    {
+                        "pair": [est_a, est_b],
+                        "p_value": None,
+                        "holm_p_value": None,
+                        "significant": False,
+                        "n": int(n_positive + n_negative),
+                        "error": str(exc),
+                        "better_estimator": None,
+                        "n_positive": n_positive,
+                        "n_negative": n_negative,
+                    }
+                )
+                continue
+
+            better = None
+            if n_positive != n_negative:
+                better = est_a if n_negative > n_positive else est_b
+
+            sign_results.append(
+                {
+                    "pair": [est_a, est_b],
+                    "p_value": p_value,
+                    "n": int(n_positive + n_negative),
+                    "n_positive": n_positive,
+                    "n_negative": n_negative,
+                    "better_estimator": better,
+                }
             )
-            m = len(sorted_indices)
-            previous_adjusted = 0.0
-            for order, idx in enumerate(sorted_indices):
-                raw_p = pairwise_results[idx]["p_value"]
-                multiplier = m - order
-                adjusted_p = min(1.0, raw_p * multiplier)
-                adjusted_p = max(adjusted_p, previous_adjusted)
-                pairwise_results[idx]["holm_p_value"] = adjusted_p
-                pairwise_results[idx]["significant"] = adjusted_p < alpha
-                previous_adjusted = adjusted_p
 
-        # Ensure default fields exist for entries without valid tests
-        for res in pairwise_results:
-            if "holm_p_value" not in res:
-                res["holm_p_value"] = res.get("p_value")
-            if "significant" not in res:
-                res["significant"] = False
+        _apply_holm(sign_results, alpha)
+        significance_payload["sign_test"] = {
+            "status": "ok" if sign_results else "insufficient_data",
+            "alpha": alpha,
+            "results": sign_results,
+        }
 
-        significance_payload["post_hoc"] = pairwise_results
+        estimator_markers: Dict[str, Dict[str, List[str]]] = {
+            estimator: {"nemenyi": [], "wilcoxon": [], "sign_test": []}
+            for estimator in estimator_names
+        }
+
+        def _register_marker(
+            winner: Optional[str],
+            pair: List[str],
+            test_key: str,
+        ) -> None:
+            if winner is None or winner not in pair or len(pair) != 2:
+                return
+            loser = pair[0] if winner == pair[1] else pair[1]
+            bucket = estimator_markers.setdefault(
+                winner, {"nemenyi": [], "wilcoxon": [], "sign_test": []}
+            ).setdefault(test_key, [])
+            if loser not in bucket:
+                bucket.append(loser)
+
+        nemenyi_results = significance_payload["nemenyi"].get("results", [])
+        if isinstance(nemenyi_results, list):
+            for record in nemenyi_results:
+                if record.get("significant"):
+                    _register_marker(
+                        record.get("better_estimator"),
+                        record.get("pair", []),
+                        "nemenyi",
+                    )
+
+        for record in wilcoxon_results:
+            if record.get("significant"):
+                _register_marker(
+                    record.get("better_estimator"), record.get("pair", []), "wilcoxon"
+                )
+
+        sign_section = significance_payload["sign_test"].get("results", [])
+        if isinstance(sign_section, list):
+            for record in sign_section:
+                if record.get("significant"):
+                    _register_marker(
+                        record.get("better_estimator"),
+                        record.get("pair", []),
+                        "sign_test",
+                    )
+
+        for estimator, buckets in estimator_markers.items():
+            for key, values in buckets.items():
+                buckets[key] = sorted(set(values))
+
+        significance_payload["estimator_markers"] = estimator_markers
 
         return significance_payload
 
@@ -1174,6 +1747,107 @@ class ComprehensiveBenchmark:
             return "long (2049–8192)"
         return "ultra-long (>8192)"
 
+    def _extract_scale_data(
+        self, 
+        result: Dict[str, Any], 
+        estimator: Any
+    ) -> Tuple[Optional[np.ndarray], Optional[np.ndarray]]:
+        """
+        Extract scale and statistics data from estimator result for diagnostics.
+        
+        Parameters
+        ----------
+        result : dict
+            Estimator result dictionary
+        estimator : BaseEstimator
+            Estimator instance
+            
+        Returns
+        -------
+        tuple
+            (scales, statistics) arrays or (None, None) if unavailable
+        """
+        # Try various common keys in result dict
+        scale_keys = ["scales", "log_scales", "windows", "frequencies", "freq", "wavelet_scales"]
+        stat_keys = ["statistics", "values", "log_values", "fluctuations", "psd", "power", "variance"]
+        
+        scales = None
+        statistics = None
+        
+        # Try to extract from result dict
+        for scale_key in scale_keys:
+            if scale_key in result:
+                scales = result[scale_key]
+                if isinstance(scales, (list, np.ndarray)):
+                    scales = np.asarray(scales, dtype=np.float64)
+                    break
+        
+        for stat_key in stat_keys:
+            if stat_key in result:
+                statistics = result[stat_key]
+                if isinstance(statistics, (list, np.ndarray)):
+                    statistics = np.asarray(statistics, dtype=np.float64)
+                    break
+        
+        # If still None, try nested structures
+        if scales is None or statistics is None:
+            scale_stats = result.get("scale_statistics")
+            if isinstance(scale_stats, dict):
+                scales = scale_stats.get("scales")
+                statistics = scale_stats.get("statistics") or scale_stats.get("values")
+        
+        # Try calling estimator method if available
+        if (scales is None or statistics is None) and hasattr(estimator, "get_scaling_diagnostics"):
+            try:
+                diag_data = estimator.get_scaling_diagnostics()
+                if isinstance(diag_data, dict):
+                    scales = diag_data.get("scales")
+                    statistics = diag_data.get("statistics") or diag_data.get("values")
+            except Exception:
+                pass
+        
+        # Convert to numpy arrays if successful
+        if scales is not None and statistics is not None:
+            try:
+                scales = np.asarray(scales, dtype=np.float64)
+                statistics = np.asarray(statistics, dtype=np.float64)
+                
+                # Validate
+                if len(scales) == len(statistics) and len(scales) > 0:
+                    return scales, statistics
+            except Exception:
+                pass
+        
+        return None, None
+    
+    def _infer_estimator_family(self, estimator_name: str) -> str:
+        """
+        Infer the family (classical, ML, neural) from estimator name.
+        
+        Parameters
+        ----------
+        estimator_name : str
+            Name of the estimator
+            
+        Returns
+        -------
+        str
+            Estimator family
+        """
+        family_keywords = {
+            "classical": ["GPH", "Whittle", "Periodogram", "DFA", "DMA", "R/S", "Higuchi",
+                         "CWT", "WaveletVar", "WaveletLogVar", "WaveletWhittle",
+                         "MFDFA", "WaveletLeaders"],
+            "ML": ["RandomForest", "GradientBoosting", "SVR", "XGBoost", "LightGBM"],
+            "neural": ["CNN", "LSTM", "GRU", "Transformer", "ResNet"]
+        }
+        
+        for family, keywords in family_keywords.items():
+            if any(kw in estimator_name for kw in keywords):
+                return family
+        
+        return "other"
+    
     def _infer_tail_class(
         self,
         model_name: Optional[str],
@@ -1197,7 +1871,17 @@ class ComprehensiveBenchmark:
         return "unknown"
 
     def _build_provenance_bundle(self, summary: Dict[str, Any]) -> Dict[str, Any]:
-        """Construct a provenance bundle capturing protocol-critical settings."""
+        """
+        Construct a comprehensive provenance bundle using ProvenanceTracker.
+        
+        This bundle includes all settings needed to reproduce the experiment:
+        - Data generation parameters
+        - Estimator configuration
+        - Preprocessing settings
+        - Scale selection parameters
+        - Analytics configuration
+        - Environment information
+        """
         estimator_listing = {
             category: [
                 name
@@ -1206,25 +1890,95 @@ class ComprehensiveBenchmark:
             ]
             for category in self.all_estimators
         }
-
-        return {
+        
+        # Use the new provenance tracker
+        benchmark_metadata = {
             "timestamp": summary.get("timestamp"),
-            "protocol_version": self.protocol_config.get("version"),
-            "protocol_path": str(self.protocol_config_path),
             "benchmark_type": summary.get("benchmark_type"),
             "data_length": summary.get("data_length"),
-            "contamination": {
-                "type": summary.get("contamination_type"),
-                "level": summary.get("contamination_level"),
-            },
-            "preprocessing": self.protocol_config.get("preprocessing"),
-            "scale_selection": self.protocol_config.get("scale_selection"),
-            "estimator_overrides": self.protocol_config.get("estimator_overrides"),
-            "data_models": self.protocol_config.get("data_models"),
-            "confidence_level": self.protocol_config.get("benchmark", {}).get(
-                "confidence_level"
-            ),
-            "estimators_tested": estimator_listing,
+            "contamination_type": summary.get("contamination_type"),
+            "contamination_level": summary.get("contamination_level"),
+            "total_tests": summary.get("total_tests"),
+            "successful_tests": summary.get("successful_tests"),
+            "success_rate": summary.get("success_rate"),
+            "data_models_tested": summary.get("data_models_tested"),
+            "estimators_tested": summary.get("estimators_tested")
+        }
+        rng_snapshot = self.random_manager.snapshot()
+        benchmark_metadata["random_state"] = {
+            "global_seed": rng_snapshot.global_seed,
+            "streams": rng_snapshot.child_seeds,
+        }
+        
+        return self.provenance_tracker.capture_provenance(
+            benchmark_metadata,
+            estimator_listing
+        )
+    
+    def _attach_uncertainty_calibration_summary(
+        self, summary: Dict[str, Any], lookback_days: int = 90
+    ) -> None:
+        """Augment benchmark summaries with uncertainty calibration diagnostics."""
+        analyzer = getattr(self, "error_analyzer", None)
+        if analyzer is None:
+            return
+
+        summariser = getattr(analyzer, "summarise_uncertainty_calibration", None)
+        if summariser is None:
+            return
+
+        try:
+            calibration_records = summariser(days=lookback_days)
+        except Exception:
+            return
+
+        if not calibration_records:
+            return
+
+        summary["uncertainty_calibration"] = calibration_records
+
+        plotter = getattr(analyzer, "plot_uncertainty_calibration", None)
+        if plotter is None:
+            return
+
+        figures_dir = self.output_dir / "figures"
+        figures_dir.mkdir(parents=True, exist_ok=True)
+        plot_filename = (
+            f"uncertainty_calibration_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+        )
+        plot_path = figures_dir / plot_filename
+
+        try:
+            generated_path = plotter(str(plot_path), days=lookback_days)
+        except Exception:
+            generated_path = None
+
+        if generated_path:
+            summary["uncertainty_calibration_plot"] = generated_path
+    
+    def _build_result_row_provenance(self, result: Dict[str, Any], data_params: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Build provenance bundle for a single result row.
+        
+        This creates a lightweight provenance artifact per result that includes:
+        - Experiment-level provenance (reference)
+        - Row-specific parameters (data model, estimator, etc.)
+        - Result metadata
+        """
+        return {
+            "experiment_id": self.protocol_config.get("experiment_id"),
+            "timestamp": result.get("timestamp") or datetime.now().isoformat(),
+            "estimator": result.get("estimator"),
+            "data_model": data_params.get("model_name"),
+            "data_params": data_params,
+            "preprocessing": result.get("preprocessing", {}),
+            "estimated_hurst": result.get("estimated_hurst"),
+            "true_hurst": result.get("true_hurst"),
+            "error": result.get("error"),
+            "robustness_panel": result.get("robustness_panel"),
+            "uncertainty": result.get("uncertainty", {}),
+            "protocol_version": self.protocol_config.get("version", "2.0"),
+            "protocol_path": str(self.protocol_config_path),
         }
 
     def _record_uncertainty_event(
@@ -1235,55 +1989,83 @@ class ComprehensiveBenchmark:
         estimate: Optional[float],
         true_value: Optional[float],
         data_length: int,
+        estimator_family: Optional[str],
     ) -> None:
         """Persist uncertainty calibration data via the error analyzer."""
-        if not hasattr(self, "error_analyzer") or self.error_analyzer is None:
+        analyzer = getattr(self, "error_analyzer", None)
+        if analyzer is None:
             return
 
         if not isinstance(uncertainty, dict):
             return
 
-        primary_interval = uncertainty.get("primary_interval")
-        if not isinstance(primary_interval, dict):
-            return
-
-        ci = primary_interval.get("confidence_interval")
-        if ci is None or len(ci) != 2:
-            return
-
-        method_name = primary_interval.get("method")
-
-        coverage_flag = None
         coverage_data = uncertainty.get("coverage")
-        if isinstance(coverage_data, dict):
-            if method_name and method_name in coverage_data:
-                coverage_flag = coverage_data.get(method_name)
-            else:
+        if not isinstance(coverage_data, dict):
+            coverage_data = {}
+
+        primary_interval = uncertainty.get("primary_interval")
+        if isinstance(primary_interval, dict):
+            primary_method = primary_interval.get("method")
+        else:
+            primary_method = None
+
+        method_entries = [
+            ("block_bootstrap", uncertainty.get("block_bootstrap")),
+            ("wavelet_bootstrap", uncertainty.get("wavelet_bootstrap")),
+            ("parametric_monte_carlo", uncertainty.get("parametric_monte_carlo")),
+        ]
+
+        for method_name, method_summary in method_entries:
+            if not isinstance(method_summary, dict):
+                continue
+
+            ci = method_summary.get("confidence_interval")
+            if not (isinstance(ci, (list, tuple)) and len(ci) == 2):
+                continue
+
+            try:
+                ci_lower = float(ci[0])
+                ci_upper = float(ci[1])
+            except (TypeError, ValueError):
+                continue
+
+            if not np.isfinite(ci_lower) or not np.isfinite(ci_upper):
+                continue
+
+            coverage_flag = coverage_data.get(method_name)
+            if coverage_flag is None:
                 for value in coverage_data.values():
                     if value is not None:
                         coverage_flag = value
                         break
+            metadata: Dict[str, Any] = {
+                "confidence_level": uncertainty.get("confidence_level"),
+                "n_samples": method_summary.get("n_samples"),
+                "status": method_summary.get("status"),
+                "data_length": data_length,
+                "estimator_family": estimator_family,
+                "is_primary": method_name == primary_method,
+                "method_metadata": method_summary.get("metadata"),
+            }
+            if estimate is not None and np.isfinite(estimate):
+                metadata["central_estimate"] = float(estimate)
+            if true_value is not None and np.isfinite(true_value):
+                metadata["true_value"] = float(true_value)
 
-        try:
-            self.error_analyzer.record_uncertainty_calibration(
-                estimator_name=estimator_name,
-                data_model=data_model,
-                ci_lower=float(ci[0]),
-                ci_upper=float(ci[1]),
-                estimate=float(estimate) if estimate is not None else None,
-                true_value=float(true_value) if true_value is not None else None,
-                method=method_name,
-                coverage_flag=coverage_flag,
-                metadata={
-                    "confidence_level": uncertainty.get("confidence_level"),
-                    "n_samples": primary_interval.get("n_samples"),
-                    "status": uncertainty.get("status"),
-                    "data_length": data_length,
-                },
-            )
-        except Exception:
-            # Fail silently to avoid interrupting benchmarks
-            pass
+            try:
+                analyzer.record_uncertainty_calibration(
+                    estimator_name=estimator_name,
+                    data_model=data_model,
+                    ci_lower=ci_lower,
+                    ci_upper=ci_upper,
+                    estimate=float(estimate) if estimate is not None else None,
+                    true_value=float(true_value) if true_value is not None else None,
+                    method=method_name,
+                    coverage_flag=coverage_flag,
+                    metadata=metadata,
+                )
+            except Exception:
+                continue
 
     def run_comprehensive_benchmark(
         self,
@@ -1402,6 +2184,11 @@ class ComprehensiveBenchmark:
             "protocol_config": json.loads(json.dumps(self.protocol_config)),
             "protocol_path": str(self.protocol_config_path),
         }
+        rng_snapshot = self.random_manager.snapshot()
+        summary["random_state"] = {
+            "global_seed": rng_snapshot.global_seed,
+            "streams": rng_snapshot.child_seeds,
+        }
 
         summary["stratified_metrics"] = self._compute_stratified_metrics(
             all_results,
@@ -1414,6 +2201,9 @@ class ComprehensiveBenchmark:
         # Compute statistical significance analysis
         significance_results = self._compute_significance_tests(all_results)
         summary["significance_analysis"] = significance_results
+
+        # Attach uncertainty calibration diagnostics
+        self._attach_uncertainty_calibration_summary(summary)
 
         # Save results if requested
         if save_results:
@@ -1922,6 +2712,17 @@ class ComprehensiveBenchmark:
             with open(stratified_file, "w") as f:
                 json.dump(stratified_metrics, f, indent=2, default=str)
             print(f"   Stratified: {stratified_file}")
+        
+        # Generate enhanced stratified reports
+        try:
+            stratified_report = self.stratified_report_generator.generate_report(
+                results,
+                output_dir=self.output_dir,
+                formats=['markdown', 'json', 'csv']
+            )
+            print(f"   Enhanced stratified reports generated")
+        except Exception as exc:
+            warnings.warn(f"Enhanced stratified report generation failed: {exc}")
 
         provenance = results.get("provenance")
         if provenance:
@@ -1929,6 +2730,19 @@ class ComprehensiveBenchmark:
             with open(provenance_file, "w") as f:
                 json.dump(provenance, f, indent=2, default=str)
             print(f"   Provenance: {provenance_file}")
+
+        calibration_records = results.get("uncertainty_calibration")
+        if calibration_records:
+            calibration_dir = self.output_dir / "calibration"
+            calibration_dir.mkdir(parents=True, exist_ok=True)
+            calibration_file = calibration_dir / f"uncertainty_calibration_{timestamp}.json"
+            with open(calibration_file, "w") as f:
+                json.dump(calibration_records, f, indent=2, default=str)
+            print(f"   Calibration: {calibration_file}")
+
+        calibration_plot = results.get("uncertainty_calibration_plot")
+        if calibration_plot:
+            print(f"   Calibration plot: {calibration_plot}")
 
     def print_summary(self, summary: Dict[str, Any]) -> None:
         """Print benchmark summary."""
@@ -2209,6 +3023,43 @@ class ComprehensiveBenchmark:
             else:
                 reason = significance.get("reason", "insufficient data")
                 print(f"Significance testing not performed: {reason}")
+
+        calibration = summary.get("uncertainty_calibration")
+        if isinstance(calibration, list) and calibration:
+            print("\n🎯 UNCERTAINTY CALIBRATION:")
+            method_stats: Dict[str, Dict[str, float]] = {}
+            family_stats: Dict[str, Dict[str, float]] = {}
+            for entry in calibration:
+                coverage = entry.get("empirical_coverage")
+                n = entry.get("n")
+                if coverage is None or n in (None, 0):
+                    continue
+                method = entry.get("method") or "unknown"
+                family = entry.get("estimator_family") or "unspecified"
+                method_bucket = method_stats.setdefault(method, {"weighted": 0.0, "total": 0.0})
+                method_bucket["weighted"] += float(coverage) * float(n)
+                method_bucket["total"] += float(n)
+                family_bucket = family_stats.setdefault(family, {"weighted": 0.0, "total": 0.0})
+                family_bucket["weighted"] += float(coverage) * float(n)
+                family_bucket["total"] += float(n)
+
+            if method_stats:
+                print("   Method-level empirical coverage:")
+                for method, stats in sorted(method_stats.items(), key=lambda kv: kv[0]):
+                    if stats["total"] > 0:
+                        rate = stats["weighted"] / stats["total"]
+                        print(f"      • {method}: {rate:.2%} across {int(stats['total'])} runs")
+
+            if family_stats:
+                print("   Family-level coverage (all methods combined):")
+                for family, stats in sorted(family_stats.items(), key=lambda kv: kv[0]):
+                    if stats["total"] > 0:
+                        rate = stats["weighted"] / stats["total"]
+                        print(f"      • {family}: {rate:.2%} across {int(stats['total'])} runs")
+
+            calibration_plot = summary.get("uncertainty_calibration_plot")
+            if calibration_plot:
+                print(f"   Calibration plot: {calibration_plot}")
 
         # Show detailed breakdown by data model
         print("\n📊 DETAILED PERFORMANCE BY DATA MODEL:")
