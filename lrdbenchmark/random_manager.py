@@ -96,6 +96,3 @@ def initialise_global_rng(seed: Optional[int]) -> RandomManager:
     manager = get_random_manager()
     manager.initialise(seed)
     return manager
-
-
-
