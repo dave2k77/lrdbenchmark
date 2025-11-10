@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lrdbenchmark.models.data_models.mrw.mrw_model &mdash; LRDBenchmark 1.7.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=19f00094" />
+  <title>lrdbenchmark.models.data_models.mrw.mrw_model &mdash; lrdbenchmark 2.3.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
     <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/_modules/lrdbenchmark/models/data_models/mrw/mrw_model.html" />
-  <!--[if lt IE 9]>
-    <script src="../../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../../_static/documentation_options.js?v=030dc6f6"></script>
-        <script src="../../../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=67b02a41"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -32,11 +30,8 @@
           
           
           <a href="../../../../../index.html" class="icon icon-home">
-            LRDBenchmark
+            lrdbenchmark
           </a>
-              <div class="version">
-                1.7.0
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -60,23 +55,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../api/analytics.html">Analytics API</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/theory.html">Theoretical Foundations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/theory.html#statistical-estimators">Statistical Estimators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/theory.html#theoretical-performance-considerations">Theoretical Performance Considerations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/theory.html#practical-examples">Practical Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/theory.html#theoretical-references">Theoretical References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html">Validation Techniques and Statistical Tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#monte-carlo-validation">Monte Carlo Validation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#bootstrap-methods">Bootstrap Methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#cross-validation">Cross-Validation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#robustness-analysis">Robustness Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#validation-statistical-tests">Validation Statistical Tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#model-selection">Model Selection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#validation-performance-metrics">Validation Performance Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#quality-assurance">Quality Assurance</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#validation-references">Validation References</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/comprehensive_adaptive_demo.html">Comprehensive Adaptive Estimators Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/comprehensive_demo.html">Comprehensive LRDBench Demonstration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/comprehensive_demo.html#basic-data-generation-and-analysis">Basic Data Generation and Analysis</a></li>
@@ -87,6 +65,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/comprehensive_demo.html#integration-with-external-libraries">Integration with External Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/comprehensive_demo.html#complete-workflow-example">Complete Workflow Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/comprehensive_demo.html#summary">Summary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/leaderboard.html">Leaderboard Significance Analysis</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/notebooks_overview.html">Demonstration Notebooks Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/notebooks_overview.html#data-generation-and-visualization">01. Data Generation and Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/notebooks_overview.html#estimation-and-statistical-validation">02. Estimation and Statistical Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/notebooks_overview.html#custom-models-and-estimators">03. Custom Models and Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/notebooks_overview.html#comprehensive-benchmarking">04. Comprehensive Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/notebooks_overview.html#leaderboard-generation">05. Leaderboard Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/notebooks_overview.html#getting-started-with-notebooks">Getting Started with Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/notebooks_overview.html#support-and-contributing">Support and Contributing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/index.html">Tutorial Series</a></li>
 </ul>
 
         </div>
@@ -95,7 +87,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../../../index.html">LRDBenchmark</a>
+          <a href="../../../../../index.html">lrdbenchmark</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -122,17 +114,17 @@
 <span class="sd">using log-normal volatility cascades.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..base_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">..base_model</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 
 
 <div class="viewcode-block" id="MultifractalRandomWalk">
 <a class="viewcode-back" href="../../../../../api/data_models.html#lrdbenchmark.models.data_models.mrw.mrw_model.MultifractalRandomWalk">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">MultifractalRandomWalk</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">MultifractalRandomWalk</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Multifractal Random Walk (MRW) model.</span>
 
@@ -154,7 +146,7 @@
 
 <div class="viewcode-block" id="MultifractalRandomWalk.__init__">
 <a class="viewcode-back" href="../../../../../api/data_models.html#lrdbenchmark.models.data_models.mrw.mrw_model.MultifractalRandomWalk.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">H</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lambda_param</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cascade&quot;</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -176,7 +168,7 @@
 
 <div class="viewcode-block" id="MultifractalRandomWalk._validate_parameters">
 <a class="viewcode-back" href="../../../../../api/data_models.html#lrdbenchmark.models.data_models.mrw.mrw_model.MultifractalRandomWalk._validate_parameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_validate_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate model parameters.&quot;&quot;&quot;</span>
         <span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s2">&quot;H&quot;</span><span class="p">]</span>
         <span class="n">lambda_param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s2">&quot;lambda_param&quot;</span><span class="p">]</span>
@@ -199,22 +191,33 @@
 
 <div class="viewcode-block" id="MultifractalRandomWalk.generate">
 <a class="viewcode-back" href="../../../../../api/data_models.html#lrdbenchmark.models.data_models.mrw.mrw_model.MultifractalRandomWalk.generate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate multifractal random walk.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        n : int</span>
+<span class="sd">        length : int, optional</span>
 <span class="sd">            Length of the time series to generate</span>
 <span class="sd">        seed : int, optional</span>
 <span class="sd">            Random seed for reproducibility</span>
+<span class="sd">        n : int, optional</span>
+<span class="sd">            Alternate parameter name for length (for backward compatibility)</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
-<span class="sd">            Generated MRW time series of length n</span>
+<span class="sd">            Generated MRW time series</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Either &#39;length&#39; or &#39;n&#39; must be provided. If both are provided, &#39;length&#39; takes precedence.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Handle backward compatibility: accept both &#39;length&#39; and &#39;n&#39;</span>
+        <span class="k">if</span> <span class="n">length</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Either &#39;length&#39; or &#39;n&#39; must be provided&quot;</span><span class="p">)</span>
+        <span class="n">data_length</span> <span class="o">=</span> <span class="n">length</span> <span class="k">if</span> <span class="n">length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">n</span>
+        
         <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
@@ -224,15 +227,15 @@
         <span class="n">method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;cascade&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cascade_method</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">lambda_param</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cascade_method</span><span class="p">(</span><span class="n">data_length</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">lambda_param</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_direct_method</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">lambda_param</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_direct_method</span><span class="p">(</span><span class="n">data_length</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">lambda_param</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MultifractalRandomWalk._cascade_method">
 <a class="viewcode-back" href="../../../../../api/data_models.html#lrdbenchmark.models.data_models.mrw.mrw_model.MultifractalRandomWalk._cascade_method">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_cascade_method</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">H</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lambda_param</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="k">def</span> <span class="nf">_cascade_method</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">H</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lambda_param</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate MRW using volatility cascade method.</span>
@@ -241,10 +244,10 @@
 <span class="sd">        it to a fractional Brownian motion.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Generate the volatility cascade</span>
-        <span class="n">omega</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_volatility_cascade</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">lambda_param</span><span class="p">)</span>
+        <span class="n">omega</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_volatility_cascade</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">lambda_param</span><span class="p">)</span>
 
         <span class="c1"># Generate fractional Brownian motion</span>
-        <span class="n">fbm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_fbm</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+        <span class="n">fbm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_fbm</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
 
         <span class="c1"># Combine to get MRW</span>
         <span class="n">mrw</span> <span class="o">=</span> <span class="n">fbm</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span>
@@ -254,34 +257,34 @@
 
 <div class="viewcode-block" id="MultifractalRandomWalk._generate_volatility_cascade">
 <a class="viewcode-back" href="../../../../../api/data_models.html#lrdbenchmark.models.data_models.mrw.mrw_model.MultifractalRandomWalk._generate_volatility_cascade">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_volatility_cascade</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lambda_param</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_generate_volatility_cascade</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lambda_param</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate log-normal volatility cascade.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        n : int</span>
+<span class="sd">        length : int</span>
 <span class="sd">            Length of the time series</span>
 <span class="sd">        lambda_param : float</span>
 <span class="sd">            Intermittency parameter</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        np.ndarray</span>
+<span class="sd">        lengthp.ndarray</span>
 <span class="sd">            Log-volatility cascade</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Initialize omega with zeros</span>
-        <span class="n">omega</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">omega</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
 
         <span class="c1"># Generate the cascade at different scales</span>
-        <span class="n">scale</span> <span class="o">=</span> <span class="n">n</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="n">length</span>
         <span class="k">while</span> <span class="n">scale</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="c1"># Generate Gaussian noise at current scale</span>
             <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">lambda_param</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
 
             <span class="c1"># Interpolate to full length</span>
-            <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-            <span class="n">omega_interp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">indices</span><span class="p">,</span> <span class="n">noise</span><span class="p">)</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">omega_interp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">length</span><span class="p">),</span> <span class="n">indices</span><span class="p">,</span> <span class="n">noise</span><span class="p">)</span>
 
             <span class="c1"># Add to the cascade</span>
             <span class="n">omega</span> <span class="o">+=</span> <span class="n">omega_interp</span>
@@ -294,13 +297,13 @@
 
 <div class="viewcode-block" id="MultifractalRandomWalk._generate_fbm">
 <a class="viewcode-back" href="../../../../../api/data_models.html#lrdbenchmark.models.data_models.mrw.mrw_model.MultifractalRandomWalk._generate_fbm">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_fbm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">H</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_generate_fbm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">H</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate fractional Brownian motion using circulant embedding.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        n : int</span>
+<span class="sd">        length : int</span>
 <span class="sd">            Length of the time series</span>
 <span class="sd">        H : float</span>
 <span class="sd">            Hurst parameter</span>
@@ -309,11 +312,11 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        np.ndarray</span>
+<span class="sd">        lengthp.ndarray</span>
 <span class="sd">            Fractional Brownian motion</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Calculate autocovariance function</span>
-        <span class="n">lags</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">lags</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
         <span class="n">autocov</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span>
             <span class="o">*</span> <span class="mf">0.5</span>
@@ -325,7 +328,7 @@
         <span class="p">)</span>
 
         <span class="c1"># Construct circulant matrix</span>
-        <span class="n">circulant_row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">autocov</span><span class="p">,</span> <span class="n">autocov</span><span class="p">[</span><span class="mi">1</span> <span class="p">:</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">circulant_row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">autocov</span><span class="p">,</span> <span class="n">autocov</span><span class="p">[</span><span class="mi">1</span> <span class="p">:</span> <span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
 
         <span class="c1"># Eigenvalue decomposition</span>
         <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">circulant_row</span><span class="p">)</span>
@@ -341,15 +344,15 @@
         <span class="n">filtered_noise</span> <span class="o">=</span> <span class="n">noise</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span>
 
         <span class="c1"># Inverse FFT</span>
-        <span class="n">fbm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">filtered_noise</span><span class="p">))[:</span><span class="n">n</span><span class="p">]</span>
+        <span class="n">fbm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">filtered_noise</span><span class="p">))[:</span><span class="n">length</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">fbm</span></div>
 
 
 <div class="viewcode-block" id="MultifractalRandomWalk._direct_method">
 <a class="viewcode-back" href="../../../../../api/data_models.html#lrdbenchmark.models.data_models.mrw.mrw_model.MultifractalRandomWalk._direct_method">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_direct_method</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">H</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lambda_param</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="k">def</span> <span class="nf">_direct_method</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">H</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lambda_param</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate MRW using direct method.</span>
@@ -358,13 +361,13 @@
 <span class="sd">        multifractal formalism.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Generate the increments directly</span>
-        <span class="n">increments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">increments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
 
         <span class="c1"># Generate volatility cascade</span>
-        <span class="n">omega</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_volatility_cascade</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">lambda_param</span><span class="p">)</span>
+        <span class="n">omega</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_volatility_cascade</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">lambda_param</span><span class="p">)</span>
 
         <span class="c1"># Generate Gaussian noise</span>
-        <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+        <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
 
         <span class="c1"># Combine to get increments</span>
         <span class="n">increments</span> <span class="o">=</span> <span class="n">noise</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span> <span class="o">*</span> <span class="n">sigma</span>
@@ -377,7 +380,7 @@
 
 <div class="viewcode-block" id="MultifractalRandomWalk.get_theoretical_properties">
 <a class="viewcode-back" href="../../../../../api/data_models.html#lrdbenchmark.models.data_models.mrw.mrw_model.MultifractalRandomWalk.get_theoretical_properties">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_theoretical_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">get_theoretical_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get theoretical properties of MRW.</span>
 
@@ -403,7 +406,7 @@
 
 <div class="viewcode-block" id="MultifractalRandomWalk.get_increments">
 <a class="viewcode-back" href="../../../../../api/data_models.html#lrdbenchmark.models.data_models.mrw.mrw_model.MultifractalRandomWalk.get_increments">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_increments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mrw</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_increments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mrw</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the increments of MRW.</span>
 
@@ -414,7 +417,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        np.ndarray</span>
+<span class="sd">        lengthp.ndarray</span>
 <span class="sd">            Increments</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">mrw</span><span class="p">)</span></div>

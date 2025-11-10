@@ -34,6 +34,7 @@ class GradientBoostingEstimator(BaseEstimator):
         self.model = None
         self.scaler = None
         self.feature_names = None
+        self.expected_features = None
         self.is_loaded = False
     
     def _validate_parameters(self) -> None:
@@ -43,7 +44,9 @@ class GradientBoostingEstimator(BaseEstimator):
         
     def _get_default_model_path(self) -> str:
         """Get the default path for the pre-trained Gradient Boosting model."""
-        return "models/gradient_boosting_estimator.joblib"
+        fixed_path = "models/gradient_boosting_estimator_fixed.joblib"
+        default_path = "models/gradient_boosting_estimator.joblib"
+        return fixed_path if os.path.exists(fixed_path) else default_path
     
     def _load_model(self):
         """Load the pre-trained Gradient Boosting model."""
@@ -57,14 +60,75 @@ class GradientBoostingEstimator(BaseEstimator):
             
         try:
             model_data = joblib.load(self.model_path)
-            self.model = model_data['model']
-            self.scaler = model_data['scaler']
-            self.feature_names = model_data.get('feature_names', UnifiedFeatureExtractor.get_feature_names_54())
+
+            if isinstance(model_data, dict):
+                self.model = model_data.get('model')
+                self.scaler = model_data.get('scaler')
+                self.feature_names = model_data.get(
+                    'feature_names',
+                    UnifiedFeatureExtractor.get_feature_names_54(),
+                )
+            elif isinstance(model_data, (list, tuple)):
+                self.model = model_data[0] if model_data else None
+                if len(model_data) > 1 and hasattr(model_data[1], "transform"):
+                    self.scaler = model_data[1]
+                else:
+                    self.scaler = None
+                self.feature_names = UnifiedFeatureExtractor.get_feature_names_54()
+            else:
+                self.model = model_data
+                self.scaler = None
+                self.feature_names = UnifiedFeatureExtractor.get_feature_names_54()
+
+            if self.model is None:
+                raise ValueError("Loaded model does not contain a valid estimator")
+
+            self._update_feature_metadata()
             self.is_loaded = True
             logger.info(f"Gradient Boosting model loaded from {self.model_path}")
         except Exception as e:
             logger.error(f"Failed to load Gradient Boosting model: {e}")
             self.is_loaded = False
+
+    def _update_feature_metadata(self):
+        """Update expected feature count and default feature names."""
+        if self.model is None:
+            return
+
+        self.expected_features = getattr(self.model, "n_features_in_", None)
+
+        if self.feature_names is not None:
+            return
+
+        if self.expected_features in (5, 8):
+            self.feature_names = UnifiedFeatureExtractor.get_feature_names_8()[: self.expected_features or 8]
+        elif self.expected_features == 54:
+            self.feature_names = UnifiedFeatureExtractor.get_feature_names_54()
+        elif self.expected_features == 29:
+            self.feature_names = UnifiedFeatureExtractor.get_feature_names_29()
+        else:
+            self.feature_names = UnifiedFeatureExtractor.get_feature_names()
+
+    def _extract_features_for_model(self, data: np.ndarray) -> np.ndarray:
+        """Extract feature vector that matches the pretrained model."""
+        expected = self.expected_features
+
+        if expected in (5, 8):
+            features = UnifiedFeatureExtractor.extract_features_8(data)
+        elif expected == 29:
+            features = UnifiedFeatureExtractor.extract_features_29(data)
+        elif expected == 54:
+            features = UnifiedFeatureExtractor.extract_features_54(data)
+        else:
+            features = UnifiedFeatureExtractor.extract_features_76(data)
+
+        if expected is not None and len(features) != expected:
+            if len(features) > expected:
+                features = features[:expected]
+            else:
+                features = np.pad(features, (0, expected - len(features)), 'constant')
+
+        return features
     
     def estimate(self, data: np.ndarray) -> Dict[str, Any]:
         """
@@ -89,20 +153,18 @@ class GradientBoostingEstimator(BaseEstimator):
             }
         
         try:
-            # Extract first 54 features using unified extractor
-            features = UnifiedFeatureExtractor.extract_features_54(data)
+            features = self._extract_features_for_model(data)
             
-            # Ensure we have exactly 54 features
-            if len(features) != 54:
-                logger.warning(f"Expected 54 features, got {len(features)}")
-                # Pad or truncate as needed
-                if len(features) < 54:
-                    features = np.pad(features, (0, 54 - len(features)), 'constant')
-                else:
-                    features = features[:54]
-            
-            # Scale features
-            features_scaled = self.scaler.transform(features.reshape(1, -1))
+            feature_array = features.reshape(1, -1)
+
+            if self.scaler is not None:
+                try:
+                    features_scaled = self.scaler.transform(feature_array)
+                except Exception as e:
+                    logger.warning(f"Scaler transform failed ({e}), using raw features")
+                    features_scaled = feature_array
+            else:
+                features_scaled = feature_array
             
             # Make prediction
             H_estimate = self.model.predict(features_scaled)[0]
@@ -110,8 +172,8 @@ class GradientBoostingEstimator(BaseEstimator):
             return {
                 'hurst_parameter': float(H_estimate),
                 'method': 'gradient_boosting',
-                'features_used': 54,
-                'feature_names': self.feature_names[:54]
+                'features_used': len(features),
+                'feature_names': self.feature_names[:len(features)] if self.feature_names else None
             }
             
         except Exception as e:
@@ -120,7 +182,7 @@ class GradientBoostingEstimator(BaseEstimator):
                 'hurst_parameter': np.nan,
                 'method': 'gradient_boosting',
                 'error': str(e),
-                'features_used': 54
+                'features_used': len(features)
             }
     
     def get_feature_importance(self) -> Optional[np.ndarray]:

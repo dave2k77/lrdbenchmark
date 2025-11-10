@@ -593,6 +593,143 @@ class ErrorAnalyzer:
         with open(output_path, "w") as f:
             json.dump([asdict(e) for e in recent_events], f, indent=2)
 
+    def summarise_uncertainty_calibration(
+        self, days: int = 30, min_samples: int = 3
+    ) -> List[Dict[str, Any]]:
+        """Aggregate empirical coverage rates per estimator/method."""
+        cutoff_time = datetime.now() - timedelta(days=days)
+
+        with self._lock:
+            recent_events = [
+                e
+                for e in self._uncertainty_events
+                if datetime.fromisoformat(e.timestamp) > cutoff_time
+            ]
+
+        aggregates: Dict[
+            Tuple[str, str, float, Optional[str], bool], Dict[str, Any]
+        ] = {}
+        for event in recent_events:
+            level = (
+                event.confidence_level
+                if event.confidence_level is not None
+                else event.metadata.get("confidence_level") if event.metadata else None
+            )
+            if level is None:
+                continue
+            try:
+                level_value = float(level)
+            except (TypeError, ValueError):
+                continue
+
+            if level_value <= 0 or level_value >= 1:
+                continue
+
+            if event.coverage_flag is None:
+                continue
+
+            method = event.method or (event.metadata.get("method") if event.metadata else None)
+            method = method or "unknown"
+            family = event.metadata.get("estimator_family") if event.metadata else None
+            is_primary = bool(event.metadata.get("is_primary")) if event.metadata else False
+
+            key = (event.estimator_name, method, level_value, family, is_primary)
+            bucket = aggregates.setdefault(
+                key,
+                {
+                    "coverage_sum": 0.0,
+                    "count": 0,
+                    "data_lengths": [],
+                },
+            )
+            bucket["coverage_sum"] += 1.0 if event.coverage_flag else 0.0
+            bucket["count"] += 1
+            if event.data_length:
+                bucket["data_lengths"].append(event.data_length)
+
+        records: List[Dict[str, Any]] = []
+        for (estimator, method, level_value, family, is_primary), stats in aggregates.items():
+            if stats["count"] < min_samples:
+                continue
+            avg_coverage = stats["coverage_sum"] / stats["count"]
+            avg_length = (
+                float(np.mean(stats["data_lengths"])) if stats["data_lengths"] else None
+            )
+            records.append(
+                {
+                    "estimator": estimator,
+                    "method": method,
+                    "confidence_level": level_value,
+                    "empirical_coverage": avg_coverage,
+                    "n": int(stats["count"]),
+                    "estimator_family": family,
+                    "is_primary": is_primary,
+                    "avg_data_length": avg_length,
+                }
+            )
+
+        records.sort(
+            key=lambda rec: (
+                rec["method"],
+                rec["estimator"],
+                rec["confidence_level"],
+                not rec["is_primary"],
+            )
+        )
+        return records
+
+    def plot_uncertainty_calibration(
+        self,
+        output_path: str,
+        days: int = 30,
+        min_samples: int = 3,
+    ) -> Optional[str]:
+        """Create a nominal vs empirical coverage plot from calibration records."""
+        records = self.summarise_uncertainty_calibration(days=days, min_samples=min_samples)
+        if not records:
+            return None
+
+        try:
+            import pandas as pd
+            import matplotlib.pyplot as plt
+        except ImportError:
+            return None
+
+        df = pd.DataFrame(records)
+        if df.empty:
+            return None
+
+        df = df.sort_values(["method", "confidence_level"])
+        fig, ax = plt.subplots(figsize=(6, 6))
+
+        for method, group in df.groupby("method"):
+            group = group.groupby("confidence_level").agg(
+                empirical_coverage=("empirical_coverage", "mean"),
+                total_runs=("n", "sum"),
+            )
+            ax.plot(
+                group.index,
+                group["empirical_coverage"],
+                marker="o",
+                label=f"{method} ({int(group['total_runs'].sum())} runs)",
+            )
+
+        ax.plot([0, 1], [0, 1], linestyle="--", color="grey", alpha=0.6)
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        ax.set_xlabel("Nominal coverage")
+        ax.set_ylabel("Empirical coverage")
+        ax.set_title("Uncertainty Calibration")
+        ax.grid(True, alpha=0.2)
+        ax.legend()
+
+        output_path_obj = Path(output_path)
+        output_path_obj.parent.mkdir(parents=True, exist_ok=True)
+        fig.tight_layout()
+        fig.savefig(output_path_obj, dpi=300)
+        plt.close(fig)
+        return str(output_path_obj)
+
     def _calculate_correlation(
         self, session_errors: Dict, error_type1: str, error_type2: str
     ) -> float:

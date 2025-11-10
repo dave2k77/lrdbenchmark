@@ -59,6 +59,7 @@ class ContaminationConfig:
     # Noise parameters
     noise_gaussian_std: float = 0.1
     noise_colored_power: float = 1.0
+    noise_colored_std: float = 0.1
     noise_impulsive_probability: float = 0.005
     noise_impulsive_amplitude: float = 5.0
 
@@ -331,7 +332,12 @@ class ContaminationModel:
         return data + noise
 
     def add_noise_colored(
-        self, data: np.ndarray, power: Optional[float] = None
+        self,
+        data: np.ndarray,
+        power: Optional[float] = None,
+        std: Optional[float] = None,
+        *,
+        alpha: Optional[float] = None,
     ) -> np.ndarray:
         """
         Add colored (1/f^power) noise to the data.
@@ -348,7 +354,15 @@ class ContaminationModel:
         np.ndarray
             Data with colored noise added
         """
-        power = power or self.config.noise_colored_power
+        if power is None:
+            if alpha is not None:
+                power = alpha
+            else:
+                power = self.config.noise_colored_power
+
+        if std is None:
+            std = self.config.noise_colored_std
+
         n = len(data)
 
         # Generate colored noise using FFT
@@ -365,7 +379,11 @@ class ContaminationModel:
         noise = np.real(np.fft.ifft(noise_fft))
 
         # Normalize
-        noise = noise / np.std(noise) * 0.1
+        noise_std = np.std(noise)
+        if noise_std == 0 or not np.isfinite(noise_std):
+            return data
+
+        noise = noise / noise_std * std
 
         return data + noise
 

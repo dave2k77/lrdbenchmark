@@ -68,6 +68,7 @@ class ARFIMAModel(BaseModel):
         super().__init__(
             d=d, ar_params=ar_params, ma_params=ma_params, sigma=sigma, method=method
         )
+        self._current_rng: Optional[np.random.Generator] = None
 
     def _validate_parameters(self) -> None:
         """Validate model parameters."""
@@ -107,7 +108,13 @@ class ARFIMAModel(BaseModel):
         if method not in valid_methods:
             raise ValueError(f"Method must be one of {valid_methods}")
 
-    def generate(self, length: Optional[int] = None, seed: Optional[int] = None, n: Optional[int] = None) -> np.ndarray:
+    def generate(
+        self,
+        length: Optional[int] = None,
+        seed: Optional[int] = None,
+        n: Optional[int] = None,
+        rng: Optional[np.random.Generator] = None,
+    ) -> np.ndarray:
         """
         Generate ARFIMA time series.
 
@@ -134,8 +141,7 @@ class ARFIMAModel(BaseModel):
             raise ValueError("Either 'length' or 'n' must be provided")
         data_length = length if length is not None else n
         
-        if seed is not None:
-            np.random.seed(seed)
+        self._current_rng = self._resolve_generator(seed, rng)
 
         d = self.parameters["d"]
         ar_params = self.parameters["ar_params"]
@@ -147,6 +153,11 @@ class ARFIMAModel(BaseModel):
             return self._spectral_method(data_length, d, ar_params, ma_params, sigma)
         else:
             return self._simulation_method(data_length, d, ar_params, ma_params, sigma)
+
+    def _rng(self) -> np.random.Generator:
+        if self._current_rng is None:
+            self._current_rng = np.random.default_rng()
+        return self._current_rng
 
     def _spectral_method(
         self,
@@ -171,7 +182,7 @@ class ARFIMAModel(BaseModel):
         )
 
         # Generate complex Gaussian noise
-        noise = np.random.normal(0, 1, length) + 1j * np.random.normal(0, 1, length)
+        noise = self._rng().normal(0, 1, length) + 1j * self._rng().normal(0, 1, length)
         noise = noise / np.sqrt(2)
 
         # Apply spectral filter
@@ -197,7 +208,7 @@ class ARFIMAModel(BaseModel):
         AR/MA filtering with scipy.
         """
         # Generate white noise
-        noise = np.random.normal(0, sigma, length + 1000)  # Extra for warm-up
+        noise = self._rng().normal(0, sigma, length + 1000)  # Extra for warm-up
 
         # Apply MA filter if needed
         if ma_params:

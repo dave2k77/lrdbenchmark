@@ -19,8 +19,11 @@ try:
     import jax
     import jax.numpy as jnp
     import jax.scipy.special
+
     JAX_AVAILABLE = True
 except ImportError:
+    jax = None  # type: ignore[assignment]
+    jnp = None  # type: ignore[assignment]
     JAX_AVAILABLE = False
 
 try:

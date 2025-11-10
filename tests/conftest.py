@@ -2,24 +2,34 @@
 Pytest configuration and fixtures for LRDBenchmark tests.
 """
 
-import pytest
-import numpy as np
-import tempfile
 import os
+import tempfile
 from pathlib import Path
+
+import numpy as np
+import pytest
+
+from lrdbenchmark.random_manager import get_random_manager, initialise_global_rng
+
+
+@pytest.fixture(autouse=True)
+def reset_random_manager():
+    """Reset the global RNG manager before each test."""
+    initialise_global_rng(42)
+    yield
 
 
 @pytest.fixture
 def sample_data():
     """Generate sample time series data for testing."""
-    np.random.seed(42)
-    return np.random.randn(1000)
+    rng = get_random_manager().spawn_generator("tests:sample_data")
+    return rng.normal(size=1000)
 
 
 @pytest.fixture
 def fbm_data():
     """Generate fractional Brownian motion data for testing."""
-    np.random.seed(42)
+    rng = get_random_manager().spawn_generator("tests:fbm_data")
     # Simple fBm-like data
     n = 1000
     H = 0.7
@@ -27,7 +37,7 @@ def fbm_data():
     t = np.arange(n) * dt
     
     # Generate fBm using approximate method
-    increments = np.random.randn(n-1)
+    increments = rng.normal(size=n - 1)
     fbm = np.zeros(n)
     fbm[0] = 0
     
@@ -40,27 +50,27 @@ def fbm_data():
 @pytest.fixture
 def short_data():
     """Generate short time series for edge case testing."""
-    np.random.seed(42)
-    return np.random.randn(50)
+    rng = get_random_manager().spawn_generator("tests:short_data")
+    return rng.normal(size=50)
 
 
 @pytest.fixture
 def long_data():
     """Generate long time series for performance testing."""
-    np.random.seed(42)
-    return np.random.randn(10000)
+    rng = get_random_manager().spawn_generator("tests:long_data")
+    return rng.normal(size=10000)
 
 
 @pytest.fixture
 def contaminated_data():
     """Generate data with contamination for robustness testing."""
-    np.random.seed(42)
-    base_data = np.random.randn(1000)
+    rng = get_random_manager().spawn_generator("tests:contaminated_data")
+    base_data = rng.normal(size=1000)
     
     # Add outliers
     contaminated = base_data.copy()
-    outlier_indices = np.random.choice(1000, size=50, replace=False)
-    contaminated[outlier_indices] += 5 * np.random.randn(50)
+    outlier_indices = rng.choice(1000, size=50, replace=False)
+    contaminated[outlier_indices] += 5 * rng.normal(size=50)
     
     return contaminated
 

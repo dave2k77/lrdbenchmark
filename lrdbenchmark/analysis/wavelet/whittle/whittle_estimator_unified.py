@@ -17,8 +17,13 @@ import warnings
 try:
     import jax
     import jax.numpy as jnp
+    from jax import vmap
+
     JAX_AVAILABLE = True
 except ImportError:
+    jax = None  # type: ignore[assignment]
+    jnp = None  # type: ignore[assignment]
+    vmap = None  # type: ignore[assignment]
     JAX_AVAILABLE = False
 
 try:
@@ -34,9 +39,6 @@ from lrdbenchmark.analysis.wavelet.jax_wavelet import (
     dwt_periodized,
     wavelet_detail_variances,
 )
-from jax import vmap
-
-
 class WaveletWhittleEstimator(BaseEstimator):
     """
     Unified Wavelet Whittle Estimator for Long-Range Dependence Analysis.

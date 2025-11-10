@@ -1,48 +1,234 @@
-{
-  "version": "1.0",
-  "preprocessing": {
-    "outlier_threshold": 3.0,
-    "winsorize_limits": [0.01, 0.99],
-    "detrend": true,
-    "apply_winsorize": true
-  },
-  "scale_selection": {
-    "spectral": {
-      "min_freq_ratio": 0.01,
-      "max_freq_ratio": 0.1,
-      "low_freq_trim": 0.0
-    },
-    "temporal": {
-      "min_window": 16,
-      "max_window": 256,
-      "window_density": "log"
-    },
-    "wavelet": {
-      "min_level": 1,
-      "max_level": 8,
-      "wavelet": "db4"
-    }
-  },
-  "data_models": {
-    "fBm": {"H": 0.7, "sigma": 1.0},
-    "fGn": {"H": 0.7, "sigma": 1.0},
-    "ARFIMAModel": {"d": 0.3, "ar_params": [0.5], "ma_params": [0.2]},
-    "MRW": {"H": 0.7, "lambda_param": 0.5, "sigma": 1.0}
-  },
-  "estimator_overrides": {
-    "GPH": {"min_freq_ratio": 0.01, "max_freq_ratio": 0.08},
-    "Whittle": {"max_iter": 500},
-    "DFA": {"min_window": 16, "max_window": 256},
-    "DMA": {"min_window": 16, "max_window": 256},
-    "R/S": {"min_window": 16, "max_window": 256}
-  },
-  "benchmark": {
-    "confidence_level": 0.95,
-    "uncertainty": {
-      "n_block_bootstrap": 64,
-      "n_wavelet_bootstrap": 64,
-      "n_parametric": 48
-    }
-  }
-}
+# Unified Experiment Schema for LRDBenchmark
+# This schema defines all experiment parameters for reproducibility
 
+version: "2.0"
+experiment_id: null  # Auto-generated if null
+description: "Comprehensive benchmark protocol for LRD estimation"
+
+# Data Generation Parameters
+data_generation:
+  # Default data length
+  default_length: 1000
+  
+  # Data model parameters
+  models:
+    fBm:
+      H: 0.7
+      sigma: 1.0
+      enabled: true
+    fGn:
+      H: 0.7
+      sigma: 1.0
+      enabled: true
+    ARFIMAModel:
+      d: 0.3
+      ar_params: [0.5]
+      ma_params: [0.2]
+      enabled: true
+    MRW:
+      H: 0.7
+      lambda_param: 0.5
+      sigma: 1.0
+      enabled: true
+  
+  # Random seed for data generation
+  random_seed: null  # Auto-generated if null
+  
+  # Contamination settings
+  contamination:
+    enabled: false
+    type: null  # Options: additive_gaussian, multiplicative, outlier, trend, seasonal, missing
+    level: 0.1
+
+# Preprocessing Configuration
+preprocessing:
+  outlier_threshold: 3.0
+  winsorize_limits: [0.01, 0.99]
+  detrend: true
+  apply_winsorize: true
+  # Detrending order (for polynomial detrending)
+  detrend_order: 1
+  # Tapering window (for spectral methods)
+  tapering: null  # Options: hann, hamming, blackman, null
+
+# Scale Selection Parameters
+scale_selection:
+  spectral:
+    min_freq_ratio: 0.01
+    max_freq_ratio: 0.1
+    low_freq_trim: 0.0
+    # Frequency bin selection method
+    selection_method: "auto"  # Options: auto, manual, adaptive
+  
+  temporal:
+    min_window: 16
+    max_window: 256
+    window_density: "log"  # Options: linear, log, custom
+    # Window selection method
+    selection_method: "auto"
+  
+  wavelet:
+    min_level: 1
+    max_level: 8
+    wavelet: "db4"  # Options: db4, db8, haar, coif2, etc.
+    # Level selection method
+    selection_method: "auto"
+
+# Estimator Configuration
+estimators:
+  # Estimator-specific parameter overrides
+  overrides:
+    GPH:
+      min_freq_ratio: 0.01
+      max_freq_ratio: 0.08
+    Whittle:
+      max_iter: 500
+    DFA:
+      min_window: 16
+      max_window: 256
+    DMA:
+      min_window: 16
+      max_window: 256
+    R/S:
+      min_window: 16
+      max_window: 256
+  
+  # Categories to include
+  categories:
+    classical: true
+    ML: true
+    neural: true
+  
+  # Specific estimators to include/exclude
+  include: null  # null = all, or list of estimator names
+  exclude: null  # null = none, or list of estimator names
+
+# Benchmark Execution Settings
+benchmark:
+  confidence_level: 0.95
+  
+  # Uncertainty Quantification
+  uncertainty:
+    enabled: true
+    n_block_bootstrap: 64
+    block_size: null  # Auto if null
+    n_wavelet_bootstrap: 64
+    wavelet: "db4"
+    max_wavelet_level: null  # Auto if null
+    n_parametric: 48
+    random_state: null  # Auto-generated if null
+  
+  # Robustness Stress Panels
+  robustness:
+    enabled: true
+    random_state: null  # Auto-generated if null
+    config:
+      missing_rate: 0.1
+      block_fraction: 0.2
+      regime_shift: 0.5
+      burst_rate: 0.05
+      burst_magnitude: 3.0
+      oscillation_amplitude: 0.3
+      oscillation_frequency: 0.1
+  
+  # Advanced Metrics
+  advanced_metrics:
+    enabled: true
+    convergence_analysis: true
+    bias_analysis: true
+    monte_carlo_simulations: 50
+  
+  # Statistical Significance Testing
+  significance_testing:
+    enabled: true
+    alpha: 0.05
+    methods:
+      - friedman
+      - nemenyi
+      - wilcoxon
+
+# Analytics Configuration
+analytics:
+  # Error analysis
+  error_analysis:
+    enabled: true
+    metrics:
+      - mae
+      - mse
+      - rmse
+      - bias
+      - variance
+  
+  # Stratified reporting
+  stratified_reporting:
+    enabled: true
+    stratify_by:
+      - true_hurst
+      - data_length
+      - tail_index
+      - estimator_category
+  
+  # Visualization
+  visualization:
+    enabled: true
+    formats:
+      - png
+      - pdf
+    dpi: 300
+  
+  # Dashboard generation
+  dashboard:
+    enabled: true
+    interactive: false
+
+# Output Configuration
+output:
+  # Results directory
+  results_dir: "benchmark_results"
+  
+  # Save options
+  save_results: true
+  save_provenance: true
+  save_summary: true
+  save_stratified: true
+  
+  # Provenance artifact
+  provenance:
+    format: "json"  # Options: json, yaml
+    include_full_config: true
+    include_environment: true
+    include_git_info: true
+
+# Legacy compatibility (maps to new schema)
+# These are kept for backward compatibility
+data_models:
+  fBm:
+    H: 0.7
+    sigma: 1.0
+  fGn:
+    H: 0.7
+    sigma: 1.0
+  ARFIMAModel:
+    d: 0.3
+    ar_params: [0.5]
+    ma_params: [0.2]
+  MRW:
+    H: 0.7
+    lambda_param: 0.5
+    sigma: 1.0
+
+estimator_overrides:
+  GPH:
+    min_freq_ratio: 0.01
+    max_freq_ratio: 0.08
+  Whittle:
+    max_iter: 500
+  DFA:
+    min_window: 16
+    max_window: 256
+  DMA:
+    min_window: 16
+    max_window: 256
+  R/S:
+    min_window: 16
+    max_window: 256

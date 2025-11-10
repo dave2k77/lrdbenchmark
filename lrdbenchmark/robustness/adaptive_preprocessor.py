@@ -5,9 +5,12 @@ Adaptive Data Preprocessor for LRDBenchmark
 This module provides adaptive data preprocessing based on data characteristics.
 """
 
-import numpy as np
-from typing import Dict, Any, Tuple
 import logging
+from typing import Any, Dict, Optional, Tuple
+
+import numpy as np
+
+from lrdbenchmark.domain.preprocessing import DomainPreprocessor
 
 logger = logging.getLogger(__name__)
 
@@ -20,11 +23,13 @@ class AdaptiveDataPreprocessor:
     appropriate preprocessing strategies.
     """
     
-    def __init__(self, 
-                 outlier_threshold: float = 3.0,
-                 winsorize_limits: Tuple[float, float] = (0.01, 0.99),
-                 enable_winsorize: bool = True,
-                 enable_detrend: bool = True):
+    def __init__(
+        self,
+        outlier_threshold: float = 3.0,
+        winsorize_limits: Tuple[float, float] = (0.01, 0.99),
+        enable_winsorize: bool = True,
+        enable_detrend: bool = True,
+    ):
         """
         Initialize the adaptive data preprocessor.
         
@@ -39,8 +44,15 @@ class AdaptiveDataPreprocessor:
         self.winsorize_limits = winsorize_limits
         self.enable_winsorize = enable_winsorize
         self.enable_detrend = enable_detrend
+        self.domain_preprocessor = DomainPreprocessor()
     
-    def preprocess(self, data: np.ndarray) -> Tuple[np.ndarray, Dict[str, Any]]:
+    def preprocess(
+        self,
+        data: np.ndarray,
+        *,
+        domain: Optional[str] = None,
+        sampling_rate_hz: Optional[float] = None,
+    ) -> Tuple[np.ndarray, Dict[str, Any]]:
         """
         Preprocess data based on its characteristics.
         
@@ -48,6 +60,11 @@ class AdaptiveDataPreprocessor:
         ----------
         data : np.ndarray
             Input time series data
+        domain : str, optional
+            Domain label (e.g., ``'eeg'`` or ``'ecg'``) to trigger specialised
+            preprocessing.
+        sampling_rate_hz : float, optional
+            Sampling rate required for domain-specific pipelines.
             
         Returns
         -------
@@ -76,6 +93,19 @@ class AdaptiveDataPreprocessor:
             data_processed, proc_metadata = self._preprocess_normal(data_clean)
         
         metadata.update(proc_metadata)
+
+        if domain is not None:
+            try:
+                domain_processed, domain_metadata = self.domain_preprocessor.preprocess(
+                    data_processed, domain=domain, sampling_rate_hz=sampling_rate_hz
+                )
+                data_processed = domain_processed
+                metadata["domain_preprocessing"] = domain_metadata
+            except ValueError as exc:
+                metadata["domain_preprocessing"] = {
+                    "status": "skipped",
+                    "reason": str(exc),
+                }
         
         return data_processed, metadata
     

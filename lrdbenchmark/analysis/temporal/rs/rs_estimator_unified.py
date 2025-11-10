@@ -7,6 +7,7 @@ selection (JAX, Numba, NumPy) for the best performance on the available hardware
 """
 
 import math
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 from typing import Dict, Any, Optional, Union, Tuple, List, Sequence, Callable
@@ -44,6 +45,22 @@ except ImportError:
     SCIPY_AVAILABLE = False
 
 from lrdbenchmark.analysis.base_estimator import BaseEstimator
+
+
+def _ensure_non_interactive_backend() -> None:
+    """Switch to a headless-friendly Matplotlib backend when running without DISPLAY."""
+    if os.environ.get("LRDBENCHMARK_FORCE_INTERACTIVE", "").lower() in {"1", "true", "yes"}:
+        return
+    backend = plt.get_backend().lower()
+    interactive_markers = ("gtk", "qt", "wx", "tk")
+    if any(marker in backend for marker in interactive_markers):
+        try:
+            plt.switch_backend("Agg")
+        except Exception:
+            pass
+
+
+_ensure_non_interactive_backend()
 
 
 class RSEstimator(BaseEstimator):
@@ -244,6 +261,16 @@ class RSEstimator(BaseEstimator):
         if np.any(windows <= 0):
             raise ValueError("Window sizes must be positive integers")
         return windows
+
+    @staticmethod
+    def _should_suppress_fallback_warning(error: Exception) -> bool:
+        """Return True when a fallback is expected and shouldn't raise a warning."""
+        message = str(error).lower()
+        suppressed_fragments = (
+            "need at least 3 window sizes",
+            "insufficient valid",
+        )
+        return any(fragment in message for fragment in suppressed_fragments)
 
     def _resolve_block_sizes(self, n: int) -> np.ndarray:
         """
@@ -460,20 +487,21 @@ class RSEstimator(BaseEstimator):
         data = np.asarray(data)
         n = len(data)
 
-        if n < 100:
-            warnings.warn("Data length is small, results may be unreliable")
-
         # Select optimal method based on data size and framework
         if self.optimization_framework == "jax" and JAX_AVAILABLE:
             try:
                 return self._estimate_jax(data)
             except Exception as e:
+                if self._should_suppress_fallback_warning(e):
+                    return self._estimate_numpy(data)
                 warnings.warn(f"JAX implementation failed: {e}, falling back to NumPy")
                 return self._estimate_numpy(data)
         elif self.optimization_framework == "numba" and NUMBA_AVAILABLE:
             try:
                 return self._estimate_numba(data)
             except Exception as e:
+                if self._should_suppress_fallback_warning(e):
+                    return self._estimate_numpy(data)
                 warnings.warn(f"Numba implementation failed: {e}, falling back to NumPy")
                 return self._estimate_numpy(data)
         else:
@@ -518,7 +546,8 @@ class RSEstimator(BaseEstimator):
             # Use Numba-optimized calculation
             return self._estimate_numba_optimized(data)
         except Exception as e:
-            warnings.warn(f"Numba implementation failed: {e}, falling back to NumPy")
+            if not self._should_suppress_fallback_warning(e):
+                warnings.warn(f"Numba implementation failed: {e}, falling back to NumPy")
             return self._estimate_numpy(data)
     
     def _estimate_numba_optimized(self, data: np.ndarray) -> Dict[str, Any]:
@@ -559,7 +588,8 @@ class RSEstimator(BaseEstimator):
             # Use JAX-optimized calculation
             return self._estimate_jax_optimized(data)
         except Exception as e:
-            warnings.warn(f"JAX implementation failed: {e}, falling back to NumPy")
+            if not self._should_suppress_fallback_warning(e):
+                warnings.warn(f"JAX implementation failed: {e}, falling back to NumPy")
             return self._estimate_numpy(data)
     
     def _estimate_jax_optimized(self, data: np.ndarray) -> Dict[str, Any]:
@@ -637,7 +667,8 @@ class RSEstimator(BaseEstimator):
             # Use Numba-optimized calculation
             return self._calculate_rs_numba_optimized(data, block_size)
         except Exception as e:
-            warnings.warn(f"Numba R/S calculation failed: {e}, falling back to NumPy")
+            if not self._should_suppress_fallback_warning(e):
+                warnings.warn(f"Numba R/S calculation failed: {e}, falling back to NumPy")
             return self._calculate_rs_numpy(data, block_size)
     
     def _calculate_rs_numba_optimized(self, data: np.ndarray, block_size: int) -> float:
@@ -890,7 +921,12 @@ class RSEstimator(BaseEstimator):
 
         if save_path:
             plt.savefig(save_path, dpi=300, bbox_inches="tight")
-        plt.show()
+        backend = plt.get_backend().lower()
+        interactive_markers = ("qt", "gtk", "wx", "tk", "nbagg", "webagg")
+        if plt.isinteractive() or any(marker in backend for marker in interactive_markers):
+            plt.show()
+        else:
+            plt.close(fig)
 
     def get_method_recommendation(self, n: int) -> Dict[str, Any]:
         """Get method recommendation for a given data size."""

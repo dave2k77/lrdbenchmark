@@ -20,7 +20,7 @@ Basic Usage
 .. code-block:: python
 
    from lrdbenchmark.analysis.comprehensive_adaptive_estimators import get_all_comprehensive_adaptive_classical_estimators
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import FBMModel
    import numpy as np
    
    # Get all comprehensive adaptive estimators
@@ -63,7 +63,7 @@ Performance Comparison
 .. code-block:: python
 
    from lrdbenchmark.analysis.comprehensive_adaptive_estimators import ComprehensiveAdaptiveRS, ComprehensiveAdaptiveDFA
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import FBMModel
    import numpy as np
    import time
    
@@ -113,8 +113,8 @@ EEG Contamination Testing
 .. code-block:: python
 
    from lrdbenchmark.analysis.comprehensive_adaptive_estimators import ComprehensiveAdaptiveDFA
-   from lrdbenchmark.models.contamination.contamination_factory import ContaminationFactory, ConfoundingScenario
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import ContaminationFactory, ConfoundingScenario
+   from lrdbenchmark import FBMModel
    import numpy as np
    
    # Create estimator and contamination factory
@@ -184,7 +184,7 @@ Data Length Robustness Testing
 .. code-block:: python
 
    from lrdbenchmark.analysis.comprehensive_adaptive_estimators import ComprehensiveAdaptiveGPH, ComprehensiveAdaptiveCWT
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import FBMModel
    import numpy as np
    
    # Create estimators
@@ -235,7 +235,7 @@ Framework Selection Analysis
 .. code-block:: python
 
    from lrdbenchmark.analysis.comprehensive_adaptive_estimators import ComprehensiveAdaptiveRS
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
+   from lrdbenchmark import FBMModel
    import numpy as np
    
    # Create estimator with profiling
@@ -271,9 +271,9 @@ Comprehensive Benchmark
 .. code-block:: python
 
    from lrdbenchmark.analysis.comprehensive_adaptive_estimators import get_all_comprehensive_adaptive_classical_estimators
-   from lrdbenchmark.models.contamination.contamination_factory import ContaminationFactory, ConfoundingScenario
-   from lrdbenchmark.models.data_models.fbm.fbm_model import FBMModel
-   from lrdbenchmark.models.data_models.fgn.fgn_model import FGNModel
+   from lrdbenchmark import ContaminationFactory, ConfoundingScenario
+   from lrdbenchmark import FBMModel
+   from lrdbenchmark import FGNModel
    import numpy as np
    import pandas as pd
    

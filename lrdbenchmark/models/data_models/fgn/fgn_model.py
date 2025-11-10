@@ -15,6 +15,7 @@ class FractionalGaussianNoise(BaseModel):
 
     def __init__(self, H: float, sigma: float = 1.0, method: str = "circulant") -> None:
         super().__init__(H=H, sigma=sigma, method=method)
+        self._current_rng: Optional[np.random.Generator] = None
 
     def _validate_parameters(self) -> None:
         H = self.parameters.get("H")
@@ -28,14 +29,19 @@ class FractionalGaussianNoise(BaseModel):
         if method not in {"circulant", "cholesky"}:
             raise ValueError("method must be one of {'circulant', 'cholesky'}")
 
-    def generate(self, length: Optional[int] = None, seed: Optional[int] = None, n: Optional[int] = None) -> np.ndarray:
+    def generate(
+        self,
+        length: Optional[int] = None,
+        seed: Optional[int] = None,
+        n: Optional[int] = None,
+        rng: Optional[np.random.Generator] = None,
+    ) -> np.ndarray:
         # Handle backward compatibility: accept both 'length' and 'n'
         if length is None and n is None:
             raise ValueError("Either 'length' or 'n' must be provided")
         data_length = length if length is not None else n
-        
-        if seed is not None:
-            np.random.seed(seed)
+
+        self._current_rng = self._resolve_generator(seed, rng)
 
         H = self.parameters["H"]
         sigma = self.parameters["sigma"]
@@ -71,8 +77,8 @@ class FractionalGaussianNoise(BaseModel):
 
         # Generate complex Gaussian noise with matching length
         z = (
-            np.random.normal(0, 1, len(eigenvalues))
-            + 1j * np.random.normal(0, 1, len(eigenvalues))
+            self._rng().normal(0, 1, len(eigenvalues))
+            + 1j * self._rng().normal(0, 1, len(eigenvalues))
         ) / np.sqrt(2)
 
         # Filter
@@ -95,9 +101,14 @@ class FractionalGaussianNoise(BaseModel):
             cov = cov + 1e-10 * np.eye(length)
             L = np.linalg.cholesky(cov)
 
-        z = np.random.normal(0.0, 1.0, length)
+        z = self._rng().normal(0.0, 1.0, length)
         x = L @ z
         return x
+
+    def _rng(self) -> np.random.Generator:
+        if self._current_rng is None:
+            self._current_rng = np.random.default_rng()
+        return self._current_rng
 
     def get_theoretical_properties(self) -> Dict[str, Any]:
         H = self.parameters["H"]

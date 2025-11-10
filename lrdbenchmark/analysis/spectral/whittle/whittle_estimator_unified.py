@@ -18,7 +18,6 @@ from lrdbenchmark.analysis.backend_utils import select_backend, JAX_AVAILABLE, N
 if JAX_AVAILABLE:
     import jax
     import jax.numpy as jnp
-    from jax import jit, vmap
 if NUMBA_AVAILABLE:
     import numba
     from numba import jit as numba_jit, prange
@@ -209,11 +208,72 @@ class WhittleEstimator(BaseEstimator):
 
     def _estimate_jax(self, data: np.ndarray) -> Dict[str, Any]:
         """JAX-optimized implementation of Whittle estimation."""
-        # This is a placeholder and falls back to the NumPy implementation.
-        # A full JAX implementation would require re-implementing scipy's spectral
-        # and optimization routines, which is a significant undertaking.
-        warnings.warn("JAX not available for WhittleEstimator, falling back to NumPy.")
-        return self._estimate_numpy(data)
+        if not JAX_AVAILABLE:
+            return self._estimate_numpy(data)
+
+        data_np = np.asarray(data, dtype=float)
+        n = len(data_np)
+        demeaned = data_np - np.mean(data_np)
+        x = jnp.asarray(demeaned, dtype=jnp.float64)
+
+        freqs = jnp.fft.rfftfreq(n, d=1.0)
+        fft_vals = jnp.fft.rfft(x)
+        psd = (jnp.abs(fft_vals) ** 2) / n
+
+        nyquist = 0.5
+        min_freq = self.parameters["min_freq_ratio"] * nyquist
+        max_freq = self.parameters["max_freq_ratio"] * nyquist
+        mask = (freqs >= min_freq) & (freqs <= max_freq) & (freqs > 0)
+        freqs_sel = freqs[mask]
+        psd_sel = psd[mask]
+
+        if freqs_sel.size < 4:
+            raise ValueError("Insufficient frequency points for Whittle regression")
+
+        log_freq = jnp.log(freqs_sel)
+        log_psd = jnp.log(psd_sel)
+        x_mean = jnp.mean(log_freq)
+        y_mean = jnp.mean(log_psd)
+        slope = jnp.sum((log_freq - x_mean) * (log_psd - y_mean)) / jnp.sum((log_freq - x_mean) ** 2)
+        intercept = y_mean - slope * x_mean
+
+        residuals = log_psd - (slope * log_freq + intercept)
+        ss_res = jnp.sum(residuals**2)
+        ss_tot = jnp.sum((log_psd - y_mean) ** 2)
+        r_squared = 1.0 - ss_res / ss_tot
+
+        beta = -float(slope)
+        hurst = float((beta + 1.0) / 2.0)
+        scale = 1.0
+
+        self.results = {
+            "hurst_parameter": hurst,
+            "d_parameter": float(hurst - 0.5),
+            "scale_parameter": float(scale),
+            "r_squared": float(r_squared),
+            "slope": float(slope),
+            "intercept": float(intercept),
+            "p_value": None,
+            "std_error": None,
+            "m": int(freqs_sel.size),
+            "log_model": jnp.log(self._fgn_spectrum(np.array(freqs_sel), hurst, scale)).tolist(),
+            "log_periodogram": log_psd.tolist(),
+            "frequency": freqs_sel.tolist(),
+            "periodogram": psd_sel.tolist(),
+            "method": "Spectral_JAX",
+            "selection_reason": "Direct spectral regression on GPU",
+            "spectral_estimate": hurst,
+            "local_whittle_estimate": None,
+            "bandwidth_info": {
+                "min_freq": float(min_freq),
+                "max_freq": float(max_freq),
+                "data_length": n,
+            },
+            "spectral_quality": {"quality": "estimated", "method": "jax_periodogram"},
+            "optimization_framework": self.optimization_framework,
+        }
+
+        return self.results
 
     def _adaptive_bandwidth_selection(self, data: np.ndarray) -> Dict[str, Any]:
         """Adaptive bandwidth selection based on data characteristics."""

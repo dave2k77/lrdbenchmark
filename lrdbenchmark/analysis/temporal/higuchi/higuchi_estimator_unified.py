@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+import os
 import warnings
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -271,6 +272,15 @@ class HiguchiEstimator(BaseEstimator):
         try:
             import matplotlib.pyplot as plt
 
+            if os.environ.get("LRDBENCHMARK_FORCE_INTERACTIVE", "").lower() not in {"1", "true", "yes"}:
+                backend = plt.get_backend().lower()
+                interactive_markers = ("gtk", "qt", "wx", "tk")
+                if any(marker in backend for marker in interactive_markers):
+                    try:
+                        plt.switch_backend("Agg")
+                    except Exception:
+                        pass
+
             if not self.results:
                 raise ValueError("No estimation results available")
 
@@ -300,7 +310,12 @@ class HiguchiEstimator(BaseEstimator):
             plt.tight_layout()
             if save_path:
                 plt.savefig(save_path, dpi=300, bbox_inches="tight")
-            else:
+
+            backend = plt.get_backend().lower()
+            interactive_markers = ("qt", "gtk", "wx", "tk", "nbagg", "webagg")
+            if plt.isinteractive() or any(marker in backend for marker in interactive_markers):
                 plt.show()
+            else:
+                plt.close(fig)
         except ImportError as exc:  # pragma: no cover
             raise RuntimeError("Matplotlib not available for plotting") from exc

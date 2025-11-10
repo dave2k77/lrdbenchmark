@@ -1,4 +1,4 @@
-#!/home/davianc/Documents/LRDBenchmark/lrdbenchmark_venv/bin/python
+#!/home/davianc/Documents/lrdbenchmark/lrdbenchmark_venv/bin/python
 import sys
 from fontTools.subset import main
 if __name__ == '__main__':

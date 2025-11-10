@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lrdbenchmark.analytics.workflow_analyzer &mdash; LRDBenchmark 1.7.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+  <title>lrdbenchmark.analytics.workflow_analyzer &mdash; lrdbenchmark 2.3.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
     <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/_modules/lrdbenchmark/analytics/workflow_analyzer.html" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=030dc6f6"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=67b02a41"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -32,11 +30,8 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            LRDBenchmark
+            lrdbenchmark
           </a>
-              <div class="version">
-                1.7.0
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -60,23 +55,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../api/analytics.html">Analytics API</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html">Theoretical Foundations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#statistical-estimators">Statistical Estimators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#theoretical-performance-considerations">Theoretical Performance Considerations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#practical-examples">Practical Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#theoretical-references">Theoretical References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html">Validation Techniques and Statistical Tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#monte-carlo-validation">Monte Carlo Validation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#bootstrap-methods">Bootstrap Methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#cross-validation">Cross-Validation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#robustness-analysis">Robustness Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#validation-statistical-tests">Validation Statistical Tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#model-selection">Model Selection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#validation-performance-metrics">Validation Performance Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#quality-assurance">Quality Assurance</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#validation-references">Validation References</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_adaptive_demo.html">Comprehensive Adaptive Estimators Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html">Comprehensive LRDBench Demonstration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#basic-data-generation-and-analysis">Basic Data Generation and Analysis</a></li>
@@ -87,6 +65,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#integration-with-external-libraries">Integration with External Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#complete-workflow-example">Complete Workflow Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#summary">Summary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/leaderboard.html">Leaderboard Significance Analysis</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/notebooks_overview.html">Demonstration Notebooks Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/notebooks_overview.html#data-generation-and-visualization">01. Data Generation and Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/notebooks_overview.html#estimation-and-statistical-validation">02. Estimation and Statistical Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/notebooks_overview.html#custom-models-and-estimators">03. Custom Models and Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/notebooks_overview.html#comprehensive-benchmarking">04. Comprehensive Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/notebooks_overview.html#leaderboard-generation">05. Leaderboard Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/notebooks_overview.html#getting-started-with-notebooks">Getting Started with Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/notebooks_overview.html#support-and-contributing">Support and Contributing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorial Series</a></li>
 </ul>
 
         </div>
@@ -95,7 +87,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">LRDBenchmark</a>
+          <a href="../../../index.html">lrdbenchmark</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -125,20 +117,20 @@
 <span class="sd">- Feature usage analysis</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Any</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">asdict</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">Counter</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">asdict</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">Counter</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 
 
 <div class="viewcode-block" id="WorkflowStep">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowStep">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">WorkflowStep</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">WorkflowStep</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a single step in a user workflow&quot;&quot;&quot;</span>
 
     <span class="n">timestamp</span><span class="p">:</span> <span class="nb">str</span>
@@ -154,7 +146,7 @@
 <div class="viewcode-block" id="Workflow">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.Workflow">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Workflow</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">Workflow</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a complete user workflow&quot;&quot;&quot;</span>
 
     <span class="n">workflow_id</span><span class="p">:</span> <span class="nb">str</span>
@@ -169,7 +161,7 @@
 
 
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">WorkflowSummary</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">WorkflowSummary</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregated workflow statistics&quot;&quot;&quot;</span>
 
     <span class="n">total_workflows</span><span class="p">:</span> <span class="nb">int</span>
@@ -183,7 +175,7 @@
 
 <div class="viewcode-block" id="WorkflowAnalyzer">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">WorkflowAnalyzer</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">WorkflowAnalyzer</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Comprehensive workflow analysis system</span>
 
@@ -197,7 +189,7 @@
 
 <div class="viewcode-block" id="WorkflowAnalyzer.__init__">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;~/.lrdbench/analytics&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;~/.lrdbench/analytics&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the workflow analyzer&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">storage_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">storage_path</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">storage_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -212,7 +204,7 @@
 
 <div class="viewcode-block" id="WorkflowAnalyzer._load_existing_data">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer._load_existing_data">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_load_existing_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_load_existing_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Load existing workflow data&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">workflows_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_path</span> <span class="o">/</span> <span class="s2">&quot;workflows.json&quot;</span>
@@ -230,7 +222,7 @@
 
 <div class="viewcode-block" id="WorkflowAnalyzer._reconstruct_workflow">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer._reconstruct_workflow">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_reconstruct_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workflow_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Workflow</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_reconstruct_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workflow_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Workflow</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reconstruct workflow object from stored data&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">steps</span> <span class="o">=</span> <span class="p">[]</span>
@@ -255,7 +247,7 @@
 
 <div class="viewcode-block" id="WorkflowAnalyzer.start_workflow_session">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer.start_workflow_session">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">start_workflow_session</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">start_workflow_session</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Start tracking a new workflow session&quot;&quot;&quot;</span>
@@ -266,7 +258,7 @@
 
 <div class="viewcode-block" id="WorkflowAnalyzer.add_workflow_step">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer.add_workflow_step">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_workflow_step</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">add_workflow_step</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">step_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -303,7 +295,7 @@
 
 <div class="viewcode-block" id="WorkflowAnalyzer.end_workflow_session">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer.end_workflow_session">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">end_workflow_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">end_workflow_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        End a workflow session and create workflow record</span>
 
@@ -354,7 +346,7 @@
 
 <div class="viewcode-block" id="WorkflowAnalyzer.get_workflow_summary">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer.get_workflow_summary">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_workflow_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowSummary</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_workflow_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkflowSummary</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get workflow summary for the specified time period</span>
 
@@ -412,7 +404,7 @@
 
 <div class="viewcode-block" id="WorkflowAnalyzer._analyze_workflow_patterns">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer._analyze_workflow_patterns">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_analyze_workflow_patterns</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_analyze_workflow_patterns</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">workflows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Workflow</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">int</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Analyze common workflow patterns&quot;&quot;&quot;</span>
@@ -429,7 +421,7 @@
 
 <div class="viewcode-block" id="WorkflowAnalyzer._analyze_estimator_sequences">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer._analyze_estimator_sequences">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_analyze_estimator_sequences</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_analyze_estimator_sequences</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">workflows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Workflow</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">int</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Analyze popular estimator sequences&quot;&quot;&quot;</span>
@@ -449,7 +441,7 @@
 
 <div class="viewcode-block" id="WorkflowAnalyzer._analyze_workflow_complexity">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer._analyze_workflow_complexity">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_analyze_workflow_complexity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workflows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Workflow</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_analyze_workflow_complexity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workflows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Workflow</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Analyze workflow complexity distribution&quot;&quot;&quot;</span>
         <span class="n">complexity_distribution</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;simple&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>  <span class="c1"># 1-2 steps</span>
@@ -474,7 +466,7 @@
 
 <div class="viewcode-block" id="WorkflowAnalyzer.get_user_workflow_patterns">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer.get_user_workflow_patterns">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_user_workflow_patterns</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">get_user_workflow_patterns</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get workflow patterns for a specific user&quot;&quot;&quot;</span>
@@ -521,7 +513,7 @@
 
 <div class="viewcode-block" id="WorkflowAnalyzer.get_workflow_optimization_recommendations">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer.get_workflow_optimization_recommendations">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_workflow_optimization_recommendations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">get_workflow_optimization_recommendations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get recommendations for workflow optimization&quot;&quot;&quot;</span>
         <span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_workflow_summary</span><span class="p">(</span><span class="n">days</span><span class="p">)</span>
         <span class="n">recommendations</span> <span class="o">=</span> <span class="p">[]</span>
@@ -571,7 +563,7 @@
 
 <div class="viewcode-block" id="WorkflowAnalyzer.export_workflows">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer.export_workflows">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">export_workflows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">export_workflows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Export workflow data to file&quot;&quot;&quot;</span>
         <span class="n">cutoff_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
 
@@ -590,7 +582,7 @@
 
 <div class="viewcode-block" id="WorkflowAnalyzer.get_feature_usage_analysis">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer.get_feature_usage_analysis">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_feature_usage_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">get_feature_usage_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Analyze feature usage patterns&quot;&quot;&quot;</span>
         <span class="n">cutoff_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
 
@@ -642,7 +634,7 @@
 
 <div class="viewcode-block" id="WorkflowAnalyzer._get_length_range">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.workflow_analyzer.WorkflowAnalyzer._get_length_range">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_length_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_get_length_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert data length to range category&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">length</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;&lt;100&quot;</span>
@@ -660,7 +652,7 @@
 <span class="n">_global_workflow_analyzer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">WorkflowAnalyzer</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">get_workflow_analyzer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">WorkflowAnalyzer</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">get_workflow_analyzer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">WorkflowAnalyzer</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the global workflow analyzer instance&quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">_global_workflow_analyzer</span>
     <span class="k">if</span> <span class="n">_global_workflow_analyzer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -668,11 +660,11 @@
     <span class="k">return</span> <span class="n">_global_workflow_analyzer</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">track_workflow</span><span class="p">(</span><span class="n">step_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">track_workflow</span><span class="p">(</span><span class="n">step_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator for tracking workflow steps&quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="n">analyzer</span> <span class="o">=</span> <span class="n">get_workflow_analyzer</span><span class="p">()</span>
 
             <span class="c1"># Start workflow session if not already started</span>

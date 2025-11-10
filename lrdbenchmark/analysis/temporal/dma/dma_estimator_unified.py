@@ -6,6 +6,7 @@ This module implements the DMA estimator with automatic optimization framework
 selection (JAX, Numba, NumPy) for the best performance on the available hardware.
 """
 
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
@@ -29,6 +30,22 @@ except ImportError:
     NUMBA_AVAILABLE = False
 
 from lrdbenchmark.analysis.base_estimator import BaseEstimator
+
+
+def _ensure_non_interactive_backend() -> None:
+    """Switch to a headless-friendly Matplotlib backend when running without DISPLAY."""
+    if os.environ.get("LRDBENCHMARK_FORCE_INTERACTIVE", "").lower() in {"1", "true", "yes"}:
+        return
+    backend = plt.get_backend().lower()
+    interactive_markers = ("gtk", "qt", "wx", "tk")
+    if any(marker in backend for marker in interactive_markers):
+        try:
+            plt.switch_backend("Agg")
+        except Exception:
+            pass
+
+
+_ensure_non_interactive_backend()
 
 
 class DMAEstimator(BaseEstimator):
@@ -218,20 +235,21 @@ class DMAEstimator(BaseEstimator):
         if n < 10:
             raise ValueError("Data length must be at least 10")
 
-        if n < 100:
-            warnings.warn("Data length is small, results may be unreliable")
-
         # Select optimal method based on data size and framework
         if self.optimization_framework == "jax" and JAX_AVAILABLE:
             try:
                 return self._estimate_jax(data)
             except Exception as e:
+                if self._should_suppress_fallback_warning(e):
+                    return self._estimate_numpy(data)
                 warnings.warn(f"JAX implementation failed: {e}, falling back to NumPy")
                 return self._estimate_numpy(data)
         elif self.optimization_framework == "numba" and NUMBA_AVAILABLE:
             try:
                 return self._estimate_numba(data)
             except Exception as e:
+                if self._should_suppress_fallback_warning(e):
+                    return self._estimate_numpy(data)
                 warnings.warn(f"Numba implementation failed: {e}, falling back to NumPy")
                 return self._estimate_numpy(data)
         else:
@@ -312,18 +330,61 @@ class DMAEstimator(BaseEstimator):
 
     def _estimate_jax(self, data: np.ndarray) -> Dict[str, Any]:
         """JAX-optimized implementation of DMA estimation."""
-        # Convert data to JAX array
-        data_jax = jnp.array(data)
-        
-        # JAX implementation of the core computation
-        # Note: JAX doesn't have direct equivalents for some operations
-        # So we'll use the NumPy implementation for now
-        # This can be enhanced with JAX-specific optimizations
-        
-        result = self._estimate_numpy(np.array(data_jax))
-        result["method"] = "jax"
-        result["optimization_framework"] = "jax"
-        return result
+        if not JAX_AVAILABLE:
+            return self._estimate_numpy(data)
+
+        n = len(data)
+        data_np = np.asarray(data, dtype=float)
+        y = jnp.asarray(np.cumsum(data_np - np.mean(data_np)), dtype=jnp.float64)
+
+        scales_np = self._resolve_scales(n)
+        overlap = bool(self.parameters.get("overlap", True))
+
+        fluctuation_values = []
+        for scale in scales_np:
+            fluct = _dma_fluctuation_jax(y, int(scale), overlap)
+            fluctuation_values.append(float(fluct))
+        fluctuation_values = np.asarray(fluctuation_values, dtype=float)
+
+        valid_mask = (fluctuation_values > 0) & ~np.isnan(fluctuation_values)
+        if np.sum(valid_mask) < 3:
+            raise ValueError("Insufficient valid fluctuation values for analysis")
+
+        valid_scales = scales_np[valid_mask]
+        valid_fluctuations = fluctuation_values[valid_mask]
+
+        log_scales = np.log(valid_scales)
+        log_fluctuations = np.log(valid_fluctuations)
+
+        slope, intercept, r_value, p_value, std_err = stats.linregress(
+            log_scales, log_fluctuations
+        )
+        r_squared = r_value**2
+
+        confidence_interval = self._confidence_interval(
+            float(slope),
+            float(std_err),
+            len(log_scales),
+        )
+
+        self.results = {
+            "hurst_parameter": float(slope),
+            "r_squared": float(r_squared),
+            "slope": float(slope),
+            "intercept": float(intercept),
+            "p_value": float(p_value),
+            "std_error": float(std_err),
+            "scales": valid_scales.tolist(),
+            "window_sizes": valid_scales.tolist(),
+            "fluctuation_values": valid_fluctuations.tolist(),
+            "log_scales": log_scales.tolist(),
+            "log_fluctuations": log_fluctuations.tolist(),
+            "confidence_interval": confidence_interval,
+            "method": "jax",
+            "optimization_framework": self.optimization_framework,
+        }
+
+        return self.results
 
     def _calculate_fluctuation_numpy(self, data: np.ndarray, scale: int, overlap: bool) -> float:
         """Calculate fluctuation value for a given scale using NumPy."""
@@ -420,6 +481,17 @@ class DMAEstimator(BaseEstimator):
         else:
             return "numpy"  # Fallback
 
+    @staticmethod
+    def _should_suppress_fallback_warning(error: Exception) -> bool:
+        """Return True when a fallback is expected and shouldn't raise a warning."""
+        message = str(error).lower()
+        suppressed_fragments = (
+            "need at least 3 window sizes",
+            "insufficient valid",
+            "insufficient valid fluctuation values",
+        )
+        return any(fragment in message for fragment in suppressed_fragments)
+
     def plot_analysis(self, figsize: Tuple[int, int] = (12, 8), save_path: Optional[str] = None) -> None:
         """Plot the DMA analysis results."""
         if not self.results:
@@ -486,7 +558,13 @@ class DMAEstimator(BaseEstimator):
 
         if save_path:
             plt.savefig(save_path, dpi=300, bbox_inches="tight")
-        plt.show()
+
+        backend = plt.get_backend().lower()
+        interactive_markers = ("qt", "gtk", "wx", "tk", "nbagg", "webagg")
+        if plt.isinteractive() or any(marker in backend for marker in interactive_markers):
+            plt.show()
+        else:
+            plt.close(fig)
 
     def get_method_recommendation(self, n: int) -> Dict[str, Any]:
         """Get method recommendation for a given data size."""
@@ -526,3 +604,35 @@ class DMAEstimator(BaseEstimator):
                     "accuracy": "High"
                 }
             }
+
+if JAX_AVAILABLE:
+    from functools import partial
+
+    @partial(jit, static_argnums=(1, 2))
+    def _dma_fluctuation_jax(y: jnp.ndarray, scale: int, overlap: bool) -> jnp.ndarray:
+        """JAX implementation of DMA fluctuation for a fixed scale."""
+        if overlap:
+            kernel = jnp.ones(scale, dtype=y.dtype) / scale
+            moving_avg = jnp.convolve(y, kernel, mode="valid")
+            detrended = y[scale - 1 :] - moving_avg
+            return jnp.sqrt(jnp.mean(detrended**2))
+
+        n_segments = y.shape[0] // scale
+        if n_segments == 0:
+            return jnp.nan
+
+        trimmed = y[: n_segments * scale]
+        segments = trimmed.reshape((n_segments, scale))
+        x = jnp.arange(scale, dtype=y.dtype)
+        x_mean = jnp.mean(x)
+        denom = jnp.sum((x - x_mean) ** 2)
+
+        def segment_variance(segment: jnp.ndarray) -> jnp.ndarray:
+            seg_mean = jnp.mean(segment)
+            slope = jnp.sum((x - x_mean) * (segment - seg_mean)) / denom
+            intercept = seg_mean - slope * x_mean
+            detrended = segment - (slope * x + intercept)
+            return jnp.mean(detrended**2)
+
+        variances = vmap(segment_variance)(segments)
+        return jnp.sqrt(jnp.mean(variances))

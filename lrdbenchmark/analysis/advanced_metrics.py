@@ -478,11 +478,43 @@ class ScalingInfluenceAnalyzer:
 
 class RobustnessStressTester:
     """
-    Generate standard stress panels (missingness, regime shifts, bursts) for estimators.
+    Generate standard stress panels (missingness, regime shifts, bursts, oscillations) for estimators.
+    
+    Implements standard robustness stress tests including:
+    - Missingness patterns: MCAR (Missing Completely At Random), MAR (Missing At Random), 
+      MNAR (Missing Not At Random), and block missing
+    - Regime shifts: sudden changes in mean/scale
+    - Burst noise: intermittent high-magnitude noise
+    - Oscillations: additive periodic components
     """
 
-    def __init__(self, random_state: Optional[int] = None):
+    def __init__(self, random_state: Optional[int] = None, config: Optional[Dict[str, Any]] = None):
+        """
+        Initialize robustness stress tester.
+        
+        Parameters
+        ----------
+        random_state : int, optional
+            Random seed for reproducibility
+        config : dict, optional
+            Configuration dictionary with scenario parameters:
+            - missing_rate: float (default 0.1)
+            - block_fraction: float (default 0.2)
+            - regime_shift: float (default 0.5)
+            - burst_rate: float (default 0.05)
+            - burst_magnitude: float (default 3.0)
+            - oscillation_amplitude: float (default 0.3)
+            - oscillation_frequency: float (default 0.1)
+        """
         self._rng = np.random.default_rng(random_state)
+        self.config = config or {}
+        self.missing_rate = self.config.get("missing_rate", 0.1)
+        self.block_fraction = self.config.get("block_fraction", 0.2)
+        self.regime_shift = self.config.get("regime_shift", 0.5)
+        self.burst_rate = self.config.get("burst_rate", 0.05)
+        self.burst_magnitude = self.config.get("burst_magnitude", 3.0)
+        self.oscillation_amplitude = self.config.get("oscillation_amplitude", 0.3)
+        self.oscillation_frequency = self.config.get("oscillation_frequency", 0.1)
 
     def run_panels(
         self,
@@ -493,6 +525,9 @@ class RobustnessStressTester:
     ) -> Optional[Dict[str, Any]]:
         """
         Execute robustness scenarios and report estimator sensitivity.
+        
+        Returns before/after H comparisons for each scenario to quantify
+        preprocessing-induced bias and variance.
         """
         if baseline_result is None:
             return None
@@ -502,11 +537,13 @@ class RobustnessStressTester:
             return None
 
         scenarios = {
-            "missing_at_random": lambda x: self._apply_missing_at_random(x, rate=0.1),
-            "missing_block": lambda x: self._apply_block_missing(x, block_fraction=0.2),
-            "regime_shift": lambda x: self._apply_regime_shift(x, shift=0.5),
-            "burst_noise": lambda x: self._apply_burst_noise(x, rate=0.05, magnitude=3.0),
-            "seasonal_drift": lambda x: self._apply_seasonal_drift(x, amplitude=0.3),
+            "missing_mcar": lambda x: self._apply_missing_mcar(x, rate=self.missing_rate),
+            "missing_mar": lambda x: self._apply_missing_mar(x, rate=self.missing_rate),
+            "missing_mnar": lambda x: self._apply_missing_mnar(x, rate=self.missing_rate),
+            "missing_block": lambda x: self._apply_block_missing(x, block_fraction=self.block_fraction),
+            "regime_shift": lambda x: self._apply_regime_shift(x, shift=self.regime_shift),
+            "burst_noise": lambda x: self._apply_burst_noise(x, rate=self.burst_rate, magnitude=self.burst_magnitude),
+            "oscillation": lambda x: self._apply_oscillation(x, amplitude=self.oscillation_amplitude, frequency=self.oscillation_frequency),
         }
 
         scenario_results: Dict[str, Dict[str, Any]] = {}
@@ -547,15 +584,23 @@ class RobustnessStressTester:
                 continue
 
             delta = float(estimate - baseline_estimate)
-            deltas.append(abs(delta))
+            abs_delta = abs(delta)
+            deltas.append(abs_delta)
             successes += 1
+
+            # Calculate relative change
+            relative_delta = delta / baseline_estimate if baseline_estimate != 0 else None
 
             scenario_results[name] = {
                 "status": "ok",
-                "estimate": float(estimate),
-                "delta_from_baseline": delta,
+                "before_h": float(baseline_estimate),  # H before stress test
+                "after_h": float(estimate),  # H after stress test
+                "delta_h": delta,  # Absolute change
+                "abs_delta_h": abs_delta,  # Absolute magnitude of change
+                "relative_delta_h": relative_delta,  # Relative change (%)
                 "execution_time": execution_time,
                 "true_value": float(true_value) if true_value is not None else None,
+                "bias": delta if true_value is not None else None,  # Bias relative to true value
             }
 
         if not scenario_results:
@@ -590,12 +635,48 @@ class RobustnessStressTester:
         except Exception:
             return estimator_cls()
 
-    def _apply_missing_at_random(self, data: np.ndarray, rate: float) -> np.ndarray:
+    def _apply_missing_mcar(self, data: np.ndarray, rate: float) -> np.ndarray:
+        """
+        Apply Missing Completely At Random (MCAR) pattern.
+        Missingness is independent of observed and unobserved data.
+        """
         mask = self._rng.random(len(data)) < rate
         data[mask] = np.nan
         return data
 
+    def _apply_missing_mar(self, data: np.ndarray, rate: float) -> np.ndarray:
+        """
+        Apply Missing At Random (MAR) pattern.
+        Missingness depends on observed values (e.g., higher values more likely to be missing).
+        """
+        # Normalize data to [0, 1] for probability calculation
+        data_normalized = (data - np.nanmin(data)) / (np.nanmax(data) - np.nanmin(data) + 1e-10)
+        # Higher values have higher probability of being missing
+        prob_missing = rate * (0.5 + data_normalized)
+        prob_missing = np.clip(prob_missing, 0, 1)
+        mask = self._rng.random(len(data)) < prob_missing
+        data[mask] = np.nan
+        return data
+
+    def _apply_missing_mnar(self, data: np.ndarray, rate: float) -> np.ndarray:
+        """
+        Apply Missing Not At Random (MNAR) pattern.
+        Missingness depends on the unobserved values themselves (e.g., extreme values more likely missing).
+        """
+        # Use absolute values to identify extremes
+        abs_data = np.abs(data)
+        threshold = np.percentile(abs_data, 100 * (1 - rate))
+        # Values above threshold more likely to be missing
+        prob_missing = np.where(abs_data > threshold, rate * 2, rate * 0.5)
+        prob_missing = np.clip(prob_missing, 0, 1)
+        mask = self._rng.random(len(data)) < prob_missing
+        data[mask] = np.nan
+        return data
+
     def _apply_block_missing(self, data: np.ndarray, block_fraction: float) -> np.ndarray:
+        """
+        Apply block missing pattern (consecutive missing values).
+        """
         n = len(data)
         block_size = max(1, int(n * block_fraction * 0.3))
         start_idx = self._rng.integers(0, max(1, n - block_size))
@@ -603,22 +684,41 @@ class RobustnessStressTester:
         return data
 
     def _apply_regime_shift(self, data: np.ndarray, shift: float) -> np.ndarray:
+        """
+        Apply regime shift (sudden change in mean/scale).
+        """
         n = len(data)
         halfway = n // 2
         data[halfway:] = data[halfway:] + shift
         return data
 
     def _apply_burst_noise(self, data: np.ndarray, rate: float, magnitude: float) -> np.ndarray:
+        """
+        Apply intermittent burst noise (high-magnitude noise at random points).
+        """
         mask = self._rng.random(len(data)) < rate
         noise = self._rng.normal(0, magnitude, size=len(data))
         data[mask] = data[mask] + noise[mask]
         return data
 
-    def _apply_seasonal_drift(self, data: np.ndarray, amplitude: float) -> np.ndarray:
+    def _apply_oscillation(self, data: np.ndarray, amplitude: float, frequency: float) -> np.ndarray:
+        """
+        Apply additive oscillation (periodic component).
+        
+        Parameters
+        ----------
+        amplitude : float
+            Amplitude of oscillation relative to data std
+        frequency : float
+            Frequency as fraction of Nyquist (0 to 0.5)
+        """
         n = len(data)
         t = np.arange(n)
-        seasonal = amplitude * np.sin(2 * np.pi * t / max(8, n // 4))
-        return data + seasonal
+        # Convert frequency to period
+        period = int(1.0 / frequency) if frequency > 0 else n // 4
+        period = max(4, min(period, n // 2))  # Ensure reasonable period
+        oscillation = amplitude * np.std(data) * np.sin(2 * np.pi * t / period)
+        return data + oscillation
 
 
 class AdvancedPerformanceProfiler:
@@ -629,7 +729,12 @@ class AdvancedPerformanceProfiler:
     to provide comprehensive performance profiling for estimators.
     """
     
-    def __init__(self, convergence_threshold: float = 1e-6, max_iterations: int = 100):
+    def __init__(
+        self,
+        convergence_threshold: float = 1e-6,
+        max_iterations: int = 100,
+        random_state: Optional[int] = None,
+    ):
         """
         Initialize the advanced performance profiler.
         
@@ -643,7 +748,8 @@ class AdvancedPerformanceProfiler:
         self.convergence_analyzer = ConvergenceAnalyzer(convergence_threshold, max_iterations)
         self.mse_analyzer = MeanSignedErrorAnalyzer()
         self.scaling_analyzer = ScalingInfluenceAnalyzer()
-        self.stress_tester = RobustnessStressTester()
+        self.stress_tester = RobustnessStressTester(random_state=random_state)
+        self._rng = np.random.default_rng(random_state)
     
     def profile_estimator_performance(
         self,
@@ -767,7 +873,7 @@ class AdvancedPerformanceProfiler:
         for i in range(n_simulations):
             # Add small random noise to create variations
             noise_level = 0.01 * np.std(data)
-            noisy_data = data + np.random.normal(0, noise_level, len(data))
+            noisy_data = data + self._rng.normal(0, noise_level, len(data))
             
             start_time = time.time()
             try:

@@ -277,8 +277,8 @@ ML Estimator Training and Evaluation
 .. code-block:: python
 
    from lrdbenchmark import FBMModel, FGNModel, ARFIMAModel
-   from lrdbenchmark.analysis.machine_learning.random_forest_estimator import RandomForestEstimator
-   from lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator import GradientBoostingEstimator
+   from lrdbenchmark import RandomForestEstimator
+   from lrdbenchmark import GradientBoostingEstimator
    from sklearn.model_selection import train_test_split
    import numpy as np
    import matplotlib.pyplot as plt
@@ -414,7 +414,7 @@ Comprehensive Analytics Demo
 .. code-block:: python
 
    from lrdbenchmark import enable_analytics, get_analytics_summary
-   from lrdbenchmark.analytics import AnalyticsDashboard
+   from lrdbenchmark import AnalyticsDashboard
    from lrdbenchmark import FBMModel, FGNModel, ComprehensiveBenchmark
    import time
 
@@ -512,8 +512,8 @@ Financial Time Series Analysis
    import pandas as pd
    import matplotlib.pyplot as plt
    from lrdbenchmark import ComprehensiveBenchmark
-   from lrdbenchmark.analysis.temporal.dfa.dfa_estimator import DFAEstimator
-   from lrdbenchmark.analysis.spectral.gph.gph_estimator import GPHEstimator
+   from lrdbenchmark import DFAEstimator
+   from lrdbenchmark import GPHEstimator
 
    def financial_analysis_demo():
        """Demonstrate LRDBench for financial time series analysis."""

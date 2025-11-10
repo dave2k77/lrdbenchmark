@@ -2,40 +2,60 @@
 """
 Utilities for backend selection in unified estimators.
 """
+import logging
+import os
 import warnings
+from typing import Optional
 
 # --- Backend Availability ---
+JAX_AVAILABLE = False
+JAX_GPU_AVAILABLE = False
+JAX_DEFAULT_DEVICE: Optional[str] = None
+
 try:
-    import os
-    import logging
-    
-    # Set JAX to CPU-only mode before importing to prevent CUDA plugin initialization
-    # This prevents CUDA_ERROR_NO_DEVICE errors when CUDA_VISIBLE_DEVICES is empty
-    if 'JAX_PLATFORM_NAME' not in os.environ:
-        os.environ['JAX_PLATFORM_NAME'] = 'cpu'
-    if 'JAX_PLATFORMS' not in os.environ:
-        os.environ['JAX_PLATFORMS'] = 'cpu'
-    
-    # Suppress JAX plugin initialization warnings/errors
-    # These can occur when multiple CUDA plugins are installed
-    logging.getLogger('jax._src.xla_bridge').setLevel(logging.CRITICAL)
-    logging.getLogger('jax_plugins').setLevel(logging.CRITICAL)
-    
-    # Import JAX after setting environment variables
     import jax
-    
-    # Test that JAX is actually functional
+    from jax import config as jax_config
+
+    # Suppress noisy plugin warnings that can occur during device discovery
+    logging.getLogger("jax._src.xla_bridge").setLevel(logging.CRITICAL)
+    logging.getLogger("jax_plugins").setLevel(logging.CRITICAL)
+
+    # Respect explicit opt-in/out flags
+    force_cpu = os.environ.get("LRDBENCHMARK_FORCE_CPU", "").lower() in {"1", "true", "yes"}
+
+    # Enable higher precision by default for numerical stability
+    jax_config.update("jax_enable_x64", True)
+
+    if force_cpu:
+        jax_config.update("jax_platform_name", "cpu")
+
     try:
-        _ = jax.devices()
+        devices = jax.devices()
+    except RuntimeError:
+        if not force_cpu:
+            # Retry on CPU fallback if GPU probing failed (e.g., CUDA error with no visible device)
+            jax_config.update("jax_platform_name", "cpu")
+            devices = jax.devices()
+        else:
+            devices = []
+
+    if devices:
         JAX_AVAILABLE = True
-    except Exception:
-        # JAX is installed but not functional (e.g., plugin conflicts)
-        JAX_AVAILABLE = False
+        JAX_GPU_AVAILABLE = any(device.platform.lower() in {"gpu", "cuda"} for device in devices)
+        JAX_DEFAULT_DEVICE = devices[0].platform
 except ImportError:
     JAX_AVAILABLE = False
+    JAX_GPU_AVAILABLE = False
+    JAX_DEFAULT_DEVICE = None
+except Exception as exc:  # pragma: no cover - defensive fallback
+    warnings.warn(f"Failed to initialize JAX backend: {exc}")
+    JAX_AVAILABLE = False
+    JAX_GPU_AVAILABLE = False
+    JAX_DEFAULT_DEVICE = None
 
 try:
     import numba
+
     NUMBA_AVAILABLE = True
 except ImportError:
     NUMBA_AVAILABLE = False

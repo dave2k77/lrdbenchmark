@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lrdbenchmark.analytics.usage_tracker &mdash; LRDBenchmark 1.7.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+  <title>lrdbenchmark.analytics.usage_tracker &mdash; lrdbenchmark 2.3.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
     <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/_modules/lrdbenchmark/analytics/usage_tracker.html" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=030dc6f6"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=67b02a41"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -32,11 +30,8 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            LRDBenchmark
+            lrdbenchmark
           </a>
-              <div class="version">
-                1.7.0
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -60,23 +55,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../api/analytics.html">Analytics API</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html">Theoretical Foundations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#statistical-estimators">Statistical Estimators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#theoretical-performance-considerations">Theoretical Performance Considerations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#practical-examples">Practical Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/theory.html#theoretical-references">Theoretical References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html">Validation Techniques and Statistical Tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#monte-carlo-validation">Monte Carlo Validation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#bootstrap-methods">Bootstrap Methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#cross-validation">Cross-Validation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#robustness-analysis">Robustness Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#validation-statistical-tests">Validation Statistical Tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#model-selection">Model Selection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#validation-performance-metrics">Validation Performance Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#quality-assurance">Quality Assurance</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research/validation.html#validation-references">Validation References</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_adaptive_demo.html">Comprehensive Adaptive Estimators Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html">Comprehensive LRDBench Demonstration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#basic-data-generation-and-analysis">Basic Data Generation and Analysis</a></li>
@@ -87,6 +65,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#integration-with-external-libraries">Integration with External Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#complete-workflow-example">Complete Workflow Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/comprehensive_demo.html#summary">Summary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/leaderboard.html">Leaderboard Significance Analysis</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/notebooks_overview.html">Demonstration Notebooks Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/notebooks_overview.html#data-generation-and-visualization">01. Data Generation and Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/notebooks_overview.html#estimation-and-statistical-validation">02. Estimation and Statistical Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/notebooks_overview.html#custom-models-and-estimators">03. Custom Models and Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/notebooks_overview.html#comprehensive-benchmarking">04. Comprehensive Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/notebooks_overview.html#leaderboard-generation">05. Leaderboard Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/notebooks_overview.html#getting-started-with-notebooks">Getting Started with Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/notebooks_overview.html#support-and-contributing">Support and Contributing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorial Series</a></li>
 </ul>
 
         </div>
@@ -95,7 +87,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">LRDBenchmark</a>
+          <a href="../../../index.html">lrdbenchmark</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -125,21 +117,21 @@
 <span class="sd">- Error rates and types</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">asdict</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">asdict</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 
 <div class="viewcode-block" id="UsageEvent">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageEvent">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">UsageEvent</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">UsageEvent</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a single usage event&quot;&quot;&quot;</span>
 
     <span class="n">timestamp</span><span class="p">:</span> <span class="nb">str</span>
@@ -158,7 +150,7 @@
 <div class="viewcode-block" id="UsageSummary">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageSummary">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">UsageSummary</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">UsageSummary</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregated usage statistics&quot;&quot;&quot;</span>
 
     <span class="n">total_events</span><span class="p">:</span> <span class="nb">int</span>
@@ -174,7 +166,7 @@
 
 <div class="viewcode-block" id="UsageTracker">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">UsageTracker</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">UsageTracker</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Comprehensive usage tracking system for LRDBench</span>
 
@@ -188,7 +180,7 @@
 
 <div class="viewcode-block" id="UsageTracker.__init__">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">storage_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;~/.lrdbench/analytics&quot;</span><span class="p">,</span>
         <span class="n">enable_tracking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -221,14 +213,14 @@
 
 <div class="viewcode-block" id="UsageTracker._generate_session_id">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker._generate_session_id">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_session_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_generate_session_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a unique session ID&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">8</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="UsageTracker._load_existing_data">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker._load_existing_data">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_load_existing_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_load_existing_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Load existing analytics data from storage&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">events_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_path</span> <span class="o">/</span> <span class="s2">&quot;usage_events.json&quot;</span>
@@ -244,12 +236,12 @@
 
 <div class="viewcode-block" id="UsageTracker._start_background_processing">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker._start_background_processing">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_start_background_processing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_start_background_processing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Start background thread for data processing&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">enable_tracking</span><span class="p">:</span>
             <span class="k">return</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">background_worker</span><span class="p">():</span>
+        <span class="k">def</span> <span class="nf">background_worker</span><span class="p">():</span>
             <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>  <span class="c1"># Process every 5 minutes</span>
@@ -264,7 +256,7 @@
 
 <div class="viewcode-block" id="UsageTracker.track_estimator_usage">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker.track_estimator_usage">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">track_estimator_usage</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">track_estimator_usage</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">estimator_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">parameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
@@ -310,7 +302,7 @@
 
 <div class="viewcode-block" id="UsageTracker.track_benchmark_run">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker.track_benchmark_run">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">track_benchmark_run</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">track_benchmark_run</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">benchmark_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">estimators_used</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
@@ -357,7 +349,7 @@
 
 <div class="viewcode-block" id="UsageTracker._sanitize_parameters">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker._sanitize_parameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_sanitize_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_sanitize_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Sanitize parameters for privacy and storage&quot;&quot;&quot;</span>
         <span class="n">sanitized</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -372,7 +364,7 @@
 
 <div class="viewcode-block" id="UsageTracker._hash_user_id">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker._hash_user_id">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_hash_user_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_hash_user_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Hash user ID for privacy&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">privacy_mode</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">user_id</span>
@@ -381,7 +373,7 @@
 
 <div class="viewcode-block" id="UsageTracker.get_usage_summary">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker.get_usage_summary">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_usage_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UsageSummary</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_usage_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UsageSummary</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get usage summary for the specified time period</span>
 
@@ -470,7 +462,7 @@
 
 <div class="viewcode-block" id="UsageTracker._get_length_range">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker._get_length_range">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_length_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_get_length_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert data length to range category&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">length</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;&lt;100&quot;</span>
@@ -484,7 +476,7 @@
 
 <div class="viewcode-block" id="UsageTracker._save_data">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker._save_data">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_save_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_save_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save analytics data to storage&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
@@ -500,7 +492,7 @@
 
 <div class="viewcode-block" id="UsageTracker._cleanup_old_data">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker._cleanup_old_data">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_cleanup_old_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_age_days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">90</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_cleanup_old_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_age_days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">90</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove old analytics data&quot;&quot;&quot;</span>
         <span class="n">cutoff_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span> <span class="o">-</span> <span class="p">(</span><span class="n">max_age_days</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">3600</span><span class="p">)</span>
 
@@ -514,7 +506,7 @@
 
 <div class="viewcode-block" id="UsageTracker.export_summary">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker.export_summary">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">export_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">export_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Export usage summary to file</span>
 
@@ -530,7 +522,7 @@
 
 <div class="viewcode-block" id="UsageTracker.get_popular_estimators">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker.get_popular_estimators">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_popular_estimators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">get_popular_estimators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get top N most popular estimators&quot;&quot;&quot;</span>
         <span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_usage_summary</span><span class="p">()</span>
         <span class="n">sorted_estimators</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
@@ -541,7 +533,7 @@
 
 <div class="viewcode-block" id="UsageTracker.get_performance_trends">
 <a class="viewcode-back" href="../../../api/analytics.html#lrdbenchmark.analytics.usage_tracker.UsageTracker.get_performance_trends">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_performance_trends</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">7</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+    <span class="k">def</span> <span class="nf">get_performance_trends</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">7</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get performance trends over time&quot;&quot;&quot;</span>
         <span class="c1"># Implementation for time-series performance analysis</span>
         <span class="c1"># This would show how execution times change over time</span>
@@ -554,7 +546,7 @@
 <span class="n">_global_tracker</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">UsageTracker</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">get_usage_tracker</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">UsageTracker</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">get_usage_tracker</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">UsageTracker</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the global usage tracker instance&quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">_global_tracker</span>
     <span class="k">if</span> <span class="n">_global_tracker</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -562,11 +554,11 @@
     <span class="k">return</span> <span class="n">_global_tracker</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">track_usage</span><span class="p">(</span><span class="n">estimator_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">track_usage</span><span class="p">(</span><span class="n">estimator_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator for tracking estimator usage&quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">func_kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">func_kwargs</span><span class="p">):</span>
             <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
             <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="n">error_message</span> <span class="o">=</span> <span class="kc">None</span>

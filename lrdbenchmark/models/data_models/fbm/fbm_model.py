@@ -108,6 +108,7 @@ class FractionalBrownianMotion(BaseModel):
         self.use_gpu = use_gpu
         self.hardware_info = self._detect_hardware()
         self.optimization_framework = self._select_optimization_framework(use_optimization)
+        self._current_rng: Optional[np.random.Generator] = None
 
         # Validate optimization framework availability
         if self.optimization_framework == "jax" and not JAX_AVAILABLE:
@@ -229,7 +230,13 @@ class FractionalBrownianMotion(BaseModel):
 
         return method
 
-    def generate(self, length: Optional[int] = None, seed: Optional[int] = None, n: Optional[int] = None) -> np.ndarray:
+    def generate(
+        self,
+        length: Optional[int] = None,
+        seed: Optional[int] = None,
+        n: Optional[int] = None,
+        rng: Optional[np.random.Generator] = None,
+    ) -> np.ndarray:
         """
         Generate fractional Brownian motion using the optimal method.
 
@@ -256,8 +263,7 @@ class FractionalBrownianMotion(BaseModel):
             raise ValueError("Either 'length' or 'n' must be provided")
         data_length = length if length is not None else n
         
-        if seed is not None:
-            np.random.seed(seed)
+        self._current_rng = self._resolve_generator(seed, rng)
 
         H = self.parameters["H"]
         sigma = self.parameters["sigma"]
@@ -291,6 +297,11 @@ class FractionalBrownianMotion(BaseModel):
             return self._davies_harte_numba(n, H, sigma)
         else:
             return self._davies_harte_numpy(n, H, sigma)
+
+    def _rng(self) -> np.random.Generator:
+        if self._current_rng is None:
+            self._current_rng = np.random.default_rng()
+        return self._current_rng
 
     def _generate_cholesky(self, n: int, H: float, sigma: float) -> np.ndarray:
         """
@@ -334,7 +345,7 @@ class FractionalBrownianMotion(BaseModel):
             raise ImportError("hpfracc library not available")
 
         # Generate standard Brownian motion increments
-        increments = np.random.normal(0, sigma, n)
+        increments = self._rng().normal(0, sigma, n)
 
         # For FBM with hpfracc, we'll use a hybrid approach:
         # 1. Generate standard Brownian motion
@@ -368,8 +379,8 @@ class FractionalBrownianMotion(BaseModel):
         freqs = np.arange(1, n // 2 + 1)
         spectral_density = sigma**2 * (2 * np.sin(np.pi * freqs / n)) ** (1 - 2 * H)
 
-        real_part = np.random.normal(0, 1, n // 2)
-        imag_part = np.random.normal(0, 1, n // 2)
+        real_part = self._rng().normal(0, 1, n // 2)
+        imag_part = self._rng().normal(0, 1, n // 2)
         complex_noise = (real_part + 1j * imag_part) / np.sqrt(2)
 
         filtered_noise = complex_noise * np.sqrt(spectral_density)
@@ -406,7 +417,7 @@ class FractionalBrownianMotion(BaseModel):
             cov_matrix += 1e-10 * np.eye(n)
             L = linalg.cholesky(cov_matrix, lower=True)
 
-        noise = np.random.normal(0, 1, n)
+        noise = self._rng().normal(0, 1, n)
         fbm = L @ noise
         return fbm
 
@@ -427,7 +438,7 @@ class FractionalBrownianMotion(BaseModel):
         eigenvalues = np.fft.fft(circulant_row)
         eigenvalues = np.maximum(eigenvalues, 0)
 
-        noise = np.random.normal(0, 1, len(eigenvalues)) + 1j * np.random.normal(
+        noise = self._rng().normal(0, 1, len(eigenvalues)) + 1j * self._rng().normal(
             0, 1, len(eigenvalues)
         )
         noise = noise / np.sqrt(2)
@@ -707,7 +718,7 @@ class FractionalBrownianMotion(BaseModel):
         fractional_deriv = create_fractional_derivative(order=1 - H)
 
         # Generate white noise
-        noise = np.random.normal(0, self.parameters["sigma"], n)
+        noise = self._rng().normal(0, self.parameters["sigma"], n)
 
         # Apply fractional integration using hpfracc
         # For FBM, we need fractional integration of order H-0.5

@@ -8,9 +8,7 @@ This module provides a unified feature extraction pipeline that extracts
 import numpy as np
 from scipy import stats
 from scipy.signal import welch
-from scipy.stats import kurtosis, skew
 from typing import Dict, Any, List, Optional
-import warnings
 
 class UnifiedFeatureExtractor:
     """
@@ -34,34 +32,50 @@ class UnifiedFeatureExtractor:
             Array of 76 features
         """
         if len(data) < 10:
-            warnings.warn("Very short time series, features may be unreliable")
             # Return zeros for very short series
             return np.zeros(76)
         
         features = []
+        mean_val = np.mean(data)
+        std_val = np.std(data)
+        var_val = np.var(data)
+        min_val = np.min(data)
+        max_val = np.max(data)
+        median_val = np.median(data)
+        tol = np.finfo(float).eps
+
+        if std_val <= tol:
+            skew_val = 0.0
+            kurtosis_val = 0.0
+        else:
+            skew_val = stats.skew(data)
+            kurtosis_val = stats.kurtosis(data)
         
         # Basic statistical features (10)
         features.extend([
-            np.mean(data),
-            np.std(data),
-            np.var(data),
-            np.min(data),
-            np.max(data),
-            np.median(data),
-            stats.skew(data),
-            stats.kurtosis(data),
+            mean_val,
+            std_val,
+            var_val,
+            min_val,
+            max_val,
+            median_val,
+            skew_val,
+            kurtosis_val,
             np.percentile(data, 25),
             np.percentile(data, 75)
         ])
         
         # Autocorrelation features (10)
         max_lag = min(10, len(data) // 4)
-        for lag in range(1, max_lag + 1):
-            if lag < len(data):
-                corr = np.corrcoef(data[:-lag], data[lag:])[0, 1]
-                features.append(corr if not np.isnan(corr) else 0.0)
-            else:
-                features.append(0.0)
+        if max_lag > 0 and std_val > tol:
+            for lag in range(1, max_lag + 1):
+                if lag < len(data):
+                    corr = np.corrcoef(data[:-lag], data[lag:])[0, 1]
+                    features.append(corr if not np.isnan(corr) else 0.0)
+                else:
+                    features.append(0.0)
+        else:
+            features.extend([0.0] * max_lag)
         
         # Fill remaining autocorrelation features with zeros if needed
         while len(features) < 20:
@@ -70,16 +84,29 @@ class UnifiedFeatureExtractor:
         # Spectral features (10)
         try:
             freqs, psd = welch(data, nperseg=min(256, len(data)//4))
+            psd_sum = np.sum(psd)
+            peak_frequency = np.argmax(psd) / len(psd) if len(psd) > 0 else 0.0
+            if psd_sum > 0:
+                mean_frequency = np.sum(psd * freqs) / psd_sum
+                second_moment = np.sum(psd * freqs**2) / psd_sum
+                low_freq_power = np.sum(psd[:len(psd)//4]) / psd_sum
+                high_freq_power = np.sum(psd[len(psd)//2:]) / psd_sum
+            else:
+                mean_frequency = 0.0
+                second_moment = 0.0
+                low_freq_power = 0.0
+                high_freq_power = 0.0
+
             features.extend([
                 np.mean(psd),
                 np.std(psd),
                 np.max(psd),
-                np.argmax(psd) / len(psd),  # Normalized peak frequency
-                np.sum(psd),
-                np.sum(psd * freqs) / np.sum(psd),  # Mean frequency
-                np.sum(psd * freqs**2) / np.sum(psd),  # Second moment
-                np.sum(psd[:len(psd)//4]) / np.sum(psd),  # Low frequency power
-                np.sum(psd[len(psd)//2:]) / np.sum(psd),  # High frequency power
+                peak_frequency,
+                psd_sum,
+                mean_frequency,
+                second_moment,
+                low_freq_power,
+                high_freq_power,
                 len(psd)  # Number of frequency bins
             ])
         except:
@@ -261,6 +288,44 @@ class UnifiedFeatureExtractor:
         features_76 = UnifiedFeatureExtractor.extract_features_76(data)
         # Return first 29 features
         return features_76[:29]
+
+    @staticmethod
+    def extract_features_8(data: np.ndarray) -> np.ndarray:
+        """
+        Extract 8 core statistical features used by lightweight pretrained models.
+
+        Parameters
+        ----------
+        data : np.ndarray
+            Input time series data
+
+        Returns
+        -------
+        np.ndarray
+            Array of 8 features
+        """
+        if np.any(np.isnan(data)):
+            data = data[~np.isnan(data)]
+
+        if len(data) < 10:
+            return np.zeros(8)
+
+        diff_data = np.diff(data)
+        abs_data = np.abs(data)
+        diff_abs = np.diff(data) ** 2
+
+        features = [
+            np.mean(data),
+            np.std(data),
+            np.mean(diff_data),
+            np.std(diff_data),
+            np.mean(abs_data),
+            np.std(abs_data),
+            np.mean(diff_abs),
+            np.std(diff_abs),
+        ]
+
+        return np.array(features)
     
     @staticmethod
     def get_feature_names_76() -> List[str]:
@@ -330,3 +395,17 @@ class UnifiedFeatureExtractor:
     def get_feature_names_54() -> List[str]:
         """Get names of the first 54 features."""
         return UnifiedFeatureExtractor.get_feature_names_76()[:54]
+
+    @staticmethod
+    def get_feature_names_8() -> List[str]:
+        """Feature names for the 8-core statistical features."""
+        return [
+            "mean",
+            "std",
+            "diff_mean",
+            "diff_std",
+            "abs_mean",
+            "abs_std",
+            "diff_sq_mean",
+            "diff_sq_std",
+        ]

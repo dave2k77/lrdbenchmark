@@ -1,30 +1,26 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Validation Techniques and Statistical Tests &mdash; LRDBenchmark 1.7.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+  <title>Validation Techniques and Statistical Tests &mdash; lrdbenchmark 2.3.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
     <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/research/validation.html" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=030dc6f6"></script>
-        <script src="../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=67b02a41"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Comprehensive Adaptive Estimators Demo" href="../examples/comprehensive_adaptive_demo.html" />
-    <link rel="prev" title="Theoretical Foundations" href="theory.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -36,11 +32,8 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            LRDBenchmark
+            lrdbenchmark
           </a>
-              <div class="version">
-                1.7.0
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -63,23 +56,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/benchmark.html">Benchmark API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/analytics.html">Analytics API</a></li>
 </ul>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="theory.html">Theoretical Foundations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="theory.html#statistical-estimators">Statistical Estimators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="theory.html#theoretical-performance-considerations">Theoretical Performance Considerations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="theory.html#practical-examples">Practical Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="theory.html#theoretical-references">Theoretical References</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Validation Techniques and Statistical Tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#monte-carlo-validation">Monte Carlo Validation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#bootstrap-methods">Bootstrap Methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#cross-validation">Cross-Validation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#robustness-analysis">Robustness Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#validation-statistical-tests">Validation Statistical Tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#model-selection">Model Selection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#validation-performance-metrics">Validation Performance Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#quality-assurance">Quality Assurance</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#validation-references">Validation References</a></li>
-</ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_adaptive_demo.html">Comprehensive Adaptive Estimators Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html">Comprehensive LRDBench Demonstration</a></li>
@@ -91,6 +67,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#integration-with-external-libraries">Integration with External Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#complete-workflow-example">Complete Workflow Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/comprehensive_demo.html#summary">Summary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/leaderboard.html">Leaderboard Significance Analysis</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/notebooks_overview.html">Demonstration Notebooks Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/notebooks_overview.html#data-generation-and-visualization">01. Data Generation and Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/notebooks_overview.html#estimation-and-statistical-validation">02. Estimation and Statistical Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/notebooks_overview.html#custom-models-and-estimators">03. Custom Models and Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/notebooks_overview.html#comprehensive-benchmarking">04. Comprehensive Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/notebooks_overview.html#leaderboard-generation">05. Leaderboard Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/notebooks_overview.html#getting-started-with-notebooks">Getting Started with Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/notebooks_overview.html#support-and-contributing">Support and Contributing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorial Series</a></li>
 </ul>
 
         </div>
@@ -99,7 +89,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">LRDBenchmark</a>
+          <a href="../index.html">lrdbenchmark</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -145,10 +135,10 @@
 <div class="math notranslate nohighlight">
 \[\text{MSE} = \mathbb{E}[(\hat{H} - H_0)^2] = \text{Bias}^2 + \text{Variance}\]</div>
 <p><strong>Implementation</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span><span class="p">,</span> <span class="n">ComprehensiveBenchmark</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">lrdbenchmark</span> <span class="kn">import</span> <span class="n">FBMModel</span><span class="p">,</span> <span class="n">ComprehensiveBenchmark</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">monte_carlo_validation</span><span class="p">(</span><span class="n">H_values</span><span class="p">,</span> <span class="n">sample_sizes</span><span class="p">,</span> <span class="n">n_realizations</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">monte_carlo_validation</span><span class="p">(</span><span class="n">H_values</span><span class="p">,</span> <span class="n">sample_sizes</span><span class="p">,</span> <span class="n">n_realizations</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform Monte Carlo validation.&quot;&quot;&quot;</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -205,10 +195,10 @@
 <div class="math notranslate nohighlight">
 \[B_i = (X_i, X_{i+1}, \ldots, X_{i+l-1})\]</div>
 <p><strong>Implementation</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">bootstrap_confidence_interval</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">estimator_func</span><span class="p">,</span> <span class="n">n_bootstrap</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+<span class="k">def</span> <span class="nf">bootstrap_confidence_interval</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">estimator_func</span><span class="p">,</span> <span class="n">n_bootstrap</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
                                 <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate bootstrap confidence interval.&quot;&quot;&quot;</span>
     <span class="n">bootstrap_estimates</span> <span class="o">=</span> <span class="p">[]</span>
@@ -255,10 +245,10 @@
 \[\text{CV} = \frac{1}{K} \sum_{k=1}^K L(y_k, f^{-k}(x_k))\]</div>
 <p>where <span class="math notranslate nohighlight">\(f^{-k}\)</span> is the estimator trained on all folds except fold k.</p>
 <p><strong>Implementation</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">KFold</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_squared_error</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">cross_validate_estimator</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">estimator_class</span><span class="p">,</span> <span class="n">k_folds</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">cross_validate_estimator</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">estimator_class</span><span class="p">,</span> <span class="n">k_folds</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform k-fold cross-validation.&quot;&quot;&quot;</span>
     <span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">k_folds</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
     <span class="n">cv_scores</span> <span class="o">=</span> <span class="p">[]</span>
@@ -284,7 +274,7 @@
 <section id="time-series-cross-validation">
 <h2>Time Series Cross-Validation<a class="headerlink" href="#time-series-cross-validation" title="Link to this heading"></a></h2>
 <p>For time series data, standard k-fold CV can lead to data leakage. Time series CV uses expanding windows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">time_series_cv</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">estimator_class</span><span class="p">,</span> <span class="n">min_train_size</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">time_series_cv</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">estimator_class</span><span class="p">,</span> <span class="n">min_train_size</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Time series cross-validation with expanding windows.&quot;&quot;&quot;</span>
     <span class="n">cv_scores</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -332,7 +322,7 @@ X_t^{(0)} + \delta &amp; \text{with probability } \epsilon
 <div class="math notranslate nohighlight">
 \[X_t = X_t^{(0)} + \alpha t + \beta t^2\]</div>
 <p><strong>Implementation</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">robustness_analysis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">estimator_func</span><span class="p">,</span> <span class="n">contamination_levels</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">robustness_analysis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">estimator_func</span><span class="p">,</span> <span class="n">contamination_levels</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Analyze estimator robustness to contamination.&quot;&quot;&quot;</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -362,7 +352,7 @@ X_t^{(0)} + \delta &amp; \text{with probability } \epsilon
 <h2>Breakdown Point Analysis<a class="headerlink" href="#breakdown-point-analysis" title="Link to this heading"></a></h2>
 <p>The breakdown point is the smallest fraction of contaminated data that can cause the estimator to produce arbitrarily bad results.</p>
 <p><strong>Implementation</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">breakdown_point_analysis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">estimator_func</span><span class="p">,</span> <span class="n">max_contamination</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">breakdown_point_analysis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">estimator_func</span><span class="p">,</span> <span class="n">max_contamination</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Estimate breakdown point of an estimator.&quot;&quot;&quot;</span>
     <span class="n">original_estimate</span> <span class="o">=</span> <span class="n">estimator_func</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="n">breakdown_point</span> <span class="o">=</span> <span class="kc">None</span>
@@ -416,9 +406,9 @@ Alternative hypothesis: <span class="math notranslate nohighlight">\(H_1: H_1 \n
 </pre></div>
 </div>
 <p><strong>Implementation</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">test_lrd_presence</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">estimator_func</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">test_lrd_presence</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">estimator_func</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Test for presence of long-range dependence.&quot;&quot;&quot;</span>
     <span class="c1"># Estimate H</span>
     <span class="n">H_estimate</span> <span class="o">=</span> <span class="n">estimator_func</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -466,7 +456,7 @@ Alternative hypothesis: <span class="math notranslate nohighlight">\(H_1: H_1 \n
 <div class="math notranslate nohighlight">
 \[\chi^2 = \sum_{i=1}^k \frac{(O_i - E_i)^2}{E_i}\]</div>
 <p><strong>Implementation</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">goodness_of_fit_tests</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">theoretical_distribution</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">goodness_of_fit_tests</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">theoretical_distribution</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform goodness-of-fit tests.&quot;&quot;&quot;</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -518,7 +508,7 @@ Alternative hypothesis: <span class="math notranslate nohighlight">\(H_1: H_1 \n
 <div class="math notranslate nohighlight">
 \[\text{AICc} = \text{AIC} + \frac{2k(k+1)}{n-k-1}\]</div>
 <p><strong>Implementation</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">model_selection_criteria</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">model_selection_criteria</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate model selection criteria.&quot;&quot;&quot;</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -576,7 +566,7 @@ Alternative hypothesis: <span class="math notranslate nohighlight">\(H_1: H_1 \n
 <div class="math notranslate nohighlight">
 \[CI_{width} = \hat{H}_{1-\alpha/2} - \hat{H}_{\alpha/2}\]</div>
 <p><strong>Implementation</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">calculate_performance_metrics</span><span class="p">(</span><span class="n">true_values</span><span class="p">,</span> <span class="n">estimated_values</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calculate_performance_metrics</span><span class="p">(</span><span class="n">true_values</span><span class="p">,</span> <span class="n">estimated_values</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate comprehensive performance metrics.&quot;&quot;&quot;</span>
     <span class="n">metrics</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -616,12 +606,12 @@ Rate at which estimator approaches true value with increasing sample size.</p>
 <p><strong>3. Asymptotic Efficiency</strong>:
 Ratio of estimator variance to Cramér-Rao lower bound.</p>
 <p><strong>Implementation</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span><span class="p">,</span> <span class="n">ComprehensiveBenchmark</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">lrdbenchmark</span> <span class="kn">import</span> <span class="n">FBMModel</span><span class="p">,</span> <span class="n">ComprehensiveBenchmark</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">efficiency_analysis_example</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">efficiency_analysis_example</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Demonstrate efficiency analysis of estimators.&quot;&quot;&quot;</span>
 
     <span class="c1"># Test different sample sizes</span>
@@ -719,12 +709,12 @@ Ratio of estimator variance to Cramér-Rao lower bound.</p>
 <section id="data-quality-checks">
 <h2>Data Quality Checks<a class="headerlink" href="#data-quality-checks" title="Link to this heading"></a></h2>
 <p><strong>1. Stationarity Tests</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tsa.stattools</span><span class="w"> </span><span class="kn">import</span> <span class="n">adfuller</span><span class="p">,</span> <span class="n">kpss</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span><span class="p">,</span> <span class="n">FGNModel</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">statsmodels.tsa.stattools</span> <span class="kn">import</span> <span class="n">adfuller</span><span class="p">,</span> <span class="n">kpss</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">lrdbenchmark</span> <span class="kn">import</span> <span class="n">FBMModel</span><span class="p">,</span> <span class="n">FGNModel</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">data_quality_checks_example</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">data_quality_checks_example</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Demonstrate data quality checks for time series.&quot;&quot;&quot;</span>
 
     <span class="c1"># Generate different types of data</span>
@@ -782,11 +772,11 @@ Ratio of estimator variance to Cramér-Rao lower bound.</p>
 <section id="estimator-validation">
 <h2>Estimator Validation<a class="headerlink" href="#estimator-validation" title="Link to this heading"></a></h2>
 <p><strong>1. Consistency Checks</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span><span class="p">,</span> <span class="n">ComprehensiveBenchmark</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">lrdbenchmark</span> <span class="kn">import</span> <span class="n">FBMModel</span><span class="p">,</span> <span class="n">ComprehensiveBenchmark</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">estimator_validation_example</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">estimator_validation_example</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Demonstrate estimator validation procedures.&quot;&quot;&quot;</span>
 
     <span class="c1"># Test consistency with increasing sample size</span>
@@ -874,12 +864,12 @@ Ratio of estimator variance to Cramér-Rao lower bound.</p>
 </section>
 <section id="comprehensive-validation-workflow">
 <h2>Comprehensive Validation Workflow<a class="headerlink" href="#comprehensive-validation-workflow" title="Link to this heading"></a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">FBMModel</span><span class="p">,</span> <span class="n">FGNModel</span><span class="p">,</span> <span class="n">ComprehensiveBenchmark</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">lrdbenchmark</span> <span class="kn">import</span> <span class="n">FBMModel</span><span class="p">,</span> <span class="n">FGNModel</span><span class="p">,</span> <span class="n">ComprehensiveBenchmark</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">comprehensive_validation_workflow</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">comprehensive_validation_workflow</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Complete validation workflow for LRDBench estimators.&quot;&quot;&quot;</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== COMPREHENSIVE VALIDATION WORKFLOW ===&quot;</span><span class="p">)</span>
@@ -1009,10 +999,10 @@ Ratio of estimator variance to Cramér-Rao lower bound.</p>
 <strong>2. Convergence Rate</strong>: Rate at which estimator approaches true value
 <strong>3. Asymptotic Efficiency</strong>: Ratio of estimator variance to Cramér-Rao lower bound</p>
 <p><strong>Implementation</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">psutil</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">psutil</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">efficiency_analysis</span><span class="p">(</span><span class="n">estimator_func</span><span class="p">,</span> <span class="n">data_sizes</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">efficiency_analysis</span><span class="p">(</span><span class="n">estimator_func</span><span class="p">,</span> <span class="n">data_sizes</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Analyze computational efficiency.&quot;&quot;&quot;</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -1059,10 +1049,7 @@ Ratio of estimator variance to Cramér-Rao lower bound.</p>
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="theory.html" class="btn btn-neutral float-left" title="Theoretical Foundations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../examples/comprehensive_adaptive_demo.html" class="btn btn-neutral float-right" title="Comprehensive Adaptive Estimators Demo" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

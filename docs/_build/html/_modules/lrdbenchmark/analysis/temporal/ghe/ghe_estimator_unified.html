@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lrdbenchmark.analysis.temporal.ghe.ghe_estimator_unified &mdash; LRDBenchmark 1.7.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=19f00094" />
+  <title>lrdbenchmark.analysis.temporal.ghe.ghe_estimator_unified &mdash; lrdbenchmark 2.3.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
     <link rel="canonical" href="https://lrdbenchmark.readthedocs.io/_modules/lrdbenchmark/analysis/temporal/ghe/ghe_estimator_unified.html" />
-  <!--[if lt IE 9]>
-    <script src="../../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../../_static/documentation_options.js?v=030dc6f6"></script>
-        <script src="../../../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=67b02a41"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -32,11 +30,8 @@
           
           
           <a href="../../../../../index.html" class="icon icon-home">
-            LRDBenchmark
+            lrdbenchmark
           </a>
-              <div class="version">
-                1.7.0
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -60,23 +55,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../api/analytics.html">Analytics API</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/theory.html">Theoretical Foundations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/theory.html#statistical-estimators">Statistical Estimators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/theory.html#theoretical-performance-considerations">Theoretical Performance Considerations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/theory.html#practical-examples">Practical Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/theory.html#theoretical-references">Theoretical References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html">Validation Techniques and Statistical Tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#monte-carlo-validation">Monte Carlo Validation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#bootstrap-methods">Bootstrap Methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#cross-validation">Cross-Validation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#robustness-analysis">Robustness Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#validation-statistical-tests">Validation Statistical Tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#model-selection">Model Selection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#validation-performance-metrics">Validation Performance Metrics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#quality-assurance">Quality Assurance</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../research/validation.html#validation-references">Validation References</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/comprehensive_adaptive_demo.html">Comprehensive Adaptive Estimators Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/comprehensive_demo.html">Comprehensive LRDBench Demonstration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/comprehensive_demo.html#basic-data-generation-and-analysis">Basic Data Generation and Analysis</a></li>
@@ -87,6 +65,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/comprehensive_demo.html#integration-with-external-libraries">Integration with External Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/comprehensive_demo.html#complete-workflow-example">Complete Workflow Example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/comprehensive_demo.html#summary">Summary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/leaderboard.html">Leaderboard Significance Analysis</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/notebooks_overview.html">Demonstration Notebooks Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/notebooks_overview.html#data-generation-and-visualization">01. Data Generation and Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/notebooks_overview.html#estimation-and-statistical-validation">02. Estimation and Statistical Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/notebooks_overview.html#custom-models-and-estimators">03. Custom Models and Estimators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/notebooks_overview.html#comprehensive-benchmarking">04. Comprehensive Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/notebooks_overview.html#leaderboard-generation">05. Leaderboard Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/notebooks_overview.html#getting-started-with-notebooks">Getting Started with Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/notebooks_overview.html#support-and-contributing">Support and Contributing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/index.html">Tutorial Series</a></li>
 </ul>
 
         </div>
@@ -95,7 +87,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../../../index.html">LRDBenchmark</a>
+          <a href="../../../../../index.html">lrdbenchmark</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -127,43 +119,42 @@
 <span class="sd">q-th order moments of increments and estimating the generalized Hurst exponent.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">curve_fit</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
 
 <span class="c1"># Import optimization frameworks</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">vmap</span>
+    <span class="kn">import</span> <span class="nn">jax</span>
+    <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+    <span class="kn">from</span> <span class="nn">jax</span> <span class="kn">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">vmap</span>
     <span class="n">JAX_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">JAX_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">numba</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">numba</span><span class="w"> </span><span class="kn">import</span> <span class="n">jit</span> <span class="k">as</span> <span class="n">numba_jit</span><span class="p">,</span> <span class="n">prange</span>
+    <span class="kn">import</span> <span class="nn">numba</span>
+    <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span> <span class="k">as</span> <span class="n">numba_jit</span><span class="p">,</span> <span class="n">prange</span>
     <span class="n">NUMBA_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">NUMBA_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># Create a dummy decorator when numba is not available</span>
+    <span class="k">def</span> <span class="nf">numba_jit</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">decorator</span>
+    <span class="n">prange</span> <span class="o">=</span> <span class="nb">range</span>  <span class="c1"># Dummy prange</span>
 
 <span class="c1"># Import base estimator</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">lrdbenchmark.models.estimators.base_estimator</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseEstimator</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="c1"># Fallback if base estimator not available</span>
-    <span class="k">class</span><span class="w"> </span><span class="nc">BaseEstimator</span><span class="p">:</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">kwargs</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kn">from</span> <span class="nn">lrdbenchmark.analysis.base_estimator</span> <span class="kn">import</span> <span class="n">BaseEstimator</span>
 
 
 <div class="viewcode-block" id="GHEEstimator">
 <a class="viewcode-back" href="../../../../../api/estimators.html#lrdbenchmark.analysis.temporal.ghe.ghe_estimator_unified.GHEEstimator">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">GHEEstimator</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">GHEEstimator</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Unified GHE (Generalized Hurst Exponent) Estimator for Long-Range Dependence Analysis.</span>
 
@@ -195,7 +186,7 @@
 
 <div class="viewcode-block" id="GHEEstimator.__init__">
 <a class="viewcode-back" href="../../../../../api/estimators.html#lrdbenchmark.analysis.temporal.ghe.ghe_estimator_unified.GHEEstimator.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the GHE estimator.</span>
 
@@ -225,7 +216,7 @@
 
 <div class="viewcode-block" id="GHEEstimator._validate_parameters">
 <a class="viewcode-back" href="../../../../../api/estimators.html#lrdbenchmark.analysis.temporal.ghe.ghe_estimator_unified.GHEEstimator._validate_parameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_validate_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate estimator parameters.&quot;&quot;&quot;</span>
         <span class="n">q_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;q_values&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">q_values</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
@@ -247,7 +238,7 @@
 
 <div class="viewcode-block" id="GHEEstimator._compute_qth_moments_numpy">
 <a class="viewcode-back" href="../../../../../api/estimators.html#lrdbenchmark.analysis.temporal.ghe.ghe_estimator_unified.GHEEstimator._compute_qth_moments_numpy">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_qth_moments_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">q_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
+    <span class="k">def</span> <span class="nf">_compute_qth_moments_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">q_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
                                  <span class="n">tau_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute q-th order moments using NumPy.</span>
@@ -289,7 +280,7 @@
 
 <div class="viewcode-block" id="GHEEstimator._compute_qth_moments_numba">
 <a class="viewcode-back" href="../../../../../api/estimators.html#lrdbenchmark.analysis.temporal.ghe.ghe_estimator_unified.GHEEstimator._compute_qth_moments_numba">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_qth_moments_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">q_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
+    <span class="k">def</span> <span class="nf">_compute_qth_moments_numba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">q_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
                                  <span class="n">tau_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute q-th order moments using Numba.</span>
@@ -312,7 +303,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_qth_moments_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">q_values</span><span class="p">,</span> <span class="n">tau_values</span><span class="p">)</span>
         
         <span class="nd">@numba_jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">compute_moments_numba</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">q_values</span><span class="p">,</span> <span class="n">tau_values</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">compute_moments_numba</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">q_values</span><span class="p">,</span> <span class="n">tau_values</span><span class="p">):</span>
             <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="n">n_q</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">q_values</span><span class="p">)</span>
             <span class="n">n_tau</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tau_values</span><span class="p">)</span>
@@ -342,7 +333,7 @@
 
 <div class="viewcode-block" id="GHEEstimator._compute_qth_moments_jax">
 <a class="viewcode-back" href="../../../../../api/estimators.html#lrdbenchmark.analysis.temporal.ghe.ghe_estimator_unified.GHEEstimator._compute_qth_moments_jax">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_qth_moments_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">q_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
+    <span class="k">def</span> <span class="nf">_compute_qth_moments_jax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">q_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
                                <span class="n">tau_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute q-th order moments using JAX.</span>
@@ -365,11 +356,11 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_qth_moments_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">q_values</span><span class="p">,</span> <span class="n">tau_values</span><span class="p">)</span>
         
         <span class="nd">@jit</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">compute_moments_jax</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">q_values</span><span class="p">,</span> <span class="n">tau_values</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">compute_moments_jax</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">q_values</span><span class="p">,</span> <span class="n">tau_values</span><span class="p">):</span>
             <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="n">moments</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">q_values</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">tau_values</span><span class="p">)))</span>
             
-            <span class="k">def</span><span class="w"> </span><span class="nf">compute_for_tau</span><span class="p">(</span><span class="n">tau_idx</span><span class="p">):</span>
+            <span class="k">def</span> <span class="nf">compute_for_tau</span><span class="p">(</span><span class="n">tau_idx</span><span class="p">):</span>
                 <span class="n">tau</span> <span class="o">=</span> <span class="n">tau_values</span><span class="p">[</span><span class="n">tau_idx</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">tau</span> <span class="o">&gt;=</span> <span class="n">N</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">q_values</span><span class="p">),</span> <span class="n">jnp</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
@@ -378,7 +369,7 @@
                 <span class="n">increments</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">tau</span><span class="p">:]</span> <span class="o">-</span> <span class="n">data</span><span class="p">[:</span><span class="o">-</span><span class="n">tau</span><span class="p">]</span>
                 
                 <span class="c1"># Compute q-th moments for all q values</span>
-                <span class="k">def</span><span class="w"> </span><span class="nf">compute_for_q</span><span class="p">(</span><span class="n">q_idx</span><span class="p">):</span>
+                <span class="k">def</span> <span class="nf">compute_for_q</span><span class="p">(</span><span class="n">q_idx</span><span class="p">):</span>
                     <span class="n">q</span> <span class="o">=</span> <span class="n">q_values</span><span class="p">[</span><span class="n">q_idx</span><span class="p">]</span>
                     <span class="k">if</span> <span class="n">q</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">:</span>
                         <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">increments</span><span class="p">))</span>
@@ -394,7 +385,7 @@
 
 <div class="viewcode-block" id="GHEEstimator._estimate_hurst_exponents">
 <a class="viewcode-back" href="../../../../../api/estimators.html#lrdbenchmark.analysis.temporal.ghe.ghe_estimator_unified.GHEEstimator._estimate_hurst_exponents">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_estimate_hurst_exponents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">moments</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
+    <span class="k">def</span> <span class="nf">_estimate_hurst_exponents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">moments</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
                                 <span class="n">q_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Estimate Hurst exponents from q-th moments.</span>
@@ -451,7 +442,7 @@
 
 <div class="viewcode-block" id="GHEEstimator._select_backend">
 <a class="viewcode-back" href="../../../../../api/estimators.html#lrdbenchmark.analysis.temporal.ghe.ghe_estimator_unified.GHEEstimator._select_backend">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_select_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_select_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Select the best available backend for computation.</span>
 <span class="sd">        </span>
@@ -486,7 +477,7 @@
 
 <div class="viewcode-block" id="GHEEstimator.estimate">
 <a class="viewcode-back" href="../../../../../api/estimators.html#lrdbenchmark.analysis.temporal.ghe.ghe_estimator_unified.GHEEstimator.estimate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">estimate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">estimate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Estimate the generalized Hurst exponent using the GHE method.</span>
 <span class="sd">        </span>
@@ -571,7 +562,7 @@
 
 <div class="viewcode-block" id="GHEEstimator.plot_scaling_behavior">
 <a class="viewcode-back" href="../../../../../api/estimators.html#lrdbenchmark.analysis.temporal.ghe.ghe_estimator_unified.GHEEstimator.plot_scaling_behavior">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">plot_scaling_behavior</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">plot_scaling_behavior</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the scaling behavior of q-th moments.</span>
 <span class="sd">        </span>
@@ -646,7 +637,7 @@
 
 <div class="viewcode-block" id="GHEEstimator.get_multifractal_spectrum">
 <a class="viewcode-back" href="../../../../../api/estimators.html#lrdbenchmark.analysis.temporal.ghe.ghe_estimator_unified.GHEEstimator.get_multifractal_spectrum">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_multifractal_spectrum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">get_multifractal_spectrum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the multifractal spectrum from generalized Hurst exponents.</span>
 <span class="sd">        </span>

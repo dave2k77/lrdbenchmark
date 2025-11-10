@@ -17,9 +17,11 @@ import warnings
 try:
     import jax
     import jax.numpy as jnp
-    from jax import jit, vmap
+
     JAX_AVAILABLE = True
 except ImportError:
+    jax = None  # type: ignore[assignment]
+    jnp = None  # type: ignore[assignment]
     JAX_AVAILABLE = False
 
 try:
@@ -30,6 +32,7 @@ except ImportError:
     NUMBA_AVAILABLE = False
 
 from lrdbenchmark.analysis.base_estimator import BaseEstimator
+from lrdbenchmark.analysis.wavelet.jax_wavelet import dwt_periodized
 
 
 class MultifractalWaveletLeadersEstimator(BaseEstimator):
@@ -246,17 +249,105 @@ class MultifractalWaveletLeadersEstimator(BaseEstimator):
 
     def _estimate_jax(self, data: np.ndarray) -> Dict[str, Any]:
         """JAX-optimized implementation of Wavelet Leaders estimation."""
-        # Convert data to JAX array
-        data_jax = jnp.array(data)
-        
-        # JAX implementation of the core computation
-        # Note: JAX doesn't have direct equivalents for pywt.wavedec
-        # So we'll use the NumPy implementation for wavelet decomposition
-        # and JAX for the regression part
-        
-        # For now, fall back to NumPy implementation
-        # This can be enhanced with JAX-specific optimizations for the regression
-        return self._estimate_numpy(data)
+        if not JAX_AVAILABLE:
+            return self._estimate_numpy(data)
+
+        data_np = np.asarray(data, dtype=float)
+        n = len(data_np)
+
+        max_safe_scale = min(self.parameters["max_scale"], n // 8)
+        if max_safe_scale < self.parameters["min_scale"]:
+            raise ValueError(f"Data length {n} is too short for wavelet leaders analysis")
+
+        if max_safe_scale < self.parameters["max_scale"]:
+            safe_scales = [s for s in self.parameters["scales"] if s <= max_safe_scale]
+            if len(safe_scales) >= 3:
+                self.parameters["scales"] = np.array(safe_scales)
+                self.parameters["max_scale"] = max_safe_scale
+            else:
+                warnings.warn(
+                    f"Data length ({n}) may be too short for reliable wavelet leaders analysis"
+                )
+
+        scales = np.asarray(self.parameters["scales"], dtype=int)
+        q_values = np.asarray(self.parameters["q_values"], dtype=float)
+
+        wavelet = self.parameters["wavelet"]
+        w = pywt.Wavelet(wavelet)
+        J = pywt.dwt_max_level(n, w.dec_len)
+        data_jax = jnp.asarray(data_np, dtype=jnp.float64)
+        _, details = dwt_periodized(data_jax, wavelet, J)
+        abs_details = [jnp.abs(d) for d in details]
+
+        leaders: List[jnp.ndarray] = []
+        for j, Dj in enumerate(abs_details):
+            n_j = Dj.shape[0]
+            Lj = jnp.zeros(n_j, dtype=jnp.float64)
+            for k in range(n_j):
+                segments = [Dj[max(0, k - 1): min(n_j, k + 2)]]
+                if j > 0:
+                    Df = abs_details[j - 1]
+                    start = 2 * k - 2
+                    idx = jnp.arange(max(0, start), min(Df.shape[0], start + 5))
+                    if idx.size > 0:
+                        segments.append(Df[idx])
+                if j > 1:
+                    Df2 = abs_details[j - 2]
+                    start2 = 4 * k - 4
+                    idx2 = jnp.arange(max(0, start2), min(Df2.shape[0], start2 + 9))
+                    if idx2.size > 0:
+                        segments.append(Df2[idx2])
+                concatenated = jnp.concatenate(segments)
+                Lj = Lj.at[k].set(jnp.max(concatenated))
+            leaders.append(Lj + 1e-18)
+
+        js = scales.astype(float)
+        SL_rows = []
+        for q in q_values:
+            row_vals = []
+            for j in scales:
+                Lj = leaders[j - 1] if 1 <= j <= len(leaders) else leaders[-1]
+                if Lj.size == 0:
+                    row_vals.append(jnp.nan)
+                    continue
+                if np.isclose(q, 0.0):
+                    row_vals.append(jnp.exp(jnp.mean(jnp.log(Lj))))
+                else:
+                    row_vals.append(jnp.mean(Lj ** q) ** (1.0 / q))
+            SL_rows.append(jnp.asarray(row_vals, dtype=jnp.float64))
+        SL = jnp.stack(SL_rows, axis=0)
+
+        x = jnp.asarray(js, dtype=jnp.float64)
+        x_mean = jnp.mean(x)
+        x_centered = x - x_mean
+        denom = jnp.sum(x_centered ** 2)
+
+        zeta = []
+        for row in SL:
+            y = jnp.log2(row + 1e-300)
+            y_mean = jnp.mean(y)
+            slope = jnp.sum((x - x_mean) * (y - y_mean)) / denom
+            zeta.append(slope)
+        zeta = jnp.asarray(zeta, dtype=jnp.float64)
+
+        q_arr = jnp.asarray(q_values, dtype=jnp.float64)
+        q_mean = jnp.mean(q_arr)
+        q_centered = q_arr - q_mean
+        denom_q = jnp.sum(q_centered ** 2)
+        slope_c1 = jnp.sum(q_centered * (zeta - jnp.mean(zeta))) / denom_q if denom_q > 0 else 0.0
+        intercept_c0 = jnp.mean(zeta) - slope_c1 * q_mean
+
+        self.results = {
+            "hurst_parameter": float(slope_c1),
+            "method": "jax",
+            "q": q_values.tolist(),
+            "zeta": [float(val) for val in zeta],
+            "c1": float(slope_c1),
+            "c0": float(intercept_c0),
+            "j_used": js.tolist(),
+        }
+
+        return self.results
 
     def _compute_wavelet_coefficients(self, data: np.ndarray, scale: int) -> np.ndarray:
         """Compute wavelet coefficients at a given scale."""

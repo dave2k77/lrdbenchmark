@@ -17,6 +17,7 @@ import seaborn as sns
 from pathlib import Path
 import json
 from datetime import datetime
+from typing import Any, Dict, Optional
 
 class ComprehensiveLeaderboard:
     """Create comprehensive leaderboards for all estimators."""
@@ -25,6 +26,8 @@ class ComprehensiveLeaderboard:
         self.results_dir = Path(".")
         self.leaderboard_data = {}
         self.quality_scores = {}
+        self.significance_metadata: Optional[Dict[str, Any]] = None
+        self.significance_index: Dict[str, Dict[str, Any]] = {}
         
     def load_all_benchmark_data(self):
         """Load data from all benchmark categories."""
@@ -53,6 +56,97 @@ class ComprehensiveLeaderboard:
             nn_df['Category'] = 'Neural Networks'
             self.leaderboard_data['Neural Networks'] = nn_df
             print(f"✅ Loaded Neural Networks: {len(nn_df)} estimators")
+        
+        self._load_significance_metadata()
+
+    def _load_significance_metadata(self) -> None:
+        """Load the most recent significance analysis for leaderboard annotation."""
+        benchmark_dir = self.results_dir / "benchmark_results"
+        self.significance_metadata = None
+        self.significance_index = {}
+
+        if not benchmark_dir.exists():
+            return
+
+        candidates = list(benchmark_dir.glob("comprehensive_benchmark_*.json"))
+        if not candidates:
+            return
+
+        latest = max(candidates, key=lambda path: path.stat().st_mtime)
+        try:
+            with open(latest, "r") as f:
+                data = json.load(f)
+        except Exception as exc:
+            print(f"⚠️ Unable to load significance metadata from {latest}: {exc}")
+            return
+
+        significance = data.get("significance_analysis")
+        if isinstance(significance, dict) and significance.get("status") == "ok":
+            self.significance_metadata = significance
+            self._build_significance_index()
+        else:
+            self.significance_metadata = None
+            self.significance_index = {}
+
+    def _build_significance_index(self) -> None:
+        """Create a quick lookup of significance markers per estimator."""
+        if not isinstance(self.significance_metadata, dict):
+            self.significance_index = {}
+            return
+
+        markers = self.significance_metadata.get("estimator_markers", {})
+        mean_ranks = self.significance_metadata.get("mean_ranks", {})
+        index: Dict[str, Dict[str, Any]] = {}
+
+        for estimator, marker_dict in markers.items():
+            nemenyi_list = sorted(marker_dict.get("nemenyi", []))
+            wilcoxon_list = sorted(marker_dict.get("wilcoxon", []))
+            sign_list = sorted(marker_dict.get("sign_test", []))
+            tests_with_support = [
+                label
+                for label, entries in (
+                    ("nemenyi", nemenyi_list),
+                    ("wilcoxon", wilcoxon_list),
+                    ("sign_test", sign_list),
+                )
+                if entries
+            ]
+            index[estimator] = {
+                "mean_rank": mean_ranks.get(estimator),
+                "nemenyi": nemenyi_list,
+                "wilcoxon": wilcoxon_list,
+                "sign_test": sign_list,
+                "total_significant_wins": len(nemenyi_list) + len(wilcoxon_list) + len(sign_list),
+                "tests_with_support": tests_with_support,
+            }
+
+        self.significance_index = index
+
+    def _attach_significance_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Append significance summary columns to leaderboard dataframes."""
+        if df is None or df.empty or "Estimator" not in df.columns:
+            return df
+
+        df = df.copy()
+        if not self.significance_index:
+            df["Significant_Wins"] = 0
+            df["Significance_Evidence"] = ""
+            df["Mean_Rank"] = np.nan
+            return df
+
+        df["Significant_Wins"] = df["Estimator"].apply(
+            lambda est: self.significance_index.get(est, {}).get("total_significant_wins", 0)
+        )
+        df["Significance_Evidence"] = df["Estimator"].apply(
+            lambda est: ", ".join(
+                label.replace("_", " ").title()
+                for label in self.significance_index.get(est, {}).get("tests_with_support", [])
+            )
+        )
+        df["Mean_Rank"] = df["Estimator"].apply(
+            lambda est: self.significance_index.get(est, {}).get("mean_rank")
+        )
+        return df
     
     def standardize_column_names(self, df, category):
         """Standardize column names across different benchmark results."""
@@ -136,6 +230,7 @@ class ComprehensiveLeaderboard:
         # Robustness composite (robustness + realistic)
         scores_df['Robustness_Composite'] = 0.6 * scores_df['Robustness_Score_Normalized'] + 0.4 * scores_df['Realistic_Score']
         
+        scores_df = self._attach_significance_columns(scores_df)
         return scores_df
     
     def create_overall_leaderboard(self):
@@ -468,7 +563,15 @@ class ComprehensiveLeaderboard:
         
         # Overall leaderboard report
         reports['overall'] = {
-            'top_10': overall_leaderboard.head(10)[['Estimator', 'Category', 'Composite_Score', 'Overall_Rank']].to_dict('records'),
+            'top_10': overall_leaderboard.head(10)[[
+                'Estimator',
+                'Category',
+                'Composite_Score',
+                'Overall_Rank',
+                'Significant_Wins',
+                'Significance_Evidence',
+                'Mean_Rank',
+            ]].to_dict('records'),
             'summary_stats': {
                 'total_estimators': len(overall_leaderboard),
                 'categories': overall_leaderboard['Category'].value_counts().to_dict(),
@@ -480,7 +583,14 @@ class ComprehensiveLeaderboard:
         reports['categories'] = {}
         for category, leaderboard in category_leaderboards.items():
             reports['categories'][category] = {
-                'top_5': leaderboard.head(5)[['Estimator', 'Composite_Score', 'Category_Rank']].to_dict('records'),
+                'top_5': leaderboard.head(5)[[
+                    'Estimator',
+                    'Composite_Score',
+                    'Category_Rank',
+                    'Significant_Wins',
+                    'Significance_Evidence',
+                    'Mean_Rank',
+                ]].to_dict('records'),
                 'summary': {
                     'count': len(leaderboard),
                     'avg_score': leaderboard['Composite_Score'].mean(),
@@ -519,12 +629,15 @@ class ComprehensiveLeaderboard:
         # Overall Top 10
         print(f"\n🥇 TOP 10 OVERALL PERFORMERS:")
         print("-" * 80)
-        print(f"{'Rank':<4} {'Estimator':<20} {'Category':<15} {'Composite Score':<15} {'Performance':<12} {'Robustness':<10}")
+        print(f"{'Rank':<4} {'Estimator':<20} {'Category':<15} {'Composite':<10} {'SigWins':<8} {'Evidence':<20} {'Performance':<12} {'Robust':<10}")
         print("-" * 80)
         
         for _, row in overall_leaderboard.head(10).iterrows():
+            sig_wins = row.get('Significant_Wins', 0)
+            evidence = row.get('Significance_Evidence', '')
             print(f"{row['Overall_Rank']:<4} {row['Estimator']:<20} {row['Category']:<15} "
-                  f"{row['Composite_Score']:<15.2f} {row.get('Pure_Performance_Score', 0):<12.2f} "
+                  f"{row['Composite_Score']:<10.2f} {sig_wins:<8} {evidence:<20} "
+                  f"{row.get('Pure_Performance_Score', 0):<12.2f} "
                   f"{row.get('Robustness_Composite', 0):<10.2f}")
         
         # Category Champions
@@ -533,7 +646,14 @@ class ComprehensiveLeaderboard:
         for category, leaderboard in category_leaderboards.items():
             if not leaderboard.empty:
                 champ = leaderboard.iloc[0]
-                print(f"{category:<15}: {champ['Estimator']:<20} (Score: {champ['Composite_Score']:.2f})")
+                sig_wins = champ.get('Significant_Wins', 0)
+                evidence = champ.get('Significance_Evidence', '')
+                evidence_display = f", Evidence: {evidence}" if evidence else ""
+                print(
+                    f"{category:<15}: {champ['Estimator']:<20} "
+                    f"(Score: {champ['Composite_Score']:.2f}, SigWins: {sig_wins}"
+                    f"{evidence_display})"
+                )
         
         # Robustness Champions
         if not robustness_leaderboard.empty:

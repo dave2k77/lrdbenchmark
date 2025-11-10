@@ -107,6 +107,15 @@ Examples & Demos
    examples/comprehensive_demo
    examples/leaderboard
 
+Domain Guides
+-------------
+
+.. toctree::
+   :maxdepth: 1
+   :titlesonly:
+
+   domain/preprocessing_guidelines
+
 Demonstration Notebooks
 -----------------------
 
@@ -117,6 +126,17 @@ Comprehensive Jupyter notebooks demonstrating all library features:
    :titlesonly:
 
    notebooks/notebooks_overview
+
+Tutorial Series
+---------------
+
+Structured learning path through the LRDBenchmark workflow:
+
+.. toctree::
+   :maxdepth: 2
+   :titlesonly:
+
+   tutorials/index
 
 Indices and tables
 ==================

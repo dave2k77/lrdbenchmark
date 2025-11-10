@@ -496,7 +496,200 @@ This report provides comprehensive insights into LRDBench usage, performance, re
         append_section("Hurst Regimes", stratified.get("hurst_bands", {}))
         append_section("Tail Classes", stratified.get("tail_classes", {}))
         append_section("Length Regimes", stratified.get("data_length_bands", {}))
-        append_section("Contamination Regimes", stratified.get("contamination", {}))
+        contamination_data = stratified.get("contamination", {})
+        append_section("Contamination Regimes", contamination_data)
+        if (
+            contamination_data
+            and len(contamination_data) == 1
+            and "clean" in contamination_data
+        ):
+            report_lines.append(
+                "_No contaminated scenarios were included in this benchmark run._"
+            )
+            report_lines.append("")
+
+        provenance = summary.get("provenance", {})
+        estimator_category_map: Dict[str, str] = {}
+        for category, names in provenance.get("estimators_tested", {}).items():
+            for name in names:
+                estimator_category_map[name] = category
+
+        estimator_stats: Dict[str, Dict[str, Any]] = {}
+        results = summary.get("results", {})
+
+        def extract_coverage_flag(est_result: Dict[str, Any]) -> Optional[bool]:
+            uncertainty = est_result.get("uncertainty")
+            if not isinstance(uncertainty, dict):
+                return None
+            coverage_data = uncertainty.get("coverage")
+            primary = uncertainty.get("primary_interval")
+            method = primary.get("method") if isinstance(primary, dict) else None
+            if isinstance(coverage_data, dict):
+                if method and method in coverage_data:
+                    return coverage_data.get(method)
+                for value in coverage_data.values():
+                    if value is not None:
+                        return value
+            return None
+
+        for model_data in results.values():
+            for est_result in model_data.get("estimator_results", []):
+                estimator_name = est_result.get("estimator")
+                if estimator_name is None:
+                    continue
+                entry = estimator_stats.setdefault(
+                    estimator_name,
+                    {
+                        "category": estimator_category_map.get(
+                            estimator_name, "unknown"
+                        ),
+                        "count": 0,
+                        "success": 0,
+                        "errors": [],
+                        "ci_widths": [],
+                        "coverage": [],
+                    },
+                )
+                entry["count"] += 1
+                if est_result.get("success"):
+                    entry["success"] += 1
+                error = est_result.get("error")
+                if error is not None and np.isfinite(error):
+                    entry["errors"].append(float(error))
+                ci = est_result.get("confidence_interval")
+                if (
+                    isinstance(ci, (list, tuple))
+                    and len(ci) == 2
+                    and ci[0] is not None
+                    and ci[1] is not None
+                ):
+                    try:
+                        width = float(ci[1]) - float(ci[0])
+                        if np.isfinite(width):
+                            entry["ci_widths"].append(width)
+                    except (TypeError, ValueError):
+                        pass
+                coverage_flag = extract_coverage_flag(est_result)
+                if coverage_flag is not None:
+                    try:
+                        entry["coverage"].append(bool(coverage_flag))
+                    except Exception:
+                        pass
+
+        if estimator_stats:
+            report_lines.append("## Estimator Summary")
+            headers = [
+                "Estimator",
+                "Category",
+                "n",
+                "Mean Error",
+                "Median Error",
+                "Success Rate",
+                "Coverage",
+                "Mean CI Width",
+            ]
+            report_lines.append("| " + " | ".join(headers) + " |")
+            report_lines.append("|" + " --- |" * len(headers))
+            sorted_estimators = sorted(
+                estimator_stats.items(),
+                key=lambda item: (
+                    np.mean(item[1]["errors"]) if item[1]["errors"] else float("inf"),
+                    item[0],
+                ),
+            )
+            for estimator_name, info in sorted_estimators:
+                count = info["count"]
+                mean_error = np.mean(info["errors"]) if info["errors"] else None
+                median_error = (
+                    float(np.median(info["errors"])) if info["errors"] else None
+                )
+                success_rate = info["success"] / count if count else 0.0
+                coverage_rate = (
+                    float(np.mean(info["coverage"])) if info["coverage"] else None
+                )
+                mean_ci_width = (
+                    float(np.mean(info["ci_widths"])) if info["ci_widths"] else None
+                )
+                row = [
+                    estimator_name,
+                    info["category"],
+                    str(count),
+                    fmt_val(mean_error),
+                    fmt_val(median_error),
+                    fmt_rate(success_rate),
+                    fmt_rate(coverage_rate),
+                    fmt_val(mean_ci_width),
+                ]
+                report_lines.append("| " + " | ".join(row) + " |")
+            report_lines.append("")
+
+        category_stats: Dict[str, Dict[str, Any]] = {}
+        for estimator_name, info in estimator_stats.items():
+            category = info["category"]
+            entry = category_stats.setdefault(
+                category,
+                {
+                    "estimators": [],
+                    "count": 0,
+                    "success": 0,
+                    "errors": [],
+                    "ci_widths": [],
+                    "coverage": [],
+                },
+            )
+            entry["estimators"].append(estimator_name)
+            entry["count"] += info["count"]
+            entry["success"] += info["success"]
+            entry["errors"].extend(info["errors"])
+            entry["ci_widths"].extend(info["ci_widths"])
+            entry["coverage"].extend(info["coverage"])
+
+        if category_stats:
+            report_lines.append("## Category Summary")
+            headers = [
+                "Category",
+                "Estimators",
+                "n",
+                "Mean Error",
+                "Median Error",
+                "Success Rate",
+                "Coverage",
+                "Mean CI Width",
+            ]
+            report_lines.append("| " + " | ".join(headers) + " |")
+            report_lines.append("|" + " --- |" * len(headers))
+            sorted_categories = sorted(
+                category_stats.items(),
+                key=lambda item: (
+                    np.mean(item[1]["errors"]) if item[1]["errors"] else float("inf"),
+                    item[0],
+                ),
+            )
+            for category, info in sorted_categories:
+                count = info["count"]
+                mean_error = np.mean(info["errors"]) if info["errors"] else None
+                median_error = (
+                    float(np.median(info["errors"])) if info["errors"] else None
+                )
+                success_rate = info["success"] / count if count else 0.0
+                coverage_rate = (
+                    float(np.mean(info["coverage"])) if info["coverage"] else None
+                )
+                mean_ci_width = (
+                    float(np.mean(info["ci_widths"])) if info["ci_widths"] else None
+                )
+                row = [
+                    category,
+                    ", ".join(sorted(info["estimators"])) if info["estimators"] else "–",
+                    str(count),
+                    fmt_val(mean_error),
+                    fmt_val(median_error),
+                    fmt_rate(success_rate),
+                    fmt_rate(coverage_rate),
+                    fmt_val(mean_ci_width),
+                ]
+                report_lines.append("| " + " | ".join(row) + " |")
+            report_lines.append("")
 
         report = "\n".join(report_lines)
         if output_path:

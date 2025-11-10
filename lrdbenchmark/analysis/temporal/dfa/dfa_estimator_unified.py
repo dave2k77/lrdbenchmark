@@ -72,43 +72,36 @@ def _calculate_fluctuation_numba(data: np.ndarray, scales: np.ndarray, order: in
 
 
 if JAX_AVAILABLE:
-    @jit
-    def _polyfit_jax(x, y, deg):
-        """JAX-compatible polyfit."""
-        X = jnp.vander(x, N=deg + 1)
-        coeffs, _, _, _ = jnp.linalg.lstsq(X, y, rcond=None)
-        return coeffs
+    from functools import partial
 
-    @jit
-    def _polyval_jax(p, x):
-        """JAX-compatible polyval."""
-        y = jnp.zeros_like(x)
-        for i, coeff in enumerate(p):
-            y += coeff * x ** (len(p) - 1 - i)
-        return y
-
-    @jit
-    def _calculate_fluctuation_jax_single_scale(data, scale, order):
-        """JAX fluctuation calculation for a single scale."""
-        n = len(data)
-        n_segments = n // scale
+    @partial(jit, static_argnums=(1, 2))
+    def _dfa_fluctuation_jax(cumsum: jnp.ndarray, scale: int, order: int) -> jnp.ndarray:
+        n_segments = cumsum.shape[0] // scale
         if n_segments == 0:
             return jnp.nan
 
-        segments = data[:n_segments * scale].reshape(n_segments, scale)
+        trimmed = cumsum[: n_segments * scale]
+        segments = trimmed.reshape((n_segments, scale))
+        x = jnp.arange(scale, dtype=cumsum.dtype)
 
-        def detrend_and_var(segment):
-            x = jnp.arange(scale)
-            if order == 0:
-                detrended = segment - jnp.mean(segment)
-            else:
-                coeffs = _polyfit_jax(x, segment, order)
-                trend = _polyval_jax(coeffs, x)
-                detrended = segment - trend
+        if order == 0:
+            detrended = segments - jnp.mean(segments, axis=1, keepdims=True)
+            variances = jnp.mean(detrended**2, axis=1)
+            return jnp.sqrt(jnp.mean(variances))
+
+        X = jnp.vander(x, N=order + 1)
+        XtX = X.T @ X
+        XtX_inv = jnp.linalg.inv(XtX)
+        projector = XtX_inv @ X.T
+
+        def segment_variance(segment):
+            coeffs = projector @ segment
+            trend = X @ coeffs
+            detrended = segment - trend
             return jnp.mean(detrended**2)
 
-        variances = vmap(detrend_and_var)(segments)
-        return jnp.mean(jnp.sqrt(variances))
+        variances = vmap(segment_variance)(segments)
+        return jnp.sqrt(jnp.mean(variances))
 
 class DFAEstimator(BaseEstimator):
     """
@@ -291,12 +284,15 @@ class DFAEstimator(BaseEstimator):
         )
         scales = np.unique(scales)
         scales = scales[scales <= n // 2]
-        scales_jax = jnp.array(scales)
 
         if len(scales) < 3:
             raise ValueError("Insufficient valid scales for analysis")
 
-        fluctuation_values = jax.vmap(lambda s: _calculate_fluctuation_jax_single_scale(cumsum, s, self.parameters["order"]))(scales_jax)
+        fluctuation_values = []
+        for scale in scales:
+            fluct = _dfa_fluctuation_jax(cumsum, int(scale), int(self.parameters["order"]))
+            fluctuation_values.append(fluct)
+        fluctuation_values = jnp.asarray(fluctuation_values, dtype=jnp.float64)
         
         valid_mask = (fluctuation_values > 0) & ~jnp.isnan(fluctuation_values)
         if jnp.sum(valid_mask) < 3:

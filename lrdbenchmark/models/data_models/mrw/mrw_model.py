@@ -51,6 +51,7 @@ class MultifractalRandomWalk(BaseModel):
             Generation method (default: 'cascade')
         """
         super().__init__(H=H, lambda_param=lambda_param, sigma=sigma, method=method)
+        self._current_rng: Optional[np.random.Generator] = None
 
     def _validate_parameters(self) -> None:
         """Validate model parameters."""
@@ -72,7 +73,13 @@ class MultifractalRandomWalk(BaseModel):
         if method not in valid_methods:
             raise ValueError(f"Method must be one of {valid_methods}")
 
-    def generate(self, length: Optional[int] = None, seed: Optional[int] = None, n: Optional[int] = None) -> np.ndarray:
+    def generate(
+        self,
+        length: Optional[int] = None,
+        seed: Optional[int] = None,
+        n: Optional[int] = None,
+        rng: Optional[np.random.Generator] = None,
+    ) -> np.ndarray:
         """
         Generate multifractal random walk.
 
@@ -98,9 +105,7 @@ class MultifractalRandomWalk(BaseModel):
         if length is None and n is None:
             raise ValueError("Either 'length' or 'n' must be provided")
         data_length = length if length is not None else n
-        
-        if seed is not None:
-            np.random.seed(seed)
+        self._current_rng = self._resolve_generator(seed, rng)
 
         H = self.parameters["H"]
         lambda_param = self.parameters["lambda_param"]
@@ -155,7 +160,7 @@ class MultifractalRandomWalk(BaseModel):
         scale = length
         while scale > 1:
             # Generate Gaussian noise at current scale
-            noise = np.random.normal(0, lambda_param, scale)
+            noise = self._rng().normal(0, lambda_param, scale)
 
             # Interpolate to full length
             indices = np.linspace(0, length - 1, scale, dtype=int)
@@ -207,7 +212,7 @@ class MultifractalRandomWalk(BaseModel):
         eigenvalues = np.maximum(eigenvalues.real, 0)
 
         # Generate complex Gaussian noise
-        noise = np.random.normal(0, 1, len(eigenvalues)) + 1j * np.random.normal(
+        noise = self._rng().normal(0, 1, len(eigenvalues)) + 1j * self._rng().normal(
             0, 1, len(eigenvalues)
         )
         noise = noise / np.sqrt(2)
@@ -236,7 +241,7 @@ class MultifractalRandomWalk(BaseModel):
         omega = self._generate_volatility_cascade(length, lambda_param)
 
         # Generate Gaussian noise
-        noise = np.random.normal(0, 1, length)
+        noise = self._rng().normal(0, 1, length)
 
         # Combine to get increments
         increments = noise * np.exp(omega) * sigma
@@ -245,6 +250,11 @@ class MultifractalRandomWalk(BaseModel):
         mrw = np.cumsum(increments)
 
         return mrw
+
+    def _rng(self) -> np.random.Generator:
+        if self._current_rng is None:
+            self._current_rng = np.random.default_rng()
+        return self._current_rng
 
     def get_theoretical_properties(self) -> Dict[str, Any]:
         """

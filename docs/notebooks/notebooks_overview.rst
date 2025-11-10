@@ -14,141 +14,21 @@ The demonstration notebooks follow a progressive learning structure:
 4. **Comprehensive Benchmarking** - Full benchmarking system with contamination testing
 5. **Leaderboard Generation** - Performance rankings and comparative analysis
 
-Available Notebooks
--------------------
+Tutorial Series
+---------------
 
-.. toctree::
-   :maxdepth: 2
-   :titlesonly:
+The instructional material previously hosted exclusively as notebooks is now published as a structured tutorial sequence. For the canonical, documentation-friendly narrative, follow the multi-part series:
 
-   01_data_generation_and_visualisation
-   02_estimation_and_validation
-   03_custom_models_and_estimators
-   04_comprehensive_benchmarking
-   05_leaderboard_generation
+- :doc:`/tutorials/tutorial_01_synthetic_data` — Generating synthetic and realistic LRD data, including contamination scenarios
+- :doc:`/tutorials/tutorial_02_estimators` — Estimating the Hurst parameter with statistical validation and uncertainty quantification
+- :doc:`/tutorials/tutorial_03_customization` — Extending LRDBenchmark with custom data generators and estimators
+- :doc:`/tutorials/tutorial_04_benchmarking` — Running comprehensive and contamination-aware benchmarks
+- :doc:`/tutorials/tutorial_05_leaderboards` — Building stratified leaderboards and publishing results
 
-01. Data Generation and Visualization
-=====================================
+Legacy Notebooks
+----------------
 
-**File**: `notebooks/01_data_generation_and_visualisation.ipynb`
-
-**Purpose**: Demonstrate all available data models and visualization techniques
-
-**Key Content**:
-- Introduction to long-range dependence concepts
-- Generate data from all models: FBM, FGN, ARFIMA, MRW, Alpha-Stable
-- Visual comparison of different Hurst parameters (H=0.3, 0.5, 0.7, 0.9)
-- Time series plots, autocorrelation functions, power spectral density
-- Data quality assessment (statistics, stationarity tests)
-- Theoretical properties vs empirical observations
-
-**Data Models Covered**:
-- `FBMModel` - self-similar Gaussian process (Fractional Brownian Motion)
-- `FGNModel` - increments of FBM (Fractional Gaussian Noise)
-- `ARFIMAModel` - autoregressive fractionally integrated moving average
-- `MRWModel` - multifractal processes (Multifractal Random Walk)
-- `AlphaStableModel` - heavy-tailed distributions
-
-02. Estimation and Statistical Validation
-==========================================
-
-**File**: `notebooks/02_estimation_and_validation.ipynb`
-
-**Purpose**: Demonstrate all estimator categories with statistical validation
-
-**Key Content**:
-- Overview of estimator categories (Classical, ML, Neural)
-- Classical estimators: R/S, DFA, DMA, Higuchi, GPH, Whittle, Periodogram, CWT
-- Machine learning estimators: Random Forest, SVR, Gradient Boosting
-- Neural network estimators: CNN, LSTM, GRU, Transformer
-- Statistical validation: confidence intervals, bootstrap methods
-- Performance comparison across estimator categories
-- Decision guidelines for estimator selection
-
-**Estimator Categories**:
-- **Temporal**: R/S Analysis, DFA, DMA, Higuchi
-- **Spectral**: GPH, Whittle, Periodogram
-- **Wavelet**: CWT, Wavelet Variance, Log Variance, Wavelet Whittle
-- **Multifractal**: MFDFA, Wavelet Leaders
-- **ML**: Random Forest, SVR, Gradient Boosting
-- **Neural**: CNN, LSTM, GRU, Transformer
-
-03. Custom Models and Estimators
-=================================
-
-**File**: `notebooks/03_custom_models_and_estimators.ipynb`
-
-**Purpose**: Show users how to extend the library with custom data models and estimators
-
-**Key Content**:
-- Understanding the `BaseModel` interface for data models
-- Creating a custom data model (Fractional Ornstein-Uhlenbeck process)
-- Implementing required methods: `generate()`, `_validate_parameters()`, `get_theoretical_properties()`
-- Creating a custom classical estimator (Variance-Based Hurst Estimator)
-- Integrating custom models into the benchmark framework
-- Best practices for extensibility
-
-**Base Classes**:
-- `BaseModel` from `lrdbenchmark/models/data_models/base_model.py`
-- Estimator patterns from existing unified estimators
-- `MLModelFactory` for ML extensions
-
-04. Comprehensive Benchmarking
-=============================
-
-**File**: `notebooks/04_comprehensive_benchmarking.ipynb`
-
-**Purpose**: Demonstrate the full benchmarking system with different configurations
-
-**Key Content**:
-- Introduction to the `ComprehensiveBenchmark` class
-- Running classical-only benchmarks
-- Running ML-only benchmarks
-- Running neural-only benchmarks
-- Running comprehensive (all estimators) benchmarks
-- Contamination robustness testing:
-  - Additive Gaussian noise
-  - Multiplicative noise
-  - Outliers
-  - Trend contamination
-  - Seasonal patterns
-  - Missing data
-- Performance metrics: MAE, execution time, success rate
-- Visualizing benchmark results
-
-**Benchmark Types**:
-- `classical`: 13+ classical statistical estimators
-- `ML`: 3 machine learning estimators
-- `neural`: 4 neural network estimators
-- `comprehensive`: All estimators combined
-
-05. Leaderboard Generation
-==========================
-
-**File**: `notebooks/05_leaderboard_generation.ipynb`
-
-**Purpose**: Demonstrate leaderboard creation and performance ranking
-
-**Key Content**:
-- Loading benchmark results from multiple runs
-- Creating overall performance leaderboards
-- Category-wise rankings (Classical vs ML vs Neural)
-- Composite scoring system:
-  - Accuracy score (MAE-based)
-  - Speed score (execution time)
-  - Robustness score (contamination performance)
-  - Realistic performance score
-- Weighted composite rankings
-- Creating publication-ready tables
-- Generating performance comparison plots
-- Exporting leaderboards to LaTeX/Markdown/CSV
-
-**Leaderboard Types**:
-- Overall leaderboard (all estimators)
-- Category leaderboards (Classical, ML, Neural)
-- Robustness leaderboard (contamination resistance)
-- Speed leaderboard (execution time)
-- Accuracy leaderboard (pure MAE)
+The original Jupyter notebooks remain available in the repository under ``notebooks/`` for interactive experimentation. They mirror the content of the tutorial series and can be launched locally when a live environment is preferred.
 
 Getting Started with Notebooks
 ==============================

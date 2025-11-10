@@ -42,7 +42,13 @@ class BaseModel(ABC):
         pass
 
     @abstractmethod
-    def generate(self, length: Optional[int] = None, seed: Optional[int] = None, n: Optional[int] = None) -> np.ndarray:
+    def generate(
+        self,
+        length: Optional[int] = None,
+        seed: Optional[int] = None,
+        n: Optional[int] = None,
+        rng: Optional[np.random.Generator] = None,
+    ) -> np.ndarray:
         """
         Generate synthetic data from the model.
 
@@ -54,6 +60,9 @@ class BaseModel(ABC):
             Random seed for reproducibility
         n : int, optional
             Alternate parameter name for length (for backward compatibility)
+        rng : numpy.random.Generator, optional
+            Pre-configured generator to use.  When provided it takes precedence
+            over ``seed`` and is used directly to drive the simulation.
 
         Returns
         -------
@@ -128,8 +137,13 @@ class BaseModel(ABC):
             
         return min(optimal_start, n - window_size)
     
-    def generate_converged(self, length: int, seed: Optional[int] = None, 
-                          convergence_factor: float = 2.0) -> np.ndarray:
+    def generate_converged(
+        self,
+        length: int,
+        seed: Optional[int] = None,
+        convergence_factor: float = 2.0,
+        rng: Optional[np.random.Generator] = None,
+    ) -> np.ndarray:
         """
         Generate converged data by generating extra data and discarding initial transients.
         
@@ -147,9 +161,11 @@ class BaseModel(ABC):
         np.ndarray
             Generated time series of length n with converged behavior
         """
+        local_rng = self._resolve_generator(seed, rng)
+
         # Generate extra data for convergence analysis
         extended_length = int(length * convergence_factor)
-        extended_data = self.generate(extended_length, seed=seed)
+        extended_data = self.generate(extended_length, rng=local_rng)
         
         # Analyze convergence
         optimal_start = self._analyze_convergence(extended_data)
@@ -160,12 +176,17 @@ class BaseModel(ABC):
         # If we don't have enough data, pad with more generation
         if len(converged_data) < length:
             additional_length = length - len(converged_data)
-            additional_data = self.generate(additional_length, seed=seed + extended_length if seed is not None else None)
+            additional_data = self.generate(additional_length, rng=local_rng)
             converged_data = np.concatenate([converged_data, additional_data])
         
         return converged_data[:length]
     
-    def generate_analysis_ready(self, length: int, seed: Optional[int] = None) -> np.ndarray:
+    def generate_analysis_ready(
+        self,
+        length: int,
+        seed: Optional[int] = None,
+        rng: Optional[np.random.Generator] = None,
+    ) -> np.ndarray:
         """
         Generate data ready for analysis (converged by default).
         
@@ -184,9 +205,28 @@ class BaseModel(ABC):
         np.ndarray
             Generated time series of length n with converged behavior
         """
-        return self.generate_converged(length, seed=seed)
+        return self.generate_converged(length, seed=seed, rng=rng)
+
+    @staticmethod
+    def _resolve_generator(
+        seed: Optional[int], rng: Optional[np.random.Generator]
+    ) -> np.random.Generator:
+        """
+        Choose or construct the generator to use for simulation.
+
+        Priority: explicit ``rng`` argument > ``seed`` > fresh generator.
+        """
+        if rng is not None:
+            return rng
+        return np.random.default_rng(seed)
     
-    def generate_batch(self, n_series: int, length: int, seed: Optional[int] = None) -> np.ndarray:
+    def generate_batch(
+        self,
+        n_series: int,
+        length: int,
+        seed: Optional[int] = None,
+        rng: Optional[np.random.Generator] = None,
+    ) -> np.ndarray:
         """
         Generate multiple time series from the model.
 
@@ -204,18 +244,22 @@ class BaseModel(ABC):
         np.ndarray
             Generated time series array of shape (n_series, length)
         """
-        if seed is not None:
-            np.random.seed(seed)
-        
         batch = np.zeros((n_series, length))
-        for i in range(n_series):
-            # Use different seed for each series to ensure independence
-            series_seed = seed + i if seed is not None else None
-            batch[i] = self.generate(length, seed=series_seed)
+        base_rng = self._resolve_generator(seed, rng)
+        seeds = base_rng.integers(0, 2**63 - 1, size=n_series)
+        for i, series_seed in enumerate(seeds):
+            series_rng = np.random.default_rng(int(series_seed))
+            batch[i] = self.generate(length, rng=series_rng)
         
         return batch
     
-    def generate_streaming(self, length: int, chunk_size: int = 1000, seed: Optional[int] = None):
+    def generate_streaming(
+        self,
+        length: int,
+        chunk_size: int = 1000,
+        seed: Optional[int] = None,
+        rng: Optional[np.random.Generator] = None,
+    ):
         """
         Generate data in streaming fashion for very large datasets.
 
@@ -233,13 +277,11 @@ class BaseModel(ABC):
         np.ndarray
             Chunks of generated data
         """
-        if seed is not None:
-            np.random.seed(seed)
-        
+        stream_rng = self._resolve_generator(seed, rng)
         for start in range(0, length, chunk_size):
             end = min(start + chunk_size, length)
             chunk_length = end - start
-            yield self.generate(chunk_length, seed=seed + start if seed is not None else None)
+            yield self.generate(chunk_length, rng=stream_rng)
 
     @abstractmethod
     def get_theoretical_properties(self) -> Dict[str, Any]:

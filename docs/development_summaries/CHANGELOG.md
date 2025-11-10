@@ -10,6 +10,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Confirmed documentation and version references now point to the 2.1.7 release available on PyPI.
 
+## [Unreleased] - 2025-11-08
+
+### Added
+- Introduced `lrdbenchmark/analysis/calibration_utils.py` to load short-range dependence (SRD) bias tables and apply calibrated corrections to estimator outputs.
+- Recorded SRD calibration data under `benchmark_results/calibration/srd_bias_estimates.json` using a 64-run Monte Carlo sweep for ARFIMA(H≈0.3).
+- Documented the findings and remediation steps in `lrdbenchmark_evaluation_review.md`, updating the review to reflect today’s calibration work and outstanding action items.
+
+### Changed
+- Updated the wavelet variance, wavelet log-variance, CWT, wavelet Whittle, and MFDFA estimators to apply SRD bias corrections and propagate the adjustments into their confidence intervals.
+- Refreshed the classical benchmark run (pure and contaminated suites) to reflect the calibration updates and regenerated the summary artefacts in `benchmark_results/`.
+
+### Fixed
+- Addressed 0 % coverage and degenerate confidence intervals for short-range ARFIMA cases by capping wavelet scales, applying SRD bias offsets, and recalibrating interval widths.
+
 ## [2.1.0] - 2024-12-19
 
 ### Added
