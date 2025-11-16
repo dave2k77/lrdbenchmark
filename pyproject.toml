@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lrdbenchmark"
-version = "2.3.1"
+dynamic = ["version"]
 description = "Comprehensive Long-Range Dependence Benchmarking Framework with 20 Estimators (13 Classical, 3 ML, 4 Neural Networks) + 5 Demonstration Notebooks"
 readme = "README.md"
 license = {text = "MIT"}
@@ -18,12 +18,9 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Mathematics",
     "Topic :: Scientific/Engineering :: Physics",
     "Topic :: Scientific/Engineering :: Information Analysis",
@@ -43,12 +40,12 @@ keywords = [
     "wavelet analysis",
     "spectral analysis"
 ]
-requires-python = ">=3.8,<3.13"  # Python 3.13 not yet supported
+requires-python = ">=3.10,<3.13"
 dependencies = [
-    "numpy>=1.21.0,<2.0",
-    "scipy>=1.7.0,<2.0",
-    "scikit-learn>=1.0.0",
-    "pandas>=1.3.0",
+    "numpy>=1.26.0",
+    "scipy>=1.10.0",
+    "scikit-learn>=1.2.0",
+    "pandas>=1.5.0",
     "pywavelets>=1.3.0",
     "matplotlib>=3.5.0",
     "seaborn>=0.11.0",
@@ -75,20 +72,20 @@ dashboard = [
     "plotly>=5.15.0",
 ]
 accel-jax = [
-    "jax>=0.3.0",
-    "jaxlib>=0.3.0",
+    "jax>=0.4.28",
+    "jaxlib>=0.4.28",
 ]
 accel-pytorch = [
-    "torch>=1.9.0",
+    "torch>=2.2.0",
 ]
 accel-numba = [
-    "numba>=0.56.0",
+    "numba>=0.60.0",
 ]
 accel-all = [
-    "jax>=0.3.0",
-    "jaxlib>=0.3.0",
-    "torch>=1.9.0",
-    "numba>=0.56.0",
+    "jax>=0.4.28",
+    "jaxlib>=0.4.28",
+    "torch>=2.2.0",
+    "numba>=0.60.0",
 ]
 bayes = [
     "optuna>=3.0.0",
@@ -109,16 +106,17 @@ where = ["."]
 include = ["lrdbenchmark*"]
 
 [tool.setuptools.package-data]
-lrdbenchmark = ["py.typed"]
- "*" = [
-    "notebooks/README.md",
-    "notebooks/markdown/*.md",
-    "notebooks/markdown/*/*",
- ]
+lrdbenchmark = [
+    "py.typed",
+    "model_configs/*.json",
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "lrdbenchmark._version.__version__" }
 
 [tool.black]
 line-length = 88
-target-version = ['py39', 'py310', 'py311', 'py312']
+target-version = ['py310', 'py311', 'py312']
 include = '\.pyi?$'
 extend-exclude = '''
 /(

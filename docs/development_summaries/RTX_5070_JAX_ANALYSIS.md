@@ -14,7 +14,7 @@ Based on the RTX 5070 Blackwell Architecture Support document, your system meets
 | CUDA Toolkit | 12.3+ | 12.9 | ✅ **EXCEEDS** |
 | cuDNN | 9.1+ | Included | ✅ **COMPATIBLE** |
 | OS | Linux | Linux | ✅ **COMPATIBLE** |
-| Python | 3.8-3.11 | 3.11 | ✅ **COMPATIBLE** |
+| Python | 3.10-3.12 | 3.11 | ✅ **COMPATIBLE** |
 
 ## Technical Diagnosis
 

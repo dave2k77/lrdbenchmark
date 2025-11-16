@@ -10,15 +10,18 @@ This script performs a thorough audit of neural network LRD estimators including
 5. Train-once-apply-many workflow validation
 """
 
-import numpy as np
-import time
-import warnings
-import logging
-import torch
 import json
-from typing import Dict, Any, List, Optional, Union, Tuple
+import logging
 from pathlib import Path
 import sys
+import time
+from typing import Any, Dict, List, Optional, Tuple, Union
+import warnings
+
+import numpy as np
+import torch
+
+from lrdbenchmark import assets
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -325,15 +328,15 @@ class NeuralEstimatorsAudit:
             "model_info": {}
         }
         
-        # Check for configuration files
-        models_dir = Path("models")
-        if models_dir.exists():
-            config_files = list(models_dir.glob("*_config.json"))
+        assets.ensure_all_artifacts()
+        config_root = Path(__file__).resolve().parents[1] / "lrdbenchmark" / "model_configs"
+        if config_root.exists():
+            config_files = sorted(config_root.glob("*_config.json"))
             print(f"   Found {len(config_files)} configuration files:")
             
             for config_file in config_files:
                 try:
-                    with open(config_file, 'r') as f:
+                    with open(config_file, 'r', encoding='utf-8') as f:
                         config = json.load(f)
                     
                     pretrained_results["config_files"][config_file.name] = {
@@ -349,9 +352,11 @@ class NeuralEstimatorsAudit:
                         "error": str(e)
                     }
                     print(f"      ❌ {config_file.name}: {e}")
+        else:
+            print("   ⚠️ No packaged neural network configs found.")
         
-        # Check for PyTorch model files
-        pytorch_files = list(models_dir.glob("*.pth")) + list(models_dir.glob("*.pt"))
+        cache_dir = assets.get_cache_dir()
+        pytorch_files = list(cache_dir.glob("*.pth")) + list(cache_dir.glob("*.pt"))
         if pytorch_files:
             print(f"   Found {len(pytorch_files)} PyTorch model files:")
             for model_file in pytorch_files:
@@ -361,6 +366,8 @@ class NeuralEstimatorsAudit:
                     "type": "pytorch"
                 }
                 print(f"      ✅ {model_file.name}: {model_file.stat().st_size} bytes")
+        else:
+            print("   ⚠️ No PyTorch checkpoints detected in the asset cache (tools/fetch_pretrained_models.py).")
         
         # Test model loading
         if self.nn_factory:

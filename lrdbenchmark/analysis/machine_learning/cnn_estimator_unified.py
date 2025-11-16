@@ -6,11 +6,14 @@ This module implements the Cnn estimator with automatic optimization framework
 selection (JAX, Numba, NumPy) for the best performance on the available hardware.
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
-from typing import Dict, Any, Optional, Union, Tuple
 import warnings
 from pathlib import Path
+from typing import Any, Dict, Optional, Tuple, Union
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from lrdbenchmark.assets import get_model_config_path
 
 # Import optimization frameworks
 try:
@@ -143,10 +146,10 @@ class CNNEstimator(BaseEstimator):
                 factory = NeuralNetworkFactory()
                 cnn_network = factory.create_network(config)
                 
-                # Check if we have a pretrained model
-                model_path = f"models/CNN_neural_network_config.json"
-                if Path(model_path).exists():
-                    print("✅ Found CNN pretrained model configuration")
+                # Check if we have a packaged configuration
+                model_path = get_model_config_path("CNN_neural_network_config.json")
+                if model_path:
+                    print(f"✅ Found CNN pretrained configuration at {model_path}")
                     # For now, use the network for prediction
                     # In a full implementation, we would load the trained weights
                     hurst_estimate = self._estimate_with_neural_network(cnn_network, data)
@@ -162,7 +165,7 @@ class CNNEstimator(BaseEstimator):
                         "fallback_used": False
                     }
                 else:
-                    print("⚠️ No pretrained CNN model found. Using neural network estimation.")
+                    print("⚠️ No packaged CNN configuration found. Using neural network estimation.")
                     # Use the network for estimation even without pretrained weights
                     hurst_estimate = self._estimate_with_neural_network(cnn_network, data)
                     

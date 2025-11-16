@@ -8,8 +8,13 @@ import numpy as np
 from typing import Optional, Dict, Any, List
 import sys
 import os
-from scipy import signal
-from scipy.special import gamma
+
+try:
+    from scipy import signal
+    from scipy.special import gamma
+except ImportError:  # pragma: no cover - optional dependency
+    signal = None
+    gamma = None
 
 from ..base_model import BaseModel
 
@@ -19,13 +24,14 @@ class ARFIMAModel(BaseModel):
     Autoregressive Fractionally Integrated Moving Average (ARFIMA) model.
 
     ARFIMA(p,d,q) process combines autoregressive (AR), fractionally integrated (FI),
-    and moving average (MA) components. The fractional integration parameter d
-    controls long-range dependence.
+    and moving average (MA) components. The fractional integration parameter ``d``
+    controls long-range dependence and implies a Hurst index ``H = d + 0.5``.
 
     Parameters
     ----------
     d : float
-        Fractional integration parameter (-0.5 < d < 0.5)
+        Fractional integration parameter (-0.5 < d < 0.5).  The implied
+        Hurst exponent is d + 0.5.
     ar_params : List[float], optional
         Autoregressive parameters (default: [])
     ma_params : List[float], optional
@@ -142,6 +148,8 @@ class ARFIMAModel(BaseModel):
         data_length = length if length is not None else n
         
         self._current_rng = self._resolve_generator(seed, rng)
+
+        self._require_scipy()
 
         d = self.parameters["d"]
         ar_params = self.parameters["ar_params"]
@@ -408,3 +416,29 @@ class ARFIMAModel(BaseModel):
             Increments (differences)
         """
         return np.diff(arfima)
+
+    def expected_hurst(self) -> float:
+        """
+        Return the implied Hurst exponent ``H = d + 0.5``.
+
+        The fractional differencing parameter ``d`` lives in (-0.5, 0.5), so the
+        resulting H is always in (0, 1).
+        """
+        return float(self.parameters["d"] + 0.5)
+
+    def _require_scipy(self) -> None:
+        """Ensure SciPy is available before running simulation-heavy code."""
+        if signal is None or gamma is None:
+            raise ImportError(
+                "SciPy is required for ARFIMA generation. "
+                "Install scipy>=1.7 or run benchmarks in an environment with SciPy."
+            )
+
+    def expected_hurst(self) -> float:
+        """
+        Return the implied Hurst exponent ``H = d + 0.5``.
+
+        The fractional differencing parameter ``d`` lives in (-0.5, 0.5), so the
+        resulting H is always in (0, 1).
+        """
+        return float(self.parameters["d"] + 0.5)

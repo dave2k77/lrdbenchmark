@@ -5,13 +5,15 @@ This module provides a Gradient Boosting estimator that uses the unified feature
 pipeline to work with pre-trained models.
 """
 
-import numpy as np
-import joblib
-import os
-from typing import Dict, Any, Optional, List
 import logging
+import os
+from typing import Any, Dict, List, Optional
+
+import joblib
+import numpy as np
 
 from lrdbenchmark.analysis.base_estimator import BaseEstimator
+from lrdbenchmark.assets import ensure_model_artifact
 from .unified_feature_extractor import UnifiedFeatureExtractor
 
 logger = logging.getLogger(__name__)
@@ -42,18 +44,19 @@ class GradientBoostingEstimator(BaseEstimator):
         # For unified estimators, parameters are handled by the pre-trained models
         pass
         
-    def _get_default_model_path(self) -> str:
-        """Get the default path for the pre-trained Gradient Boosting model."""
-        fixed_path = "models/gradient_boosting_estimator_fixed.joblib"
-        default_path = "models/gradient_boosting_estimator.joblib"
-        return fixed_path if os.path.exists(fixed_path) else default_path
+    def _get_default_model_path(self) -> Optional[str]:
+        """Resolve the default pretrained model path, downloading if required."""
+        artifact_path = ensure_model_artifact("gradient_boosting_estimator")
+        if artifact_path:
+            return str(artifact_path)
+        return None
     
     def _load_model(self):
         """Load the pre-trained Gradient Boosting model."""
         if self.is_loaded:
             return
             
-        if not os.path.exists(self.model_path):
+        if not self.model_path or not os.path.exists(self.model_path):
             logger.warning(f"Pre-trained model not found at {self.model_path}")
             self.is_loaded = False
             return

@@ -6,11 +6,14 @@ This module implements the Gru estimator with automatic optimization framework
 selection (JAX, Numba, NumPy) for the best performance on the available hardware.
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
-from typing import Dict, Any, Optional, Union, Tuple
 import warnings
 from pathlib import Path
+from typing import Any, Dict, Optional, Tuple, Union
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from lrdbenchmark.assets import get_model_config_path
 
 # Import optimization frameworks
 try:
@@ -142,10 +145,10 @@ class GRUEstimator(BaseEstimator):
                 factory = NeuralNetworkFactory()
                 gru_network = factory.create_network(config)
                 
-                # Check if we have a pretrained model
-                model_path = f"models/gru_neural_network_config.json"
-                if Path(model_path).exists():
-                    print("✅ Found GRU pretrained model configuration")
+                # Check if we have a packaged configuration
+                model_path = get_model_config_path("gru_neural_network_config.json")
+                if model_path:
+                    print(f"✅ Found GRU pretrained configuration at {model_path}")
                     hurst_estimate = self._estimate_with_neural_network(gru_network, data)
                     
                     return {
@@ -159,7 +162,7 @@ class GRUEstimator(BaseEstimator):
                         "fallback_used": False
                     }
                 else:
-                    print("⚠️ No pretrained GRU model found. Using neural network estimation.")
+                    print("⚠️ No packaged GRU configuration found. Using neural network estimation.")
                     hurst_estimate = self._estimate_with_neural_network(gru_network, data)
                     
                     return {

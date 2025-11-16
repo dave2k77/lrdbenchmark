@@ -5,12 +5,15 @@ This module provides various utility functions used throughout the package,
 including model loading utilities that can handle multiple file formats.
 """
 
-import warnings
-import joblib
-import pickle
+import logging
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
-import logging
+import warnings
+
+import joblib
+import pickle
+
+from .assets import ensure_model_artifact, get_model_config_path
 
 logger = logging.getLogger(__name__)
 
@@ -180,27 +183,19 @@ def get_pretrained_model_path(model_name: str, format_type: str = "joblib") -> O
     Returns:
         Path to the pretrained model file, or None if not found
     """
-    try:
-        from importlib.metadata import files
-        package_files = files('lrdbenchmark')
-        for file in package_files:
-            if f'models/{model_name}.{format_type}' in str(file):
-                return str(file.locate())
-    except (ImportError, Exception):
-        # Fallback to pkg_resources for older Python versions
-        try:
-            import pkg_resources
-            package_path = pkg_resources.resource_filename('lrdbenchmark', f'models/{model_name}.{format_type}')
-            if Path(package_path).exists():
-                return package_path
-        except Exception:
-            pass
-    
-    # Fallback to local models directory
-    local_path = Path(f"models/{model_name}.{format_type}")
-    if local_path.exists():
-        return str(local_path)
-    
+    artifact_path = ensure_model_artifact(model_name)
+    if artifact_path:
+        return str(artifact_path)
+
+    # Fallback to legacy on-disk locations to preserve backward compatibility.
+    legacy_path = Path(f"models/{model_name}.{format_type}")
+    if legacy_path.exists():
+        logger.warning(
+            "Using legacy model path at %s; please migrate to the new asset cache.",
+            legacy_path,
+        )
+        return str(legacy_path)
+
     return None
 
 def get_neural_network_model_path(model_name: str) -> tuple[Optional[str], Optional[str]]:
@@ -213,41 +208,32 @@ def get_neural_network_model_path(model_name: str) -> tuple[Optional[str], Optio
     Returns:
         Tuple of (model_path, config_path) or (None, None) if not found
     """
-    try:
-        from importlib.metadata import files
-        package_files = files('lrdbenchmark')
-        model_path = None
-        config_path = None
-        
-        for file in package_files:
-            file_str = str(file)
-            if f'models/{model_name}_neural_network.pth' in file_str:
-                model_path = str(file.locate())
-            elif f'models/{model_name}_config.json' in file_str:
-                config_path = str(file.locate())
-        
-        if model_path and Path(model_path).exists():
-            return model_path, config_path if config_path and Path(config_path).exists() else None
-    except (ImportError, Exception):
-        # Fallback to pkg_resources for older Python versions
-        try:
-            import pkg_resources
-            model_path = pkg_resources.resource_filename('lrdbenchmark', f'models/{model_name}_neural_network.pth')
-            config_path = pkg_resources.resource_filename('lrdbenchmark', f'models/{model_name}_config.json')
-            
-            if Path(model_path).exists():
-                return model_path, config_path if Path(config_path).exists() else None
-        except Exception:
-            pass
-    
-    # Fallback to local models directory
-    local_model_path = Path(f"models/{model_name}_neural_network.pth")
-    local_config_path = Path(f"models/{model_name}_config.json")
-    
-    if local_model_path.exists():
-        return str(local_model_path), str(local_config_path) if local_config_path.exists() else None
-    
-    return None, None
+    model_artifact = ensure_model_artifact(model_name)
+    config_filename_options = [
+        f"{model_name}_neural_network_config.json",
+        f"{model_name}_config.json",
+        f"{model_name}.json",
+    ]
+    config_path = None
+    for filename in config_filename_options:
+        candidate = get_model_config_path(filename)
+        if candidate:
+            config_path = str(candidate)
+            break
+
+    if model_artifact:
+        return str(model_artifact), config_path
+
+    # Legacy fallback to repository-relative directories
+    legacy_model = Path(f"models/{model_name}_neural_network.pth")
+    if legacy_model.exists():
+        logger.warning(
+            "Using legacy neural-network model from %s; migrate to the asset cache.",
+            legacy_model,
+        )
+        return str(legacy_model), config_path
+
+    return None, config_path
 
 # Modern metadata handling
 try:

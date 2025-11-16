@@ -613,6 +613,10 @@ class FractionalBrownianMotion(BaseModel):
         """
         return np.diff(data)
 
+    def expected_hurst(self) -> float:
+        """Return the configured Hurst exponent."""
+        return float(self.parameters["H"])
+
     def get_optimization_info(self) -> Dict[str, Any]:
         """
         Get information about available optimizations and current selection.

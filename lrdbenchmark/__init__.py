@@ -5,22 +5,28 @@ A comprehensive toolkit for benchmarking long-range dependence estimators
 on synthetic and real-world time series data.
 """
 
-import os
-import warnings
+import importlib
 import logging
+import os
+from typing import Any, Dict, Optional, Tuple, TYPE_CHECKING
+import warnings
 
-# Set CPU-only mode by default to avoid GPU issues
-# Users can override by setting these environment variables explicitly
-if 'CUDA_VISIBLE_DEVICES' not in os.environ:
-    os.environ['CUDA_VISIBLE_DEVICES'] = ''
-if 'JAX_PLATFORMS' not in os.environ:
-    os.environ['JAX_PLATFORMS'] = 'cpu'
-# Prevent JAX from discovering CUDA plugins when in CPU-only mode
-if 'XLA_PYTHON_CLIENT_PREALLOCATE' not in os.environ:
-    os.environ['XLA_PYTHON_CLIENT_PREALLOCATE'] = 'false'
-# Disable JAX CUDA plugin discovery to prevent CUDA_ERROR_NO_DEVICE errors
-if 'JAX_PLATFORM_NAME' not in os.environ:
-    os.environ['JAX_PLATFORM_NAME'] = 'cpu'
+from ._version import __version__
+
+
+def _configure_cpu_defaults() -> None:
+    """Apply safe CPU defaults unless explicitly disabled."""
+    auto_cpu = os.environ.get("LRDBENCHMARK_AUTO_CPU", "1").lower()
+    if auto_cpu in {"0", "false", "off"}:
+        return
+
+    os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
+    os.environ.setdefault("JAX_PLATFORMS", "cpu")
+    os.environ.setdefault("XLA_PYTHON_CLIENT_PREALLOCATE", "false")
+    os.environ.setdefault("JAX_PLATFORM_NAME", "cpu")
+
+
+_configure_cpu_defaults()
 
 # Suppress JAX CUDA warnings and errors when using CPU-only mode
 warnings.filterwarnings('ignore', category=UserWarning, module='jax')
@@ -32,7 +38,6 @@ warnings.filterwarnings('ignore', message='.*operation cuInit.*failed.*')
 logging.getLogger('jax._src.xla_bridge').setLevel(logging.CRITICAL)
 logging.getLogger('jax_plugins').setLevel(logging.CRITICAL)
 
-__version__ = "2.3.1"
 __author__ = "LRDBench Development Team"
 __email__ = "lrdbench@example.com"
 
@@ -93,55 +98,6 @@ except ImportError as e:
     MFDFAEstimator = None
     MultifractalWaveletLeadersEstimator = None
 
-# Machine Learning estimators
-try:
-    from .analysis.machine_learning import (
-        RandomForestEstimator,
-        SVREstimator,
-        GradientBoostingEstimator,
-        CNNEstimator,
-        LSTMEstimator,
-        GRUEstimator,
-        TransformerEstimator,
-    )
-except ImportError as e:
-    print(f"Warning: Could not import ML estimators: {e}")
-    RandomForestEstimator = None
-    SVREstimator = None
-    GradientBoostingEstimator = None
-    CNNEstimator = None
-    LSTMEstimator = None
-    GRUEstimator = None
-    TransformerEstimator = None
-
-# Neural Network Factory
-try:
-    from .analysis.machine_learning.neural_network_factory import NeuralNetworkFactory
-except ImportError as e:
-    print(f"Warning: Could not import neural network factory: {e}")
-    NeuralNetworkFactory = None
-
-# Benchmark system
-try:
-    from .analysis.benchmark import ComprehensiveBenchmark
-except ImportError as e:
-    print(f"Warning: Could not import benchmark system: {e}")
-    ComprehensiveBenchmark = None
-
-# GPU utilities
-try:
-    from .gpu import is_available as gpu_is_available, get_device_info, clear_cache, suggest_batch_size, get_safe_device
-    from .gpu_memory import get_gpu_memory_info, clear_gpu_cache, monitor_gpu_memory
-except ImportError as e:
-    print(f"Warning: Could not import GPU utilities: {e}")
-    gpu_is_available = lambda: False
-    get_device_info = lambda: {'available': False}
-    clear_cache = lambda: None
-    suggest_batch_size = lambda data_size, seq_len: min(32, data_size)
-    get_safe_device = lambda use_gpu=False: 'cpu'
-    get_gpu_memory_info = lambda: {'torch_available': False, 'jax_available': False}
-    clear_gpu_cache = lambda: None
-    monitor_gpu_memory = lambda op_name="operation": None
 
 # Main exports
 __all__ = [
@@ -191,3 +147,83 @@ __all__ = [
     "__author__",
     "__email__",
 ]
+
+if TYPE_CHECKING:
+    from .analysis.machine_learning.random_forest_estimator_unified import RandomForestEstimator as RandomForestEstimator
+    from .analysis.machine_learning.svr_estimator_unified import SVREstimator as SVREstimator
+    from .analysis.machine_learning.gradient_boosting_estimator_unified import GradientBoostingEstimator as GradientBoostingEstimator
+    from .analysis.machine_learning.cnn_estimator_unified import CNNEstimator as CNNEstimator
+    from .analysis.machine_learning.lstm_estimator_unified import LSTMEstimator as LSTMEstimator
+    from .analysis.machine_learning.gru_estimator_unified import GRUEstimator as GRUEstimator
+    from .analysis.machine_learning.transformer_estimator_unified import TransformerEstimator as TransformerEstimator
+    from .analysis.machine_learning.neural_network_factory import NeuralNetworkFactory as NeuralNetworkFactory
+    from .analysis.benchmark import ComprehensiveBenchmark as ComprehensiveBenchmark
+    from .gpu import (
+        is_available as gpu_is_available,
+        get_device_info,
+        clear_cache,
+        suggest_batch_size,
+        get_safe_device,
+    )
+    from .gpu_memory import get_gpu_memory_info, clear_gpu_cache, monitor_gpu_memory
+
+_LOGGER = logging.getLogger(__name__)
+
+_LAZY_ATTRS: Dict[str, str] = {
+    # Machine learning estimators
+    "RandomForestEstimator": "lrdbenchmark.analysis.machine_learning.random_forest_estimator_unified:RandomForestEstimator",
+    "SVREstimator": "lrdbenchmark.analysis.machine_learning.svr_estimator_unified:SVREstimator",
+    "GradientBoostingEstimator": "lrdbenchmark.analysis.machine_learning.gradient_boosting_estimator_unified:GradientBoostingEstimator",
+    "CNNEstimator": "lrdbenchmark.analysis.machine_learning.cnn_estimator_unified:CNNEstimator",
+    "LSTMEstimator": "lrdbenchmark.analysis.machine_learning.lstm_estimator_unified:LSTMEstimator",
+    "GRUEstimator": "lrdbenchmark.analysis.machine_learning.gru_estimator_unified:GRUEstimator",
+    "TransformerEstimator": "lrdbenchmark.analysis.machine_learning.transformer_estimator_unified:TransformerEstimator",
+    # Factory & benchmarking
+    "NeuralNetworkFactory": "lrdbenchmark.analysis.machine_learning.neural_network_factory:NeuralNetworkFactory",
+    "ComprehensiveBenchmark": "lrdbenchmark.analysis.benchmark:ComprehensiveBenchmark",
+    # GPU utilities
+    "gpu_is_available": "lrdbenchmark.gpu:is_available",
+    "get_device_info": "lrdbenchmark.gpu:get_device_info",
+    "clear_cache": "lrdbenchmark.gpu:clear_cache",
+    "suggest_batch_size": "lrdbenchmark.gpu:suggest_batch_size",
+    "get_safe_device": "lrdbenchmark.gpu:get_safe_device",
+    "get_gpu_memory_info": "lrdbenchmark.gpu_memory:get_gpu_memory_info",
+    "clear_gpu_cache": "lrdbenchmark.gpu_memory:clear_gpu_cache",
+    "monitor_gpu_memory": "lrdbenchmark.gpu_memory:monitor_gpu_memory",
+}
+
+_GPU_STUBS: Dict[str, Any] = {
+    "gpu_is_available": lambda: False,
+    "get_device_info": lambda: {"available": False},
+    "clear_cache": lambda: None,
+    "suggest_batch_size": lambda data_size, seq_len=None: min(32, data_size),
+    "get_safe_device": lambda use_gpu=False: "cpu",
+    "get_gpu_memory_info": lambda: {"torch_available": False, "jax_available": False},
+    "clear_gpu_cache": lambda: None,
+    "monitor_gpu_memory": lambda op_name="operation": None,
+}
+
+
+def __getattr__(name: str) -> Any:
+    target = _LAZY_ATTRS.get(name)
+    if not target:
+        raise AttributeError(f"module 'lrdbenchmark' has no attribute '{name}'")
+
+    module_path, attr_name = target.split(":")
+    try:
+        module = importlib.import_module(module_path)
+        value = getattr(module, attr_name)
+    except ImportError as exc:
+        stub = _GPU_STUBS.get(name)
+        if stub is not None:
+            _LOGGER.debug("Falling back to GPU stub for %s: %s", name, exc)
+            value = stub
+        else:
+            _LOGGER.warning("Optional dependency missing for %s: %s", name, exc)
+            value = None
+    globals()[name] = value
+    return value
+
+
+def __dir__() -> Tuple[str, ...]:
+    return tuple(sorted(__all__))

@@ -120,3 +120,7 @@ class FractionalGaussianNoise(BaseModel):
             "gaussian": True,
             "long_range_dependence": H > 0.5,
         }
+
+    def expected_hurst(self) -> float:
+        """Return the configured Hurst exponent."""
+        return float(self.parameters["H"])

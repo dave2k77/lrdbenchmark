@@ -174,6 +174,10 @@ class MultifractalRandomWalk(BaseModel):
 
         return omega
 
+    def expected_hurst(self) -> float:
+        """Return the configured large-scale Hurst exponent."""
+        return float(self.parameters["H"])
+
     def _generate_fbm(self, length: int, H: float, sigma: float) -> np.ndarray:
         """
         Generate fractional Brownian motion using circulant embedding.

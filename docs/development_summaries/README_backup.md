@@ -1,6 +1,6 @@
 # LRDBenchmark: A Comprehensive Framework for Long-Range Dependence Estimation
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![DOI](https://img.shields.io/badge/DOI-10.1000/xyz-blue.svg)](https://doi.org/10.1000/xyz)
 
@@ -13,6 +13,8 @@ A comprehensive and reproducible framework for benchmarking Long-Range Dependenc
 LRDBenchmark provides a standardized platform for evaluating and comparing LRD estimators with automatic framework selection (GPU/JAX, CPU/Numba, NumPy), robust error handling, and realistic contamination testing. Our latest comprehensive benchmark shows **Neural Networks dominate performance** with LSTM achieving the best accuracy (0.097 MAE) while **all estimators achieve perfect robustness** (100% success rate across all contamination scenarios).
 
 > **📋 For a complete project overview and evolution history, see [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md)**
+
+> **Pretrained artefacts**: Download ML/NN checkpoints via `python tools/fetch_pretrained_models.py` to populate `~/.cache/lrdbenchmark/models` or a custom `LRDBENCHMARK_MODELS_DIR`. Mentions of `models/` below refer to that cache.
 
 ## 🚀 Installation
 
@@ -207,7 +209,7 @@ python -m pytest tests/
 ```
 lrdbenchmark/
 ├── lrdbenchmark/                 # Main package
-│   ├── models/                   # Data models and contamination
+│   ├── models/                   # Data models and contamination (package modules)
 │   │   ├── data_models/         # Stochastic processes (FBM, FGN, ARFIMA, MRW)
 │   │   └── contamination/       # Contamination models and factory
 │   ├── analysis/                # Analysis modules
@@ -221,6 +223,7 @@ lrdbenchmark/
 ├── ml_benchmark_results/        # ML benchmark results
 ├── neural_benchmark_results/    # Neural network benchmark results
 ├── docs/                        # Documentation
+├── artifacts/                   # Git-ignored pretrained weights cache (optional)
 ├── research/                    # Research materials
 │   ├── manuscript_updated.tex   # Updated LaTeX manuscript
 │   └── figures/                 # Generated figures

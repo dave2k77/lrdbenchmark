@@ -10,16 +10,19 @@ This script performs a thorough audit of ML estimators including:
 5. Production readiness evaluation
 """
 
-import numpy as np
-import time
-import warnings
+import json
 import logging
 import pickle
-import json
-from pathlib import Path
-from typing import Dict, Any, List, Optional, Union, Tuple
-import pandas as pd
+import time
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, Union
+import warnings
+
+import numpy as np
+import pandas as pd
+
+from lrdbenchmark import assets
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -77,68 +80,63 @@ class MLEstimatorsAudit:
         """Check for available pretrained models."""
         print("🔍 Checking for Pretrained Models...")
         
-        models_dir = Path("models")
-        pretrained_models = {}
-        
-        if models_dir.exists():
-            # Check for joblib models (scikit-learn) - prioritize fixed models
-            joblib_files = list(models_dir.glob("*.joblib"))
-            # Sort to prioritize fixed models
-            joblib_files.sort(key=lambda x: x.name)
-            
-            for model_file in joblib_files:
-                model_name = model_file.stem
-                # Skip if we already have a fixed version
-                if "_fixed" in model_name:
-                    continue
-                
-                # Check if there's a fixed version
-                fixed_model_file = models_dir / f"{model_name}_fixed.joblib"
-                if fixed_model_file.exists():
-                    model_file = fixed_model_file
+        assets.ensure_all_artifacts()
+        cache_dir = assets.get_cache_dir()
+        pretrained_models: Dict[str, Dict[str, Any]] = {}
+
+        joblib_files = sorted(cache_dir.glob("*.joblib"))
+        if not joblib_files:
+            print("   ⚠️ No pretrained joblib artefacts found. Run tools/fetch_pretrained_models.py.")
+
+        for model_file in joblib_files:
+            model_name = model_file.stem
+            if "_fixed" not in model_name:
+                fixed_variant = cache_dir / f"{model_name}_fixed.joblib"
+                if fixed_variant.exists():
+                    model_file = fixed_variant
                     model_name = model_name + "_fixed"
-                
-                try:
-                    # Try to load the model with joblib (recommended for scikit-learn)
-                    import joblib
-                    model = joblib.load(model_file)
-                    pretrained_models[model_name] = {
-                        "file_path": str(model_file),
-                        "model_type": type(model).__name__,
-                        "status": "available",
-                        "model": model
-                    }
-                    print(f"   ✅ {model_name}: {type(model).__name__}")
-                except Exception as e:
-                    pretrained_models[model_name] = {
-                        "file_path": str(model_file),
-                        "status": "error",
-                        "error": str(e)
-                    }
-                    print(f"   ❌ {model_name}: {str(e)[:50]}...")
-            
-            # Check for JSON config files (neural networks)
-            json_files = list(models_dir.glob("*.json"))
-            for config_file in json_files:
+
+            try:
+                import joblib
+
+                model = joblib.load(model_file)
+                pretrained_models[model_name] = {
+                    "file_path": str(model_file),
+                    "model_type": type(model).__name__,
+                    "status": "available",
+                    "model": model,
+                }
+                print(f"   ✅ {model_name}: {type(model).__name__}")
+            except Exception as exc:
+                pretrained_models[model_name] = {
+                    "file_path": str(model_file),
+                    "status": "error",
+                    "error": str(exc),
+                }
+                print(f"   ❌ {model_name}: {str(exc)[:50]}...")
+
+        config_root = Path(__file__).resolve().parents[1] / "lrdbenchmark" / "model_configs"
+        if config_root.exists():
+            for config_file in sorted(config_root.glob("*.json")):
                 config_name = config_file.stem
                 try:
-                    with open(config_file, 'r') as f:
-                        config = json.load(f)
+                    with open(config_file, "r", encoding="utf-8") as handle:
+                        config = json.load(handle)
                     pretrained_models[config_name] = {
                         "file_path": str(config_file),
                         "model_type": "neural_network_config",
                         "status": "config_available",
-                        "config": config
+                        "config": config,
                     }
                     print(f"   ✅ {config_name}: Neural network config")
-                except Exception as e:
+                except Exception as exc:
                     pretrained_models[config_name] = {
                         "file_path": str(config_file),
                         "status": "error",
-                        "error": str(e)
+                        "error": str(exc),
                     }
-                    print(f"   ❌ {config_name}: {str(e)[:50]}...")
-        
+                    print(f"   ❌ {config_name}: {str(exc)[:50]}...")
+
         self.pretrained_models = pretrained_models
         print(f"✅ Found {len(pretrained_models)} pretrained models/configs")
     

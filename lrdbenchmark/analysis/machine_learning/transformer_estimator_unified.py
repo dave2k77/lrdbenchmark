@@ -6,11 +6,14 @@ This module implements the Transformer estimator with automatic optimization fra
 selection (JAX, Numba, NumPy) for the best performance on the available hardware.
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
-from typing import Dict, Any, Optional, Union, Tuple
 import warnings
 from pathlib import Path
+from typing import Any, Dict, Optional, Tuple, Union
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from lrdbenchmark.assets import get_model_config_path
 
 # Import optimization frameworks
 try:
@@ -143,10 +146,10 @@ class TransformerEstimator(BaseEstimator):
                 factory = NeuralNetworkFactory()
                 transformer_network = factory.create_network(config)
                 
-                # Check if we have a pretrained model
-                model_path = f"models/transformer_neural_network_config.json"
-                if Path(model_path).exists():
-                    print("✅ Found Transformer pretrained model configuration")
+                # Check if we have a packaged configuration
+                model_path = get_model_config_path("transformer_neural_network_config.json")
+                if model_path:
+                    print(f"✅ Found Transformer pretrained configuration at {model_path}")
                     hurst_estimate = self._estimate_with_neural_network(transformer_network, data)
                     
                     return {
@@ -160,7 +163,7 @@ class TransformerEstimator(BaseEstimator):
                         "fallback_used": False
                     }
                 else:
-                    print("⚠️ No pretrained Transformer model found. Using neural network estimation.")
+                    print("⚠️ No packaged Transformer configuration found. Using neural network estimation.")
                     hurst_estimate = self._estimate_with_neural_network(transformer_network, data)
                     
                     return {

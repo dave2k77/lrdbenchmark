@@ -6,7 +6,8 @@ This guide will help you install lrdbenchmark and its dependencies.
 Requirements
 ------------
 
-* Python 3.8 or higher (3.8-3.12 supported)
+* Python 3.10–3.12 (primary test matrix)
+* NumPy 2.x preferred (NumPy 1.26.x supported on a best-effort basis)
 * pip (Python package installer)
 * Optional: CUDA-compatible GPU for accelerated computations
 
@@ -37,6 +38,11 @@ This will install lrdbenchmark with all required dependencies including:
 Installation with Optional Dependencies
 --------------------------------------
 
+Supported environment policy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+LRDBenchmark is validated in CI on Linux, macOS, and Windows for Python 3.10–3.12 with NumPy 2.x. NumPy 1.26.x remains available for legacy stacks, but new features are only guaranteed on the NumPy 2.x toolchain. GPU extras require the latest compatible backends (JAX ≥ 0.4.28, PyTorch ≥ 2.2, Numba ≥ 0.60) to ensure Python 3.12 support.
+
 For GPU acceleration and additional features:
 
 .. code-block:: bash
@@ -54,6 +60,24 @@ For GPU acceleration and additional features:
    
    # Install with documentation dependencies
    pip install lrdbenchmark[docs]
+
+Pretrained model artefacts
+--------------------------
+
+Large pretrained estimators (Random Forest, SVR, Gradient Boosting, reference neural networks) are distributed separately to keep the repository slim. Use the helper script to download and verify the artefacts you need:
+
+.. code-block:: bash
+
+   python tools/fetch_pretrained_models.py                # download everything
+   python tools/fetch_pretrained_models.py --list         # inspect available keys
+   python tools/fetch_pretrained_models.py --models svr_estimator
+
+By default artefacts are cached under ``~/.cache/lrdbenchmark/models``. Override the directory with ``LRDBENCHMARK_MODELS_DIR=/path/to/cache`` if you prefer a project-local cache such as ``artifacts/models`` (which is ignored by git).
+
+CPU-only guard
+--------------
+
+For predictable imports on headless machines, LRDBenchmark masks GPUs unless you opt in. Set ``LRDBENCHMARK_AUTO_CPU=0`` *before* importing the package to keep your CUDA/JAX environment untouched.
 
 Development Installation
 ------------------------

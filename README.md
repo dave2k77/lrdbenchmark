@@ -3,7 +3,7 @@
 Modern, reproducible benchmarking for long-range dependence (LRD) estimation across classical statistics, machine learning, and neural approaches.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8–3.12](https://img.shields.io/badge/python-3.8%E2%80%933.12-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.10–3.12](https://img.shields.io/badge/python-3.10%E2%80%933.12-blue.svg)](https://www.python.org/downloads/)
 [![Version 2.3.1](https://img.shields.io/badge/version-2.3.1-green.svg)](https://pypi.org/project/lrdbenchmark/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17534599.svg)](https://doi.org/10.5281/zenodo.17534599)
 
@@ -30,6 +30,29 @@ pip install lrdbenchmark[accel-numba]            # + Numba acceleration
 pip install lrdbenchmark[accel-pytorch]          # + PyTorch acceleration
 # or everything: pip install lrdbenchmark[accel-all]
 ```
+
+### Pretrained models
+
+Large pretrained estimators (joblib/pth files) live in a separate download channel to keep the repository lightweight. Fetch them with checksum verification whenever you need deterministic ML/NN baselines:
+
+```bash
+python tools/fetch_pretrained_models.py          # download every published artifact
+python tools/fetch_pretrained_models.py --list   # inspect available keys
+python tools/fetch_pretrained_models.py --models random_forest_estimator svr_estimator
+```
+
+By default the artefacts are cached under `~/.cache/lrdbenchmark/models`. Override the location with `LRDBENCHMARK_MODELS_DIR=/path/to/artifacts` if you need a project-local cache (e.g., `artifacts/models/` inside the repo, which is Git-ignored).
+
+### Supported environments
+
+- Python 3.10–3.12 across Linux, macOS, and Windows (covered in CI).
+- NumPy 2.x is the preferred runtime and receives full testing; NumPy 1.26.x remains available for legacy stacks but only receives best-effort support.
+- GPU/acceleration extras require the latest compatible backends (JAX ≥ 0.4.28, PyTorch ≥ 2.2, Numba ≥ 0.60) to ensure Python 3.12 and NumPy 2 compatibility.
+
+### Runtime configuration
+
+- CPU guard: the package defaults to safe CPU-only settings to avoid noisy CUDA warnings. Override by setting `LRDBENCHMARK_AUTO_CPU=0` *before* importing to opt into your own CUDA configuration.
+- Asset cache: set `LRDBENCHMARK_MODELS_DIR=/path/to/cache` if you want pretrained weights downloaded into a custom directory (default is `~/.cache/lrdbenchmark/models`).
 
 ### First Benchmark
 
@@ -100,8 +123,9 @@ lrdbenchmark/
 ├── lrdbenchmark/            # Package modules
 │   ├── analysis/            # Estimators, benchmarking, diagnostics
 │   ├── analytics/           # Provenance, reporting, dashboards
-│   ├── models/              # Data generators
+│   ├── models/              # Data generators & contamination models
 │   └── robustness/          # Adaptive preprocessing & stress tests
+├── artifacts/               # (Ignored) downloaded pretrained weights
 ├── docs/                    # Sphinx documentation & tutorials
 ├── notebooks/               # Markdown notebooks + supporting artefacts
 ├── examples/                # Minimal usage examples

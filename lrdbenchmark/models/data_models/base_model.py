@@ -207,6 +207,16 @@ class BaseModel(ABC):
         """
         return self.generate_converged(length, seed=seed, rng=rng)
 
+    def expected_hurst(self) -> Optional[float]:
+        """
+        Return the theoretical Hurst exponent implied by the current parameters.
+
+        By default this method looks for an ``H`` entry in ``self.parameters``.
+        Models where \\( H \\) is derived from other parameters (e.g., ARFIMA with
+        fractional differencing ``d``) should override this method accordingly.
+        """
+        return self.parameters.get("H")
+
     @staticmethod
     def _resolve_generator(
         seed: Optional[int], rng: Optional[np.random.Generator]

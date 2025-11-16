@@ -36,7 +36,7 @@ Getting Started with Notebooks
 Prerequisites
 -------------
 
-- Python 3.8+
+- Python 3.10–3.12
 - Jupyter Notebook or JupyterLab
 - lrdbenchmark installed (``pip install lrdbenchmark``)
 
