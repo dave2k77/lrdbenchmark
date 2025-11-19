@@ -108,16 +108,16 @@ class ClassicalEstimatorsBenchmark:
             
             # FBM data
             fbm_model = FBMModel(H=H, sigma=1.0)
-            fbm_data = fbm_model.generate(n=n_samples, seed=42)
+            fbm_data = fbm_model.generate(length=n_samples, rng=np.random.default_rng(42))
             
             # FGN data
             fgn_model = FGNModel(H=H, sigma=1.0)
-            fgn_data = fgn_model.generate(n=n_samples, seed=42)
+            fgn_data = fgn_model.generate(length=n_samples, rng=np.random.default_rng(42))
             
             # ARFIMA data (d = H - 0.5)
             d = H - 0.5
             arfima_model = ARFIMAModel(d=d, sigma=1.0)
-            arfima_data = arfima_model.generate(n=n_samples, seed=42)
+            arfima_data = arfima_model.generate(length=n_samples, rng=np.random.default_rng(42))
             
             self.test_data[f"H_{H}"] = {
                 "true_hurst": H,
@@ -210,29 +210,14 @@ class ClassicalEstimatorsBenchmark:
             for data_key, data_info in self.test_data.items():
                 true_hurst = data_info["true_hurst"]
                 
-                # Test on FBM data
-                try:
-                    start_time = time.time()
-                    result = estimator.estimate(data_info["fbm"])
-                    execution_time = time.time() - start_time
-                    
-                    estimated_hurst = result.get("hurst_parameter", np.nan)
-                    error = abs(estimated_hurst - true_hurst)
-                    
-                    estimator_results["accuracy"][f"{data_key}_fbm"] = {
-                        "true_hurst": true_hurst,
-                        "estimated_hurst": estimated_hurst,
-                        "absolute_error": error,
-                        "relative_error": error / true_hurst if true_hurst != 0 else np.nan,
-                        "execution_time": execution_time,
-                        "r_squared": result.get("r_squared", np.nan)
-                    }
-                    
-                except Exception as e:
-                    estimator_results["accuracy"][f"{data_key}_fbm"] = {
-                        "error": str(e),
-                        "execution_time": np.nan
-                    }
+                # Test on FBM data - SKIPPED
+                # Most estimators in this library expect stationary noise (fGn) and perform 
+                # integration internally. Passing fBm (random walk) leads to double integration
+                # and incorrect Hurst estimates (typically H+1).
+                # To benchmark on fBm, one would need to differentiate it first to get fGn.
+                # For consistency, we benchmark on fGn and ARFIMA (both stationary).
+                pass
+
                 
                 # Test on FGN data
                 try:
@@ -289,8 +274,8 @@ class ClassicalEstimatorsBenchmark:
                 "performance_degradation": {}
             }
             
-            # Test on one representative dataset (H=0.7 FBM)
-            base_data = self.test_data["H_0.7"]["fbm"]
+            # Test on one representative dataset (H=0.7 FGN)
+            base_data = self.test_data["H_0.7"]["fgn"]
             true_hurst = 0.7
             
             for cont_type in contamination_types:

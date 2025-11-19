@@ -1,126 +1,84 @@
-from typing import Optional, Dict, Any
 import numpy as np
+from scipy.fft import fft, ifft
+from typing import Optional, Union, Generator
 
-from ..base_model import BaseModel
-
-
-class FractionalGaussianNoise(BaseModel):
+class FractionalGaussianNoise:
     """
-    Fractional Gaussian Noise (fGn) generator.
-
-    fGn is the stationary increment process of fractional Brownian motion (fBm).
-    This class generates fGn directly using the circulant embedding approach on
-    the autocovariance function of fGn.
+    Fractional Gaussian Noise (fGn) generator using the Davies-Harte method.
+    
+    Generates exact fGn with Hurst parameter H.
     """
-
-    def __init__(self, H: float, sigma: float = 1.0, method: str = "circulant") -> None:
-        super().__init__(H=H, sigma=sigma, method=method)
-        self._current_rng: Optional[np.random.Generator] = None
-
-    def _validate_parameters(self) -> None:
-        H = self.parameters.get("H")
-        sigma = self.parameters.get("sigma")
-        method = self.parameters.get("method")
-
-        if not isinstance(H, (int, float)) or not (0 < H < 1):
-            raise ValueError("H must be a float in (0, 1)")
-        if not isinstance(sigma, (int, float)) or sigma <= 0:
-            raise ValueError("sigma must be a positive float")
-        if method not in {"circulant", "cholesky"}:
-            raise ValueError("method must be one of {'circulant', 'cholesky'}")
-
+    def __init__(
+        self, 
+        H: float = 0.7, 
+        sigma: float = 1.0, 
+        **kwargs
+    ):
+        self.H = H
+        self.sigma = sigma
+        
     def generate(
-        self,
-        length: Optional[int] = None,
-        seed: Optional[int] = None,
-        n: Optional[int] = None,
+        self, 
+        length: int, 
         rng: Optional[np.random.Generator] = None,
+        random_state: Optional[int] = None
     ) -> np.ndarray:
-        # Handle backward compatibility: accept both 'length' and 'n'
-        if length is None and n is None:
-            raise ValueError("Either 'length' or 'n' must be provided")
-        data_length = length if length is not None else n
-
-        self._current_rng = self._resolve_generator(seed, rng)
-
-        H = self.parameters["H"]
-        sigma = self.parameters["sigma"]
-        method = self.parameters["method"]
-
-        if method == "circulant":
-            return self._circulant_method(data_length, H, sigma)
-        else:
-            return self._cholesky_method(data_length, H, sigma)
-
-    def _autocovariance_fgn(self, H: float, sigma: float, length: int) -> np.ndarray:
-        # γ(k) = (σ^2 / 2)(|k+1|^{2H} - 2|k|^{2H} + |k-1|^{2H}) for k >= 0
-        k = np.arange(0, length)
-        gamma = (
-            (sigma**2)
-            * 0.5
-            * (
-                np.power(k + 1, 2 * H)
-                - 2 * np.power(k, 2 * H)
-                + np.power(np.maximum(0, k - 1), 2 * H)
-            )
-        )
-        return gamma
-
-    def _circulant_method(self, length: int, H: float, sigma: float) -> np.ndarray:
-        # Build circulant embedding of covariance for length length
-        gamma = self._autocovariance_fgn(H, sigma, length)
-        first_row = np.concatenate([gamma, gamma[1 : length - 1][::-1]])
-
-        # Eigenvalues of the circulant matrix
-        eigenvalues = np.fft.fft(first_row)
-        eigenvalues = np.maximum(eigenvalues.real, 0.0)
-
-        # Generate complex Gaussian noise with matching length
-        z = (
-            self._rng().normal(0, 1, len(eigenvalues))
-            + 1j * self._rng().normal(0, 1, len(eigenvalues))
-        ) / np.sqrt(2)
-
-        # Filter
-        y = np.fft.ifft(z * np.sqrt(eigenvalues))
-        x = np.real(y[:length])
-        return x
-
-    def _cholesky_method(self, length: int, H: float, sigma: float) -> np.ndarray:
-        # Construct Toeplitz covariance matrix from autocovariance
-        gamma = self._autocovariance_fgn(H, sigma, length)
-        cov = np.empty((length, length))
-        for i in range(length):
-            for j in range(length):
-                cov[i, j] = gamma[abs(i - j)]
-
-        # Regularize if needed and sample
-        try:
-            L = np.linalg.cholesky(cov)
-        except np.linalg.LinAlgError:
-            cov = cov + 1e-10 * np.eye(length)
-            L = np.linalg.cholesky(cov)
-
-        z = self._rng().normal(0.0, 1.0, length)
-        x = L @ z
-        return x
-
-    def _rng(self) -> np.random.Generator:
-        if self._current_rng is None:
-            self._current_rng = np.random.default_rng()
-        return self._current_rng
-
-    def get_theoretical_properties(self) -> Dict[str, Any]:
-        H = self.parameters["H"]
-        sigma = self.parameters["sigma"]
-        return {
-            "hurst_parameter": H,
-            "variance": sigma**2,
-            "stationary": True,
-            "gaussian": True,
-            "long_range_dependence": H > 0.5,
-        }
-
-    def expected_hurst(self) -> float:
-        """Return the configured Hurst exponent."""
-        return float(self.parameters["H"])
+        """
+        Generate fGn time series.
+        
+        Parameters
+        ----------
+        length : int
+            Length of the time series to generate
+        rng : np.random.Generator, optional
+            Random number generator instance
+        random_state : int, optional
+            Seed for random number generator if rng is not provided
+            
+        Returns
+        -------
+        np.ndarray
+            Generated fGn time series
+        """
+        if rng is None:
+            rng = np.random.default_rng(random_state)
+            
+        # Davies-Harte method
+        N = length
+        
+        # 1. Calculate autocovariance function
+        k = np.arange(N)
+        # Autocovariance of fGn: gamma(k) = (sigma^2 / 2) * (|k+1|^2H - 2|k|^2H + |k-1|^2H)
+        gamma = (self.sigma**2 / 2.0) * (np.abs(k + 1)**(2 * self.H) - 2 * np.abs(k)**(2 * self.H) + np.abs(k - 1)**(2 * self.H))
+        
+        # 2. Construct the first row of the circulant matrix C
+        # We use M = 2N
+        k_extended = np.arange(N + 1)
+        gamma_ext = (self.sigma**2 / 2.0) * (np.abs(k_extended + 1)**(2 * self.H) - 2 * np.abs(k_extended)**(2 * self.H) + np.abs(k_extended - 1)**(2 * self.H))
+        
+        # Circulant first row: g0, g1, ..., g(N-1), g(N), g(N-1), ..., g1
+        first_row = np.concatenate([gamma_ext[:N], [gamma_ext[N]], gamma_ext[1:N][::-1]])
+        
+        # 3. Compute eigenvalues of C
+        eigenvals = fft(first_row).real
+        
+        # Check for negative eigenvalues (numerical instability or invalid H)
+        if np.any(eigenvals < 0):
+            if np.min(eigenvals) > -1e-9:
+                eigenvals[eigenvals < 0] = 0
+            else:
+                # Warning: Davies-Harte failure (should not happen for valid fGn)
+                eigenvals[eigenvals < 0] = 0
+                
+        # 4. Generate complex Gaussian noise
+        # V = (randn + j * randn)
+        V = rng.standard_normal(2 * N) + 1j * rng.standard_normal(2 * N)
+        
+        # 5. Compute IFFT
+        Y = ifft(np.sqrt(eigenvals) * V)
+        
+        # 6. Take real part and scale
+        # The factor sqrt(2N) ensures the correct variance
+        fgn = Y[:N].real * np.sqrt(2 * N)
+        
+        return fgn
