@@ -165,7 +165,7 @@ Please consult `CONTRIBUTING.md` for coding standards and review expectations.
   title   = {lrdbenchmark: A Comprehensive Framework for Long-Range Dependence Estimation},
   version = {2.3.2},
   year    = {2024},
-  doi     = {10.5281/zenodo.17534599},
+  doi     = {10.5281/zenodo.17535020},
   url     = {https://github.com/dave2k77/lrdbenchmark}
 }
 ```
