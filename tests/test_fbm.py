@@ -52,7 +52,7 @@ class TestFractionalBrownianMotion:
         fbm = FractionalBrownianMotion(H=0.7, sigma=1.0)
         n = 1000
         
-        data = fbm.generate(n, random_state=42)
+        data = fbm.generate(length=n, random_state=42)
         
         assert len(data) == n
         assert isinstance(data, np.ndarray)
@@ -64,8 +64,8 @@ class TestFractionalBrownianMotion:
         n = 500
         
         # Generate two series with the same seed
-        data1 = fbm.generate(n, random_state=123)
-        data2 = fbm.generate(n, random_state=123)
+        data1 = fbm.generate(length=n, random_state=123)
+        data2 = fbm.generate(length=n, random_state=123)
         
         np.testing.assert_array_equal(data1, data2)
     
@@ -88,7 +88,7 @@ class TestFractionalBrownianMotion:
         fbm = FractionalBrownianMotion(H=0.5, sigma=1.0)
         n = 100
         
-        data = fbm.generate(n, random_state=42)
+        data = fbm.generate(length=n, random_state=42)
         increments = np.diff(data)
         
         assert len(increments) == n - 1
