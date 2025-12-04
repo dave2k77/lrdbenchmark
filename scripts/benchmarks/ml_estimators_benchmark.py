@@ -118,12 +118,12 @@ class MLEstimatorsBenchmark:
             for seq_len in sequence_lengths:
                 # FBM data
                 fbm_model = FBMModel(H=H, sigma=1.0)
-                fbm_data = fbm_model.generate(n=seq_len, seed=42)
+                fbm_data = fbm_model.generate(length=seq_len, random_state=42)
                 pure_data[f"H_{H}"]["fbm"].append(fbm_data)
                 
                 # FGN data
                 fgn_model = FGNModel(H=H, sigma=1.0)
-                fgn_data = fgn_model.generate(n=seq_len, seed=42)
+                fgn_data = fgn_model.generate(length=seq_len, random_state=42)
                 pure_data[f"H_{H}"]["fgn"].append(fgn_data)
                 
                 # ARFIMA data (d = H - 0.5)
@@ -153,7 +153,7 @@ class MLEstimatorsBenchmark:
         
         # Use representative base data (H=0.7, 1000 points, FBM)
         base_fbm = FBMModel(H=0.7, sigma=1.0)
-        base_data = base_fbm.generate(n=1000, seed=42)
+        base_data = base_fbm.generate(length=1000, random_state=42)
         
         # Define contamination scenarios
         contamination_scenarios = [
@@ -225,7 +225,7 @@ class MLEstimatorsBenchmark:
         """Generate realistic financial time series."""
         # Generate base FBM with financial characteristics
         fbm_model = FBMModel(H=0.6, sigma=1.0)
-        base_data = fbm_model.generate(n=1000, seed=42)
+        base_data = fbm_model.generate(length=1000, random_state=42)
         
         # Add financial-specific characteristics
         # Volatility clustering (GARCH-like behavior)
@@ -243,7 +243,7 @@ class MLEstimatorsBenchmark:
         """Generate realistic physiological signal."""
         # Generate base FBM with physiological characteristics
         fbm_model = FBMModel(H=0.7, sigma=1.0)
-        base_data = fbm_model.generate(n=1000, seed=42)
+        base_data = fbm_model.generate(length=1000, random_state=42)
         
         # Add physiological artifacts
         # Heart rate variability-like patterns
@@ -260,7 +260,7 @@ class MLEstimatorsBenchmark:
         """Generate realistic environmental monitoring data."""
         # Generate base FBM with environmental characteristics
         fbm_model = FBMModel(H=0.8, sigma=1.0)
-        base_data = fbm_model.generate(n=1000, seed=42)
+        base_data = fbm_model.generate(length=1000, random_state=42)
         
         # Add seasonal patterns
         seasonal_component = 0.3 * np.sin(2 * np.pi * np.arange(len(base_data)) / 200)
@@ -276,7 +276,7 @@ class MLEstimatorsBenchmark:
         """Generate realistic network traffic data."""
         # Generate base FBM with network characteristics
         fbm_model = FBMModel(H=0.5, sigma=1.0)
-        base_data = fbm_model.generate(n=1000, seed=42)
+        base_data = fbm_model.generate(length=1000, random_state=42)
         
         # Add network-specific patterns
         # Burst patterns (high traffic periods)
