@@ -563,7 +563,7 @@ class TestContaminationIntegration:
         """Test that contaminations affect basic statistics as expected."""
         # Generate clean fGn
         fgn = FractionalGaussianNoise(H=0.7)
-        clean_data = fgn.generate(self.n, seed=42)
+        clean_data = fgn.generate(self.n, random_state=42)
         
         # Generate contaminated version
         contamination_model = ContaminationModel()
@@ -591,7 +591,7 @@ class TestContaminationIntegration:
         
         # Should have higher variance than clean fGn
         fgn = FractionalGaussianNoise(H=0.7)
-        clean_data = fgn.generate(self.n, seed=42)
+        clean_data = fgn.generate(self.n, random_state=42)
         assert np.var(data) > np.var(clean_data)
         
         # Should have outliers (impulsive noise)

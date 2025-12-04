@@ -11,7 +11,7 @@ from lrdbenchmark.models.data_models.fgn.fgn_model import FractionalGaussianNois
 def generate_fgn_from_fbm(H: float, n: int, seed: int = 123) -> np.ndarray:
     # Use FractionalGaussianNoise directly instead of fBm differences
     fgn = FractionalGaussianNoise(H=H)
-    return fgn.generate(n, seed=seed)
+    return fgn.generate(n, random_state=seed)
 
 
 def test_periodogram_basic():
