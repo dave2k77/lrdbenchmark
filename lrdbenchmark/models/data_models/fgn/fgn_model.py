@@ -1,8 +1,11 @@
 import numpy as np
 from scipy.fft import fft, ifft
-from typing import Optional, Union, Generator
+from typing import Any, Dict, Optional, Union, Generator
 
-class FractionalGaussianNoise:
+from ..base_model import BaseModel
+
+
+class FractionalGaussianNoise(BaseModel):
     """
     Fractional Gaussian Noise (fGn) generator using the Davies-Harte method.
     
@@ -16,32 +19,55 @@ class FractionalGaussianNoise:
     ):
         self.H = H
         self.sigma = sigma
-        
+        super().__init__(H=H, sigma=sigma, **kwargs)
+
+    def _validate_parameters(self) -> None:
+        """Validate model parameters."""
+        if not (0 < self.H < 1):
+            raise ValueError(f"Hurst parameter H must be in (0, 1), got {self.H}")
+        if self.sigma <= 0:
+            raise ValueError(f"Sigma must be positive, got {self.sigma}")
+
     def generate(
         self, 
-        length: int, 
+        length: Optional[int] = None, 
+        seed: Optional[int] = None,
+        n: Optional[int] = None,
         rng: Optional[np.random.Generator] = None,
-        random_state: Optional[int] = None
+        random_state: Optional[int] = None,
     ) -> np.ndarray:
         """
         Generate fGn time series.
         
         Parameters
         ----------
-        length : int
-            Length of the time series to generate
+        length : int, optional
+            Length of the time series to generate (preferred parameter name)
+        seed : int, optional
+            Random seed for reproducibility
+        n : int, optional
+            Alternate parameter name for length (for backward compatibility)
         rng : np.random.Generator, optional
             Random number generator instance
         random_state : int, optional
-            Seed for random number generator if rng is not provided
+            Seed for random number generator if rng is not provided (deprecated, use seed)
             
         Returns
         -------
         np.ndarray
             Generated fGn time series
         """
+        # Handle length parameter (support both 'length' and 'n')
+        if length is None and n is not None:
+            length = n
+        if length is None:
+            raise ValueError("Either 'length' or 'n' must be provided")
+        
+        # Handle seed parameter (support both 'seed' and 'random_state')
+        effective_seed = seed if seed is not None else random_state
+        
         if rng is None:
-            rng = np.random.default_rng(random_state)
+            rng = np.random.default_rng(effective_seed)
             
         # Davies-Harte method
         N = length
@@ -82,3 +108,20 @@ class FractionalGaussianNoise:
         fgn = Y[:N].real * np.sqrt(2 * N)
         
         return fgn
+
+    def get_theoretical_properties(self) -> Dict[str, Any]:
+        """
+        Get theoretical properties of the fGn model.
+        
+        Returns
+        -------
+        dict
+            Dictionary containing theoretical properties
+        """
+        return {
+            "hurst_parameter": self.H,
+            "variance": self.sigma ** 2,
+            "stationary": True,
+            "long_range_dependent": self.H > 0.5,
+            "mean": 0.0,
+        }
