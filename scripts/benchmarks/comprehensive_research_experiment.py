@@ -271,7 +271,8 @@ class ComprehensiveResearchExperiment:
         
         elif contamination_type == "heavy_tailed_noise":
             # Heavy-tailed noise (t-distribution, df=3)
-            noise = stats.t.rvs(df=3, size=n, random_state=int(seed)) * level * np.std(data)
+            # Use seed safely - rng is already seeded, so use it for t-distribution via numpy
+            noise = rng.standard_t(df=3, size=n) * level * np.std(data)
             contaminated += noise
         
         elif contamination_type == "heteroscedasticity":
@@ -360,7 +361,7 @@ class ComprehensiveResearchExperiment:
         total_conditions = (
             len(self.config.hurst_values) * len(self.config.data_lengths) * 2 +  # fBm, fGn
             len(self.config.arfima_d_values) * len(self.config.data_lengths) +    # ARFIMA
-            len(self.config.hurst_values) * len(self.config.mrw_intermittency_values) * len(self.config.data_lengths)  # MRW (subset)
+            2 * min(2, len(self.config.mrw_intermittency_values)) * 1  # MRW (subset: 2 H values, first 2 lambda, 1 length)
         )
         condition_count = 0
         

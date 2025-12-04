@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.fft import fft, ifft
-from typing import Any, Dict, Optional, Union, Generator
+from typing import Any, Dict, Optional
 
 from ..base_model import BaseModel
 
