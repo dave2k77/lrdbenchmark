@@ -117,9 +117,10 @@ class ARFIMAModel(BaseModel):
     def generate(
         self,
         length: Optional[int] = None,
-        seed: Optional[int] = None,
+        random_state: Optional[int] = None,
         n: Optional[int] = None,
         rng: Optional[np.random.Generator] = None,
+        seed: Optional[int] = None,
     ) -> np.ndarray:
         """
         Generate ARFIMA time series.
@@ -128,10 +129,14 @@ class ARFIMAModel(BaseModel):
         ----------
         length : int, optional
             Length of the time series to generate
-        seed : int, optional
+        random_state : int, optional
             Random seed for reproducibility
         n : int, optional
             Alternate parameter name for length (for backward compatibility)
+        rng : np.random.Generator, optional
+            Random number generator instance
+        seed : int, optional
+            Alternate parameter name for random_state (for backward compatibility)
 
         Returns
         -------
@@ -141,13 +146,17 @@ class ARFIMAModel(BaseModel):
         Notes
         -----
         Either 'length' or 'n' must be provided. If both are provided, 'length' takes precedence.
+        Either 'random_state' or 'seed' can be provided. If both are provided, 'random_state' takes precedence.
         """
         # Handle backward compatibility: accept both 'length' and 'n'
         if length is None and n is None:
             raise ValueError("Either 'length' or 'n' must be provided")
         data_length = length if length is not None else n
         
-        self._current_rng = self._resolve_generator(seed, rng)
+        # Handle backward compatibility: accept both 'random_state' and 'seed'
+        effective_seed = random_state if random_state is not None else seed
+        
+        self._current_rng = self._resolve_generator(effective_seed, rng)
 
         self._require_scipy()
 
