@@ -81,6 +81,10 @@ for reproducible results.
     # Import lrdbenchmark data models
     from lrdbenchmark import FBMModel, FGNModel, ARFIMAModel, MRWModel, AlphaStableModel
     
+    # Create outputs directory for saving plots
+    import os
+    os.makedirs('outputs', exist_ok=True)
+    
     print("✅ All imports successful!")
     print(f"NumPy version: {np.__version__}")
     print(f"Pandas version: {pd.__version__}")
@@ -91,11 +95,16 @@ for reproducible results.
 .. parsed-literal::
 
     🔍 Checking GPU status...
-    ✅ GPU available: {'available': True, 'device_count': 1, 'device_name': 'NVIDIA GeForce RTX 5070 Laptop GPU', 'memory_total': 7.525390625, 'memory_allocated': 0.0, 'memory_free': 7.525390625}
+    ✅ GPU available: {'available': True, 'device_count': 1, 'device_name': 'NVIDIA GPU (model varies by system)', 'memory_total': <varies>, 'memory_allocated': 0.0, 'memory_free': <varies>}
     ✅ All imports successful!
-    NumPy version: 2.3.3
-    Pandas version: 2.3.3
+    NumPy version: 2.x.x
+    Pandas version: 2.x.x
     Matplotlib backend: inline
+
+.. note::
+   **Version and Hardware Information**: The version numbers and GPU details shown above are examples. 
+   Your installation will display your actual library versions and GPU hardware (if available). 
+   The library works in CPU-only mode if no GPU is detected.
 
 
 .. code:: ipython3
@@ -126,6 +135,12 @@ for reproducible results.
 .. parsed-literal::
 
     🧪 Testing ARFIMA generation and plotting...
+
+.. note::
+   **Numerical Reproducibility**: The exact numerical values shown in tutorial outputs 
+   (means, standard deviations, etc.) are examples. Due to random seed handling and 
+   floating-point precision differences across systems, your results may vary slightly 
+   while still being statistically correct.
 
 
 
