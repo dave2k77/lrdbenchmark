@@ -312,6 +312,30 @@ class GPHEstimator(BaseEstimator):
         }
         return self.results
 
+    def _estimate_numba(self, data: np.ndarray) -> Dict[str, Any]:
+        """Numba-optimized implementation of GPH estimation."""
+        try:
+            from lrdbenchmark.analysis.high_performance.numba.gph_numba import GPHEstimatorNumba
+            
+            estimator = GPHEstimatorNumba(
+                min_freq_ratio=self.parameters["min_freq_ratio"],
+                max_freq_ratio=self.parameters["max_freq_ratio"],
+                apply_bias_correction=self.parameters["apply_bias_correction"]
+            )
+            
+            result = estimator.estimate(data)
+            
+            # Add method info
+            result["method"] = "numba"
+            result["optimization_framework"] = self.optimization_framework
+            
+            return result
+            
+        except ImportError:
+            raise ImportError("Numba implementation not available")
+        except Exception as e:
+            raise RuntimeError(f"Numba estimation failed: {e}")
+
     def get_optimization_info(self) -> Dict[str, Any]:
         """Get information about available optimizations and current selection."""
         return {

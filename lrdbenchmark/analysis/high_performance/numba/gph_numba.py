@@ -8,7 +8,7 @@ log-periodogram regression with Numba JIT compilation.
 import numpy as np
 from numba import jit, prange
 from scipy import stats
-from models.estimators.base_estimator import BaseEstimator
+from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 
 @jit(nopython=True, cache=True)
@@ -179,7 +179,7 @@ def _gph_regression_numba(freqs, psd, min_freq, max_freq, apply_bias_correction)
         # Return default values if insufficient data
         # Create empty arrays with proper types for Numba
         empty_array = np.zeros(0, dtype=np.float64)
-        return 0.5, 0.0, 0.0, 0.0, empty_array, empty_array
+        return np.nan, np.nan, np.nan, np.nan, empty_array, empty_array
 
     # Extract valid points
     freqs_sel = np.empty(valid_count)

@@ -1,0 +1,28 @@
+% Combined ML and NN Estimators - Summary Performance Table
+\begin{table}[htbp]
+\centering
+\caption{Summary: ML and NN Hurst Parameter Estimators Performance}
+\label{tab:ml_nn_summary}
+\begin{tabular}{llcccc}
+\toprule
+\textbf{Category} & \textbf{Estimator} & \textbf{Pure MAE} & \textbf{Contam. MAE} & \textbf{Time (s)} & \textbf{Rank} \\
+\midrule
+\multirow{3}{*}{ML} 
+  & GradientBoosting & 0.159 & 0.118 $\pm$ 0.051 & 0.023 & 2 \\
+  & RandomForest & 0.159 & 0.112 $\pm$ 0.044 & 0.049 & 3 \\
+  & SVR & 0.200 & 0.158 $\pm$ 0.000 & 0.025 & 6 \\
+\midrule
+\multirow{4}{*}{NN}
+  & GRU & \textbf{0.156} & \textbf{0.046} $\pm$ 0.000 & \textbf{0.003} & \textbf{1} \\
+  & Transformer & 0.157 & 0.097 $\pm$ 0.000 & 0.013 & 4 \\
+  & LSTM & 0.194 & 0.195 $\pm$ 0.001 & 0.004 & 5 \\
+  & CNN & 0.299 & 0.300 $\pm$ 0.000 & 0.012 & 7 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item MAE = Mean Absolute Error. Contam. MAE represents mean $\pm$ std across 8 contamination scenarios.
+\item ML estimators use 76-feature extraction (autocorrelation, spectral, DFA, entropy features).
+\item NN estimators process z-score normalized sequences, showing contamination robustness.
+\end{tablenotes}
+\end{table}

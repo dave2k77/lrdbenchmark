@@ -1,8 +1,10 @@
 """
 Pre-trained Models Package for LRDBench
 
-This package contains pre-trained neural network models for Hurst parameter estimation.
-These models are used in production releases to avoid training during runtime.
+This package contains pre-trained neural network models for
+Hurst estimation. Using pre-trained models allows faster
+evaluation and benchmarking by avoiding training each
+model during runtime.
 """
 
 from .base_pretrained_model import BasePretrainedModel

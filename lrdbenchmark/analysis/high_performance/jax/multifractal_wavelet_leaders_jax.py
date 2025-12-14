@@ -10,7 +10,7 @@ import jax
 import jax.numpy as jnp
 from jax import jit, vmap
 from typing import Dict, List, Tuple, Any, Optional
-from models.estimators.base_estimator import BaseEstimator
+from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 
 class MultifractalWaveletLeadersEstimatorJAX(BaseEstimator):

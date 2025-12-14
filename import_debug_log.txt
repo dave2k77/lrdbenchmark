@@ -1,0 +1,15 @@
+Debugging Imports...
+
+1. Trying to import ml_pretrained
+   FAILED: No module named 'lrdbenchmark.models.pretrained_models.lstm_pretrained'
+Traceback (most recent call last):
+  File "C:\Users\davia\git_clone_projects\lrdbenchmark\check_imports.py", line 12, in <module>
+    from lrdbenchmark.models.pretrained_models.ml_pretrained import (
+    ...<3 lines>...
+    )
+  File "C:\Users\davia\git_clone_projects\lrdbenchmark\lrdbenchmark\models\pretrained_models\__init__.py", line 11, in <module>
+    from .lstm_pretrained import LSTMPretrainedModel
+ModuleNotFoundError: No module named 'lrdbenchmark.models.pretrained_models.lstm_pretrained'
+
+2. Trying to import cnn_pretrained
+   SUCCESS

@@ -187,33 +187,17 @@ class TransformerEstimator(BaseEstimator):
     
     def _estimate_with_neural_network(self, network, data: np.ndarray) -> float:
         """Estimate Hurst parameter using Transformer neural network."""
-        try:
-            # Transformer-specific Hurst estimation
-            if len(data) < 4:
-                return 0.5
+        # Prediction expects (batch, length) for 1D or (batch, length, features)
+        # Network predict handles dim expansion internally
+        prediction = network.predict(data)
+        
+        # Handle scalar or array return
+        if np.ndim(prediction) > 0:
+            hurst_estimate = prediction[0]
+        else:
+            hurst_estimate = prediction
             
-            # Calculate attention-like features (global patterns)
-            # Use multiple autocorrelation lags for attention-like analysis
-            autocorr_features = []
-            for lag in [1, 2, 4, 8]:
-                if len(data) > lag:
-                    autocorr = np.corrcoef(data[:-lag], data[lag:])[0, 1] if len(data) > lag else 0
-                    autocorr_features.append(autocorr)
-            
-            # Transformer-like features: global attention and long-range dependencies
-            variance = np.var(data)
-            mean_abs_diff = np.mean(np.abs(np.diff(data)))
-            
-            # Transformer heuristic: weighted combination of autocorrelations
-            weighted_autocorr = sum(0.3 * corr for corr in autocorr_features[:2]) + sum(0.1 * corr for corr in autocorr_features[2:])
-            hurst_estimate = 0.5 + 0.25 * weighted_autocorr - 0.05 * (mean_abs_diff / np.std(data))
-            hurst_estimate = np.clip(hurst_estimate, 0.1, 0.9)
-            
-            return float(hurst_estimate)
-            
-        except Exception as e:
-            print(f"Warning: Transformer neural network estimation failed: {e}")
-            return 0.5 + 0.1 * np.random.randn()
+        return float(hurst_estimate)
     
     def _fallback_estimation(self, data: np.ndarray) -> Dict[str, Any]:
         """Fallback estimation when Transformer model is not available."""
@@ -308,29 +292,33 @@ class TransformerEstimator(BaseEstimator):
             Training results
         """
         try:
-            from .enhanced_transformer_estimator import EnhancedTransformerEstimator
+            from .neural_network_factory import NeuralNetworkFactory, NNArchitecture, NNConfig
             
-            # Create estimator instance
-            estimator = EnhancedTransformerEstimator(**self.parameters)
+            # Create configuration
+            config = NNConfig(
+                architecture=NNArchitecture.TRANSFORMER,
+                input_length=X.shape[1] if X.ndim > 1 else len(X),
+                hidden_dims=[64, 32],
+                transformer_heads=self.parameters.get('transformer_heads', 8),
+                transformer_layers=self.parameters.get('transformer_layers', 2),
+                epochs=self.parameters.get('epochs', 50),
+                batch_size=self.parameters.get('batch_size', 32)
+            )
             
-            # Convert data to the format expected by enhanced Transformer
-            if X.ndim == 1:
-                # Single time series
-                data_list = [X]
-                labels = [y[0] if hasattr(y, '__len__') else y]
-            elif X.ndim == 2:
-                # Multiple time series
-                data_list = [X[i] for i in range(X.shape[0])]
-                labels = y.tolist()
-            else:
-                raise ValueError(f"Unexpected data shape: {X.shape}")
+            # Create/Get network
+            factory = NeuralNetworkFactory()
+            network = factory.create_network(config)
             
-            # Train the model using the correct method
-            results = estimator.train_model(data_list, labels, save_model=True)
+            # Train model
+            history = network.train_model(X, y)
             
             print("✅ Trained Transformer model saved")
             
-            return results
+            return {
+                "history": history,
+                "model": network,
+                "success": True
+            }
             
         except Exception as e:
             raise RuntimeError(f"Failed to train Transformer model: {e}")
@@ -354,14 +342,22 @@ class TransformerEstimator(BaseEstimator):
             Training or loading results
         """
         try:
-            from .enhanced_transformer_estimator import EnhancedTransformerEstimator
+            # Check for existing model
+            from .neural_network_factory import NeuralNetworkFactory, NNArchitecture, NNConfig
             
-            # Create estimator instance
-            estimator = EnhancedTransformerEstimator(**self.parameters)
+            input_length = X.shape[1] if X.ndim > 1 else len(X)
             
-            # Try to load existing model, otherwise train
-            if estimator._try_load_pretrained_model():
-                return {"loaded": True, "training_time": 0.0}
+            # Create temp config to check for model
+            config = NNConfig(
+                architecture=NNArchitecture.TRANSFORMER,
+                input_length=input_length
+            )
+            
+            factory = NeuralNetworkFactory()
+            network = factory.create_network(config)
+            
+            if network.load_model():
+                return {"loaded": True, "training_time": 0.0, "model": network}
             else:
                 return self.train(X, y, **kwargs)
             

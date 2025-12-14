@@ -9,7 +9,7 @@ import numpy as np
 import jax
 import jax.numpy as jnp
 from jax import jit, vmap
-from models.estimators.base_estimator import BaseEstimator
+from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 
 class GPHEstimatorJAX(BaseEstimator):
@@ -183,7 +183,8 @@ class GPHEstimatorJAX(BaseEstimator):
 
         if len(freqs_sel) < 3:
             # Return default values if insufficient data
-            return 0.5, 0.0, 0.0, 0.0, jnp.array([]), jnp.array([])
+            # Return NaNs if insufficient data
+            return jnp.nan, jnp.nan, jnp.nan, jnp.nan, jnp.array([]), jnp.array([])
 
         # Convert back to JAX arrays
         freqs_sel = jnp.array(freqs_sel)

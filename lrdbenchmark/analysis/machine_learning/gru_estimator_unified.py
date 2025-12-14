@@ -186,27 +186,17 @@ class GRUEstimator(BaseEstimator):
     
     def _estimate_with_neural_network(self, network, data: np.ndarray) -> float:
         """Estimate Hurst parameter using GRU neural network."""
-        try:
-            # GRU-specific Hurst estimation (similar to LSTM but simpler)
-            if len(data) < 2:
-                return 0.5
+        # Prediction expects (batch, length) for 1D or (batch, length, features)
+        # Network predict handles dim expansion internally
+        prediction = network.predict(data)
+        
+        # Handle scalar or array return
+        if np.ndim(prediction) > 0:
+            hurst_estimate = prediction[0]
+        else:
+            hurst_estimate = prediction
             
-            # Calculate autocorrelation features
-            autocorr_1 = np.corrcoef(data[:-1], data[1:])[0, 1] if len(data) > 1 else 0
-            
-            # GRU-like features: gating and memory
-            variance = np.var(data)
-            mean_abs_diff = np.mean(np.abs(np.diff(data)))
-            
-            # GRU heuristic: similar to LSTM but with different weighting
-            hurst_estimate = 0.5 + 0.15 * autocorr_1 - 0.08 * (mean_abs_diff / np.std(data))
-            hurst_estimate = np.clip(hurst_estimate, 0.1, 0.9)
-            
-            return float(hurst_estimate)
-            
-        except Exception as e:
-            print(f"Warning: GRU neural network estimation failed: {e}")
-            return 0.5 + 0.1 * np.random.randn()
+        return float(hurst_estimate)
     
     def _fallback_estimation(self, data: np.ndarray) -> Dict[str, Any]:
         """Fallback estimation when GRU model is not available."""
@@ -301,29 +291,32 @@ class GRUEstimator(BaseEstimator):
             Training results
         """
         try:
-            from .enhanced_gru_estimator import EnhancedGRUEstimator
+            from .neural_network_factory import NeuralNetworkFactory, NNArchitecture, NNConfig
             
-            # Create estimator instance
-            estimator = EnhancedGRUEstimator(**self.parameters)
+            # Create configuration
+            config = NNConfig(
+                architecture=NNArchitecture.GRU,
+                input_length=X.shape[1] if X.ndim > 1 else len(X),
+                hidden_dims=[64, 32],
+                lstm_units=self.parameters.get('lstm_units', 64),
+                epochs=self.parameters.get('epochs', 50),
+                batch_size=self.parameters.get('batch_size', 32)
+            )
             
-            # Convert data to the format expected by enhanced GRU
-            if X.ndim == 1:
-                # Single time series
-                data_list = [X]
-                labels = [y[0] if hasattr(y, '__len__') else y]
-            elif X.ndim == 2:
-                # Multiple time series
-                data_list = [X[i] for i in range(X.shape[0])]
-                labels = y.tolist()
-            else:
-                raise ValueError(f"Unexpected data shape: {X.shape}")
+            # Create/Get network
+            factory = NeuralNetworkFactory()
+            network = factory.create_network(config)
             
-            # Train the model using the correct method
-            results = estimator.train_model(data_list, labels, save_model=True)
+            # Train model
+            history = network.train_model(X, y)
             
             print("✅ Trained GRU model saved")
             
-            return results
+            return {
+                "history": history,
+                "model": network,
+                "success": True
+            }
             
         except Exception as e:
             raise RuntimeError(f"Failed to train GRU model: {e}")
@@ -347,14 +340,22 @@ class GRUEstimator(BaseEstimator):
             Training or loading results
         """
         try:
-            from .enhanced_gru_estimator import EnhancedGRUEstimator
+            # Check for existing model
+            from .neural_network_factory import NeuralNetworkFactory, NNArchitecture, NNConfig
             
-            # Create estimator instance
-            estimator = EnhancedGRUEstimator(**self.parameters)
+            input_length = X.shape[1] if X.ndim > 1 else len(X)
             
-            # Try to load existing model, otherwise train
-            if estimator._try_load_pretrained_model():
-                return {"loaded": True, "training_time": 0.0}
+            # Create temp config to check for model
+            config = NNConfig(
+                architecture=NNArchitecture.GRU,
+                input_length=input_length
+            )
+            
+            factory = NeuralNetworkFactory()
+            network = factory.create_network(config)
+            
+            if network.load_model():
+                return {"loaded": True, "training_time": 0.0, "model": network}
             else:
                 return self.train(X, y, **kwargs)
             

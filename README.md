@@ -88,7 +88,7 @@ benchmark = ComprehensiveBenchmark()   # runtime_profile defaults to "auto"/"ful
 
 ## Core Capabilities
 
-- **Estimator families** – temporal (R/S, DFA, DMA, Higuchi), spectral (Periodogram, GPH, Whittle), wavelet (CWT, variance, log-variance, wavelet Whittle), multifractal (MFDFA, wavelet leaders), machine-learning (Random Forest, SVR, Gradient Boosting), and neural (CNN, LSTM, GRU, Transformer).
+- **Estimator families** – temporal (R/S, DFA, DMA, GHE, Higuchi), spectral (Periodogram, GPH, Whittle), wavelet (CWT, variance, log-variance, wavelet Whittle), multifractal (MFDFA, wavelet leaders), machine-learning (Random Forest, SVR, Gradient Boosting), and neural (CNN, LSTM, GRU, Transformer).
 - **Robust benchmarking** – contamination models, adaptive preprocessing, stratified reporting, non-parametric significance tests, and provenance bundles per result.
 - **Analytics tooling** – convergence analysis, bias estimation, stress panels, uncertainty calibration, scale influence diagnostics.
 - **GPU-aware execution** – intelligent fallbacks (JAX ▶ Numba ▶ NumPy) with automatic CPU mode unless the user explicitly opts into GPU acceleration.

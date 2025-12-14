@@ -1,0 +1,141 @@
+{
+  "pure": {
+    "MAE": {
+      "CNN": 0.2044,
+      "GRU": 0.1998,
+      "GradientBoosting": 0.4302,
+      "LSTM": 0.2014,
+      "RandomForest": 0.5,
+      "SVR": 0.1248,
+      "Transformer": 0.2448
+    },
+    "MAE_std": {
+      "CNN": 0.1263,
+      "GRU": 0.1347,
+      "GradientBoosting": 0.1953,
+      "LSTM": 0.1416,
+      "RandomForest": 0.2239,
+      "SVR": 0.1279,
+      "Transformer": 0.1616
+    },
+    "RMSE": {
+      "CNN": 0.2402,
+      "GRU": 0.2409,
+      "GradientBoosting": 0.4724,
+      "LSTM": 0.2461,
+      "RandomForest": 0.5477,
+      "SVR": 0.1786,
+      "Transformer": 0.2932
+    },
+    "Bias": {
+      "CNN": -0.0736,
+      "GRU": -0.0908,
+      "GradientBoosting": -0.4302,
+      "LSTM": -0.103,
+      "RandomForest": -0.5,
+      "SVR": 0.0587,
+      "Transformer": -0.1895
+    },
+    "Time_ms": {
+      "CNN": 1.0963,
+      "GRU": 30.8221,
+      "GradientBoosting": 0.7259,
+      "LSTM": 3.722,
+      "RandomForest": 0.5681,
+      "SVR": 0.2289,
+      "Transformer": 3.2389
+    },
+    "Success_Rate": {
+      "CNN": 1.0,
+      "GRU": 1.0,
+      "GradientBoosting": 1.0,
+      "LSTM": 1.0,
+      "RandomForest": 1.0,
+      "SVR": 1.0,
+      "Transformer": 1.0
+    }
+  },
+  "contaminated": {
+    "MAE": {
+      "CNN": 0.1943,
+      "GRU": 0.2046,
+      "GradientBoosting": 0.3947,
+      "LSTM": 0.2058,
+      "RandomForest": 0.6,
+      "SVR": 0.1666,
+      "Transformer": 0.2891
+    },
+    "RMSE": {
+      "CNN": 0.2444,
+      "GRU": 0.2615,
+      "GradientBoosting": 0.428,
+      "LSTM": 0.2626,
+      "RandomForest": 0.6218,
+      "SVR": 0.1915,
+      "Transformer": 0.332
+    },
+    "Success_Rate": {
+      "CNN": 1.0,
+      "GRU": 1.0,
+      "GradientBoosting": 1.0,
+      "LSTM": 1.0,
+      "RandomForest": 1.0,
+      "SVR": 1.0,
+      "Transformer": 1.0
+    }
+  },
+  "friedman_test": {
+    "statistic": 745.1474157303373,
+    "p_value": 1.0889809790875107e-157,
+    "n_conditions": 320,
+    "n_estimators": 7,
+    "significant": "True"
+  },
+  "composite_scores": {
+    "Precision": {
+      "SVR": 0.543,
+      "CNN": 0.3679,
+      "GradientBoosting": 0.1219,
+      "LSTM": 0.3733,
+      "GRU": 0.3763,
+      "RandomForest": 0.0866,
+      "Transformer": 0.3019
+    },
+    "Speed": {
+      "SVR": 0.8116,
+      "CNN": 0.3679,
+      "GradientBoosting": 0.5158,
+      "LSTM": 0.0335,
+      "GRU": 0.0,
+      "RandomForest": 0.5956,
+      "Transformer": 0.0521
+    },
+    "Robustness": {
+      "SVR": 1.0,
+      "CNN": 1.0,
+      "GradientBoosting": 1.0,
+      "LSTM": 1.0,
+      "GRU": 1.0,
+      "RandomForest": 1.0,
+      "Transformer": 1.0
+    },
+    "HeavyTail": {
+      "SVR": 0.3326,
+      "CNN": 0.5247,
+      "GradientBoosting": 0.5413,
+      "LSTM": 0.4892,
+      "GRU": 0.4879,
+      "RandomForest": 0.4,
+      "Transformer": 0.4094
+    },
+    "Composite": {
+      "SVR": 0.6577,
+      "CNN": 0.4784,
+      "GradientBoosting": 0.394,
+      "LSTM": 0.394,
+      "GRU": 0.3869,
+      "RandomForest": 0.3822,
+      "Transformer": 0.3549
+    }
+  }
+}

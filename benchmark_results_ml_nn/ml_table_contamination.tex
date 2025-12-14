@@ -1,0 +1,19 @@
+% Machine Learning Estimators - Contamination Robustness
+\begin{table}[htbp]
+\centering
+\caption{Machine Learning Estimators: Contamination Robustness}
+\label{tab:ml_contamination}
+\begin{tabular}{lcccccccc}
+\toprule
+\textbf{Estimator} & \textbf{Additive} & \textbf{Linear} & \textbf{Poly} & \textbf{Spikes} & \textbf{Level} & \textbf{Missing} & \textbf{Colored} & \textbf{Impulsive} \\
+\midrule
+RandomForest & 0.136 & 0.137 & 0.137 & \textbf{0.076} & 0.136 & 0.129 & 0.135 & \textbf{0.007} \\
+GradientBoosting & 0.146 & 0.148 & 0.148 & \textbf{0.056} & 0.146 & 0.142 & 0.146 & \textbf{0.008} \\
+SVR & 0.158 & 0.158 & 0.158 & 0.158 & 0.158 & 0.158 & 0.158 & 0.158 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item Note: Bold values indicate scenarios where estimators show improved performance due to contamination-aware feature extraction.
+\end{tablenotes}
+\end{table}

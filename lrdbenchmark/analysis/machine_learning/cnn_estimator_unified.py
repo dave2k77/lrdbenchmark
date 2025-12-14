@@ -190,33 +190,17 @@ class CNNEstimator(BaseEstimator):
     
     def _estimate_with_neural_network(self, network, data: np.ndarray) -> float:
         """Estimate Hurst parameter using neural network."""
-        try:
-            # Convert data to tensor format expected by the network
-            if len(data.shape) == 1:
-                # Add batch and feature dimensions
-                data_tensor = np.expand_dims(data, axis=(0, 2))  # (batch, sequence, features)
-            else:
-                data_tensor = data
+        # Prediction expects (batch, length) for 1D or (batch, length, features)
+        # Network predict handles dim expansion internally
+        prediction = network.predict(data)
+        
+        # Handle scalar or array return
+        if np.ndim(prediction) > 0:
+            hurst_estimate = prediction[0]
+        else:
+            hurst_estimate = prediction
             
-            # Use the network for prediction
-            # For now, we'll use a simple heuristic based on network architecture
-            # In a full implementation, this would use trained weights
-            
-            # Simple CNN-based Hurst estimation
-            # Use variance and autocorrelation features
-            variance = np.var(data)
-            autocorr = np.corrcoef(data[:-1], data[1:])[0, 1] if len(data) > 1 else 0
-            
-            # Simple heuristic: higher variance and positive autocorrelation -> higher Hurst
-            hurst_estimate = 0.5 + 0.3 * (variance / np.var(np.random.randn(len(data)))) + 0.2 * autocorr
-            hurst_estimate = np.clip(hurst_estimate, 0.1, 0.9)
-            
-            return float(hurst_estimate)
-            
-        except Exception as e:
-            print(f"Warning: Neural network estimation failed: {e}")
-            # Fallback to simple statistical estimation
-            return 0.5 + 0.1 * np.random.randn()
+        return float(hurst_estimate)
     
     def _fallback_estimation(self, data: np.ndarray) -> Dict[str, Any]:
         """Fallback estimation when CNN model is not available."""
@@ -311,29 +295,32 @@ class CNNEstimator(BaseEstimator):
             Training results
         """
         try:
-            # Use basic CNN implementation
+            from .neural_network_factory import NeuralNetworkFactory, NNArchitecture, NNConfig
             
-            # Create estimator instance
-            estimator = EnhancedCNNEstimator(**self.parameters)
+            # Create configuration
+            config = NNConfig(
+                architecture=NNArchitecture.CNN,
+                input_length=X.shape[1] if X.ndim > 1 else len(X),
+                conv_filters=self.parameters.get('conv_filters', 32),
+                conv_kernel_size=self.parameters.get('conv_kernel_size', 3),
+                epochs=self.parameters.get('epochs', 50),
+                batch_size=self.parameters.get('batch_size', 32)
+            )
             
-            # Convert data to the format expected by enhanced CNN
-            if X.ndim == 1:
-                # Single time series
-                data_list = [X]
-                labels = [y[0] if hasattr(y, '__len__') else y]
-            elif X.ndim == 2:
-                # Multiple time series
-                data_list = [X[i] for i in range(X.shape[0])]
-                labels = y.tolist()
-            else:
-                raise ValueError(f"Unexpected data shape: {X.shape}")
+            # Create/Get network
+            factory = NeuralNetworkFactory()
+            network = factory.create_network(config)
             
-            # Train the model using the correct method
-            results = estimator.train_model(data_list, labels, save_model=True)
+            # Train model
+            history = network.train_model(X, y)
             
             print("✅ Trained CNN model saved")
             
-            return results
+            return {
+                "history": history,
+                "model": network,
+                "success": True
+            }
             
         except Exception as e:
             raise RuntimeError(f"Failed to train CNN model: {e}")
@@ -357,14 +344,22 @@ class CNNEstimator(BaseEstimator):
             Training or loading results
         """
         try:
-            # Use basic CNN implementation
+            # Check for existing model
+            from .neural_network_factory import NeuralNetworkFactory, NNArchitecture, NNConfig
             
-            # Create estimator instance
-            estimator = EnhancedCNNEstimator(**self.parameters)
+            input_length = X.shape[1] if X.ndim > 1 else len(X)
             
-            # Try to load existing model, otherwise train
-            if estimator._try_load_pretrained_model():
-                return {"loaded": True, "training_time": 0.0}
+            # Create temp config to check for model
+            config = NNConfig(
+                architecture=NNArchitecture.CNN,
+                input_length=input_length
+            )
+            
+            factory = NeuralNetworkFactory()
+            network = factory.create_network(config)
+            
+            if network.load_model():
+                return {"loaded": True, "training_time": 0.0, "model": network}
             else:
                 return self.train(X, y, **kwargs)
             

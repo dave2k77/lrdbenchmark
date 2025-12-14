@@ -29,8 +29,10 @@ DEFAULT_CACHE_ROOT = Path(
 
 LOCAL_FALLBACK_DIRS: Sequence[Path] = (
     DEFAULT_CACHE_ROOT,
+    Path(__file__).resolve().parent / "assets" / "models",  # Package assets
     Path.cwd() / "artifacts" / "models",
     Path.cwd() / "models",
+    Path.cwd() / "lrdbenchmark" / "assets" / "models",  # Dev mode
 )
 
 CONFIG_ROOT = Path(__file__).resolve().parent / "model_configs"
@@ -179,10 +181,21 @@ def ensure_model_artifact(model_key: str) -> Optional[Path]:
         return None
 
     for artifact in entries:
+        # First, try to find existing local files (skip SHA verification for local dev)
         for candidate in _candidate_paths(artifact.filename):
-            if _verify_sha256(candidate, artifact.sha256):
+            if candidate.exists():
+                LOGGER.info("Found local model at %s (skipping hash verification)", candidate)
                 return candidate
+        
+        # Also check without "_fixed" suffix for locally trained models
+        alt_filename = artifact.filename.replace("_fixed", "")
+        if alt_filename != artifact.filename:
+            for candidate in _candidate_paths(alt_filename):
+                if candidate.exists():
+                    LOGGER.info("Found local model at %s (alternate name)", candidate)
+                    return candidate
 
+        # Fall back to verified download
         cache_target = get_cache_dir() / artifact.filename
         if cache_target.exists() and not _verify_sha256(cache_target, artifact.sha256):
             LOGGER.warning("Cached artifact %s has wrong checksum; deleting", cache_target)
@@ -192,6 +205,7 @@ def ensure_model_artifact(model_key: str) -> Optional[Path]:
             return cache_target
 
     LOGGER.error("Unable to provide pretrained artifact for key '%s'", model_key)
+
     return None
 
 

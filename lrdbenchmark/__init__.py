@@ -111,6 +111,7 @@ __all__ = [
     "RSEstimator",
     "DFAEstimator", 
     "DMAEstimator",
+    "GHEEstimator",
     "HiguchiEstimator",
     "WhittleEstimator",
     "GPHEstimator",
@@ -149,6 +150,7 @@ __all__ = [
 ]
 
 if TYPE_CHECKING:
+    from .analysis.temporal.ghe.ghe_estimator_unified import GHEEstimator as GHEEstimator
     from .analysis.machine_learning.random_forest_estimator_unified import RandomForestEstimator as RandomForestEstimator
     from .analysis.machine_learning.svr_estimator_unified import SVREstimator as SVREstimator
     from .analysis.machine_learning.gradient_boosting_estimator_unified import GradientBoostingEstimator as GradientBoostingEstimator
@@ -190,6 +192,7 @@ _LAZY_ATTRS: Dict[str, str] = {
     "get_gpu_memory_info": "lrdbenchmark.gpu_memory:get_gpu_memory_info",
     "clear_gpu_cache": "lrdbenchmark.gpu_memory:clear_gpu_cache",
     "monitor_gpu_memory": "lrdbenchmark.gpu_memory:monitor_gpu_memory",
+    "GHEEstimator": "lrdbenchmark.analysis.temporal.ghe.ghe_estimator_unified:GHEEstimator",
 }
 
 _GPU_STUBS: Dict[str, Any] = {

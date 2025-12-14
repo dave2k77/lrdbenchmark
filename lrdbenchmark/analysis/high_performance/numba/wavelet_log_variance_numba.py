@@ -10,7 +10,7 @@ import numpy as np
 from numba import jit, prange
 from typing import Optional, Tuple, List, Dict, Any
 from scipy import stats
-from models.estimators.base_estimator import BaseEstimator
+from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 
 @jit(nopython=True, cache=True)

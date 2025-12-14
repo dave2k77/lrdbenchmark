@@ -1,0 +1,328 @@
+{
+  "pure": {
+    "MAE": {
+      "CWT": 0.1628,
+      "DFA": 0.0458,
+      "DMA": 0.0611,
+      "GPH": 0.0758,
+      "Higuchi": 0.0647,
+      "MFDFA": 0.4354,
+      "Periodogram": 0.0726,
+      "R/S": 0.0788,
+      "WaveletLeaders": 0.5777,
+      "WaveletLogVar": 0.1118,
+      "WaveletVar": 0.1761,
+      "WaveletWhittle": 0.4165,
+      "Whittle": 0.1464
+    },
+    "MAE_std": {
+      "CWT": 0.1497,
+      "DFA": 0.0258,
+      "DMA": 0.0339,
+      "GPH": 0.0634,
+      "Higuchi": 0.0551,
+      "MFDFA": 0.102,
+      "Periodogram": 0.0356,
+      "R/S": 0.0586,
+      "WaveletLeaders": 0.0994,
+      "WaveletLogVar": 0.09,
+      "WaveletVar": 0.1567,
+      "WaveletWhittle": 0.286,
+      "Whittle": 0.025
+    },
+    "RMSE": {
+      "CWT": 0.2126,
+      "DFA": 0.0515,
+      "DMA": 0.0685,
+      "GPH": 0.0954,
+      "Higuchi": 0.0819,
+      "MFDFA": 0.4452,
+      "Periodogram": 0.0795,
+      "R/S": 0.0953,
+      "WaveletLeaders": 0.5847,
+      "WaveletLogVar": 0.1387,
+      "WaveletVar": 0.2268,
+      "WaveletWhittle": 0.4916,
+      "Whittle": 0.1481
+    },
+    "Bias": {
+      "CWT": 0.1598,
+      "DFA": 0.0007,
+      "DMA": -0.0611,
+      "GPH": -0.0225,
+      "Higuchi": 0.0326,
+      "MFDFA": -0.4354,
+      "Periodogram": -0.0726,
+      "R/S": 0.0716,
+      "WaveletLeaders": -0.5777,
+      "WaveletLogVar": 0.0767,
+      "WaveletVar": 0.1549,
+      "WaveletWhittle": -0.4141,
+      "Whittle": 0.0447
+    },
+    "Time_ms": {
+      "CWT": 251.0716,
+      "DFA": 285.5327,
+      "DMA": 72.7139,
+      "GPH": 323.2373,
+      "Higuchi": 3.3587,
+      "MFDFA": 15557.9926,
+      "Periodogram": 29.6947,
+      "R/S": 562.3834,
+      "WaveletLeaders": 6.0142,
+      "WaveletLogVar": 6.4785,
+      "WaveletVar": 232.5808,
+      "WaveletWhittle": 107.4788,
+      "Whittle": 97.8001
+    },
+    "Success_Rate": {
+      "CWT": 1.0,
+      "DFA": 1.0,
+      "DMA": 1.0,
+      "GPH": 1.0,
+      "Higuchi": 1.0,
+      "MFDFA": 1.0,
+      "Periodogram": 1.0,
+      "R/S": 1.0,
+      "WaveletLeaders": 1.0,
+      "WaveletLogVar": 1.0,
+      "WaveletVar": 1.0,
+      "WaveletWhittle": 1.0,
+      "Whittle": 1.0
+    }
+  },
+  "contaminated": {
+    "MAE": {
+      "CWT": 0.0119,
+      "DFA": 0.0725,
+      "DMA": 0.0991,
+      "GPH": 0.0869,
+      "Higuchi": 0.0635,
+      "MFDFA": 0.5974,
+      "Periodogram": 0.0704,
+      "R/S": 0.0248,
+      "WaveletLeaders": 0.6804,
+      "WaveletLogVar": 0.0994,
+      "WaveletVar": 0.0548,
+      "WaveletWhittle": 0.138,
+      "Whittle": 0.1407
+    },
+    "RMSE": {
+      "CWT": 0.0137,
+      "DFA": 0.0732,
+      "DMA": 0.1021,
+      "GPH": 0.0991,
+      "Higuchi": 0.0645,
+      "MFDFA": 0.5974,
+      "Periodogram": 0.072,
+      "R/S": 0.0264,
+      "WaveletLeaders": 0.6804,
+      "WaveletLogVar": 0.1022,
+      "WaveletVar": 0.0646,
+      "WaveletWhittle": 0.1407,
+      "Whittle": 0.1618
+    },
+    "Success_Rate": {
+      "CWT": 1.0,
+      "DFA": 1.0,
+      "DMA": 1.0,
+      "GPH": 1.0,
+      "Higuchi": 1.0,
+      "MFDFA": 1.0,
+      "Periodogram": 1.0,
+      "R/S": 1.0,
+      "WaveletLeaders": 1.0,
+      "WaveletLogVar": 1.0,
+      "WaveletVar": 1.0,
+      "WaveletWhittle": 1.0,
+      "Whittle": 1.0
+    }
+  },
+  "friedman_test": {
+    "statistic": 36.131868131868146,
+    "p_value": 0.0003085520621925265,
+    "n_conditions": 6,
+    "n_estimators": 13,
+    "significant": "True"
+  },
+  "wilcoxon_tests": {
+    "reference": "DFA",
+    "bonferroni_alpha": 0.004166666666666667,
+    "n_comparisons": 12,
+    "results": [
+      {
+        "estimator": "CWT",
+        "vs": "DFA",
+        "statistic": 4.0,
+        "p_value": 0.109375,
+        "bonferroni_p": 1.3125,
+        "significant": "False"
+      },
+      {
+        "estimator": "DMA",
+        "vs": "DFA",
+        "statistic": 6.0,
+        "p_value": 0.21875,
+        "bonferroni_p": 2.625,
+        "significant": "False"
+      },
+      {
+        "estimator": "GPH",
+        "vs": "DFA",
+        "statistic": 7.0,
+        "p_value": 0.28125,
+        "bonferroni_p": 3.375,
+        "significant": "False"
+      },
+      {
+        "estimator": "Higuchi",
+        "vs": "DFA",
+        "statistic": 8.0,
+        "p_value": 0.34375,
+        "bonferroni_p": 4.125,
+        "significant": "False"
+      },
+      {
+        "estimator": "MFDFA",
+        "vs": "DFA",
+        "statistic": 0.0,
+        "p_value": 0.015625,
+        "bonferroni_p": 0.1875,
+        "significant": "False"
+      },
+      {
+        "estimator": "Periodogram",
+        "vs": "DFA",
+        "statistic": 7.0,
+        "p_value": 0.28125,
+        "bonferroni_p": 3.375,
+        "significant": "False"
+      },
+      {
+        "estimator": "R/S",
+        "vs": "DFA",
+        "statistic": 4.0,
+        "p_value": 0.109375,
+        "bonferroni_p": 1.3125,
+        "significant": "False"
+      },
+      {
+        "estimator": "WaveletLeaders",
+        "vs": "DFA",
+        "statistic": 0.0,
+        "p_value": 0.015625,
+        "bonferroni_p": 0.1875,
+        "significant": "False"
+      },
+      {
+        "estimator": "WaveletLogVar",
+        "vs": "DFA",
+        "statistic": 3.0,
+        "p_value": 0.078125,
+        "bonferroni_p": 0.9375,
+        "significant": "False"
+      },
+      {
+        "estimator": "WaveletVar",
+        "vs": "DFA",
+        "statistic": 3.0,
+        "p_value": 0.078125,
+        "bonferroni_p": 0.9375,
+        "significant": "False"
+      },
+      {
+        "estimator": "WaveletWhittle",
+        "vs": "DFA",
+        "statistic": 1.0,
+        "p_value": 0.03125,
+        "bonferroni_p": 0.375,
+        "significant": "False"
+      },
+      {
+        "estimator": "Whittle",
+        "vs": "DFA",
+        "statistic": 0.0,
+        "p_value": 0.015625,
+        "bonferroni_p": 0.1875,
+        "significant": "False"
+      }
+    ]
+  },
+  "composite_scores": {
+    "Precision": {
+      "Higuchi": 0.5605,
+      "Periodogram": 0.5226,
+      "WaveletLogVar": 0.3679,
+      "DMA": 0.5788,
+      "DFA": 0.664,
+      "R/S": 0.4941,
+      "GPH": 0.5077,
+      "Whittle": 0.2701,
+      "WaveletLeaders": 0.0057,
+      "CWT": 0.2331,
+      "WaveletVar": 0.2071,
+      "WaveletWhittle": 0.0241,
+      "MFDFA": 0.0204
+    },
+    "Speed": {
+      "Higuchi": 0.9692,
+      "Periodogram": 0.7586,
+      "WaveletLogVar": 0.9415,
+      "DMA": 0.5084,
+      "DFA": 0.0702,
+      "R/S": 0.0053,
+      "GPH": 0.0494,
+      "Whittle": 0.4025,
+      "WaveletLeaders": 0.9456,
+      "CWT": 0.0967,
+      "WaveletVar": 0.1149,
+      "WaveletWhittle": 0.3679,
+      "MFDFA": 0.0
+    },
+    "Robustness": {
+      "Higuchi": 1.0,
+      "Periodogram": 1.0,
+      "WaveletLogVar": 1.0,
+      "DMA": 1.0,
+      "DFA": 1.0,
+      "R/S": 1.0,
+      "GPH": 1.0,
+      "Whittle": 1.0,
+      "WaveletLeaders": 1.0,
+      "CWT": 1.0,
+      "WaveletVar": 1.0,
+      "WaveletWhittle": 1.0,
+      "MFDFA": 1.0
+    },
+    "HeavyTail": {
+      "Higuchi": 0.5097,
+      "Periodogram": 0.5147,
+      "WaveletLogVar": 0.5556,
+      "DMA": 0.1896,
+      "DFA": 0.2085,
+      "R/S": 0.8424,
+      "GPH": 0.4265,
+      "Whittle": 0.5191,
+      "WaveletLeaders": 0.4111,
+      "CWT": 0.9634,
+      "WaveletVar": 0.8443,
+      "WaveletWhittle": 0.8344,
+      "MFDFA": 0.3139
+    },
+    "Composite": {
+      "Higuchi": 0.7235,
+      "Periodogram": 0.6524,
+      "WaveletLogVar": 0.6249,
+      "DMA": 0.5855,
+      "DFA": 0.5204,
+      "R/S": 0.4826,
+      "GPH": 0.4588,
+      "Whittle": 0.4376,
+      "WaveletLeaders": 0.4304,
+      "CWT": 0.3871,
+      "WaveletVar": 0.3667,
+      "WaveletWhittle": 0.3375,
+      "MFDFA": 0.1916
+    }
+  }
+}

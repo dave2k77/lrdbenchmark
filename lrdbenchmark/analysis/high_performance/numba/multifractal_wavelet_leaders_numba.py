@@ -8,7 +8,7 @@ multifractal properties of time series data using wavelet leaders.
 import numpy as np
 from numba import jit, prange
 from typing import Dict, List, Tuple, Any, Optional
-from models.estimators.base_estimator import BaseEstimator
+from lrdbenchmark.analysis.base_estimator import BaseEstimator
 
 
 @jit(nopython=True, cache=True)
