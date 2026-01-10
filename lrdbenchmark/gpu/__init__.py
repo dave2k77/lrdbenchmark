@@ -158,3 +158,13 @@ def get_safe_device(use_gpu: bool = False) -> str:
     except Exception as e:
         warnings.warn(f"GPU test failed: {e}, using CPU")
         return 'cpu'
+
+# Export memory utilities
+try:
+    from .memory import (
+        get_gpu_memory_info,
+        clear_gpu_cache,
+        monitor_gpu_memory
+    )
+except ImportError:
+    pass

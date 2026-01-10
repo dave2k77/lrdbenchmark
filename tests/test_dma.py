@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from lrdbenchmark.analysis.temporal.dma.dma_estimator_unified import DMAEstimator
+from lrdbenchmark.analysis.temporal.dma_estimator import DMAEstimator
 
 
 class TestDMAEstimator:

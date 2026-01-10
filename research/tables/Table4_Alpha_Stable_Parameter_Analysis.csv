@@ -1,4 +1,0 @@
-Category,Average_Score,Average_MAE,Average_Robustness,Heavy_Tail_MAE,Heavy_Tail_Success_Rate,Best_Performer,Tier_Distribution
-Neural Networks,9.64,0.108,1.0,0.236,100.0,CNN (9.66),All Tier 1
-Machine Learning,9.33,0.202,1.0,0.219,100.0,GradientBoosting (9.34),All Tier 2
-Classical Methods,8.32,0.336,1.0,0.277,93.8,R/S (9.25),Tiers 2-4

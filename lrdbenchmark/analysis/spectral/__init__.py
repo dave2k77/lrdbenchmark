@@ -6,9 +6,10 @@ in time series data using frequency domain methods.
 """
 
 # Import unified estimators
-from .gph.gph_estimator_unified import GPHEstimator
-from .periodogram.periodogram_estimator_unified import PeriodogramEstimator
-from .whittle.whittle_estimator_unified import WhittleEstimator
+# Import unified estimators
+from .gph_estimator import GPHEstimator
+from .periodogram_estimator import PeriodogramEstimator
+from .whittle_estimator import WhittleEstimator
 
 __all__ = [
     "GPHEstimator",

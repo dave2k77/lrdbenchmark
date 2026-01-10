@@ -234,6 +234,4 @@ extlinks = {
 }
 
 # Mock imports to avoid autodoc import errors for heavy modules during docs build
-autodoc_mock_imports = [
-    'lrdbenchmark.analysis',
-]
+autodoc_mock_imports = []

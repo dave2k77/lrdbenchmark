@@ -86,12 +86,44 @@ model = TransformerPretrainedModel(use_gpu=True)
 ### Speedup Factors
 - **Neural Networks**: 5-20x faster on GPU
 - **Data Generation**: 2-5x faster on GPU
-- **Classical Estimators**: No GPU benefit (CPU-optimized)
+- **Classical Estimators (JAX Backend)**: 2-10x faster on GPU for large datasets (N > 10k)
+  - DFA, R/S, Periodogram, Whittle, Wavelet, MFDFA, Wavelet Leaders
 
 ### Memory Usage
 - **Small datasets** (<1k points): GPU overhead not worth it
 - **Medium datasets** (1k-10k points): 2-5x speedup
 - **Large datasets** (>10k points): 5-20x speedup
+
+## Classical Estimator GPU Acceleration
+
+Starting from v3.1, classical estimators support GPU acceleration via JAX backends:
+
+### Selecting Backend
+```python
+from lrdbenchmark import DFAEstimator, RSEstimator, PeriodogramEstimator
+
+# Auto-select (JAX if available, else NumPy)
+dfa = DFAEstimator(use_optimization='auto')
+
+# Force JAX for GPU
+dfa_gpu = DFAEstimator(use_optimization='jax')
+
+# Force NumPy (always works)
+dfa_cpu = DFAEstimator(use_optimization='numpy')
+```
+
+### Supported Estimators with JAX Backends
+| Estimator | Backend Package |
+|-----------|-----------------|
+| DFAEstimator | `dfa_backends` |
+| RSEstimator | `rs_backends` |
+| PeriodogramEstimator | `spectral_backends` |
+| WhittleEstimator | `spectral_backends` |
+| WaveletVarianceEstimator | `wavelet_backends` |
+| WaveletLogVarianceEstimator | `wavelet_backends` |
+| MFDFAEstimator | `mfdfa_backends` |
+| MultifractalWaveletLeadersEstimator | `wavelet_leaders_backends` |
+
 
 ## Troubleshooting
 

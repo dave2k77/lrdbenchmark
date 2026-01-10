@@ -1,0 +1,21 @@
+{
+    "timestamp": "20260110-033555",
+    "num_results": 6,
+    "columns": [
+        "benchmark_type",
+        "model",
+        "length",
+        "realization",
+        "estimator",
+        "hurst_parameter",
+        "execution_time",
+        "success",
+        "confidence_interval",
+        "std_error",
+        "method",
+        "model_info",
+        "absolute_error",
+        "squared_error",
+        "param_H"
+    ]
+}

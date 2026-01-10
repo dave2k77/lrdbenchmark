@@ -1,0 +1,7 @@
+benchmark_type,model,length,realization,estimator,hurst_parameter,execution_time,success,confidence_interval,std_error,method,model_info,absolute_error,squared_error,param_H
+ML,fgn,512,0,RandomForest,0.1,0.0004229545593261719,True,"(0.1, np.float64(0.29600000000000004))",0.1,Random Forest (Pre-trained ML),"{'is_loaded': True, 'model_path': None, 'torch_available': True}",0.6,0.36,0.7
+ML,fgn,512,0,SVR,0.6264278103443408,0.0001227855682373047,True,"(np.float64(0.4304278103443408), np.float64(0.8224278103443408))",0.1,SVR (Pre-trained ML),"{'is_loaded': True, 'model_path': None, 'torch_available': True}",0.07357218965565915,0.005412867090728279,0.7
+ML,fgn,512,0,GradientBoosting,0.1,0.0005614757537841797,True,"(0.1, np.float64(0.29600000000000004))",0.1,Gradient Boosting (Pre-trained ML),"{'is_loaded': True, 'model_path': None, 'torch_available': True}",0.6,0.36,0.7
+ML,fgn,512,1,RandomForest,0.1,0.0003917217254638672,True,"(0.1, np.float64(0.29600000000000004))",0.1,Random Forest (Pre-trained ML),"{'is_loaded': True, 'model_path': None, 'torch_available': True}",0.6,0.36,0.7
+ML,fgn,512,1,SVR,0.6152638677908544,0.0001404285430908203,True,"(np.float64(0.4192638677908544), np.float64(0.8112638677908544))",0.1,SVR (Pre-trained ML),"{'is_loaded': True, 'model_path': None, 'torch_available': True}",0.08473613220914555,0.007180212101765795,0.7
+ML,fgn,512,1,GradientBoosting,0.1,0.0005428791046142578,True,"(0.1, np.float64(0.29600000000000004))",0.1,Gradient Boosting (Pre-trained ML),"{'is_loaded': True, 'model_path': None, 'torch_available': True}",0.6,0.36,0.7

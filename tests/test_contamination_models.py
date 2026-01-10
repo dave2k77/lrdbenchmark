@@ -17,7 +17,7 @@ from lrdbenchmark.models.contamination.contamination_models import (
 from lrdbenchmark.models.contamination.complex_time_series_library import (
     ComplexTimeSeriesLibrary, ComplexTimeSeriesType, ComplexTimeSeriesConfig
 )
-from lrdbenchmark.models.data_models.fgn.fgn_model import FractionalGaussianNoise
+from lrdbenchmark.models.data_models.fgn_model import FractionalGaussianNoise
 
 
 class TestContaminationModel:
@@ -198,7 +198,9 @@ class TestContaminationModel:
     
     def test_add_sampling_aliasing(self):
         """Test aliasing effects addition."""
-        contaminated = self.contamination_model.add_sampling_aliasing(self.test_data)
+        # Use zeros to cleanly detect aliasing signal without noise interference
+        clean_data = np.zeros(self.n)
+        contaminated = self.contamination_model.add_sampling_aliasing(clean_data)
         
         # Check that data length is preserved
         assert len(contaminated) == len(self.test_data)

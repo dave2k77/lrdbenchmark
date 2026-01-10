@@ -9,11 +9,11 @@ from .base_model import BaseModel
 
 # Import all model classes
 try:
-    from .fbm.fbm_model import FractionalBrownianMotion
-    from .fgn.fgn_model import FractionalGaussianNoise
-    from .arfima.arfima_model import ARFIMAModel
-    from .mrw.mrw_model import MultifractalRandomWalk
-    from .alpha_stable.alpha_stable_model import AlphaStableModel
+    from .fbm_model import FractionalBrownianMotion
+    from .fgn_model import FractionalGaussianNoise
+    from .arfima_model import ARFIMAModel
+    from .mrw_model import MultifractalRandomWalk
+    from .alpha_stable_model import AlphaStableModel
     
     # Create shortened aliases for convenience
     FBMModel = FractionalBrownianMotion

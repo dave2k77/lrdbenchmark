@@ -170,8 +170,8 @@ conda_env.yml
 !.github/workflows/*.yaml
 
 # Development and testing files
-test_*.py
-*_test.py
+# test_*.py
+# *_test.py
 debug_*.py
 temp_*.py
 misc/

@@ -17,7 +17,7 @@ Temporal Estimators
 Detrended Fluctuation Analysis (DFA)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: lrdbenchmark.analysis.temporal.dfa.dfa_estimator_unified.DFAEstimator
+.. autoclass:: lrdbenchmark.analysis.temporal.dfa_estimator.DFAEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -28,7 +28,7 @@ Detrended Fluctuation Analysis (DFA)
 Detrended Moving Average (DMA)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: lrdbenchmark.analysis.temporal.dma.dma_estimator_unified.DMAEstimator
+.. autoclass:: lrdbenchmark.analysis.temporal.dma_estimator.DMAEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -39,7 +39,7 @@ Detrended Moving Average (DMA)
 Higuchi Method
 ~~~~~~~~~~~~~
 
-.. autoclass:: lrdbenchmark.analysis.temporal.higuchi.higuchi_estimator_unified.HiguchiEstimator
+.. autoclass:: lrdbenchmark.analysis.temporal.higuchi_estimator.HiguchiEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -50,7 +50,7 @@ Higuchi Method
 Generalised Hurst Exponent (GHE)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: lrdbenchmark.analysis.temporal.ghe.ghe_estimator_unified.GHEEstimator
+.. autoclass:: lrdbenchmark.analysis.temporal.ghe_estimator.GHEEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -61,7 +61,7 @@ Generalised Hurst Exponent (GHE)
 R/S Analysis
 ~~~~~~~~~~~
 
-.. autoclass:: lrdbenchmark.analysis.temporal.rs.rs_estimator_unified.RSEstimator
+.. autoclass:: lrdbenchmark.analysis.temporal.rs_estimator.RSEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -75,7 +75,7 @@ Spectral Estimators
 Geweke-Porter-Hudak (GPH)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: lrdbenchmark.analysis.spectral.gph.gph_estimator_unified.GPHEstimator
+.. autoclass:: lrdbenchmark.analysis.spectral.gph_estimator.GPHEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -86,7 +86,7 @@ Geweke-Porter-Hudak (GPH)
 Periodogram
 ~~~~~~~~~~
 
-.. autoclass:: lrdbenchmark.analysis.spectral.periodogram.periodogram_estimator_unified.PeriodogramEstimator
+.. autoclass:: lrdbenchmark.analysis.spectral.periodogram_estimator.PeriodogramEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -97,7 +97,7 @@ Periodogram
 Whittle Estimator
 ~~~~~~~~~~~~~~~~
 
-.. autoclass:: lrdbenchmark.analysis.spectral.whittle.whittle_estimator_unified.WhittleEstimator
+.. autoclass:: lrdbenchmark.analysis.spectral.whittle_estimator.WhittleEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -111,7 +111,7 @@ Wavelet Estimators
 Continuous Wavelet Transform (CWT)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: lrdbenchmark.analysis.wavelet.cwt.cwt_estimator_unified.CWTEstimator
+.. autoclass:: lrdbenchmark.analysis.wavelet.cwt_estimator.CWTEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -122,7 +122,7 @@ Continuous Wavelet Transform (CWT)
 Wavelet Variance
 ~~~~~~~~~~~~~~~
 
-.. autoclass:: lrdbenchmark.analysis.wavelet.variance.variance_estimator_unified.WaveletVarianceEstimator
+.. autoclass:: lrdbenchmark.analysis.wavelet.variance_estimator.WaveletVarianceEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -133,7 +133,7 @@ Wavelet Variance
 Wavelet Log-Variance
 ~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: lrdbenchmark.analysis.wavelet.log_variance.log_variance_estimator_unified.WaveletLogVarianceEstimator
+.. autoclass:: lrdbenchmark.analysis.wavelet.log_variance_estimator.WaveletLogVarianceEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -144,7 +144,7 @@ Wavelet Log-Variance
 Wavelet Whittle
 ~~~~~~~~~~~~~~~
 
-.. autoclass:: lrdbenchmark.analysis.wavelet.whittle.whittle_estimator_unified.WaveletWhittleEstimator
+.. autoclass:: lrdbenchmark.analysis.wavelet.whittle_estimator.WaveletWhittleEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -158,7 +158,7 @@ Multifractal Estimators
 Multifractal Detrended Fluctuation Analysis (MFDFA)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: lrdbenchmark.analysis.multifractal.mfdfa.mfdfa_estimator_unified.MFDFAEstimator
+.. autoclass:: lrdbenchmark.analysis.multifractal.mfdfa_estimator.MFDFAEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -169,7 +169,7 @@ Multifractal Detrended Fluctuation Analysis (MFDFA)
 Multifractal Wavelet Leaders
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: lrdbenchmark.analysis.multifractal.wavelet_leaders.wavelet_leaders_estimator_unified.MultifractalWaveletLeadersEstimator
+.. autoclass:: lrdbenchmark.analysis.multifractal.wavelet_leaders_estimator.MultifractalWaveletLeadersEstimator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -214,6 +214,46 @@ High Performance Estimators
    provide direct access to optimized implementations (e.g., ``DFAEstimatorJAX``, ``DFAEstimatorNumba``),
    but the unified estimators are recommended for most use cases as they automatically select the best
    framework based on data characteristics and hardware availability.
+
+Backend Modules (Strategy Pattern)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following backend modules provide modular implementations for each estimator family,
+enabling JAX GPU acceleration or Numba JIT compilation:
+
+**Temporal Backends**
+
+* ``lrdbenchmark.analysis.temporal.dfa_backends``: NumPy, JAX, Numba implementations for DFA.
+* ``lrdbenchmark.analysis.temporal.rs_backends``: NumPy, JAX, Numba implementations for R/S.
+
+**Spectral Backends**
+
+* ``lrdbenchmark.analysis.spectral.spectral_backends``: NumPy, JAX implementations for Periodogram, Welch, Whittle.
+
+**Wavelet Backends**
+
+* ``lrdbenchmark.analysis.wavelet.wavelet_backends``: NumPy, JAX implementations for DWT-based variance estimators.
+
+**Multifractal Backends**
+
+* ``lrdbenchmark.analysis.multifractal.mfdfa_backends``: NumPy, JAX implementations for MFDFA.
+* ``lrdbenchmark.analysis.multifractal.wavelet_leaders_backends``: NumPy, JAX implementations for Wavelet Leaders.
+
+**Usage Example (Backend Selection)**
+
+.. code-block:: python
+
+   from lrdbenchmark import DFAEstimator
+
+   # Auto-select best backend (default)
+   estimator = DFAEstimator(use_optimization='auto')
+
+   # Force JAX for GPU acceleration
+   estimator_jax = DFAEstimator(use_optimization='jax')
+
+   # Force NumPy for maximum compatibility
+   estimator_numpy = DFAEstimator(use_optimization='numpy')
+
 
 Usage Examples
 --------------

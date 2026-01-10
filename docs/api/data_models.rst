@@ -14,7 +14,7 @@ Base Model
 Fractional Brownian Motion (FBM)
 -------------------------------
 
-.. autoclass:: lrdbenchmark.models.data_models.fbm.fbm_model.FractionalBrownianMotion
+.. autoclass:: lrdbenchmark.models.data_models.fbm_model.FractionalBrownianMotion
    :members:
    :undoc-members:
    :show-inheritance:
@@ -25,7 +25,7 @@ Fractional Brownian Motion (FBM)
 Fractional Gaussian Noise (FGN)
 ------------------------------
 
-.. autoclass:: lrdbenchmark.models.data_models.fgn.fgn_model.FractionalGaussianNoise
+.. autoclass:: lrdbenchmark.models.data_models.fgn_model.FractionalGaussianNoise
    :members:
    :undoc-members:
    :show-inheritance:
@@ -36,7 +36,7 @@ Fractional Gaussian Noise (FGN)
 ARFIMA Model
 ------------
 
-.. autoclass:: lrdbenchmark.models.data_models.arfima.arfima_model.ARFIMAModel
+.. autoclass:: lrdbenchmark.models.data_models.arfima_model.ARFIMAModel
    :members:
    :undoc-members:
    :show-inheritance:
@@ -47,7 +47,7 @@ ARFIMA Model
 Multifractal Random Walk (MRW)
 -----------------------------
 
-.. autoclass:: lrdbenchmark.models.data_models.mrw.mrw_model.MultifractalRandomWalk
+.. autoclass:: lrdbenchmark.models.data_models.mrw_model.MultifractalRandomWalk
    :members:
    :undoc-members:
    :show-inheritance:

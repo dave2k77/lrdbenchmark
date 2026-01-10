@@ -6,11 +6,12 @@ in time series data.
 """
 
 # Import unified estimators
-from .rs.rs_estimator_unified import RSEstimator
-from .dma.dma_estimator_unified import DMAEstimator
-from .dfa.dfa_estimator_unified import DFAEstimator
-from .higuchi.higuchi_estimator_unified import HiguchiEstimator
-from .ghe.ghe_estimator_unified import GHEEstimator
+# Import unified estimators
+from .rs_estimator import RSEstimator
+from .dma_estimator import DMAEstimator
+from .dfa_estimator import DFAEstimator
+from .higuchi_estimator import HiguchiEstimator
+from .ghe_estimator import GHEEstimator
 
 __all__ = [
     "RSEstimator",

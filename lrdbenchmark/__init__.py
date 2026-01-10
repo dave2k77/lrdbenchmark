@@ -53,27 +53,28 @@ except ImportError as e:
     AlphaStableModel = None
 
 # Classical estimators
+# Classical estimators
 try:
     # Temporal estimators
-    from .analysis.temporal.rs.rs_estimator_unified import RSEstimator
-    from .analysis.temporal.dfa.dfa_estimator_unified import DFAEstimator
-    from .analysis.temporal.dma.dma_estimator_unified import DMAEstimator
-    from .analysis.temporal.higuchi.higuchi_estimator_unified import HiguchiEstimator
+    from .analysis.temporal.rs_estimator import RSEstimator
+    from .analysis.temporal.dfa_estimator import DFAEstimator
+    from .analysis.temporal.dma_estimator import DMAEstimator
+    from .analysis.temporal.higuchi_estimator import HiguchiEstimator
     
     # Spectral estimators
-    from .analysis.spectral.whittle.whittle_estimator_unified import WhittleEstimator
-    from .analysis.spectral.gph.gph_estimator_unified import GPHEstimator
-    from .analysis.spectral.periodogram.periodogram_estimator_unified import PeriodogramEstimator
+    from .analysis.spectral.whittle_estimator import WhittleEstimator
+    from .analysis.spectral.gph_estimator import GPHEstimator
+    from .analysis.spectral.periodogram_estimator import PeriodogramEstimator
     
     # Wavelet estimators
-    from .analysis.wavelet.cwt.cwt_estimator_unified import CWTEstimator
-    from .analysis.wavelet.variance.variance_estimator_unified import WaveletVarianceEstimator
-    from .analysis.wavelet.log_variance.log_variance_estimator_unified import WaveletLogVarianceEstimator
-    from .analysis.wavelet.whittle.whittle_estimator_unified import WaveletWhittleEstimator
+    from .analysis.wavelet.cwt_estimator import CWTEstimator
+    from .analysis.wavelet.variance_estimator import WaveletVarianceEstimator
+    from .analysis.wavelet.log_variance_estimator import WaveletLogVarianceEstimator
+    from .analysis.wavelet.whittle_estimator import WaveletWhittleEstimator
     
     # Multifractal estimators
-    from .analysis.multifractal.mfdfa.mfdfa_estimator_unified import MFDFAEstimator
-    from .analysis.multifractal.wavelet_leaders.wavelet_leaders_estimator_unified import MultifractalWaveletLeadersEstimator
+    from .analysis.multifractal.mfdfa_estimator import MFDFAEstimator
+    from .analysis.multifractal.wavelet_leaders_estimator import MultifractalWaveletLeadersEstimator
     
 except ImportError as e:
     print(f"Warning: Could not import classical estimators: {e}")
@@ -136,7 +137,12 @@ __all__ = [
     "ComprehensiveBenchmark",
     # GPU utilities
     "gpu_is_available",
-    "get_device_info", 
+    "get_device_info",
+    # New Architecture
+    "TimeSeriesGenerator",
+    "ClassicalBenchmark",
+    "MLBenchmark",
+    "NNBenchmark",
     "clear_cache",
     "suggest_batch_size",
     "get_safe_device",
@@ -150,7 +156,7 @@ __all__ = [
 ]
 
 if TYPE_CHECKING:
-    from .analysis.temporal.ghe.ghe_estimator_unified import GHEEstimator as GHEEstimator
+    from .analysis.temporal.ghe_estimator import GHEEstimator as GHEEstimator
     from .analysis.machine_learning.random_forest_estimator_unified import RandomForestEstimator as RandomForestEstimator
     from .analysis.machine_learning.svr_estimator_unified import SVREstimator as SVREstimator
     from .analysis.machine_learning.gradient_boosting_estimator_unified import GradientBoostingEstimator as GradientBoostingEstimator
@@ -159,7 +165,11 @@ if TYPE_CHECKING:
     from .analysis.machine_learning.gru_estimator_unified import GRUEstimator as GRUEstimator
     from .analysis.machine_learning.transformer_estimator_unified import TransformerEstimator as TransformerEstimator
     from .analysis.machine_learning.neural_network_factory import NeuralNetworkFactory as NeuralNetworkFactory
-    from .analysis.benchmark import ComprehensiveBenchmark as ComprehensiveBenchmark
+    from .analysis.benchmark.engine import ComprehensiveBenchmark as ComprehensiveBenchmark
+    from .benchmarks import (
+        ClassicalBenchmark, MLBenchmark, NNBenchmark
+    )
+    from .generation import TimeSeriesGenerator
     from .gpu import (
         is_available as gpu_is_available,
         get_device_info,
@@ -167,7 +177,7 @@ if TYPE_CHECKING:
         suggest_batch_size,
         get_safe_device,
     )
-    from .gpu_memory import get_gpu_memory_info, clear_gpu_cache, monitor_gpu_memory
+    from .gpu.memory import get_gpu_memory_info, clear_gpu_cache, monitor_gpu_memory
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -182,17 +192,23 @@ _LAZY_ATTRS: Dict[str, str] = {
     "TransformerEstimator": "lrdbenchmark.analysis.machine_learning.transformer_estimator_unified:TransformerEstimator",
     # Factory & benchmarking
     "NeuralNetworkFactory": "lrdbenchmark.analysis.machine_learning.neural_network_factory:NeuralNetworkFactory",
-    "ComprehensiveBenchmark": "lrdbenchmark.analysis.benchmark:ComprehensiveBenchmark",
+    # Benchmarks
+    "ComprehensiveBenchmark": "lrdbenchmark.benchmarks.comprehensive_benchmark:ComprehensiveBenchmark",
+    "ClassicalBenchmark": "lrdbenchmark.benchmarks.classical_benchmark:ClassicalBenchmark",
+    "MLBenchmark": "lrdbenchmark.benchmarks.ml_benchmark:MLBenchmark",
+    "NNBenchmark": "lrdbenchmark.benchmarks.nn_benchmark:NNBenchmark",
+    # Generation
+    "TimeSeriesGenerator": "lrdbenchmark.generation.time_series_generator:TimeSeriesGenerator",
     # GPU utilities
     "gpu_is_available": "lrdbenchmark.gpu:is_available",
     "get_device_info": "lrdbenchmark.gpu:get_device_info",
     "clear_cache": "lrdbenchmark.gpu:clear_cache",
     "suggest_batch_size": "lrdbenchmark.gpu:suggest_batch_size",
     "get_safe_device": "lrdbenchmark.gpu:get_safe_device",
-    "get_gpu_memory_info": "lrdbenchmark.gpu_memory:get_gpu_memory_info",
-    "clear_gpu_cache": "lrdbenchmark.gpu_memory:clear_gpu_cache",
-    "monitor_gpu_memory": "lrdbenchmark.gpu_memory:monitor_gpu_memory",
-    "GHEEstimator": "lrdbenchmark.analysis.temporal.ghe.ghe_estimator_unified:GHEEstimator",
+    "get_gpu_memory_info": "lrdbenchmark.gpu.memory:get_gpu_memory_info",
+    "clear_gpu_cache": "lrdbenchmark.gpu.memory:clear_gpu_cache",
+    "monitor_gpu_memory": "lrdbenchmark.gpu.memory:monitor_gpu_memory",
+    "GHEEstimator": "lrdbenchmark.analysis.temporal.ghe_estimator:GHEEstimator",
 }
 
 _GPU_STUBS: Dict[str, Any] = {
