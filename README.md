@@ -222,7 +222,7 @@ Please consult `CONTRIBUTING.md` for coding standards and review expectations.
   title   = {lrdbenchmark: A Comprehensive Framework for Long-Range Dependence Estimation},
   version = {2.3.2},
   year    = {2025},
-  doi     = {10.5281/zenodo.17535020},
+  doi     = {10.5281/zenodo.18331354},
   url     = {https://github.com/dave2k77/lrdbenchmark}
 }
 ```
@@ -237,6 +237,7 @@ Please consult `CONTRIBUTING.md` for coding standards and review expectations.
 - **Documentation**: <https://lrdbenchmark.readthedocs.io/>
 
 Made with care for the time-series community. If you publish results using lrdbenchmark, please share them – the benchmarking suite evolves with real-world feedback.
+
 
 
 
