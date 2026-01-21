@@ -1054,3 +1054,218 @@ Validation References
 4. Hyndman, R. J., & Athanasopoulos, G. (2018). Forecasting: Principles and Practice. OTexts.
 5. Montgomery, D. C., Peck, E. A., & Vining, G. G. (2012). Introduction to Linear Regression Analysis. Wiley.
 6. Shumway, R. H., & Stoffer, D. S. (2017). Time Series Analysis and Its Applications. Springer.
+
+
+Nonstationarity and Time-Varying H
+==================================
+
+Overview
+--------
+
+Classical LRD estimators assume stationarity—specifically that the Hurst parameter H
+is constant throughout the time series. When this assumption is violated, estimators
+can produce biased or misleading results.
+
+**Key stationarity assumptions violated by time-varying H:**
+
+1. **Constant autocovariance structure**: Classical estimators assume :math:`\gamma(k)` is time-invariant
+2. **Scale invariance**: Power-law decay of correlations requires constant scaling properties
+3. **Ergodicity**: Time averages should equal ensemble averages
+
+Why Classical Estimators Fail
+-----------------------------
+
+**Regime Switching**:
+
+When H switches between regimes (e.g., H=0.3 → H=0.8 at midpoint), classical estimators
+produce weighted averages of the regime-specific H values, with weights depending on:
+
+- Segment lengths
+- Estimator type (spectral vs. time domain)
+- Sample size
+
+**Continuous Drift**:
+
+Linear or smooth H(t) trajectories cause:
+
+- Systematic bias toward the time-averaged H̄ = ∫H(t)dt/T
+- Inflated variance estimates
+- Poor confidence interval coverage
+
+**Structural Breaks**:
+
+Level shifts and variance changes create spurious long-range correlations:
+
+.. math::
+
+   \hat{H}_{\text{spurious}} = \frac{1}{2} + \frac{\log(1 + \text{break\_severity})}{\log(n)}
+
+Generating Time-Varying H Signals
+---------------------------------
+
+LRDBench provides nonstationary generators in the ``generation`` module:
+
+.. code-block:: python
+
+   from lrdbenchmark.generation import (
+       RegimeSwitchingProcess,
+       ContinuousDriftProcess,
+       StructuralBreakProcess,
+       EnsembleTimeAverageProcess
+   )
+   
+   # Regime switching: H=0.3 → H=0.8 at midpoint
+   gen = RegimeSwitchingProcess(h_regimes=[0.3, 0.8], change_points=[0.5])
+   result = gen.generate(1000)
+   
+   # Linear drift: H increases from 0.3 to 0.8
+   gen = ContinuousDriftProcess(h_start=0.3, h_end=0.8, drift_type='linear')
+   result = gen.generate(1000)
+   
+   # Returns dict with 'signal', 'h_trajectory', 'metadata'
+
+
+Structural Break Detection
+==========================
+
+Overview
+--------
+
+The ``StructuralBreakDetector`` class provides multiple tests for detecting
+change points that would invalidate stationarity assumptions.
+
+Available Tests
+---------------
+
+**1. CUSUM Test**:
+
+Cumulative sum test for mean shifts. The test statistic is:
+
+.. math::
+
+   S_k = \sum_{i=1}^k (X_i - \bar{X})
+
+The maximum absolute deviation is compared against Brownian bridge critical values.
+
+**2. Recursive CUSUM**:
+
+Sequential/online detection suitable for real-time monitoring. Uses control limits
+to detect when cumulative deviations exceed threshold.
+
+**3. Chow Test**:
+
+Tests whether regression coefficients differ before and after a hypothesized break:
+
+.. math::
+
+   F = \frac{(RSS_R - RSS_U)/k}{RSS_U/(n-2k)}
+
+where :math:`RSS_R` and :math:`RSS_U` are restricted and unrestricted residual sums.
+
+**4. ICSS Algorithm**:
+
+Iterative Cumulative Sum of Squares (Inclán & Tiao, 1994) for detecting variance
+change points.
+
+Usage
+-----
+
+.. code-block:: python
+
+   from lrdbenchmark.analysis.diagnostics import StructuralBreakDetector
+   
+   detector = StructuralBreakDetector(significance_level=0.05)
+   
+   # Run all tests
+   result = detector.detect_all(data)
+   
+   if result['any_break_detected']:
+       print("⚠️ Stationarity violated!")
+       print(result['warnings'])
+   
+   # Individual tests
+   cusum_result = detector.cusum_test(data)
+   chow_result = detector.chow_test(data, break_index=500)
+
+
+Nonequilibrium Physics Considerations
+=====================================
+
+Ergodicity Breaking
+-------------------
+
+In nonequilibrium systems, ensemble averages may differ from time averages:
+
+.. math::
+
+   \langle X \rangle_{\text{ensemble}} \neq \langle X \rangle_{\text{time}}
+
+This occurs in aging systems (e.g., glassy dynamics) and subdiffusive processes.
+Classical estimators assume ergodicity, leading to systematic errors when violated.
+
+**Testing for Ergodicity**:
+
+.. code-block:: python
+
+   from lrdbenchmark.generation import EnsembleTimeAverageProcess
+   
+   gen = EnsembleTimeAverageProcess(H=0.7, aging_exponent=0.5)
+   result = gen.generate_ensemble(n_realizations=100, length=1000)
+   
+   # Compare ensemble vs time averages
+   ensemble_mean = result['ensemble_mean']  # Mean across realizations
+   time_mean = result['time_mean']          # Mean across time for each realization
+
+Aging Effects
+-------------
+
+Aging manifests as:
+
+- Time-dependent diffusion coefficients
+- Non-stationary waiting time distributions
+- Power-law decay of relaxation functions
+
+LRDBench's ``EnsembleTimeAverageProcess`` models aging via:
+
+- Power-law aging: :math:`H(t) \propto t^{-\alpha}`
+- Logarithmic aging: :math:`H(t) \propto \log(t)`
+- Exponential aging: :math:`H(t) \to H_{\text{boundary}}`
+
+
+Failure Mode Interpretation
+===========================
+
+Catalog of Classical Estimator Failures
+---------------------------------------
+
++---------------------+---------------------+-------------------------+-------------------+
+| Failure Mode        | Affected Estimators | Physics Regime          | Detection         |
++=====================+=====================+=========================+===================+
+| Bias explosion      | R/S, DFA            | H → 0 or H → 1          | \|Bias\| > 0.15   |
++---------------------+---------------------+-------------------------+-------------------+
+| Scale sensitivity   | Spectral methods    | Nonstationarity         | Sensitivity > 0.1 |
++---------------------+---------------------+-------------------------+-------------------+
+| False positives     | GPH                 | Short records (n < 512) | Type I > 10%      |
++---------------------+---------------------+-------------------------+-------------------+
+| Heavy-tail breakdown| All                 | α < 2 stable            | Variance overflow |
++---------------------+---------------------+-------------------------+-------------------+
+| Ergodicity breaking | All                 | Aging/nonequilibrium    | Ensemble ≠ time   |
++---------------------+---------------------+-------------------------+-------------------+
+
+Interpreting Benchmark Results
+------------------------------
+
+When interpreting failure benchmark results:
+
+1. **Compare stationary vs. nonstationary MAE**: Relative degradation indicates sensitivity
+2. **Check structural break detection**: If breaks detected, results are unreliable
+3. **Examine H-dependent bias**: Estimators often fail more at H boundaries
+4. **Consider sample size effects**: Short series exacerbate all failure modes
+
+**Reporting Guidelines**:
+
+- Report effect sizes (Cohen's d) for bias significance
+- Apply Bonferroni/FDR correction for multiple comparisons
+- Include 95% CI from bootstrap (≥500 resamples)
+- Visualize with heatmaps: Estimator × H × Scenario
+

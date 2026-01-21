@@ -90,12 +90,16 @@ benchmark = ComprehensiveBenchmark()   # runtime_profile defaults to "auto"/"ful
 
 - **Estimator families** – temporal (R/S, DFA, DMA, GHE, Higuchi), spectral (Periodogram, GPH, Whittle), wavelet (CWT, variance, log-variance, wavelet Whittle), multifractal (MFDFA, wavelet leaders), machine-learning (Random Forest, SVR, Gradient Boosting), and neural (CNN, LSTM, GRU, Transformer).
 - **Robust benchmarking** – contamination models, adaptive preprocessing, stratified reporting, non-parametric significance tests, and provenance bundles per result.
-- **Analytics tooling** – convergence analysis, bias estimation, stress panels, uncertainty calibration, scale influence diagnostics.
+- **Nonstationarity testing** – time-varying H generators (regime switching, continuous drift, structural breaks), critical regime models (OU, fractional Lévy, SOC), and structural break detection (CUSUM, Chow test, ICSS).
+- **Surrogate data testing** – IAAFT, phase randomization, and AR surrogates for hypothesis testing of LRD and nonlinearity.
+- **Analytics tooling** – convergence analysis, bias estimation, stress panels, uncertainty calibration (including studentized bootstrap with coverage analysis), scale influence diagnostics.
 - **GPU-aware execution** – intelligent fallbacks (JAX ▶ Numba ▶ NumPy) with automatic CPU mode unless the user explicitly opts into GPU acceleration.
+- **Containerized experiments** – Docker support for reproducible cloud/HPC benchmarking.
 
 For the full catalogue see the [API reference](https://lrdbenchmark.readthedocs.io/en/latest/api/).
 
 ---
+
 
 ## Documentation & Learning Path
 

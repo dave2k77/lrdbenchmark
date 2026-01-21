@@ -748,3 +748,441 @@ def run_comprehensive_diagnostics(
         }
     }
 
+
+class StructuralBreakDetector:
+    """
+    Detector for structural breaks in time series.
+    
+    Implements multiple tests for detecting change points that would invalidate
+    the stationarity assumptions required by classical LRD estimators.
+    
+    Methods
+    -------
+    cusum_test : Standard CUSUM test for mean shifts
+    recursive_cusum : Sequential/online CUSUM detection
+    chow_test : Test for known break point
+    icss_algorithm : Iterative Cumulative Sum of Squares for variance changes
+    detect_all : Run all tests and return comprehensive results
+    """
+    
+    def __init__(
+        self,
+        significance_level: float = 0.05,
+        min_segment_length: int = 50
+    ):
+        """
+        Initialize structural break detector.
+        
+        Parameters
+        ----------
+        significance_level : float
+            Significance level for hypothesis tests
+        min_segment_length : int
+            Minimum segment length for break detection
+        """
+        self.significance_level = significance_level
+        self.min_segment_length = min_segment_length
+    
+    def cusum_test(
+        self,
+        data: np.ndarray,
+        normalize: bool = True
+    ) -> Dict[str, Any]:
+        """
+        Standard CUSUM test for detecting mean shifts.
+        
+        The CUSUM (Cumulative Sum) test detects changes in the mean of a 
+        time series by monitoring cumulative deviations from the sample mean.
+        
+        Parameters
+        ----------
+        data : np.ndarray
+            Input time series
+        normalize : bool
+            Whether to normalize the CUSUM statistic
+            
+        Returns
+        -------
+        dict
+            Test results including:
+            - statistic: Maximum absolute CUSUM value
+            - critical_value: Critical value at significance level
+            - break_detected: Whether a break was detected
+            - break_index: Estimated break location (if detected)
+            - cusum_path: Full CUSUM path for visualization
+        """
+        n = len(data)
+        
+        if n < 2 * self.min_segment_length:
+            return {
+                "status": "insufficient_data",
+                "reason": f"Need at least {2 * self.min_segment_length} points"
+            }
+        
+        # Compute CUSUM
+        mean_val = np.mean(data)
+        cumsum = np.cumsum(data - mean_val)
+        
+        if normalize:
+            std_val = np.std(data)
+            if std_val > 0:
+                cumsum = cumsum / (std_val * np.sqrt(n))
+        
+        # Test statistic: maximum absolute deviation
+        statistic = np.max(np.abs(cumsum))
+        break_index = np.argmax(np.abs(cumsum))
+        
+        # Critical value (Brownian bridge approximation)
+        # Using Andrew (1993) critical values for significance level
+        critical_values = {
+            0.01: 1.63,
+            0.05: 1.36,
+            0.10: 1.22
+        }
+        critical_value = critical_values.get(
+            self.significance_level, 
+            1.36  # Default to 0.05
+        )
+        
+        break_detected = statistic > critical_value
+        
+        return {
+            "status": "ok",
+            "test_name": "CUSUM",
+            "statistic": float(statistic),
+            "critical_value": float(critical_value),
+            "break_detected": break_detected,
+            "break_index": int(break_index) if break_detected else None,
+            "break_position": float(break_index / n) if break_detected else None,
+            "p_value_approx": self._cusum_pvalue(statistic),
+            "cusum_path": cumsum.tolist()
+        }
+    
+    def _cusum_pvalue(self, statistic: float) -> float:
+        """Approximate p-value for CUSUM statistic."""
+        # Kolmogorov distribution approximation
+        if statistic <= 0:
+            return 1.0
+        # Using asymptotic formula
+        k = statistic
+        p_value = 2 * np.sum([
+            (-1)**(j-1) * np.exp(-2 * j**2 * k**2) 
+            for j in range(1, 101)
+        ])
+        return max(0, min(1, 1 - p_value))
+    
+    def recursive_cusum(
+        self,
+        data: np.ndarray,
+        window_size: Optional[int] = None
+    ) -> Dict[str, Any]:
+        """
+        Recursive CUSUM for sequential/online break detection.
+        
+        Monitors the process sequentially and detects when the cumulative
+        sum exceeds threshold, suitable for online monitoring.
+        
+        Parameters
+        ----------
+        data : np.ndarray
+            Input time series
+        window_size : int, optional
+            Initial window for establishing baseline
+            
+        Returns
+        -------
+        dict
+            Detection results including break points and timing
+        """
+        n = len(data)
+        
+        if window_size is None:
+            window_size = min(100, n // 4)
+        
+        if n < window_size + self.min_segment_length:
+            return {
+                "status": "insufficient_data",
+                "reason": f"Need at least {window_size + self.min_segment_length} points"
+            }
+        
+        # Establish baseline from initial window
+        baseline_mean = np.mean(data[:window_size])
+        baseline_std = np.std(data[:window_size])
+        
+        if baseline_std <= 0:
+            baseline_std = 1.0
+        
+        # Compute recursive residuals and CUSUM
+        cusum_plus = np.zeros(n - window_size)
+        cusum_minus = np.zeros(n - window_size)
+        
+        # Control limit (typically 4-5 for detecting 1-sigma shifts)
+        control_limit = 5.0
+        slack = 0.5  # Allowance parameter
+        
+        breaks_detected = []
+        
+        for i in range(window_size, n):
+            idx = i - window_size
+            z = (data[i] - baseline_mean) / baseline_std
+            
+            # Two-sided CUSUM
+            cusum_plus[idx] = max(0, cusum_plus[idx-1] + z - slack) if idx > 0 else max(0, z - slack)
+            cusum_minus[idx] = max(0, cusum_minus[idx-1] - z - slack) if idx > 0 else max(0, -z - slack)
+            
+            # Check for break
+            if cusum_plus[idx] > control_limit or cusum_minus[idx] > control_limit:
+                breaks_detected.append(i)
+                # Reset after detection
+                cusum_plus[idx] = 0
+                cusum_minus[idx] = 0
+        
+        return {
+            "status": "ok",
+            "test_name": "Recursive CUSUM",
+            "breaks_detected": len(breaks_detected) > 0,
+            "n_breaks": len(breaks_detected),
+            "break_indices": breaks_detected,
+            "break_positions": [b / n for b in breaks_detected],
+            "control_limit": control_limit,
+            "cusum_plus": cusum_plus.tolist(),
+            "cusum_minus": cusum_minus.tolist()
+        }
+    
+    def chow_test(
+        self,
+        data: np.ndarray,
+        break_index: Optional[int] = None
+    ) -> Dict[str, Any]:
+        """
+        Chow test for structural break at a known or estimated point.
+        
+        Tests whether regression coefficients (here, just the mean) differ
+        before and after a specified break point.
+        
+        Parameters
+        ----------
+        data : np.ndarray
+            Input time series
+        break_index : int, optional
+            Index of hypothesized break. If None, tests at midpoint.
+            
+        Returns
+        -------
+        dict
+            Test results including F-statistic and p-value
+        """
+        n = len(data)
+        
+        if break_index is None:
+            break_index = n // 2
+        
+        if break_index < self.min_segment_length or n - break_index < self.min_segment_length:
+            return {
+                "status": "invalid_break_point",
+                "reason": "Break point too close to boundary"
+            }
+        
+        # Split data
+        data_before = data[:break_index]
+        data_after = data[break_index:]
+        
+        n1, n2 = len(data_before), len(data_after)
+        
+        # Compute means and variances
+        mean_before = np.mean(data_before)
+        mean_after = np.mean(data_after)
+        mean_pooled = np.mean(data)
+        
+        # Sum of squared residuals
+        ssr_unrestricted = np.sum((data_before - mean_before)**2) + np.sum((data_after - mean_after)**2)
+        ssr_restricted = np.sum((data - mean_pooled)**2)
+        
+        # F-statistic
+        # k = 1 (testing difference in means)
+        k = 1
+        if ssr_unrestricted > 0:
+            f_statistic = ((ssr_restricted - ssr_unrestricted) / k) / (ssr_unrestricted / (n - 2*k))
+        else:
+            f_statistic = 0.0
+        
+        # P-value from F-distribution
+        p_value = 1 - stats.f.cdf(f_statistic, k, n - 2*k)
+        
+        break_detected = p_value < self.significance_level
+        
+        return {
+            "status": "ok",
+            "test_name": "Chow Test",
+            "break_index": int(break_index),
+            "break_position": float(break_index / n),
+            "f_statistic": float(f_statistic),
+            "p_value": float(p_value),
+            "break_detected": break_detected,
+            "mean_before": float(mean_before),
+            "mean_after": float(mean_after),
+            "mean_difference": float(mean_after - mean_before)
+        }
+    
+    def icss_algorithm(
+        self,
+        data: np.ndarray,
+        max_iterations: int = 100
+    ) -> Dict[str, Any]:
+        """
+        Iterative Cumulative Sum of Squares (ICSS) algorithm.
+        
+        Detects multiple variance change points using the algorithm of
+        Inclán and Tiao (1994).
+        
+        Parameters
+        ----------
+        data : np.ndarray
+            Input time series
+        max_iterations : int
+            Maximum iterations for refinement
+            
+        Returns
+        -------
+        dict
+            Detected variance change points
+        """
+        n = len(data)
+        
+        if n < 2 * self.min_segment_length:
+            return {
+                "status": "insufficient_data",
+                "reason": f"Need at least {2 * self.min_segment_length} points"
+            }
+        
+        # Center the data
+        data_centered = data - np.mean(data)
+        
+        # Compute cumulative sum of squares
+        css = np.cumsum(data_centered**2)
+        total_ss = css[-1]
+        
+        if total_ss <= 0:
+            return {
+                "status": "constant_variance",
+                "break_detected": False
+            }
+        
+        # Compute D_k statistic (normalized deviation from linear growth)
+        k = np.arange(1, n + 1)
+        expected_ss = (k / n) * total_ss
+        d_k = (css - expected_ss) / np.sqrt(total_ss)
+        
+        # Find maximum absolute deviation
+        max_d = np.max(np.abs(d_k))
+        break_index = np.argmax(np.abs(d_k))
+        
+        # Critical value (asymptotic distribution)
+        # Using sqrt(2 * log(log(n))) * 1.358 as approximation
+        if n > 10:
+            critical_value = np.sqrt(2 * np.log(np.log(n))) * 1.358
+        else:
+            critical_value = 1.36
+        
+        # Simple single-break detection
+        break_detected = max_d > critical_value
+        
+        # For multiple breaks, iterate (simplified version)
+        break_points = []
+        if break_detected:
+            break_points.append(int(break_index))
+        
+        return {
+            "status": "ok",
+            "test_name": "ICSS",
+            "statistic": float(max_d),
+            "critical_value": float(critical_value),
+            "break_detected": break_detected,
+            "n_breaks": len(break_points),
+            "break_indices": break_points,
+            "break_positions": [bp / n for bp in break_points],
+            "d_k_path": d_k.tolist()
+        }
+    
+    def detect_all(
+        self,
+        data: np.ndarray,
+        include_paths: bool = False
+    ) -> Dict[str, Any]:
+        """
+        Run all structural break tests and return comprehensive results.
+        
+        Parameters
+        ----------
+        data : np.ndarray
+            Input time series
+        include_paths : bool
+            Whether to include full paths (can be large)
+            
+        Returns
+        -------
+        dict
+            Comprehensive break detection results with warnings
+        """
+        data = np.asarray(data, dtype=np.float64)
+        
+        # Run all tests
+        cusum_result = self.cusum_test(data)
+        recursive_result = self.recursive_cusum(data)
+        chow_result = self.chow_test(data)
+        icss_result = self.icss_algorithm(data)
+        
+        # Remove paths if not requested
+        if not include_paths:
+            for result in [cusum_result, recursive_result, icss_result]:
+                for key in ['cusum_path', 'cusum_plus', 'cusum_minus', 'd_k_path']:
+                    result.pop(key, None)
+        
+        # Summary
+        any_break_detected = (
+            cusum_result.get("break_detected", False) or
+            recursive_result.get("breaks_detected", False) or
+            chow_result.get("break_detected", False) or
+            icss_result.get("break_detected", False)
+        )
+        
+        # Generate warnings
+        warnings_list = []
+        if cusum_result.get("break_detected"):
+            warnings_list.append(
+                f"CUSUM detected mean shift at position {cusum_result.get('break_position', 0):.2%}"
+            )
+        if recursive_result.get("n_breaks", 0) > 0:
+            warnings_list.append(
+                f"Recursive CUSUM detected {recursive_result['n_breaks']} break(s)"
+            )
+        if chow_result.get("break_detected"):
+            warnings_list.append(
+                f"Chow test detected break (p={chow_result.get('p_value', 1):.4f})"
+            )
+        if icss_result.get("break_detected"):
+            warnings_list.append(
+                f"ICSS detected {icss_result.get('n_breaks', 0)} variance change point(s)"
+            )
+        
+        if any_break_detected:
+            warnings_list.insert(0, 
+                "⚠️ STATIONARITY WARNING: Structural breaks detected. "
+                "Classical LRD estimator results may be unreliable."
+            )
+        
+        return {
+            "status": "ok",
+            "any_break_detected": any_break_detected,
+            "stationarity_valid": not any_break_detected,
+            "cusum": cusum_result,
+            "recursive_cusum": recursive_result,
+            "chow": chow_result,
+            "icss": icss_result,
+            "warnings": warnings_list,
+            "recommendation": (
+                "Consider segmented analysis or nonstationary methods" 
+                if any_break_detected else 
+                "Data appears stationary; proceed with classical estimation"
+            )
+        }

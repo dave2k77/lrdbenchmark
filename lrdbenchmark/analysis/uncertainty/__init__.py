@@ -9,6 +9,11 @@ and exposes a ``hurst_parameter`` in its results dictionary.
 """
 
 from .quantifier import UncertaintyQuantifier
+from .coverage_analyzer import CoverageAnalyzer, CoverageResult, run_comprehensive_coverage_analysis
 
-__all__ = ["UncertaintyQuantifier"]
-
+__all__ = [
+    "UncertaintyQuantifier",
+    "CoverageAnalyzer",
+    "CoverageResult",
+    "run_comprehensive_coverage_analysis"
+]

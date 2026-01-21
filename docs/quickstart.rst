@@ -324,8 +324,113 @@ Performance Tips
 3. **Enable analytics** for monitoring
 4. **Use appropriate data lengths** (1000+ samples recommended)
 
+Nonstationarity Testing
+-----------------------
+
+Test estimator robustness under nonstationarity conditions:
+
+.. code-block:: python
+
+   from lrdbenchmark.generation import (
+       RegimeSwitchingProcess,
+       ContinuousDriftProcess,
+       StructuralBreakProcess
+   )
+   
+   # Regime switching: H jumps from 0.3 to 0.8 at midpoint
+   gen = RegimeSwitchingProcess(h_regimes=[0.3, 0.8], change_points=[0.5])
+   result = gen.generate(1000)
+   signal = result['signal']
+   h_trajectory = result['h_trajectory']  # True H at each timepoint
+   
+   # Continuous linear drift from H=0.3 to H=0.8
+   gen = ContinuousDriftProcess(h_start=0.3, h_end=0.8, drift_type='linear')
+   result = gen.generate(1000)
+   
+   # Structural break with level shift
+   gen = StructuralBreakProcess(h_before=0.7, h_after=0.4, break_severity=0.3)
+   result = gen.generate(1000)
+
+Critical Regime Models
+----------------------
+
+Test estimators in physics-motivated critical regimes:
+
+.. code-block:: python
+
+   from lrdbenchmark.generation import (
+       OrnsteinUhlenbeckProcess,
+       FractionalLevyMotion,
+       SOCAvalancheModel
+   )
+   
+   # OU with time-varying friction (transient criticality)
+   gen = OrnsteinUhlenbeckProcess(theta_start=0.1, theta_end=1.0)
+   result = gen.generate(1000)
+   
+   # Heavy-tailed fractional Lévy motion (α<2 stable)
+   gen = FractionalLevyMotion(H=0.7, alpha=1.5)
+   result = gen.generate(1000)
+   
+   # Self-organized criticality avalanche model
+   gen = SOCAvalancheModel(grid_size=32)
+   result = gen.generate(500)
+
+Structural Break Detection
+--------------------------
+
+Detect stationarity violations before running classical estimators:
+
+.. code-block:: python
+
+   from lrdbenchmark.analysis.diagnostics import StructuralBreakDetector
+   
+   detector = StructuralBreakDetector(significance_level=0.05)
+   result = detector.detect_all(data)
+   
+   if result['any_break_detected']:
+       print("⚠️ Warning: Stationarity violated!")
+       print(result['warnings'])
+   else:
+       print("Data appears stationary; proceed with classical estimation")
+
+Surrogate Data Testing
+----------------------
+
+Generate surrogates for hypothesis testing:
+
+.. code-block:: python
+
+   from lrdbenchmark.generation import IAFFTSurrogate, PhaseRandomizedSurrogate
+   
+   # IAAFT: preserve spectrum AND amplitude distribution
+   gen = IAFFTSurrogate()
+   result = gen.generate(original_data, n_surrogates=100)
+   surrogates = result['surrogates']
+   
+   # Phase randomization: preserve spectrum only
+   gen = PhaseRandomizedSurrogate()
+   result = gen.generate(original_data, n_surrogates=100)
+
+Running Failure Benchmarks
+--------------------------
+
+Systematically test classical estimators under nonstationarity:
+
+.. code-block:: bash
+
+   # Quick screening (~5 min)
+   python scripts/benchmarks/run_classical_failure_benchmark.py --profile quick
+   
+   # Standard analysis (~1 hour)
+   python scripts/benchmarks/run_classical_failure_benchmark.py --profile standard
+   
+   # Full publication run (~8-10 hours)
+   python scripts/benchmarks/run_classical_failure_benchmark.py --profile full
+
 Next Steps
------------
+----------
+
 
 * :doc:`notebooks/notebooks_overview` - **Start here**: Comprehensive demonstration notebooks
 * :doc:`installation` - Detailed installation guide

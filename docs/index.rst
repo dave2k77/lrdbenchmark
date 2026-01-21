@@ -30,8 +30,13 @@ What lrdbenchmark provides
 * **Twenty estimators with a unified API** – 13 classical (temporal, spectral, wavelet, multifractal), 3 machine-learning, and 4 neural estimators.
 * **Runtime profiles** – switch between the lightweight ``quick`` profile (used automatically under pytest/CI) and the exhaustive ``full`` profile for publication-grade studies.
 * **Robust benchmarking** – contamination models, adaptive preprocessing, stratified summaries, non-parametric significance testing, and uncertainty calibration.
+* **Nonstationarity testing** – time-varying H generators (regime switching, continuous drift, structural breaks), critical regime models (OU, fractional Lévy, SOC), and structural break detection (CUSUM, Chow test, ICSS).
+* **Surrogate data testing** – IAAFT, phase randomization, and AR surrogates for hypothesis testing of LRD and nonlinearity.
+* **Coverage probability analysis** – Monte Carlo estimation of CI coverage with studentized bootstrap and calibration diagnostics.
 * **Adaptive acceleration** – automatic CPU mode with optional JAX → Numba → NumPy fallbacks and GPU support when requested.
+* **Containerized experiments** – Docker support for reproducible cloud/HPC benchmarking.
 * **Documentation-first tutorials** – the tutorial series now lives inside the docs and is mirrored by Markdown notebooks for interactive exploration.
+
 
 Quick start
 -----------
@@ -55,6 +60,9 @@ API Reference
    :maxdepth: 2
    :titlesonly:
 
+   api/generation
+   api/diagnostics
+   api/uncertainty
    api/machine_learning_estimators
    api/neural_network_factory
    api/adaptive_estimators
@@ -66,6 +74,7 @@ API Reference
 
 Theory & Background
 -------------------
+
 
 For theoretical foundations and validation techniques, see the comprehensive examples in the API documentation and quickstart guide.
 

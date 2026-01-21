@@ -149,6 +149,16 @@ class UncertaintyQuantifier:
         primary_interval = self._select_primary_interval(
             block_summary, wavelet_summary, parametric_summary
         )
+        
+        # Compute studentized bootstrap interval
+        studentized_summary = self._studentized_bootstrap_interval(
+            estimator_cls, estimator_params, data, rng, base_estimate
+        )
+        
+        if true_value is not None and np.isfinite(true_value):
+            coverage["studentized_bootstrap"] = self._contains_true_value(
+                studentized_summary, true_value
+            )
 
         return {
             "status": "ok",
@@ -157,9 +167,11 @@ class UncertaintyQuantifier:
             "block_bootstrap": block_summary.to_dict(),
             "wavelet_bootstrap": wavelet_summary.to_dict(),
             "parametric_monte_carlo": parametric_summary.to_dict(),
+            "studentized_bootstrap": studentized_summary.to_dict(),
             "coverage": coverage,
             "primary_interval": primary_interval,
         }
+
 
     # ---------------------------------------------------------------------
     # Bootstrap helpers
@@ -358,6 +370,98 @@ class UncertaintyQuantifier:
             samples,
             method="parametric_monte_carlo",
             metadata={"model": data_model_name, "failures": failures},
+        )
+
+    def _studentized_bootstrap_interval(
+        self,
+        estimator_cls: Type[Any],
+        estimator_params: Dict[str, Any],
+        data: np.ndarray,
+        rng: np.random.Generator,
+        base_estimate: float,
+    ) -> IntervalSummary:
+        """
+        Studentized (bias-corrected) bootstrap interval.
+        
+        Uses t-distribution critical values and bias correction for
+        improved coverage probability in small samples.
+        """
+        samples: List[float] = []
+        n = len(data)
+        if n < 16:
+            return IntervalSummary(
+                method="studentized_bootstrap",
+                n_samples=0,
+                mean=None,
+                std=None,
+                confidence_interval=None,
+                status="insufficient_data",
+                metadata={"reason": "Time series too short for bootstrap."},
+            )
+
+        block_size = self.block_size or max(8, int(np.sqrt(n)))
+        block_size = min(block_size, n)
+        n_blocks = int(np.ceil(n / block_size))
+        failures = 0
+
+        for _ in range(self.n_block_bootstrap):
+            if block_size >= n:
+                resampled = np.copy(data)
+            else:
+                starts = rng.integers(0, n - block_size + 1, size=n_blocks)
+                blocks = [data[s : s + block_size] for s in starts]
+                resampled = np.concatenate(blocks)[:n]
+
+            estimate = self._estimate_hurst(estimator_cls, estimator_params, resampled)
+            if estimate is None:
+                failures += 1
+                if failures > self.max_failures:
+                    break
+                continue
+            samples.append(estimate)
+
+        if len(samples) < 8:
+            return IntervalSummary(
+                method="studentized_bootstrap",
+                n_samples=len(samples),
+                mean=None,
+                std=None,
+                confidence_interval=None,
+                status="insufficient_samples",
+                metadata={"reason": "Insufficient successful resamples.", "failures": failures},
+            )
+
+        samples_arr = np.array(samples)
+        mean = float(np.mean(samples_arr))
+        std = float(np.std(samples_arr, ddof=1))
+        
+        # Bias correction
+        bias = mean - base_estimate
+        bias_corrected_mean = base_estimate - bias
+        
+        # Use t-distribution for studentized CI
+        from scipy import stats
+        df = len(samples_arr) - 1
+        t_crit = stats.t.ppf((1 + self.confidence_level) / 2, df)
+        
+        se = std / np.sqrt(len(samples_arr))
+        lower = bias_corrected_mean - t_crit * std
+        upper = bias_corrected_mean + t_crit * std
+        
+        return IntervalSummary(
+            method="studentized_bootstrap",
+            n_samples=len(samples_arr),
+            mean=bias_corrected_mean,
+            std=std,
+            confidence_interval=(float(lower), float(upper)),
+            status="ok",
+            metadata={
+                "block_size": block_size,
+                "failures": failures,
+                "bias": float(bias),
+                "t_critical": float(t_crit),
+                "degrees_freedom": df
+            },
         )
 
     # ---------------------------------------------------------------------
