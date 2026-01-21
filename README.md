@@ -4,8 +4,8 @@ Modern, reproducible benchmarking for long-range dependence (LRD) estimation acr
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10–3.12](https://img.shields.io/badge/python-3.10%E2%80%933.12-blue.svg)](https://www.python.org/downloads/)
-[![Version 2.3.2](https://img.shields.io/badge/version-2.3.2-green.svg)](https://pypi.org/project/lrdbenchmark/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17535020.svg)](https://doi.org/10.5281/zenodo.17535020)
+[![Version 2.4.0](https://img.shields.io/badge/version-2.4.0-green.svg)](https://pypi.org/project/lrdbenchmark/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18331354.svg)](https://doi.org/10.5281/zenodo.18331354)
 
 ---
 
