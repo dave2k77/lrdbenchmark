@@ -24,11 +24,16 @@ Modern, reproducible benchmarking for long-range dependence (LRD) estimation acr
 ### Installation
 
 ```bash
-pip install lrdbenchmark                          # CPU-only
-pip install lrdbenchmark[accel-jax]              # + JAX acceleration
-pip install lrdbenchmark[accel-numba]            # + Numba acceleration
-pip install lrdbenchmark[accel-pytorch]          # + PyTorch acceleration
-# or everything: pip install lrdbenchmark[accel-all]
+pip install lrdbenchmark
+```
+
+Acceleration backends (JAX, Numba, PyTorch) are **optional** and auto-detected at runtime. The library falls back to NumPy when accelerators are unavailable. Install accelerators only if you need them:
+
+```bash
+pip install lrdbenchmark[accel-jax]      # JAX for GPU/TPU
+pip install lrdbenchmark[accel-numba]    # Numba JIT compilation
+pip install lrdbenchmark[accel-pytorch]  # PyTorch for neural estimators
+pip install lrdbenchmark[accel-all]      # All accelerators
 ```
 
 ### Pretrained models
@@ -54,7 +59,55 @@ By default the artefacts are cached under `~/.cache/lrdbenchmark/models`. Overri
 - CPU guard: the package defaults to safe CPU-only settings to avoid noisy CUDA warnings. Override by setting `LRDBENCHMARK_AUTO_CPU=0` *before* importing to opt into your own CUDA configuration.
 - Asset cache: set `LRDBENCHMARK_MODELS_DIR=/path/to/cache` if you want pretrained weights downloaded into a custom directory (default is `~/.cache/lrdbenchmark/models`).
 
-### First Benchmark
+---
+
+## Command-Line Benchmarks
+
+Run classical estimator failure analysis from the CLI:
+
+```bash
+# Quick screening (~5 min) - 3 H values, 2 lengths, 10 realizations
+python scripts/benchmarks/run_classical_failure_benchmark.py --profile quick
+
+# Standard analysis (~1 hour) - 7 H values, 3 lengths, 100 realizations
+python scripts/benchmarks/run_classical_failure_benchmark.py --profile standard
+
+# Full publication run (~8-10 hours) - 17 H values, 7 lengths, 500 realizations
+python scripts/benchmarks/run_classical_failure_benchmark.py --profile full
+```
+
+### CLI Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--profile` | `standard` | `quick`, `standard`, or `full` |
+| `--output` | auto | Custom output directory |
+| `--seed` | 42 | Random seed for reproducibility |
+| `--realizations` | per-profile | Override realization count |
+| `--checkpoint-every` | 100 | Checkpoint frequency |
+| `--no-resume` | false | Start fresh, ignore checkpoints |
+| `--dry-run` | false | Show config without running |
+
+### Example Workflows
+
+```bash
+# Dry-run to see configuration
+python scripts/benchmarks/run_classical_failure_benchmark.py --dry-run --profile full
+
+# Custom output and more realizations
+python scripts/benchmarks/run_classical_failure_benchmark.py --profile standard \
+    --output results/my_experiment --realizations 200
+
+# Resume interrupted run (automatic)
+python scripts/benchmarks/run_classical_failure_benchmark.py --profile full
+```
+
+Results are saved as `results.csv`, `summary.json`, and `config.json` in the output directory.
+
+---
+
+## First Benchmark (Python API)
+
 
 ```python
 from lrdbenchmark import ComprehensiveBenchmark
