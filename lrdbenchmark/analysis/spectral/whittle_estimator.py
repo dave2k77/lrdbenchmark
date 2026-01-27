@@ -116,6 +116,7 @@ class WhittleEstimator(BaseEstimator):
         
         self.results = {
             "hurst_parameter": float(hurst),
+            "d_parameter": float(hurst - 0.5),  # Fractional differencing parameter
             "scale_parameter": float(scale),
             "optimization_success": res.success,
             "method": "Whittle_NumPy",
@@ -206,12 +207,12 @@ class WhittleEstimator(BaseEstimator):
             
             self.results = {
                 "hurst_parameter": float(hurst),
+                "d_parameter": float(hurst - 0.5),  # Fractional differencing parameter
                 "scale_parameter": float(scale),
                 "optimization_success": res.success,
                 "method": "Whittle_JAX",
                 "optimization_framework": "jax",
                 "frequencies": np.array(f_sel).tolist(),
-                # "periodogram": ... skip large arrays in dict if not needed
             }
             return self.results
 

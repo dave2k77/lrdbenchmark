@@ -12,6 +12,7 @@ from .critical_regime_generator import (
     OrnsteinUhlenbeckProcess,
     SubordinatedProcess,
     FractionalLevyMotion,
+    LinearFractionalStableMotion,
     SOCAvalancheModel,
     create_critical_regime_process
 )
@@ -34,6 +35,7 @@ __all__ = [
     "OrnsteinUhlenbeckProcess",
     "SubordinatedProcess",
     "FractionalLevyMotion",
+    "LinearFractionalStableMotion",
     "SOCAvalancheModel",
     "create_critical_regime_process",
     "IAFFTSurrogate",

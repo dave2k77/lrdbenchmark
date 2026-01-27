@@ -224,19 +224,71 @@ class SubordinatedProcess:
 
 class FractionalLevyMotion:
     """
-    Fractional Lévy motion: heavy-tailed, non-Gaussian LRD process.
+    Linear Fractional Stable Motion (LFSM) via FFT-based spectral method.
     
-    Extends fractional Brownian motion to stable distributions,
-    producing α-stable marginals with long-range dependence.
+    Generates heavy-tailed, non-Gaussian processes with long-range dependence
+    by applying fractional integration to symmetric α-stable noise in the
+    frequency domain.
     
-    Critical for testing estimator robustness under heavy tails
-    where variance is infinite (α < 2).
+    The algorithm:
+        1. Generate symmetric α-stable noise Z
+        2. FFT to frequency domain: Z̃ = FFT(Z)
+        3. Apply spectral kernel: X̃ = Z̃ * |ω|^{-d} where d = H - 1/α
+        4. IFFT back to time domain: X = IFFT(X̃)
+    
+    When α = 2 (Gaussian case), d = H - 0.5, recovering fractional Brownian motion.
+    
+    Parameters
+    ----------
+    H : float
+        Hurst (self-similarity) parameter, 0 < H < 1
+    alpha : float
+        Stability index, 0 < alpha <= 2. α=2 is Gaussian (fBm).
+    beta : float
+        Skewness parameter, -1 <= beta <= 1. Use 0 for symmetric.
+    scale : float
+        Scale parameter for the stable distribution
+    use_hpfracc : bool
+        If True, attempt to use hpfracc library for optimized operations.
+        Falls back to NumPy if hpfracc is not available.
+    random_state : int, optional
+        Random seed for reproducibility
     
     Example
     -------
     >>> gen = FractionalLevyMotion(H=0.7, alpha=1.5)
     >>> result = gen.generate(1000)
+    >>> signal = result['signal']
+    
+    Notes
+    -----
+    The relationship between H (Hurst parameter), α (stability index), and
+    d (fractional integration order) is: d = H - 1/α
+    
+    For LFSM, the valid parameter range requires: 0 < H < 1 and 1/α < H < 1
+    to ensure d > 0 (fractional integration, not differentiation).
+    
+    References
+    ----------
+    Samorodnitsky, G. & Taqqu, M. S. (1994). Stable Non-Gaussian Random
+    Processes: Stochastic Models with Infinite Variance. Chapman & Hall.
     """
+    
+    # Try to import hpfracc at class level
+    _hpfracc_available = None
+    _hpfracc_module = None
+    
+    @classmethod
+    def _check_hpfracc(cls) -> bool:
+        """Check if hpfracc is available (cached)."""
+        if cls._hpfracc_available is None:
+            try:
+                import hpfracc
+                cls._hpfracc_module = hpfracc
+                cls._hpfracc_available = True
+            except ImportError:
+                cls._hpfracc_available = False
+        return cls._hpfracc_available
     
     def __init__(
         self,
@@ -244,10 +296,11 @@ class FractionalLevyMotion:
         alpha: float = 1.5,
         beta: float = 0.0,
         scale: float = 1.0,
+        use_hpfracc: bool = True,
         random_state: Optional[int] = None
     ):
         """
-        Initialize fractional Lévy motion.
+        Initialize Linear Fractional Stable Motion generator.
         
         Parameters
         ----------
@@ -259,6 +312,8 @@ class FractionalLevyMotion:
             Skewness parameter (-1 <= beta <= 1)
         scale : float
             Scale parameter
+        use_hpfracc : bool
+            Whether to use hpfracc library if available
         random_state : int, optional
             Random seed
         """
@@ -273,23 +328,35 @@ class FractionalLevyMotion:
         self.alpha = alpha
         self.beta = beta
         self.scale = scale
+        self.use_hpfracc = use_hpfracc and self._check_hpfracc()
         self.rng = np.random.default_rng(random_state)
+        
+        # Compute fractional integration order: d = H - 1/alpha
+        # This is the key relationship for LFSM
+        self.d = H - 1.0 / alpha
     
     def _generate_stable_rv(
         self,
         size: int,
         rng: np.random.Generator
     ) -> np.ndarray:
-        """Generate stable random variables using Chambers-Mallows-Stuck."""
+        """
+        Generate stable random variables using Chambers-Mallows-Stuck algorithm.
+        
+        For symmetric α-stable (beta=0), this produces the Lévy driver noise.
+        """
         u = rng.uniform(-np.pi/2, np.pi/2, size)
         e = rng.exponential(1.0, size)
         
         if self.alpha == 2:
+            # Gaussian case
             return rng.normal(0, self.scale * np.sqrt(2), size)
         
         if self.alpha == 1:
+            # Cauchy case
             return self.scale * np.tan(u)
         
+        # General stable case (Chambers-Mallows-Stuck)
         b = np.arctan(self.beta * np.tan(np.pi * self.alpha / 2)) / self.alpha
         s = (1 + self.beta**2 * np.tan(np.pi * self.alpha / 2)**2)**(1/(2*self.alpha))
         
@@ -298,47 +365,123 @@ class FractionalLevyMotion:
         
         return self.scale * x
     
+    def _apply_spectral_kernel(
+        self,
+        noise: np.ndarray
+    ) -> np.ndarray:
+        """
+        Apply fractional integration kernel |ω|^{-d} in frequency domain.
+        
+        This is the core of the spectral method for LFSM generation.
+        """
+        n = len(noise)
+        
+        # FFT of the stable noise
+        noise_fft = np.fft.fft(noise)
+        
+        # Construct frequency array
+        freq = np.fft.fftfreq(n)
+        
+        # Build spectral kernel: |ω|^{-d}
+        # Handle DC component (ω=0) to avoid division by zero
+        omega = 2 * np.pi * freq
+        with np.errstate(divide='ignore', invalid='ignore'):
+            kernel = np.abs(omega) ** (-self.d)
+        
+        # Set DC component to 0 (removes mean, standard for LFSM)
+        kernel[0] = 0.0
+        
+        # Handle any remaining infinities at very low frequencies
+        kernel = np.nan_to_num(kernel, nan=0.0, posinf=0.0, neginf=0.0)
+        
+        # Apply kernel in frequency domain
+        result_fft = noise_fft * kernel
+        
+        # Inverse FFT to get time-domain signal
+        result = np.fft.ifft(result_fft)
+        
+        # Take real part (imaginary should be negligible for real input)
+        return np.real(result)
+    
+    def _apply_spectral_kernel_hpfracc(
+        self,
+        noise: np.ndarray
+    ) -> np.ndarray:
+        """
+        Apply fractional integration using hpfracc's optimized methods.
+        
+        Uses Riemann-Liouville fractional integral when available.
+        """
+        try:
+            hpfracc = self._hpfracc_module
+            
+            # Use hpfracc's fractional integral if available
+            # The RL integral of order d corresponds to |ω|^{-d} in frequency domain
+            if hasattr(hpfracc, 'riemann_liouville_integral'):
+                t = np.linspace(0, 1, len(noise))
+                result = hpfracc.riemann_liouville_integral(t, noise, self.d)
+                return result
+            elif hasattr(hpfracc, 'optimized_riemann_liouville_integral'):
+                t = np.linspace(0, 1, len(noise))
+                from hpfracc import FractionalOrder
+                order = FractionalOrder(self.d)
+                result = hpfracc.optimized_riemann_liouville_integral(t, noise, order)
+                return result
+            else:
+                # Fall back to numpy implementation
+                return self._apply_spectral_kernel(noise)
+        except Exception:
+            # On any error, fall back to numpy
+            return self._apply_spectral_kernel(noise)
+    
     def generate(
         self,
         length: int,
         seed: Optional[int] = None
     ) -> Dict[str, Any]:
         """
-        Generate fractional Lévy motion.
+        Generate Linear Fractional Stable Motion.
         
-        Uses Cholesky decomposition with truncated correlations.
+        Uses FFT-based spectral method with kernel |ω|^{-d} where d = H - 1/α.
         
-        Returns dict with 'signal', 'metadata'.
+        Parameters
+        ----------
+        length : int
+            Length of the time series to generate
+        seed : int, optional
+            Random seed for this generation (overrides constructor seed)
+        
+        Returns
+        -------
+        dict
+            Dictionary containing:
+            - 'signal': The generated LFSM time series
+            - 'metadata': Process parameters and properties
         """
         local_rng = np.random.default_rng(seed) if seed is not None else self.rng
         
-        # Generate stable innovations
+        # Step 1: Generate symmetric α-stable innovations (Lévy driver)
         innovations = self._generate_stable_rv(length, local_rng)
         
-        # Apply fractional filter for LRD
-        # Use simplified moving average representation
-        d = self.H - 0.5  # Fractional differencing parameter
-        
-        # Generate fractional filter coefficients
-        max_lag = min(length, 500)
-        weights = np.zeros(max_lag)
-        weights[0] = 1.0
-        for k in range(1, max_lag):
-            weights[k] = weights[k-1] * (d + k - 1) / k
-        
-        # Apply filter via convolution
-        signal = np.convolve(innovations, weights, mode='full')[:length]
+        # Steps 2-4: Apply spectral fractional integration
+        if self.use_hpfracc and self._hpfracc_available:
+            signal = self._apply_spectral_kernel_hpfracc(innovations)
+        else:
+            signal = self._apply_spectral_kernel(innovations)
         
         return {
             'signal': signal,
             'metadata': {
-                'process_type': 'FractionalLevy',
+                'process_type': 'LinearFractionalStableMotion',
                 'H': self.H,
                 'alpha': self.alpha,
                 'beta': self.beta,
                 'scale': self.scale,
+                'd': self.d,  # Fractional integration order
                 'heavy_tailed': self.alpha < 2,
-                'infinite_variance': self.alpha < 2
+                'infinite_variance': self.alpha < 2,
+                'method': 'spectral_fft',
+                'used_hpfracc': self.use_hpfracc and self._hpfracc_available
             }
         }
 
@@ -488,6 +631,8 @@ def create_critical_regime_process(
         'subordinated_brownian': SubordinatedProcess,
         'fractional_levy': FractionalLevyMotion,
         'levy': FractionalLevyMotion,
+        'lfsm': FractionalLevyMotion,
+        'linear_fractional_stable_motion': FractionalLevyMotion,
         'soc_avalanche': SOCAvalancheModel,
         'soc': SOCAvalancheModel,
         'sandpile': SOCAvalancheModel
@@ -498,7 +643,11 @@ def create_critical_regime_process(
     if process_type not in process_map:
         raise ValueError(
             f"Unknown process type '{process_type}'. "
-            f"Available: ornstein_uhlenbeck, subordinated, fractional_levy, soc_avalanche"
+            f"Available: ornstein_uhlenbeck, subordinated, fractional_levy, lfsm, soc_avalanche"
         )
     
     return process_map[process_type](**kwargs)
+
+
+# Alias for explicit naming
+LinearFractionalStableMotion = FractionalLevyMotion
