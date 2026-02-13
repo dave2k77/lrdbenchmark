@@ -76,6 +76,10 @@ try:
     from .analysis.multifractal.mfdfa_estimator import MFDFAEstimator
     from .analysis.multifractal.wavelet_leaders_estimator import MultifractalWaveletLeadersEstimator
     
+    # Entropy estimators
+    from .analysis.entropy.mse_estimator import MSEEstimator
+    from .analysis.entropy.mvmse_estimator import MultivariateMSEEstimator
+    
 except ImportError as e:
     print(f"Warning: Could not import classical estimators: {e}")
     # Temporal estimators
@@ -98,6 +102,10 @@ except ImportError as e:
     # Multifractal estimators
     MFDFAEstimator = None
     MultifractalWaveletLeadersEstimator = None
+    
+    # Entropy estimators
+    MSEEstimator = None
+    MultivariateMSEEstimator = None
 
 
 # Main exports
@@ -123,6 +131,9 @@ __all__ = [
     "WaveletWhittleEstimator",
     "MFDFAEstimator",
     "MultifractalWaveletLeadersEstimator",
+    # Entropy estimators
+    "MSEEstimator",
+    "MultivariateMSEEstimator",
     # Machine Learning estimators
     "RandomForestEstimator",
     "SVREstimator",
@@ -209,6 +220,9 @@ _LAZY_ATTRS: Dict[str, str] = {
     "clear_gpu_cache": "lrdbenchmark.gpu.memory:clear_gpu_cache",
     "monitor_gpu_memory": "lrdbenchmark.gpu.memory:monitor_gpu_memory",
     "GHEEstimator": "lrdbenchmark.analysis.temporal.ghe_estimator:GHEEstimator",
+    # Entropy estimators
+    "MSEEstimator": "lrdbenchmark.analysis.entropy.mse_estimator:MSEEstimator",
+    "MultivariateMSEEstimator": "lrdbenchmark.analysis.entropy.mvmse_estimator:MultivariateMSEEstimator",
 }
 
 _GPU_STUBS: Dict[str, Any] = {

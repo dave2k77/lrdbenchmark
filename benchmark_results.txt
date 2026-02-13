@@ -1,0 +1,22 @@
+==========================================================================================
+                        BENCHMARK: Entropy vs Classical Estimators                        
+                              N=2048, fGn spectral synthesis                              
+==========================================================================================
+
+Estimator         H=0.3 (H_est / time)   H=0.5 (H_est / time)   H=0.7 (H_est / time)   H=0.9 (H_est / time) 
+------------------------------------------------------------------------------------------
+MSE (RCMSE)       0.567 / 0.510s    0.642 / 0.463s    0.838 / 0.445s    0.897 / 0.433s  
+DFA               1.306 / 1.112s    1.515 / 0.001s    1.710 / 0.001s    1.861 / 0.001s  
+R/S               0.969 / 0.952s    0.991 / 0.002s    1.003 / 0.002s    1.012 / 0.001s  
+Higuchi           0.994 / 0.006s    0.999 / 0.006s    0.999 / 0.006s    0.999 / 0.006s  
+GPH               0.369 / 0.417s    0.483 / 0.296s    0.771 / 0.002s    0.990 / 0.273s  
+Periodogram       0.298 / 0.214s    0.494 / 0.001s    0.693 / 0.001s    0.896 / 0.001s  
+Whittle MLE       0.329 / 0.229s    0.510 / 0.079s    0.695 / 0.081s    0.883 / 0.079s  
+------------------------------------------------------------------------------------------
+
+Notes:
+  - MSE returns an *approximate* Hurst parameter derived from the
+    entropy curve slope (Complexity Index is the native metric).
+  - DFA, R/S, Higuchi operate on fBm (cumulative sum of fGn).
+  - GPH, Periodogram, Whittle operate on fGn directly.
+  - MSE operates on fBm to measure persistence across scales.

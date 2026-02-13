@@ -20,6 +20,7 @@ except ImportError:
 # Import submodules
 from . import temporal
 from . import spectral
+from . import entropy
 
 __all__ = [
     # Auto-optimized estimator system
@@ -28,7 +29,12 @@ __all__ = [
     # Standard estimators
     "DFAEstimator",
     
+    # Entropy estimators
+    "MSEEstimator",
+    "MultivariateMSEEstimator",
+    
     # Submodules
     "temporal",
     "spectral",
+    "entropy",
 ]
