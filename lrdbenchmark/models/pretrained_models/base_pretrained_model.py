@@ -125,6 +125,7 @@ class BasePretrainedModel:
 
         if self.is_loaded and self.model is not None:
             info["model_type"] = type(self.model).__name__
-            info["total_parameters"] = sum(p.numel() for p in self.model.parameters())
+            if hasattr(self.model, 'parameters'):
+                info["total_parameters"] = sum(p.numel() for p in self.model.parameters())
 
         return info

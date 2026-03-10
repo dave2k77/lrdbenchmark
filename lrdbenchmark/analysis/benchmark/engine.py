@@ -19,7 +19,7 @@ import sys
 from scipy import stats
 
 # Import advanced metrics
-from .advanced_metrics import (
+from ..advanced_metrics import (
     ConvergenceAnalyzer,
     MeanSignedErrorAnalyzer,
     AdvancedPerformanceProfiler,
@@ -29,46 +29,46 @@ from .advanced_metrics import (
     calculate_mean_signed_error,
     profile_estimator_performance
 )
-from .uncertainty import UncertaintyQuantifier
-from ..robustness.adaptive_preprocessor import AdaptiveDataPreprocessor
+from ..uncertainty.quantifier import UncertaintyQuantifier
+from ...robustness.adaptive_preprocessor import AdaptiveDataPreprocessor
 
 # Import new diagnostic and reporting systems
-from .diagnostics import (
+from ..diagnostics import (
     PowerLawDiagnostics,
     ScaleWindowSensitivityAnalyser,
     run_comprehensive_diagnostics
 )
-from ..analytics.provenance import ProvenanceTracker, create_provenance_bundle
-from ..analytics.stratified_report_generator import StratifiedReportGenerator
-from ..random_manager import get_random_manager
+from ...analytics.provenance import ProvenanceTracker, create_provenance_bundle
+from ...analytics.stratified_report_generator import StratifiedReportGenerator
+from ...random_manager import get_random_manager
 
 # Import estimators
-from .temporal.rs.rs_estimator_unified import RSEstimator
-from .temporal.dfa.dfa_estimator_unified import DFAEstimator
-from .temporal.dma.dma_estimator_unified import DMAEstimator
-from .temporal.higuchi.higuchi_estimator_unified import HiguchiEstimator
-from .spectral.gph.gph_estimator_unified import GPHEstimator
-from .spectral.whittle.whittle_estimator_unified import WhittleEstimator
-from .spectral.periodogram.periodogram_estimator_unified import PeriodogramEstimator
-from .wavelet.cwt.cwt_estimator_unified import CWTEstimator
-from .wavelet.variance.variance_estimator_unified import WaveletVarianceEstimator
-from .wavelet.log_variance.log_variance_estimator_unified import (
+from ..temporal.rs_estimator import RSEstimator
+from ..temporal.dfa_estimator import DFAEstimator
+from ..temporal.dma_estimator import DMAEstimator
+from ..temporal.higuchi_estimator import HiguchiEstimator
+from ..spectral.gph_estimator import GPHEstimator
+from ..spectral.whittle_estimator import WhittleEstimator
+from ..spectral.periodogram_estimator import PeriodogramEstimator
+from ..wavelet.cwt_estimator import CWTEstimator
+from ..wavelet.variance_estimator import WaveletVarianceEstimator
+from ..wavelet.log_variance_estimator import (
     WaveletLogVarianceEstimator,
 )
-from .wavelet.whittle.whittle_estimator_unified import WaveletWhittleEstimator
-from .multifractal.mfdfa.mfdfa_estimator_unified import MFDFAEstimator
-from .multifractal.wavelet_leaders.wavelet_leaders_estimator_unified import (
+from ..wavelet.whittle_estimator import WaveletWhittleEstimator
+from ..multifractal.mfdfa_estimator import MFDFAEstimator
+from ..multifractal.wavelet_leaders_estimator import (
     MultifractalWaveletLeadersEstimator,
 )
 
 # Note: Neural network estimators now use pretrained models instead of unified estimators
 
 # Import data models
-from ..models.data_models.fbm.fbm_model import FractionalBrownianMotion as FBMModel
-from ..models.data_models.fgn.fgn_model import FractionalGaussianNoise as FGNModel
-from ..models.data_models.arfima.arfima_model import ARFIMAModel
-from ..models.data_models.mrw.mrw_model import MultifractalRandomWalk as MRWModel
-from ..analytics.error_analyzer import ErrorAnalyzer
+from ...models.data_models.fbm_model import FractionalBrownianMotion as FBMModel
+from ...models.data_models.fgn_model import FractionalGaussianNoise as FGNModel
+from ...models.data_models.arfima_model import ARFIMAModel
+from ...models.data_models.mrw_model import MultifractalRandomWalk as MRWModel
+from ...analytics.error_analyzer import ErrorAnalyzer
 
 
 # Import contamination models
@@ -178,17 +178,17 @@ class MissingDataContamination:
 
 # Import pre-trained ML models for production use
 try:
-    from ..models.pretrained_models.ml_pretrained import (
+    from ...models.pretrained_models.ml_pretrained import (
         RandomForestPretrainedModel,
         SVREstimatorPretrainedModel,
         GradientBoostingPretrainedModel,
     )
     
     # Import pre-trained neural models
-    from ..models.pretrained_models.cnn_pretrained import CNNPretrainedModel
-    from ..models.pretrained_models.transformer_pretrained import TransformerPretrainedModel
-    from ..models.pretrained_models.lstm_pretrained import LSTMPretrainedModel
-    from ..models.pretrained_models.gru_pretrained import GRUPretrainedModel
+    from ...models.pretrained_models.cnn_pretrained import CNNPretrainedModel
+    from ...models.pretrained_models.transformer_pretrained import TransformerPretrainedModel
+    from ...models.pretrained_models.lstm_pretrained import LSTMPretrainedModel
+    from ...models.pretrained_models.gru_pretrained import GRUPretrainedModel
     
     PRETRAINED_MODELS_AVAILABLE = True
 except ImportError:

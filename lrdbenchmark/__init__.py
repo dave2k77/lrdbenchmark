@@ -14,19 +14,40 @@ import warnings
 from ._version import __version__
 
 
-def _configure_cpu_defaults() -> None:
-    """Apply safe CPU defaults unless explicitly disabled."""
-    auto_cpu = os.environ.get("LRDBENCHMARK_AUTO_CPU", "1").lower()
-    if auto_cpu in {"0", "false", "off"}:
+def _configure_hardware_acceleration() -> None:
+    """Detect GPU and configure hardware acceleration defaults."""
+    # Default to GPU enabled (LRDBENCHMARK_AUTO_CPU=0)
+    auto_cpu = os.environ.get("LRDBENCHMARK_AUTO_CPU", "0").lower()
+    
+    if auto_cpu in {"1", "true", "yes", "on"}:
+        # Explicit CPU-only mode
+        os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
+        os.environ.setdefault("JAX_PLATFORMS", "cpu")
+        os.environ.setdefault("XLA_PYTHON_CLIENT_PREALLOCATE", "false")
+        os.environ.setdefault("JAX_PLATFORM_NAME", "cpu")
         return
 
-    os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
-    os.environ.setdefault("JAX_PLATFORMS", "cpu")
-    os.environ.setdefault("XLA_PYTHON_CLIENT_PREALLOCATE", "false")
-    os.environ.setdefault("JAX_PLATFORM_NAME", "cpu")
+    # Check for GPU availability via torch (since it's installed in this env)
+    try:
+        import torch
+        if torch.cuda.is_available():
+            gpu_name = torch.cuda.get_device_name(0)
+            print(f"🚀 GPU Found: {gpu_name}. Enabling hardware acceleration.")
+            # Ensure JAX is configured to use CUDA as primary platform
+            os.environ.setdefault("JAX_PLATFORMS", "cuda,cpu")
+            os.environ.setdefault("JAX_PLATFORM_NAME", "cuda")
+            return
+    except (ImportError, Exception):
+        pass
+
+    # Fallback/Default for CPU-only systems or when discovery fails
+    # We only restrict if we didn't find a GPU to avoid breaking CPU-only installs
+    if auto_cpu == "1":
+        os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
+        os.environ.setdefault("JAX_PLATFORMS", "cpu")
 
 
-_configure_cpu_defaults()
+_configure_hardware_acceleration()
 
 # Suppress JAX CUDA warnings and errors when using CPU-only mode
 warnings.filterwarnings('ignore', category=UserWarning, module='jax')

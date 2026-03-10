@@ -9,7 +9,7 @@ import os
 # Add the project root to the path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from lrdbench.analysis.benchmark import ComprehensiveBenchmark
+from lrdbenchmark.analysis.benchmark import ComprehensiveBenchmark
 
 def main():
     """Demonstrate different benchmark types and contamination options."""
